@@ -1,0 +1,78 @@
+<project name="ArcGIS Versions" default="set_all_variables" basedir=".">
+    <description>
+        Sets the correct ArcGIS Folder location depending on version detected.
+        Sets folder values of ${dir.arcpy}, ${dir.arcgisdesktop} to the current
+        ArcGIS release version and verifies that these folders exist
+        IMPORTANT: If ArcGIS is not installed at the default location,
+                   you will need to edit the value at task "SET_CUSTOM_AGS_LOCATION"
+    </description>
+	
+<!-- Set these to the default locations of ArcGIS/ArcPy for the current version (ex. 10.1): -->
+<property name="dir_arcpy_install_current_release" value="C:\Python27\ArcGIS10.1"/>
+<property name="dir_ags_install_current_release" value="C:\Program Files (x86)\ArcGIS\Desktop10.1"/>
+
+<!-- Set these to the default locations for the alternate version of ArcGIS/ArcPy (ex. 10.2): -->
+<property name="dir_arcpy_install_alternate_release" value="C:\Python27\ArcGIS10.2"/>
+<property name="dir_ags_install_alternate_release" value="C:\Program Files (x86)\ArcGIS\Desktop10.2"/>
+	
+<!-- ************************************************************************************************************ -->
+<!-- IMPORTANT: If you have *NOT* installed ArcGIS to the default install location, you will need to set the following: -->
+<!-- If you want to use a custom AGS Location Uncomment the line below and set the values in the SET_CUSTOM_AGS_LOCATION target -->
+<!-- UNCOMMENT THIS PROPERTY: -->
+<!-- <property name="USE_CUSTOM_AGS_LOCATION" value="true"/> -->
+<!-- SET THESE VALUES TO YOUR CUSTOM INSTALL LOCATION: -->
+<target name="SET_CUSTOM_AGS_LOCATION" if="USE_CUSTOM_AGS_LOCATION">
+	<echo message="Setting Custom Values for ArcGIS Desktop and Python"/>
+	<property name="dir.arcpy" value="C:\Python27\ArcGIS10.__SET_ME__"/>  <!-- CHANGE TO YOUR LOCATION -->
+	<property name="dir.arcgisdesktop" value="C:\Program Files (x86)\ArcGIS\Desktop10.__SET_ME__"/> <!-- CHANGE TO YOUR LOCATION -->
+</target>
+<!-- ************************************************************************************************************* -->
+
+<target name="checkdirCurrentVersion">
+	<condition property="PresentCurrentVersion">
+		<available file="${dir_ags_install_current_release}" type="dir"/>
+	</condition>
+</target>
+
+<target name="checkdirAlternateVersion">
+	<condition property="PresentAlternateVersion">
+		<available file="${dir_ags_install_alternate_release}" type="dir"/>
+	</condition>
+</target>
+ 
+<target name="setvariablesCurrentVersion" depends="checkdirCurrentVersion" if="PresentCurrentVersion">
+	<echo message="Current version of ArcGIS detected at its default location."/>
+	<property name="dir.arcpy" value="${dir_arcpy_install_current_release}"/>
+	<property name="dir.arcgisdesktop" value="${dir_ags_install_current_release}"/>
+</target>
+
+<target name="setvariablesAlternateVersion" depends="checkdirAlternateVersion" if="PresentAlternateVersion">
+	<echo message="Alternative version of ArcGIS detected at its default location."/>
+	<property name="dir.arcpy" value="${dir_arcpy_install_alternate_release}"/>
+	<property name="dir.arcgisdesktop" value="${dir_ags_install_alternate_release}"/>
+</target>
+
+<target name="check_arcgis_exists" depends="SET_CUSTOM_AGS_LOCATION,setvariablesCurrentVersion,setvariablesAlternateVersion">
+	<echo message="Checking for ArcPy/ArcGIS at these Locations: ${dir.arcpy}, ${dir.arcgisdesktop}"/>	
+	<condition property="agsnotfound">
+	    <or>
+		<not>
+			<isset property="dir.arcgisdesktop"/>
+		</not>
+      		<not>
+		        <available file="${dir.arcpy}" type="dir"/>
+		</not>  
+		<not>
+		        <available file="${dir.arcgisdesktop}" type="dir"/>
+		</not>       
+	    </or>
+	</condition>
+	<fail message="****** COULD NOT FIND VALID ArcPy/ArcGIS INSTALLATION FOLDERS ******" if="agsnotfound"/>	
+	</target>
+
+<target name="set_all_variables" depends="check_arcgis_exists,SET_CUSTOM_AGS_LOCATION,setvariablesCurrentVersion,setvariablesAlternateVersion">
+	<echo message="ArcPy/ArcGIS found at these locations: ${dir.arcpy}, ${dir.arcgisdesktop}" />
+</target>
+
+</project>
+
