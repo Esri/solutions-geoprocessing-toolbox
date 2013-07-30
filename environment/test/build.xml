@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<project name="DefenseAndIntelEnvironmentToolboxTest" basedir="." default="run_all_tests">
+
+  <!-- templatehome = defense-and-intel-analysis-toolbox -->
+
+  <target name="run_all_tests" 
+    depends="test_build_elevation,test_network_data_prep,test_path_slope">
+    <echo message="Running All Tests" />
+  </target>
+  
+  <target name="test_build_elevation">
+    <echo message="Running: test_build_elevation" />
+    <ant dir="./test_build_elevation" target="run_all_tests" />
+    <echo message="Done Test: test_build_elevation" />
+  </target>
+
+  <target name="test_network_data_prep">
+    <echo message="Running: test_network_data_prep" />
+    <ant dir="./test_network_data_prep" target="run_all_tests" />
+    <echo message="Done Test: test_network_data_prep" />
+  </target>
+  
+  <target name="test_path_slope">
+    <echo message="Running: test_path_slope" />
+    <ant dir="./test_path_slope" target="run_all_tests" />
+    <echo message="Done Test: test_path_slope" />
+  </target>
+  
+</project>
