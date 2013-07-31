@@ -22,11 +22,11 @@ import os
 import sys
 
 currentPath = os.path.dirname(__file__)
-geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../data/geodatabases/"))
+geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../environment/data/geodatabases/"))
 scratchPath = geodatabasePath
-toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../toolboxes/"))
+toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../environment/toolboxes/"))
 
-elevSourcePath = os.path.normpath(os.path.join(currentPath, r"../../../data/Topographic/Elevation/Source/"))
+elevSourcePath = os.path.normpath(os.path.join(currentPath, r"../../../environment/data/Topographic/Elevation/Source/"))
 
 inputGDB  = os.path.join(geodatabasePath, "test_inputs.gdb")
 outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
