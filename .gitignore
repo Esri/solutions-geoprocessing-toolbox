@@ -7,6 +7,7 @@ arc.dir
 *.pyt.xml
 *.zip
 *.zip
+*.7z
 *-old.*
 *-old
 *-sav
