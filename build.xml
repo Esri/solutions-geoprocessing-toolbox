@@ -9,8 +9,12 @@
 
   <!-- templatehome = defense-and-intel-toolbox -->
   <property name="dir.zipdir" value="./" />
-  <property name="dir.environmentdatadir" value="./environment/data" />
+  <property name="dir.commondir" value="./common" />
   <property name="dir.commondatadir" value="./common/data" />
+  <property name="dir.commonmapdir" value="./common/maps" />
+  
+  <property name="dir.environmentdir" value="./environment" />
+  <property name="dir.environmentdatadir" value="./environment/data" />
   
 
   <target name="config" depends="make_dirs,get_common_data,get_environment_data">
@@ -28,26 +32,32 @@
   <!-- Get and manage test data for Common tests only -->
     
     <!--Original toolbox data: 1ab069b8ed5749c083069289151fe127-->
+    <echo message="Downloading common maps"/>
     <get src="http://www.arcgis.com/sharing/content/items/1ab069b8ed5749c083069289151fe127/data"
       dest="${dir.zipdir}/defense-and-intel-analysis-toolbox-maps.zip" 
       verbose="true"
       usetimestamp="true"/>
+    <echo message="Unzipping common maps" />
     <unzip src="${dir.zipdir}/defense-and-intel-analysis-toolbox-maps.zip"
-         dest="${dir.commondatadir}"/>
+         dest="${dir.commondir}"/>
     
     <!--Original toolbox maps: b818862d16b0425a85e66747874f3a16-->
+    <echo message="Downloading common maps" />
     <get src="http://www.arcgis.com/sharing/content/items/b818862d16b0425a85e66747874f3a16/data"
       dest="${dir.zipdir}/defense-and-intel-analysis-toolbox-data.zip" 
       verbose="true"
       usetimestamp="true"/>
+    <echo message="Unzipping common maps" />
     <unzip src="${dir.zipdir}/defense-and-intel-analysis-toolbox-data.zip"
-         dest="${dir.commondatadir}"/>
+         dest="${dir.commondir}"/>
 
     <!--Publishable Tasks geodatabase: 92e0592d385e471d8216823f9844182e -->
+    <echo message="Downloading publishable tasks data" />
     <get src="http://www.arcgis.com/sharing/content/items/92e0592d385e471d8216823f9844182e/data"
       dest="${dir.zipdir}/PublishableTasksData.gdb.zip"
       usetimestamp="true"
       verbose="true"/>
+    <echo message="Unzipping publishable tasks data" />
     <unzip src="${dir.zipdir}/PublishableTasksData.gdb.zip"
     dest="${dir.commondatadir}/geodatabases"/>
   
@@ -57,20 +67,22 @@
   <!-- Get and manage test data for Environment tests only   -->
     
     <!--Topographic test folder: 2b0858c4331e488eb3bba3ddd7d701a7 -->
+    <echo message="Downloading topograhic data" />
     <get src="http://www.arcgis.com/sharing/content/items/2b0858c4331e488eb3bba3ddd7d701a7/data"
     dest="${dir.zipdir}/Topographic.zip"
     verbose="true"
     usetimestamp="true"/>
-    
+    <echo message="Unzipping topographic data" />
     <unzip src="${dir.zipdir}/Topographic.zip"
     dest="${dir.environmentdatadir}" />
     
     <!--NetworkPrepData.gdb: 8624572e651a418bbdef664d2e3020a2 -->
+    <echo message="Downloading network prep data" />
     <get src="http://www.arcgis.com/sharing/content/items/8624572e651a418bbdef664d2e3020a2/data"
     dest="${dir.zipdir}/NetworkPrepData.gdb.zip"
     verbose="true"
     usetimestamp="true"/>
-    
+    <echo message="Unzipping network prep data" />
     <unzip src="${dir.zipdir}/NetworkPrepData.gdb.zip"
     dest="${dir.environmentdatadir}/geodatabases" />
     
@@ -79,14 +91,15 @@
   <target name="get_data_operations_only">
 
     <!--Download operational environment sample data to Commmon and Environment-->
+    <echo message="Downloading Operational Environment data" />
     <get src="http://downloads.esri.com/resources/defense/Operational_Environment.zip"
       dest="${dir.zipdir}/Operational_Environment.zip" 
       verbose="true"
       usetimestamp="true"/>
-    
+    <echo message="Unzipping Operational Environment sample data to common" />    
     <unzip src="${dir.zipdir}/Operational_Environment.zip"
          dest="${dir.commondatadir}/Operational_Environment"/>
-    
+    <echo message="Unzipping Operational Environment sample data to environment" />
     <unzip src="${dir.zipdir}/Operational_Environment.zip"
          dest="${dir.environmentdatadir}/Operational_Environment"/>
 
@@ -97,13 +110,12 @@
   <target name="clean">
 
     <echo message="Warning: deleting data dirs (only do this if you mean it)" />
-    <echo message="Deleting path: ${dir.commondatadir}/data" />
-    <echo message="Deleting path: ${dir.commondatadir}/maps" />
-    <echo message="Deleting path: ${dir.environmentdatadir}/data" />
-
-    <delete dir="${dir.commondatadir}/data" />
-    <delete dir="${dir.commondatadir}/maps" />
-    <delete dir="${dir.environmentdatadir}/data" />
+    <echo message="Deleting path: ${dir.commondatadir}" />
+    <delete dir="${dir.commondatadir}" />
+    <echo message="Deleting path: ${dir.commonmapdir}" />
+    <delete dir="${dir.commonmapdir}" />
+    <echo message="Deleting path: ${dir.environmentdatadir}" />
+    <delete dir="${dir.environmentdatadir}" />
 
   </target>
 

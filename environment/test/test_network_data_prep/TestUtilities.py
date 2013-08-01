@@ -21,22 +21,15 @@ import arcpy
 import os
 import sys
 
+# properties: paths
 currentPath = os.path.dirname(__file__)
 geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../environment/data/geodatabases/"))
-
 scratchPath = geodatabasePath
-
 toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../environment/toolboxes/"))                
-
-#TODO: Need to get road features from somewhere
-
-#TODO: Need to add RoadTravelVelocity table from somewhere
-
+# properties: geodatabases
 inputGDB  = os.path.join(geodatabasePath, "NetworkPrepData.gdb")
 outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
-defaultGDB = os.path.join(geodatabasePath, "default.gdb")
-scratchGDB = os.path.join(scratchPath, "scratch.gdb")
-
+# properties: toolboxes
 toolbox = os.path.join(toolboxesPath, "Network Data Preparation Tools.tbx")
 
 def createScratch() :

@@ -53,7 +53,7 @@ try:
     print "Testing Necessary Geo Objects"        
     
     objects2Check = []
-    objects2Check.extend([TestUtilities.toolbox, TestUtilities.inputGDB, TestUtilities.outputGDB, TestUtilities.defaultGDB]) 
+    objects2Check.extend([TestUtilities.toolbox, TestUtilities.inputGDB, TestUtilities.outputGDB]) 
     for object2Check in objects2Check :
         desc = arcpy.Describe(object2Check)
         if desc == None :
