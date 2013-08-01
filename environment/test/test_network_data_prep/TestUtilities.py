@@ -29,7 +29,10 @@ toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../environmen
 # properties: geodatabases
 inputGDB  = os.path.join(geodatabasePath, "NetworkPrepData.gdb")
 outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
-# properties: toolboxes
+# if the output doesn't exist, create it
+if not arcpy.Exists(outputGDB): arcpy.CreateFileGDB_management(os.path.dirname(outputGDB),os.path.basename(outputGDB)[:-4])
+
+# properties: toolboxescls
 toolbox = os.path.join(toolboxesPath, "Network Data Preparation Tools.tbx")
 
 def createScratch() :

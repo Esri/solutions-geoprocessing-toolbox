@@ -42,12 +42,12 @@
          dest="${dir.commondir}"/>
     
     <!--Original toolbox maps: b818862d16b0425a85e66747874f3a16-->
-    <echo message="Downloading common maps" />
+    <echo message="Downloading common data" />
     <get src="http://www.arcgis.com/sharing/content/items/b818862d16b0425a85e66747874f3a16/data"
       dest="${dir.zipdir}/defense-and-intel-analysis-toolbox-data.zip" 
       verbose="true"
       usetimestamp="true"/>
-    <echo message="Unzipping common maps" />
+    <echo message="Unzipping common data" />
     <unzip src="${dir.zipdir}/defense-and-intel-analysis-toolbox-data.zip"
          dest="${dir.commondir}"/>
 
@@ -65,6 +65,16 @@
   
   <target name="get_environment_data">
   <!-- Get and manage test data for Environment tests only   -->
+    
+    <!--Original toolbox maps: b818862d16b0425a85e66747874f3a16-->
+    <echo message="Downloading environment data" />
+    <get src="http://www.arcgis.com/sharing/content/items/b818862d16b0425a85e66747874f3a16/data"
+      dest="${dir.zipdir}/defense-and-intel-analysis-toolbox-data.zip" 
+      verbose="true"
+      usetimestamp="true"/>
+    <echo message="Unzipping environment data" />
+    <unzip src="${dir.zipdir}/defense-and-intel-analysis-toolbox-data.zip"
+         dest="${dir.environmentdir}"/>
     
     <!--Topographic test folder: 2b0858c4331e488eb3bba3ddd7d701a7 -->
     <echo message="Downloading topograhic data" />

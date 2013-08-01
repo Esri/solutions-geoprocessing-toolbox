@@ -21,10 +21,10 @@ import arcpy
 import os
 
 currentPath = os.path.dirname(__file__)
-geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../data/geodatabases/"))
+geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../common/data/geodatabases/"))
 
 scratchPath = geodatabasePath
-toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../toolboxes/"))                
+toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../common/toolboxes/"))                
 
 inputGDB  = os.path.join(geodatabasePath, "test_inputs.gdb")
 outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")

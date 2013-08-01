@@ -23,13 +23,12 @@ import sys
 
 currentPath = os.path.dirname(__file__)
 geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../environment/data/geodatabases/"))
-
 scratchPath = geodatabasePath
-
 toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../environment/toolboxes/"))                
 
 inputGDB  = os.path.join(geodatabasePath, "test_inputs.gdb")
 outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
+if not arcpy.Exists(outputGDB): arcpy.CreateFileGDB_management(os.path.dirname(outputGDB),os.path.basename(outputGDB)[:-4])
 defaultGDB = os.path.join(geodatabasePath, "default.gdb")
 scratchGDB = os.path.join(scratchPath, "scratch.gdb")
 
