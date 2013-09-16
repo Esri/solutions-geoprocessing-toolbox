@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<project name="TestGeonamesTools" basedir="." default="run_all_tests">
+
+  <!-- templatehome = defense-and-intel-mapping-toolbox/source/test -->
+<import file="../versions.xml"/>
+
+  <property name="dir.src" value="."/>
+  <property name="dir.datadir" value="../../.."/>
+
+  <property name="pythonpath" value="${dir.arcpy}\DLLs;${dir.arcpy}\lib;${dir.arcpy}\lib\plat-win;${dir.arcpy}\lib\lib-tk;${dir.arcpy};${dir.arcpy}\lib\site-packages;${dir.arcgisdesktop}\bin;${dir.arcgisdesktop}\arcpy"/>
+
+  <target name="run_all_tests" 
+    depends="set_all_variables,get_data,test_config,TestLoadGeonamesFile,TestCreateGeonamesGazetteerLocator">
+    <echo message="All Tests Complete" />
+  </target>
+
+  <target name="get_data">
+    <!-- TODO: determine if we need to run data fetch script here @ ../../data/build.xml -->
+    <!-- TODO: for now just issue a warning -->
+    <!-- TODO: if needed, change the target in the line below to target="default" -->
+    <ant antfile="${dir.datadir}/build.xml" target="test" />
+    <echo message="INFO: Has Dependent Data task been run from: ${dir.datadir}/build.xml" />
+  </target>
+
+  <target name="test_config" depends="set_all_variables">
+    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
+      <env key="PYTHONPATH" path="${pythonpath}"/>
+      <arg line="-u"/>
+      <arg line="${dir.src}/TemplateConfigTest.py"/>
+    </exec>
+  </target>
+
+<!-- Sample Test Line: Uncomment Test Below & All Name to run_all_tests list -->
+  <target name="TestLoadGeonamesFile" depends="test_config">
+    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
+      <env key="PYTHONPATH" path="${pythonpath}"/>
+      <arg line="-u"/>
+      <arg line="${dir.src}/TestLoadGeonamesFile.py"/>
+    </exec>
+  </target>
+
+  <target name="TestCreateGeonamesGazetteerLocator" depends="test_config">
+    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
+      <env key="PYTHONPATH" path="${pythonpath}"/>
+      <arg line="-u"/>
+      <arg line="${dir.src}/TestCreateGeonamesGazetteerLocator.py"/>
+    </exec>
+  </target>
+
+
+</project>

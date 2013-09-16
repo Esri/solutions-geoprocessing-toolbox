@@ -27,4 +27,10 @@
     <echo message="Done Test: test_path_slope" />
   </target>
   
+  <target name="test_geonames_tools">
+    <echo message="Running: test_geonames_tools" />
+    <ant dir="./test_geonames_tools" target="run_all_tests" />
+    <echo message="Done Test: test_geonames_tools" />
+  </target>
+  
 </project>

@@ -96,6 +96,17 @@
     <unzip src="${dir.zipdir}/NetworkPrepData.gdb.zip"
     dest="${dir.environmentdatadir}/geodatabases" />
     
+    <!-- Geonames: 
+    https://afmcomstaging.esri.com/arcgis/sharing/content/items/d3acf544959f4df68fb0f19aaa3118a6/data-->
+    <echo message="Downloading geonames data" />
+    <get src="http://afmcomstaging.esri.com/arcgis/sharing/content/items/d3acf544959f4df68fb0f19aaa3118a6/data"
+    dest="${dir.zipdir}/Geonames.zip"
+    verbose="true"
+    usetimestamp="true"/>
+    <echo message="Unzipping Geonames data" />
+    <unzip src="${dir.zipdir}/Geonames.zip"
+    dest="${dir.environmentdatadir}" />
+    
   </target>
   
   <target name="get_data_operations_only">
