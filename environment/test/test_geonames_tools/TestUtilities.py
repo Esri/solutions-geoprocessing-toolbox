@@ -20,11 +20,11 @@ import os
 
 
 currentPath = os.path.dirname(__file__)
-print currentPath
-geodatabasePath = os.path.normpath(os.path.join(os.path.join(currentPath, r"../../../data/Geonames")))
-
-toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../toolboxes/")) 
-print toolboxesPath               
+print "currentPath: " + currentPath
+geodatabasePath = os.path.normpath(os.path.join(os.path.join(currentPath, r"../../../environment/data/Geonames")))
+print "geodatabasePath: " + geodatabasePath
+toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../environment/toolboxes/")) 
+print "toolboxesPath: " + toolboxesPath               
 
 inputGDB  = os.path.join(geodatabasePath, "Geonames.gdb")
 
