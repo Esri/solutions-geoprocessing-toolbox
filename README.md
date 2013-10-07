@@ -6,9 +6,12 @@ The ArcGIS Defense and Intelligence Toolbox is a set of models, scripts, and too
 ## Features
 
 * Specialized geoprocessing models and tools for defense and intelligence analysis including
-* Tools for visibility and range analysis
-* Tools for analyzing the battlefield environment
-* Tools for position analysis
+  * Tools for visibility and range analysis
+  * Tools for analyzing the battlefield environment
+  * Tools for position analysis
+
+* Specialized geoprocessing models and tools for emergency management
+
 * The **common** folder contains shared tools:
   * Military Aspects of Terrain Toolbox
   * Position Analysis Tools
@@ -20,6 +23,8 @@ The ArcGIS Defense and Intelligence Toolbox is a set of models, scripts, and too
   * Geonames Tools
   * Network Data Preparation Tools
   * Path Slope Tools
+* The **emergencymanagement** folder contains:
+  * ERG Tools
 
 ## <a id="Requirements"></a>Requirements
 
