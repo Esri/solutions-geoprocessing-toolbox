@@ -328,6 +328,9 @@ class ERGByPlacard(object):
 
         # Ensure the point of spill is in a projected coord system
         spillPoint = ERG.GetProjectedPoint(parameters[0].valueAsText)
+        if (spillPoint == None):
+            arcpy.AddError("NO SPILL POINT! This tool requires a spill point to be supplied")
+            return
         
         # Look up the ERG for the relevant distances, given the input parameters
         iid, pad, materials, guidenum = ERG.LookUpERG("", parameters[1].valueAsText, parameters[4].valueAsText, parameters[3].valueAsText, ergDbf)
