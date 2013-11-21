@@ -4,7 +4,7 @@ data/
 maps/
 scratch/
 arc.dir
-*.pyt.xml
+#*.pyt.xml -- We cannot ignore these files... these are documentation
 *.zip
 *.zip
 *.7z
