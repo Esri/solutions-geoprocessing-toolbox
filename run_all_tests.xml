@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<project name="DefenseAndIntelToolboxTest" basedir="." default="run_all_subtests">
+
+  <!-- templatehome = defense-and-intel-analysis-toolbox -->
+
+  <target name="run_all_subtests" 
+    depends="test_common,test_emergencymanagement,test_environment">
+    <echo message="Running All Tests" />
+  </target>
+
+  <target name="test_common">
+    <echo message="Running: test_common" />
+    <ant dir="./common/test" target="run_all_tests" />
+    <echo message="Done Test: test_common" />
+  </target>
+
+  <target name="test_emergencymanagement">
+    <echo message="Running: test_position_analysis" />
+    <ant dir="./emergencymanagement/test" target="run_all_tests" />
+    <echo message="Done Test: test_emergencymanagement" />
+  </target>
+
+  <target name="test_environment">
+    <echo message="Running: test_environment" />
+    <ant dir="./test/environment" target="run_all_tests" />
+    <echo message="Done Test: test_environment" />
+  </target>
+
+
+</project>

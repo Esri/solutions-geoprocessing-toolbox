@@ -132,7 +132,7 @@ def RunTestTableToEllipse():
     # sample params:
     # 'data\csv\ellipsewizard.csv', 'DD_2', 'Lond', 'Latd', 'Major', 'Minor', 'KILOMETERS', 'Orient', 'DEGREES'
     # '#', 'geodatabases\test_outputs.gdb\TableToEllipse'
-    arcpy.TableToEllipse_MyAlias(inputTable, coordinateConversionFormat, coordinateFieldX, coordinateFieldY, majorAxisField, minorAxisField, axisUnit, orientationField, orientationUnit, sr, outputEllipsesFC)
+    arcpy.TableToEllipse_Position(inputTable, coordinateConversionFormat, coordinateFieldX, coordinateFieldY, majorAxisField, minorAxisField, axisUnit, orientationField, orientationUnit, sr, outputEllipsesFC)
     ########################################################3
 
     # Verify the results    
@@ -176,7 +176,7 @@ def RunTestTableToLOB():
     # 'data\csv\lobwizard.csv', 'DD_2', 'Lond', 'Latd', 'DEGREES', 'Azimuth', 'METERS', 
     # 'Distance', 'GEODESIC', 'data\geodatabases\test_outputs\TableToLOB'    
             
-    arcpy.TableToLOB_MyAlias(inputTable, coordinateConversionFormat, coordinateFieldX,  coordinateFieldY, bearingUnit, bearingField, distanceUnit, distanceField, lineType, outputLinesFC)
+    arcpy.TableToLOB_Position(inputTable, coordinateConversionFormat, coordinateFieldX,  coordinateFieldY, bearingUnit, bearingField, distanceUnit, distanceField, lineType, outputLinesFC)
     ########################################################3
 
     # Verify the results    
@@ -202,7 +202,7 @@ try:
             
     arcpy.env.overwriteOutput = True
     arcpy.env.scratchWorkspace = TestUtilities.scratchGDB
-    arcpy.ImportToolbox(toolbox, "MyAlias")
+    arcpy.ImportToolbox(toolbox, "Position")
 
     ################################################
     # Run Individual Geometry Importer Tests

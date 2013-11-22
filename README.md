@@ -1,17 +1,28 @@
-# defense-and-intel-toolbox
+# solutions-geoprocessing-toolbox
 
-The ArcGIS Defense and Intelligence Toolbox is a set of models, scripts, and tools for use in ArcGIS Desktop. These tools provide specialized processing and workflows for defense and intelligence analysis.
+The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tools for use in ArcGIS Desktop. These tools provide specialized processing, workflows, and analysis for defense, intelligence, and other solutions domains.
 
+Important Note: This is the 10.2 and later version of all of the tools from the previous repository at [https://github.com/Esri/defense-and-intel-analysis-toolbox](https://github.com/Esri/defense-and-intel-analysis-toolbox). That repo will be retired once this repo has been fully validated.
+
+![Image of toolbox](ScreenShot.jpg)
+
+## Sections
+
+* [Features](#features)
+* [Requirements](#requirements)
+* [Instructions](#instructions)
+* [Resources](#resources)
+* [Issues](#issues)
+* [Contributing](#contributing)
+* [Licensing](#licensing)
 
 ## Features
 
-* Specialized geoprocessing models and tools for defense and intelligence analysis including
+* Specialized geoprocessing models and tools for general defense and intelligence analysis tasks including
   * Tools for visibility and range analysis
   * Tools for analyzing the battlefield environment
   * Tools for position analysis
-
 * Specialized geoprocessing models and tools for emergency management
-
 * The **common** folder contains shared tools:
   * Military Aspects of Terrain Toolbox
   * Position Analysis Tools
@@ -26,12 +37,12 @@ The ArcGIS Defense and Intelligence Toolbox is a set of models, scripts, and too
 * The **emergencymanagement** folder contains:
   * ERG Tools
 
-## <a id="Requirements"></a>Requirements
+## Requirements
 
-* ArcGIS Desktop 10.1 Standard 
+* ArcGIS Desktop 10.1 or later Standard 
 * Apache Ant - used to download and extract dependent data and run test drivers
-* Java Runtime Environment (JRE) or Developer Kit (JDK)
-* Some tools require additional licenses (these tools will be disabled if license is unavailable):
+* Java Runtime Environment (JRE) or Developer Kit (JDK) (required by Ant)
+* Some tools require additional licenses (these tools will be disabled if license is unavailable), see READMEs for more information: 
     * ArcGIS Desktop Advanced (ArcInfo)
     * ArcGIS Spatial Analyst Extension
     * ArcGIS 3D Analyst Extension
@@ -39,15 +50,19 @@ The ArcGIS Defense and Intelligence Toolbox is a set of models, scripts, and too
         * Path Slope Tools.tbx\Path Slope
         * Visibility and Range Tools.tbx\Range Fan
 
-## <a id="Instructions"></a>Instructions
+## Instructions
 
 ### General Help
 [New to Github? Get started here.](http://htmlpreview.github.com/?https://github.com/Esri/esri.github.com/blob/master/help/esri-getting-to-know-github.html)
 
 ### Getting Started with the toolbox
+
 * Download the Github repository
     * If repository was downloaded as a zip, extract the zip file
-    * Make note of this directory, the steps below assume it will be called "defense-and-intel-analysis-toolbox"
+    * Make note of this directory, the steps below assume it will be called "solutions-geoprocessing-toolbox"
+
+### Downloading Data Dependencies/Test Data
+
 * Install and configure Apache Ant
     * Download Ant from the [Apache Ant Project](http://ant.apache.org/bindownload.cgi) and unzip to a location on your machine
     * Set environment variable `ANT_HOME` to Ant Install Location
@@ -57,16 +72,23 @@ The ArcGIS Defense and Intelligence Toolbox is a set of models, scripts, and too
     * You may optionally install the [PyDev Eclipse Plugin for Python](http://pydev.org) if you plan to use Eclipse to run/debug
 * To download the data dependencies 
     * Open Command Prompt>
-    * cd defense-and-intel-analysis-toolbox
-    * > ant
+    * `cd solutions-geoprocessing-toolbox`
+    * `> ant`
     * Verify “Build Succeeded”  
-* To run unit tests
-    * Open Command Prompt>
-    * > cd defense-and-intel-analysis-toolbox\source\test
-    * > ant
-    * Verify “Build Succeeded”
-    * Note: this will run the test drivers from each test subdirectory (test_position_analysis, test_viz_and_range, etc.)
 
+### Running Verification Tests
+
+* Configure and verify Ant as described in the previous steps
+* To run all unit tests
+    * `> cd solutions-geoprocessing-toolbox`
+    * `>  ant -f run_all_tests.xml`
+    *  Note/Warning: this will run the test drivers from each test directory and can take several hours to run
+* To run individual unit tests
+    * Open Command Prompt>
+    * Go to the folder for the area you would like to test, the example below uses the `environment` area/folder, but each area has similar tests 
+    * `> cd solutions-geoprocessing-toolbox\environment\test`
+    * `> ant`
+    * Verify “Build Succeeded”
 
 ## Resources
 
@@ -78,7 +100,7 @@ The ArcGIS Defense and Intelligence Toolbox is a set of models, scripts, and too
 
 ## Contributing
 
-* Anyone and everyone is welcome to contribute.
+Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
 
 ## Licensing
 
@@ -99,5 +121,5 @@ limitations under the License.
 A copy of the license is available in the repository's
 [license.txt](license.txt) file.
 
-[](Esri Tags: ArcGIS Defense and Intelligence)
+[](Esri Tags: ArcGIS Defense and Intelligence Military Environment Planning Analysis Emergency Management )
 [](Esri Language: Python)

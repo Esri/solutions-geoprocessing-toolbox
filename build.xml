@@ -8,7 +8,7 @@
 <project name="DataDownloadAndConfiguration" basedir="." default="config">
 
   <!-- templatehome = defense-and-intel-toolbox -->
-  <property name="dir.zipdir" value="./" />
+  <property name="dir.zipdir" value="./downloaded_data" />
   <property name="dir.commondir" value="./common" />
   <property name="dir.commondatadir" value="./common/data" />
   <property name="dir.commonmapdir" value="./common/maps" />
@@ -23,8 +23,8 @@
 
   <!-- Create necessary folder structure (Github will not create empty folders) -->
   <target name="make_dirs">
-    <echo message="No need to makedirs, unzip makes entire maps, data folders" />
-    
+    <mkdir dir="${dir.zipdir}"/>
+    <echo message="Creating: ${dir.zipdir}" />    
   </target>
 
 
