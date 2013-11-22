@@ -23,7 +23,7 @@
 
   <target name="test_environment">
     <echo message="Running: test_environment" />
-    <ant dir="./test/environment" target="run_all_tests" />
+    <ant dir="./environment/test" target="run_all_tests" />
     <echo message="Done Test: test_environment" />
   </target>
 
