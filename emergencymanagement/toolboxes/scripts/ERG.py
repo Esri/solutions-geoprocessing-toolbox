@@ -110,6 +110,12 @@ def GetProjectedPoint(pPointFeatureRecordSet):
             arcpy.AddMessage("  Factory code: " + esriPRConstant)
             srUTM = arcpy.SpatialReference(int(esriPRConstant))
             newgeom = geom.projectAs(srUTM)
+            if newgeom == None:
+                arcpy.AddError("Failed to project point to UTM")
+                return None
+            if newgeom.firstPoint == None:
+                arcpy.AddError("Reprojection to UTM resulted in no point being returned")
+                return None
         else:
             newgeom = geom
         return newgeom
@@ -159,6 +165,15 @@ def MakeERGFeatures(pProjectedPointGeometry, pWindBlowingToDirection, pInitialIs
     array = arcpy.Array([paPoint1, paPoint2, paPoint3, paPoint4, paPoint1])
     protectiveActionZone = arcpy.Polygon(array, sr)
 
+    # Also generate an extended zone for later computation of the protective action arc (to ensure it remains single part)
+    vectorX *= 1.5
+    vectorY *= 1.5
+    paPoint2Ext = arcpy.Point(paPoint1.X + vectorX, paPoint1.Y + vectorY)
+    paPoint3Ext = arcpy.Point(paPoint4.X + vectorX, paPoint4.Y + vectorY)
+    arrayExt = arcpy.Array([paPoint1, paPoint2Ext, paPoint3Ext, paPoint4, paPoint1])
+    paZoneExt = arcpy.Polygon(arrayExt, sr)
+
+    # arcpy.Densify_edit(initialIsolationZone, "ANGLE", "", "", "1.0")
     # Apply trick to densify the initial isolation zone (i.e. to remove circular arcs in case of reprojection of the result)
     diff = initialIsolationZone.difference(protectiveActionZone)
     intsct = initialIsolationZone.intersect(protectiveActionZone, 4)
@@ -169,7 +184,7 @@ def MakeERGFeatures(pProjectedPointGeometry, pWindBlowingToDirection, pInitialIs
 
     # Compute the "protective action arc" - the arc at the limit of the protective action zone
     paCircle = pProjectedPointGeometry.buffer(paDistanceInSrUnits)
-    protectiveActionArc = protectiveActionZone.intersect(paCircle.boundary(), 2)
+    protectiveActionArc = paZoneExt.intersect(paCircle.boundary(), 2)
 
     # Compute the "radials" - the lines connecting the edges of the initial isolation zone to the ends of the protective action arc
     innerArc = protectiveActionZone.intersect(initialIsolationZone.boundary(), 2)
