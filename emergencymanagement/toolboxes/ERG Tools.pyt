@@ -51,6 +51,9 @@ class ERGByChemical(object):
         matList = [row[0] for row in arcpy.da.SearchCursor(dbfFile, ("Material"))]
         param1.filter.type = "ValueList"
         param1.filter.list = sorted(set(matList))
+
+        if len(matList) > 0:
+            param1.value = matList[0]
         
         # Third parameter
         param2 = arcpy.Parameter(
@@ -62,6 +65,7 @@ class ERGByChemical(object):
 
         param2.filter.type = "Range"
         param2.filter.list = [0, 360]
+        param2.value = 0
 
         # Fourth parameter
         param3 = arcpy.Parameter(
@@ -73,6 +77,7 @@ class ERGByChemical(object):
 
         param3.filter.type = "ValueList"
         param3.filter.list = ["Day", "Night"]
+        param3.value = "Day"
         
         # Fifth parameter
         param4 = arcpy.Parameter(
@@ -84,6 +89,7 @@ class ERGByChemical(object):
 
         param4.filter.type = "ValueList"
         param4.filter.list = ["Large", "Small"]
+        param4.value = "Large"
         
         # Sixth parameter
         param5 = arcpy.Parameter(
@@ -214,6 +220,9 @@ class ERGByPlacard(object):
         param1.filter.type = "ValueList"
         param1.filter.list = sorted(set(placList))
 
+        if len(placList) > 0:
+            param1.value = placList[0]
+
         # Third parameter
         param2 = arcpy.Parameter(
             displayName="Wind Bearing (direction blowing to, 0 - 360)",
@@ -224,6 +233,7 @@ class ERGByPlacard(object):
 
         param2.filter.type = "Range"
         param2.filter.list = [0, 360]
+        param2.value = 0
 
         # Fourth parameter
         param3 = arcpy.Parameter(
@@ -235,6 +245,7 @@ class ERGByPlacard(object):
 
         param3.filter.type = "ValueList"
         param3.filter.list = ["Day", "Night"]
+        param3.value = "Day"
         
         # Fifth parameter
         param4 = arcpy.Parameter(
@@ -246,6 +257,7 @@ class ERGByPlacard(object):
 
         param4.filter.type = "ValueList"
         param4.filter.list = ["Large", "Small"]
+        param4.value = "Large"
         
         # Sixth parameter
         param5 = arcpy.Parameter(
