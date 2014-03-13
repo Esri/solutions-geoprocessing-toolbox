@@ -32,6 +32,7 @@ Important Note: This is the 10.2 and later version of all of the tools from the 
 * The **environment** folder contains:
   * Build Elevation Mosiac Tools
   * Geonames Tools
+  * Maritime Decision Aid Tools
   * Network Data Preparation Tools
   * Path Slope Tools
 * The **emergencymanagement** folder contains:
