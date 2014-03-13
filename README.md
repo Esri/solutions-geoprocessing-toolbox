@@ -35,6 +35,9 @@ Important Note: This is the 10.2 and later version of all of the tools from the 
   * Maritime Decision Aid Tools
   * Network Data Preparation Tools
   * Path Slope Tools
+  * Imagery Basemap Tools
+  * Scanned Map Basemap Tools
+  * Topographic Basemap Tools
 * The **emergencymanagement** folder contains:
   * ERG Tools
 
