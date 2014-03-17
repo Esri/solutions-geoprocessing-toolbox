@@ -6,14 +6,14 @@
 
 ## Sections
 
-* [Build Elevation Mosaic Tools](#Build Elevation Mosaic Tools)
-* [Geonames Tools](#Geonames Tools)
-* [Imagery Basemap Tools](#Imagery Basemap Tools)
-* [Maritime Decision Aid Tools](#Maritime Decision Aid Tools)
-* [Network Data Preparation Tools](#Network Data Preparation Tools)
-* [Path Slope Tools](#Path Slope Tools)
-* [Scanned Map Basemap Tools](#Scanned Map Basemap Tools)
-* [Topographic Basemap Tools](#Topographic Basemap Tools)
+* [Build Elevation Mosaic Tools](#build elevation mosaic tools)
+* [Geonames Tools](#geonames tools)
+* [Imagery Basemap Tools](#imagery basemap tools)
+* [Maritime Decision Aid Tools](#maritime decision aid tools)
+* [Network Data Preparation Tools](#network data preparation tools)
+* [Path Slope Tools](#path slope tools)
+* [Scanned Map Basemap Tools](#scanned map basemap tools)
+* [Topographic Basemap Tools](#topographic basemap tools)
 * [Issues](#issues)
 * [Contributing](#contributing)
 * [Licensing](#licensing)
