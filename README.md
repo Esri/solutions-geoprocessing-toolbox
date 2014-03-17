@@ -43,8 +43,10 @@ Important Note: This is the 10.2 and later version of all of the tools from the 
   * Imagery Basemap Tools
   * Scanned Map Basemap Tools
   * Topographic Basemap Tools
-* The **emergencymanagement** folder contains:
+* The [**emergencymanagement**](./emegencymanagement/README.md) folder contains:
   * ERG Tools
+* The [**planning**](./planning/README.md) folder contains:
+
 
 ## Requirements
 
