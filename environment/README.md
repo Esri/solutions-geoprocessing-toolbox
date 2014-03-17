@@ -6,14 +6,14 @@
 
 ## Sections
 
-* [Build Elevation Mosaic Tools](#buildelevation)
-* [Geonames Tools](#geonames)
-* [Imagery Basemap Tools](#imagerybasemap)
-* [Maritime Decision Aid Tools](#maritimedecision)
-* [Network Data Preparation Tools](#networkpreparation)
-* [Path Slope Tools](#pathslope)
-* [Scanned Map Basemap Tools](#scannedmap)
-* [Topographic Basemap Tools](#topobasemap)
+* [Build Elevation Mosaic Tools](#Build Elevation Mosaic Tools)
+* [Geonames Tools](#Geonames Tools)
+* [Imagery Basemap Tools](#Imagery Basemap Tools)
+* [Maritime Decision Aid Tools](#Maritime Decision Aid Tools)
+* [Network Data Preparation Tools](#Network Data Preparation Tools)
+* [Path Slope Tools](#Path Slope Tools)
+* [Scanned Map Basemap Tools](#Scanned Map Basemap Tools)
+* [Topographic Basemap Tools](#Topographic Basemap Tools)
 * [Issues](#issues)
 * [Contributing](#contributing)
 * [Licensing](#licensing)
@@ -28,9 +28,9 @@ Included tools:
 * Build Elevation Mosaics
 
 Associated files:
-* Raster Functions\Aspect.rft.xml
-* Raster Functions\Hillshade.rft.xml
-* Raster Functions\PercentSlope.rft.xml
+* [toolboxes\Raster Functions\Aspect.rft.xml](./toolboxes/Raster Functions/Aspect.rft.xml)
+* [toolboxes\Raster Functions\Hillshade.rft.xml](./toolboxes/Raster Functions/Hillshade.rft.xml)
+* [toolboxes\Raster Functions\PercentSlope.rft.xml](./toolboxes/Raster Functions/PercentSlope.rft.xml)
 
 ## Geonames Tools
 The Geonames Tools toolbox contains two model tools, and two supporting script tools, for creating a geocoding locator for place names.
@@ -42,8 +42,8 @@ Included tools:
 * Model Script Tools\Load Geonames
 
 Associated files:
-* scripts\CheckInput.py
-* scripts\LoadGeonames.py
+* [toolboxes\scripts\CheckInput.py](./toolboxes/scripts/CheckInput.py)
+* [toolboxes\scripts\LoadGeonames.py](./toolboxes/scripts/LoadGeonames.py)
 
 ## Imagery Basemap Tools
 Contains model tools that help build mosaic datasets that support the construction of an Imagery Basemap.
@@ -60,7 +60,6 @@ Included tools:
 * Distance Of Horizon
 * Farthest On Circle
 
-
 ## Network Data Preparation Tools
 These tools are used to prepare road data for use in a road network dataset.
 
@@ -71,9 +70,9 @@ Included tools:
 * Split Lines At Intersections
 
 Associated files:
-* scripts\AddTravelTimeToRoads.py
-* scripts\LineFeatureAngle.py
-* .\data\geodatabases\NetworkPrepData.gdb\RoadTravelVelocity
+* [toolboxes\scripts\AddTravelTimeToRoads.py](./toolboxes/scripts/AddTravelTimeToRoads.py)
+* [toolboxes\scripts\LineFeatureAngle.py](./toolboxes/scripts/LineFeatureAngle.py)
+* \data\geodatabases\NetworkPrepData.gdb\RoadTravelVelocity
 
 ## Path Slope Tools
 Path Slope Tools is a terrain analysis toolset to determine slope changes along linear features (paths). For example finding percent slope along roadways or degree slope along trails.These can then be used to determine vehicle crossing limits or areas dangerous to hikers.
@@ -84,9 +83,9 @@ Included tools:
 * Path Slope By Reclass Values
 
 Associated files:
-* layers\PathSlope.lyr
-* layers\PathSlopeCustom.lyr
-* layers\PathSlopeReclass.lyr
+* [toolboxes\layers\PathSlope.lyr](./toolboxes/layers/PathSlope.lyr)
+* [toolboxes\layers\PathSlopeCustom.lyr](./toolboxes/layers/PathSlopeCustom.lyr)
+* [toolboxes\layers\PathSlopeReclass.lyr](./toolboxes/layers/PathSlopeReclass.lyr)
 
 ## Scanned Map Basemap Tools
 These tools are useful for creating mosaic datasets from CADRG/ECRG rasters. The mosaics can then be published as a Scanned Map basemap.

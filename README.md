@@ -34,7 +34,7 @@ Important Note: This is the 10.2 and later version of all of the tools from the 
   * Helicopter Landing Zone Tools
   * Incident Analysis Tools
   * VillageClearing
-* The **environment** folder contains:
+* The [environment](./environment/README.md) folder contains:
   * Build Elevation Mosiac Tools
   * Geonames Tools
   * Maritime Decision Aid Tools
