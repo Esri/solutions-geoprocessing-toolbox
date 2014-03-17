@@ -29,6 +29,11 @@ Important Note: This is the 10.2 and later version of all of the tools from the 
   * Publishable Task Tools
   * Range Card Tools
   * Visibility and Range Tools
+* The **analysis** folder contains:
+  * AdjustSampleDataDates
+  * Helicopter Landing Zone Tools
+  * Incident Analysis Tools
+  * VillageClearing
 * The **environment** folder contains:
   * Build Elevation Mosiac Tools
   * Geonames Tools
