@@ -72,7 +72,7 @@ Included tools:
 Associated files:
 * [toolboxes\scripts\AddTravelTimeToRoads.py](./toolboxes/scripts/AddTravelTimeToRoads.py)
 * [toolboxes\scripts\LineFeatureAngle.py](./toolboxes/scripts/LineFeatureAngle.py)
-* \data\geodatabases\NetworkPrepData.gdb\RoadTravelVelocity
+* data\geodatabases\NetworkPrepData.gdb\RoadTravelVelocity
 
 ## Path Slope Tools
 Path Slope Tools is a terrain analysis toolset to determine slope changes along linear features (paths). For example finding percent slope along roadways or degree slope along trails.These can then be used to determine vehicle crossing limits or areas dangerous to hikers.
