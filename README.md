@@ -23,18 +23,18 @@ Important Note: This is the 10.2 and later version of all of the tools from the 
   * Tools for analyzing the battlefield environment
   * Tools for position analysis
 * Specialized geoprocessing models and tools for emergency management
-* The **common** folder contains shared tools:
+* The [**common**](./common/README.md) folder contains shared tools:
   * Military Aspects of Terrain Toolbox
   * Position Analysis Tools
   * Publishable Task Tools
   * Range Card Tools
   * Visibility and Range Tools
-* The **analysis** folder contains:
+* The [**analysis**](./analysis/README.md) folder contains:
   * AdjustSampleDataDates
   * Helicopter Landing Zone Tools
   * Incident Analysis Tools
   * VillageClearing
-* The [environment](./environment/README.md) folder contains:
+* The [**environment**](./environment/README.md) folder contains:
   * Build Elevation Mosiac Tools
   * Geonames Tools
   * Maritime Decision Aid Tools
