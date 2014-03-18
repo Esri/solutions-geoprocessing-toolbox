@@ -4,8 +4,8 @@
 
   <!-- templatehome = defense-and-intel-analysis-toolbox -->
 
-  <target name="run_all_tests" 
-    depends="test_build_elevation,test_network_data_prep,test_path_slope">
+  <target name="run_all_tests"
+    depends="test_build_elevation,test_network_data_prep,test_path_slope,test_imagery_tools">
     <echo message="Running All Tests" />
   </target>
   
@@ -31,6 +31,12 @@
     <echo message="Running: test_geonames_tools" />
     <ant dir="./test_geonames_tools" target="run_all_tests" />
     <echo message="Done Test: test_geonames_tools" />
+  </target>
+  
+  <target name="test_imagery_tools">
+    <echo message="Running: test_imagery_tools" />
+    <ant dir="./test_imagery_tools" target="run_all_tests" />
+    <echo message="Done Test: test_imagery_tools" />
   </target>
   
 </project>
