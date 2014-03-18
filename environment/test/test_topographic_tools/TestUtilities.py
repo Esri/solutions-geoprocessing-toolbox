@@ -22,15 +22,15 @@ import os
 
 currentPath = os.path.dirname(__file__)
 print currentPath
-geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../data/Topographic/Elevation/"))
-sampleInputPath = os.path.normpath(os.path.join(currentPath, r"../../../data/Topographic/Elevation/Source"))
+geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../environment/data/Topographic/Elevation/"))
+sampleInputPath = os.path.normpath(os.path.join(currentPath, r"../../../environment/data/Topographic/Elevation/Source"))
 
 
 
-toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../toolboxes/")) 
+toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../environment/toolboxes/")) 
 print toolboxesPath               
 
 inputGDB  = os.path.join(geodatabasePath, "Elevation.gdb")
 
 
-toolbox = os.path.join(toolboxesPath, "TopographicBasemap.tbx")
+toolbox = os.path.join(toolboxesPath, "Topographic Basemap Tools.tbx")

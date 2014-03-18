@@ -45,4 +45,11 @@
     <echo message="Done Test: test_scanned_map_tools" />
   </target>
   
+  <target name="test_topographic_tools">
+    <echo message="Running: test_topographic_tools" />
+    <ant dir="./test_topographic_tools" target="run_all_tests" />
+    <echo message="Done Test: test_topographic_tools" />
+  </target>
+  
+  
 </project>
