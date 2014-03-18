@@ -33,7 +33,7 @@
     
     <!--Original toolbox data: 1ab069b8ed5749c083069289151fe127-->
     <echo message="Downloading common maps"/>
-    <get src="http://www.arcgis.com/sharing/content/items/1ab069b8ed5749c083069289151fe127/data"
+    <get src="http://www.arcgis.com/sharing/content/items/3cbdf5956c304d8b8c54d3f948f38af4/data"
       dest="${dir.zipdir}/defense-and-intel-analysis-toolbox-maps.zip" 
       verbose="true"
       usetimestamp="true"/>
@@ -43,7 +43,7 @@
     
     <!--Original toolbox maps: b818862d16b0425a85e66747874f3a16-->
     <echo message="Downloading common data" />
-    <get src="http://www.arcgis.com/sharing/content/items/b818862d16b0425a85e66747874f3a16/data"
+    <get src="http://www.arcgis.com/sharing/content/items/8e83d00841404fb48c38ef3a2e5ea3b7/data"
       dest="${dir.zipdir}/defense-and-intel-analysis-toolbox-data.zip" 
       verbose="true"
       usetimestamp="true"/>
@@ -51,9 +51,9 @@
     <unzip src="${dir.zipdir}/defense-and-intel-analysis-toolbox-data.zip"
          dest="${dir.commondir}"/>
 
-    <!--Publishable Tasks geodatabase: 92e0592d385e471d8216823f9844182e -->
+    <!--Publishable Tasks geodatabase: 921fc6d5f5e2444dab14831edc01ef9d -->
     <echo message="Downloading publishable tasks data" />
-    <get src="http://www.arcgis.com/sharing/content/items/92e0592d385e471d8216823f9844182e/data"
+    <get src="http://www.arcgis.com/sharing/content/items/921fc6d5f5e2444dab14831edc01ef9d/data"
       dest="${dir.zipdir}/PublishableTasksData.gdb.zip"
       usetimestamp="true"
       verbose="true"/>
@@ -68,7 +68,7 @@
     
     <!--Original toolbox maps: b818862d16b0425a85e66747874f3a16-->
     <echo message="Downloading environment data" />
-    <get src="http://www.arcgis.com/sharing/content/items/b818862d16b0425a85e66747874f3a16/data"
+    <get src="http://www.arcgis.com/sharing/content/items/8e83d00841404fb48c38ef3a2e5ea3b7/data"
       dest="${dir.zipdir}/defense-and-intel-analysis-toolbox-data.zip" 
       verbose="true"
       usetimestamp="true"/>
@@ -76,19 +76,9 @@
     <unzip src="${dir.zipdir}/defense-and-intel-analysis-toolbox-data.zip"
          dest="${dir.environmentdir}"/>
     
-    <!--Topographic test folder: 2b0858c4331e488eb3bba3ddd7d701a7 -->
-    <echo message="Downloading topograhic data" />
-    <get src="http://www.arcgis.com/sharing/content/items/2b0858c4331e488eb3bba3ddd7d701a7/data"
-    dest="${dir.zipdir}/Topographic.zip"
-    verbose="true"
-    usetimestamp="true"/>
-    <echo message="Unzipping topographic data" />
-    <unzip src="${dir.zipdir}/Topographic.zip"
-    dest="${dir.environmentdatadir}" />
-    
-    <!--NetworkPrepData.gdb: 8624572e651a418bbdef664d2e3020a2 -->
+    <!--NetworkPrepData.gdb: cf09da3684214d2b9b18c22149130fc4 -->
     <echo message="Downloading network prep data" />
-    <get src="http://www.arcgis.com/sharing/content/items/8624572e651a418bbdef664d2e3020a2/data"
+    <get src="http://www.arcgis.com/sharing/content/items/cf09da3684214d2b9b18c22149130fc4/data"
     dest="${dir.zipdir}/NetworkPrepData.gdb.zip"
     verbose="true"
     usetimestamp="true"/>

@@ -5,7 +5,7 @@
   <!-- templatehome = defense-and-intel-analysis-toolbox -->
 
   <target name="run_all_tests"
-    depends="test_build_elevation,test_network_data_prep,test_path_slope,test_imagery_tools">
+    depends="test_build_elevation,test_network_data_prep,test_path_slope,test_imagery_tools,test_topographic_tools">
     <echo message="Running All Tests" />
   </target>
   
