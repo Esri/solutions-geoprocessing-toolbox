@@ -96,10 +96,10 @@
     <unzip src="${dir.zipdir}/NetworkPrepData.gdb.zip"
     dest="${dir.environmentdatadir}/geodatabases" />
     
-    <!-- Geonames: 
-    https://afmcomstaging.esri.com/arcgis/sharing/content/items/d3acf544959f4df68fb0f19aaa3118a6/data-->
+    <!-- Geonames: -->
+    <!-- http://www.arcgis.com/home/item.html?id=afc766d5276648ab80aa85b819af1ffc -->
     <echo message="Downloading geonames data" />
-    <get src="http://afmcomstaging.esri.com/arcgis/sharing/content/items/d3acf544959f4df68fb0f19aaa3118a6/data"
+    <get src="http://www.arcgis.com/sharing/content/items/afc766d5276648ab80aa85b819af1ffc/data"
     dest="${dir.zipdir}/Geonames.zip"
     verbose="true"
     usetimestamp="true"/>
@@ -107,6 +107,15 @@
     <unzip src="${dir.zipdir}/Geonames.zip"
     dest="${dir.environmentdatadir}" />
     
+    <!-- Imagery Basemap: -->
+    <!-- http://www.arcgis.com/home/item.html?id=c3c1baa1e65e437a9d04b7c9b9b9d699 -->
+    
+    <!-- Scanned Map Basemap: -->
+    <!-- -->
+    
+    <!-- Topographic Basemap: -->
+    <!-- -->
+        
   </target>
   
   <target name="get_data_operations_only">
