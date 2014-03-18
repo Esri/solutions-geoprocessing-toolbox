@@ -119,7 +119,15 @@
     dest="${dir.environmentdatadir}" />
     
     <!-- Scanned Map Basemap: -->
-    <!-- -->
+    <!-- http://www.arcgis.com/home/item.html?id=706e92ad67c34cae8ae95c0fde097a6c -->
+    <echo message="Downloading scanned map basemap data" />
+    <get src="http://www.arcgis.com/sharing/content/items/706e92ad67c34cae8ae95c0fde097a6c/data"
+    dest="${dir.zipdir}/ScannedMaps.zip"
+    verbose="true"
+    usetimestamp="true"/>
+    <echo message="Unzipping Scanned Map Basemap data" />
+    <unzip src="${dir.zipdir}/ScannedMaps.zip"
+    dest="${dir.environmentdatadir}" />
     
     <!-- Topographic Basemap: -->
     <!-- -->

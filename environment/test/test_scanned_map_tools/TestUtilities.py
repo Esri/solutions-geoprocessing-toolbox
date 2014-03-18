@@ -21,12 +21,12 @@ import os
 
 currentPath = os.path.dirname(__file__)
 print currentPath
-geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../data/ScannedMaps/Sample/"))
-sampleInputPath = os.path.normpath(os.path.join(currentPath, r"../../../data/ScannedMaps/Sample/SourceData/RPF"))
+geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../environment/data/ScannedMaps/Sample/"))
+sampleInputPath = os.path.normpath(os.path.join(currentPath, r"../../../environment/data/ScannedMaps/Sample/SourceData/RPF"))
 
-toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../toolboxes/")) 
+toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../environment/toolboxes/")) 
 print toolboxesPath               
 
 inputGDB  = os.path.join(geodatabasePath, "ScannedMaps.gdb")
 
-toolbox = os.path.join(toolboxesPath, "ScannedMapsTools.tbx")
+toolbox = os.path.join(toolboxesPath, "Scanned Map Basemap Tools.tbx")
