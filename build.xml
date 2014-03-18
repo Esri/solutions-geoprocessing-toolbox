@@ -130,7 +130,15 @@
     dest="${dir.environmentdatadir}" />
     
     <!-- Topographic Basemap: -->
-    <!-- -->
+    <!-- http://www.arcgis.com/home/item.html?id=8e682b02ca02482d8caaebae05cbdc1a -->
+    <echo message="Downloading topographic basemap data" />
+    <get src="http://www.arcgis.com/sharing/content/items/8e682b02ca02482d8caaebae05cbdc1a/data"
+    dest="${dir.zipdir}/Topographic.zip"
+    verbose="true"
+    usetimestamp="true"/>
+    <echo message="Unzipping Topographic Basemap data" />
+    <unzip src="${dir.zipdir}/Topographic.zip"
+    dest="${dir.environmentdatadir}" />
         
   </target>
   
