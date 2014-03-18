@@ -109,6 +109,14 @@
     
     <!-- Imagery Basemap: -->
     <!-- http://www.arcgis.com/home/item.html?id=c3c1baa1e65e437a9d04b7c9b9b9d699 -->
+    <echo message="Downloading imagery basemap data" />
+    <get src="http://www.arcgis.com/sharing/content/items/c3c1baa1e65e437a9d04b7c9b9b9d699/data"
+    dest="${dir.zipdir}/Imagery.zip"
+    verbose="true"
+    usetimestamp="true"/>
+    <echo message="Unzipping Imagery Basemap data" />
+    <unzip src="${dir.zipdir}/Imagery.zip"
+    dest="${dir.environmentdatadir}" />
     
     <!-- Scanned Map Basemap: -->
     <!-- -->

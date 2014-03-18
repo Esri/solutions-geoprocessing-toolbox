@@ -2,7 +2,7 @@
 
 <project name="TestImageryTools" basedir="." default="run_all_tests">
 
-  <!-- templatehome = defense-and-intel-mapping-toolbox/source/test -->
+  <!-- templatehome = solutions-geoprocessing-toolbox/environment/test/test_imagery_tools -->
 <import file="../versions.xml"/>
 
   <property name="dir.src" value="."/>

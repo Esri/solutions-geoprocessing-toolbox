@@ -23,12 +23,12 @@ import os
 
 currentPath = os.path.dirname(__file__)
 print currentPath
-geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../data/Imagery/Sample/"))
-sampleInputPath = os.path.normpath(os.path.join(currentPath, r"../../../data/Imagery/Sample/SourceData/RPF"))
+geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../environment/data/Imagery/Sample/"))
+sampleInputPath = os.path.normpath(os.path.join(currentPath, r"../../../environment/data/Imagery/Sample/SourceData/RPF"))
 
 
 
-toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../toolboxes/")) 
+toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../environment/toolboxes/")) 
 print toolboxesPath               
 
 inputGDB  = os.path.join(geodatabasePath, "Imagery.gdb")
@@ -37,7 +37,7 @@ inputGDB  = os.path.join(geodatabasePath, "Imagery.gdb")
 #defaultGDB = os.path.join(geodatabasePath, "default.gdb")
 
 
-toolbox = os.path.join(toolboxesPath, "ImageryTools.tbx")
+toolbox = os.path.join(toolboxesPath, "Imagery Basemap Tools.tbx")
 
 # def createScratch() :
 #     try :
