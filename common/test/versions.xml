@@ -25,12 +25,12 @@
 
 <!-- Set to the values for the current version/release (ex. 10.2): -->
 
-<property name="version.ags_current_version" value="10.2"/>
+<property name="version.ags_current_version" value="10.3"/>
 <property name="dir.arcpy_current_version" value="${default_python_location}\ArcGIS${version.ags_current_version}"/>
 
 <!-- Set to the values for the previous version/release (ex. 10.1): -->
 
-<property name="version.ags_previous_version" value="10.1"/>
+<property name="version.ags_previous_version" value="10.2"/>
 <property name="dir.arcpy_previous_version" value="${default_python_location}\ArcGIS${version.ags_previous_version}"/>
 
 <target name="checkCurrentVersion">
