@@ -99,7 +99,7 @@ class ERGByChemical(object):
             parameterType="Required",
             direction="Output")
         
-        param5.value = arcpy.CreateScratchName("ERGAreas", "", "FeatureClass", arcpy.env.scratchGDB)
+        param5.value = arcpy.CreateScratchName("ERGByChemicalAreas", "", "FeatureClass", arcpy.env.scratchGDB)
 
         # Define the schema
         templateLoc = os.path.join(thisFolder, r"tooldata\Templates.gdb")
@@ -122,7 +122,7 @@ class ERGByChemical(object):
             parameterType="Required",
             direction="Output")
 
-        param6.value = arcpy.CreateScratchName("ERGLines", "", "FeatureClass", arcpy.env.scratchGDB)
+        param6.value = arcpy.CreateScratchName("ERGByChemicalLines", "", "FeatureClass", arcpy.env.scratchGDB)
 
         # Define the schema
         d2 = arcpy.Describe(templateLoc + "\\ERGLines")
@@ -267,7 +267,7 @@ class ERGByPlacard(object):
             parameterType="Required",
             direction="Output")
         
-        param5.value = arcpy.CreateScratchName("ERGAreas", "", "FeatureClass", arcpy.env.scratchGDB)
+        param5.value = arcpy.CreateScratchName("ERGByPlacardAreas", "", "FeatureClass", arcpy.env.scratchGDB)
 
         # Define the schema
         templateLoc = os.path.join(thisFolder, r"tooldata\Templates.gdb")
@@ -290,7 +290,7 @@ class ERGByPlacard(object):
             parameterType="Required",
             direction="Output")
 
-        param6.value = arcpy.CreateScratchName("ERGLines", "", "FeatureClass", arcpy.env.scratchGDB)
+        param6.value = arcpy.CreateScratchName("ERGByPlacardLines", "", "FeatureClass", arcpy.env.scratchGDB)
 
         # Define the schema
         d2 = arcpy.Describe(templateLoc + "\\ERGLines")
