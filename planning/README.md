@@ -6,7 +6,7 @@
 
 ## Sections
 
-*[Build Elevation Mosaic Tools](#patrol-data-capture)
+*[Patrol Data Capture Tools](#patrol-data-capture)
 *[Issues](#issues)
 *[Contributing](#contributing)
 *[Licensing](#licensing)
