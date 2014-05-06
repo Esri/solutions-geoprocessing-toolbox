@@ -6,10 +6,10 @@
 
 ## Sections
 
-*[Patrol Data Capture Tools](#patrol-data-capture)
-*[Issues](#issues)
-*[Contributing](#contributing)
-*[Licensing](#licensing)
+* [Patrol Data Capture Tools](#patrol-data-capture)
+* [Issues](#issues)
+* [Contributing](#contributing)
+* [Licensing](#licensing)
 
 ## Patrol Data Capture
 This toolbox contains the model for processing GPS data into ArcGIS to create patrol tracks on a map. Most GPS navigation devices allow you to export a .gpx file that can be used in ArcGIS. 
