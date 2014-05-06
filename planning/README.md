@@ -6,10 +6,20 @@
 
 ## Sections
 
+* [Patrol Data Capture Tools](#patrol-data-capture)
 * [Issues](#issues)
 * [Contributing](#contributing)
 * [Licensing](#licensing)
 
+## Patrol Data Capture
+This toolbox contains the model for processing GPS data into ArcGIS to create patrol tracks on a map. Most GPS navigation devices allow you to export a .gpx file that can be used in ArcGIS. 
+
+These tools help you:
+* Importing the .gpx data 
+* Removing spikes (removing errors, for example, points the GPS created when connection to satellite was temporarily lost). Also known as de-spiking the data 
+* Making sure each track is distinguished from other tracks (has not merged into a previous or subsequent track) 
+* Creating the track lines in a layer by appending them to the layer 
+* Rejoining tracks
 
 ## Issues
 
