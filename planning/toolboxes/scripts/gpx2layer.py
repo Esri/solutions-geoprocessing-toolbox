@@ -1,41 +1,32 @@
-#--------ESRI 2010-------------------------------------
+#-------------------------------------------------------------------------------
+# Copyright 2010-2013 Esri
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#-------------------------------------------------------------------------------
+# gpx2layer
 # GPX (from XML) to layer
-# This script will take a GPX file as
-# input and convert it to a featureclass
-# INPUTS: 
-#    GPX file (FILE)
-# OUTPUTS:
-#    Output Featureclass (FEATURECLASS)
-#    Line Featureclass  (FEATURECLASS) - Optional
-# 
-# Date: May 5, 2010
-# Modified: June 10, 2010
-#------------------------------------------------------
+# This script will take a GPX file as input and convert it to a featureclass
+# INPUTS:  {GPX file (FILE)}
+#          {Output Point Feature Class (FEATURECLASS)}
+#          {Output Line Feature Class? (BOOLEAN)} - Optional
+# OUTPUTS: Output Point Featureclass (FEATURECLASS)
+#          Output Line Featureclass  (FEATURECLASS_line) - Optional 
+#-------------------------------------------------------------------------------
 
 from xml.etree import ElementTree
 from datetime import datetime
 import arcpy, string
 import re
 import sys, os
-
-#Set the workspace environments relative to the script location
-scriptPath = sys.path[0]
-toolSharePath = os.path.dirname(scriptPath)
-currentworkspace = os.path.join(toolSharePath, r"..\Data\Data.gdb")
-scratchworkspace = os.path.join(toolSharePath, r"..\Data\Scratch.gdb")
-try:
-    if not(arcpy.Exists(currentworkspace)):
-        arcpy.CreateFileGDB_management(currentworkspace)
-except Exception, ErrorDesc:
-    arcpy.AddError("Current workspace does not exist and it was not possible to create it\n" + str(ErrorDesc))
-try:
-    if not(arcpy.Exists(scratchworkspace)):
-        arcpy.CreateFileGDB_management(scratchworkspace)
-except Exception, ErrorDesc:
-    arcpy.AddError("Scratch workspace does not exist and it was not possible to create it\n" + str(ErrorDesc))
-
-arcpy.env.workspace = currentworkspace
-arcpy.env.scratchworkspace = scratchworkspace
 
 def trkpt2dict(gpxfile):
     #Generator : for each trkpt return point + all other attributes as a dictionary
@@ -98,14 +89,14 @@ if __name__ == "__main__":
     gpxfile = arcpy.GetParameterAsText(0)        
     outFC = arcpy.GetParameterAsText(1)
     
+    #TODO: use Describe to get workspace
     outPath = outFC[0:outFC.rfind("\\")]
-    outName = outFC[outFC.rfind("\\")+1:len(outFC)]
-   
+    outName = outFC[outFC.rfind("\\")+1:len(outFC)]   
       
     try:       
        
         #Create the FC, add appropriate fields
-        arcpy.CreateFeatureclass_management(outPath, outName, "POINT", "", "", "ENABLED",4326)
+        arcpy.CreateFeatureclass_management(outPath, outName, "POINT", "", "", "ENABLED", 4326)
         arcpy.AddField_management(outFC, "Date_Time", "DATE")
         arcpy.AddField_management(outFC, "Elevation", "DOUBLE")
         #arcpy.AddField_management(outFC, "hr", "TEXT")   #This is an extension field
@@ -113,8 +104,7 @@ if __name__ == "__main__":
                       
     except Exception, ErrorDesc:
         arcpy.AddError(str(ErrorDesc))
-        
-    
+            
     arcpy.env.workspace = outPath
         
     rows = arcpy.InsertCursor(outFC)
@@ -134,8 +124,7 @@ if __name__ == "__main__":
         
         if (recComplete % 2000) == 0:            
             arcpy.AddMessage("Processed " + str(recComplete) + " records.")
-        
-   
+           
     #If "Point to Line" is required, create second output of line featureclass
     if arcpy.GetParameter(2) == 1:
         arcpy.PointsToLine_management(outFC, outFC + "_line")                                
