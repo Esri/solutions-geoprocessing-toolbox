@@ -45,7 +45,7 @@ def Geo2Arithmetic(inAngle):
 argCount = arcpy.GetArgumentCount()
 
 inFeature = arcpy.GetParameterAsText(0)
-range = float(arcpy.GetParameterAsText(1)) #1000.0 # meters
+dRange = float(arcpy.GetParameterAsText(1)) #1000.0 # meters
 bearing = float(arcpy.GetParameterAsText(2)) #45.0 # degrees
 traversal = float(arcpy.GetParameterAsText(3)) #60.0 # degrees
 outFeature = arcpy.GetParameterAsText(4)
@@ -110,8 +110,8 @@ try:
             print "Left Angle, Right Angle"
             print leftAngle,rightAngle
             for d in xrange(int(leftAngle),int(rightAngle),step):
-                x = centerPointX + (range * math.cos(math.radians(d)))
-                y = centerPointY + (range * math.sin(math.radians(d)))
+                x = centerPointX + (dRange * math.cos(math.radians(d)))
+                y = centerPointY + (dRange * math.sin(math.radians(d)))
                 path.append([x,y])
             path.append([centerPointX,centerPointY]) # add last point
             paths.append(path)
@@ -133,7 +133,7 @@ try:
                 del pnt
             feat = cur.newRow()
             feat.shape = lineArray
-            feat.Range = range
+            feat.Range = dRange
             feat.Bearing = initialBearing
             cur.insertRow(feat)
             del lineArray
@@ -142,7 +142,7 @@ try:
         
     else:
         if debug == True: arcpy.AddMessage("Traversal is 360 degrees, buffering instead ...")
-        distance = str(range) + " Meters"
+        distance = str(dRange) + " Meters"
         arcpy.Buffer_analysis(prjInFeature,outFeature,distance)
     
     
