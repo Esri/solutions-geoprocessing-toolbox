@@ -107,9 +107,12 @@ try:
             centerPointY = centerPoint[1]
             path.append([centerPointX,centerPointY]) # add first point
             step = 1 # step in degrees
-            print "Left Angle, Right Angle"
-            print leftAngle,rightAngle
-            for d in xrange(int(leftAngle),int(rightAngle),step):
+            #print "Left Angle, Right Angle" #UPDATE
+            print("Left Angle, Right Angle")
+            #print leftAngle,rightAngle #UPDATE
+            print(leftAngle,rightAngle)
+            #for d in xrange(int(leftAngle),int(rightAngle),step): #UPDATE
+            for d in range(int(leftAngle),int(rightAngle),step):    
                 x = centerPointX + (dRange * math.cos(math.radians(d)))
                 y = centerPointY + (dRange * math.sin(math.radians(d)))
                 path.append([x,y])
@@ -154,7 +157,8 @@ except arcpy.ExecuteError:
     # Get the tool error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print msgs
+    #print msgs #UPDATE
+    print(msgs)
 
 except:
     # Get the traceback object
@@ -170,8 +174,10 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    #print pymsg + "\n" #UPDATE
+    print(pymsg + "\n")
+    #print msgs #UPDATE
+    print(msgs)
 
 finally:
     # cleanup intermediate datasets
