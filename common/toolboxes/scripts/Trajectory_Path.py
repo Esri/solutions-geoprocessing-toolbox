@@ -165,7 +165,8 @@ try:
     
     # go through each observer and build a trajectory path
     # TODO: check for analysis type. For first release this is under IDEAL conditions
-    for obsOID in observersWebMerc.keys():
+    #for obsOID in observersWebMerc.keys(): #UPDATE
+    for obsOID in list(observersWebMerc.keys()):
         if debug == True: arcpy.AddMessage("Starting observer OID: " + str(obsOID))
         path = []
         pathArray = arcpy.Array() # this is giong to be the array storing the points that become each path polyline
@@ -209,7 +210,8 @@ try:
         
         if (stepRange > 0):
             if debug == True: arcpy.AddMessage("Normal range")
-            for d in xrange(0,stepRange,step):
+            ##for d in xrange(0,stepRange,step): UPDATE
+            for d in range(0,stepRange,step):
                 h = SurfaceRange(d)
                 if debug == True: arcpy.AddMessage("d,h: " + str(d) + "," + str(h))
                 t = TimeToRange(h)
@@ -302,7 +304,8 @@ except arcpy.ExecuteError:
     # Get the tool error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print msgs
+    #print msgs #UPDATE
+    print(msgs)
 
 except:
     # Get the traceback object
@@ -318,8 +321,10 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    #print pymsg + "\n" #UPDATE
+    print(pymsg + "\n")
+    #print msgs #UPDATE
+    print(msgs)
     
    
 

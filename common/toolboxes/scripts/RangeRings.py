@@ -146,7 +146,7 @@ try:
         
         # build ellipses
         arcpy.AddMessage("Constructing " + str(results) + " radial features ...")
-        arcpy.BearingDistanceToLine_management(tempRadialTable,outputRadials,"POINT_X","POINT_Y","Range",distanceUnits,"Azimuth",bearingUnits,"RHUMB_LINE","RingID",inputCentersSR)
+        arcpy.BearingDistanceToLine_management(tempRadialTable,outputRadials,"POINT_X","POINT_Y","Range",distanceUnits,"Azimuth",bearingUnits,"GEODESIC","RingID",inputCentersSR)
         
         # Join fields
         tempRadialTableOIDFieldName = arcpy.Describe(tempRadialTable).OIDFieldName
@@ -175,7 +175,8 @@ except arcpy.ExecuteError:
     # Get the tool error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print msgs
+    #print msgs #UPDATE
+    print(msgs)
 
 except:
     # Get the traceback object
@@ -192,7 +193,9 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    #print pymsg + "\n" #UPDATE
+    print(pymsg + "\n")
+    #print msgs #UPDATE
+    print(msgs)
     
     

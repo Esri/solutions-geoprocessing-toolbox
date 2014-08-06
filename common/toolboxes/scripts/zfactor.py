@@ -68,9 +68,12 @@ try:
     arcpy.AddMessage(r"Z-factor: " + (str(zfactor)))
 
 except:
-    print "General Error:"
+    #print "General Error:"
+    print("General Error:") #UPDATE
     tb = sys.exc_info()[2]
     tbinfo = traceback.format_tb(tb)[0]
-    pymsg = tbinfo + "\n" + str(sys.exc_type)+ ": " + str(sys.exc_value)
+    #pymsg = tbinfo + "\n" + str(sys.exc_type)+ ": " + str(sys.exc_value) #UPDATE
+    pymsg = tbinfo + "\n" + str(sys.exc_info()[0])+ ": " + str(sys.exc_info()[1])
     arcpy.AddError(pymsg)
-    print pymsg
+    #print pymsg #UPDATE
+    print(pymsg)

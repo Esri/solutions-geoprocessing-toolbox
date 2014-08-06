@@ -11,22 +11,27 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#------------------------------------------------------------------------------
+# ==================================================
 # AddUniqueRowID.py
-# Description: Create Unique Id
-# Requirements: ArcGIS Desktop Standard
-# -----------------------------------------------------------------------------
-
+# --------------------------------------------------
+# Built for ArcGIS 10.1
+# --------------------------------------------------
 # Adds a new field of unique row numbers to a table
+# ==================================================
 
+# IMPORTS ==========================================
 import os, sys, traceback
 import arcpy
+from arcpy import da
 
+# ARGUMENTS ========================================
 dataset = arcpy.GetParameterAsText(0)
 fieldName = arcpy.GetParameterAsText(1)
 
+# LOCALS ===========================================
 counter = 1
 
+# ==================================================
 try:
     
     # add unique ID field
@@ -34,13 +39,13 @@ try:
     arcpy.AddField_management(dataset,fieldName,"LONG")
 
     # add unique numbers to each row
+    fields = [str(fieldName)]
     arcpy.AddMessage("Adding unique row IDs")
-    rows = arcpy.UpdateCursor(dataset)
+    rows = arcpy.da.UpdateCursor(dataset,fields)
     for row in rows:
-        row.setValue(fieldName,counter)
+        row[0] = counter
         rows.updateRow(row)
         counter += 1
-    del row
     del rows
     
     # set output
@@ -52,7 +57,8 @@ except arcpy.ExecuteError:
     # Get the tool error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print msgs
+    #print msgs #UPDATE
+    print(msgs)
 
 except:
     # Get the traceback object
@@ -69,5 +75,7 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    #print pymsg + "\n" #UPDATE
+    print(pymsg + "\n")
+    #print msgs #UPDATE
+    print(msgs)
