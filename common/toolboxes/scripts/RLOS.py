@@ -1,18 +1,3 @@
-#------------------------------------------------------------------------------
-# Copyright 2013 Esri
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#------------------------------------------------------------------------------
-
 import os, sys, traceback, math, decimal
 import arcpy
 from arcpy import env
@@ -251,11 +236,14 @@ try:
     delete_me.append(ras_poly)
     
     # clip output polys to buffer
-    out_buf = os.path.join(env.scratchWorkspace,"out_buf")
-    arcpy.Buffer_analysis(obs_prj,out_buf,"RADIUS2")
-    delete_me.append(out_buf)
-    arcpy.Clip_analysis(ras_poly,out_buf,output_rlos)
-        
+    if RADIUS2_to_infinity != True: 
+        out_buf = os.path.join(env.scratchWorkspace,"out_buf")
+        arcpy.Buffer_analysis(obs_prj,out_buf,"RADIUS2")
+        delete_me.append(out_buf)
+        arcpy.Clip_analysis(ras_poly,out_buf,output_rlos)
+    else:
+        arcpy.CopyFeatures_management(ras_poly, output_rlos)
+
     
     # set output
     arcpy.SetParameter(2,output_rlos)
@@ -272,8 +260,7 @@ except arcpy.ExecuteError:
     # Get the tool error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    #print msgs #UPDATE
-    print(msgs)
+    print msgs
 
 except:
     # Get the traceback object
@@ -290,9 +277,7 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    #print pymsg + "\n" #UPDATE
-    print(pymsg + "\n")
-    #print msgs #UPDATE
-    print(msgs)
+    print pymsg + "\n"
+    print msgs
 
 

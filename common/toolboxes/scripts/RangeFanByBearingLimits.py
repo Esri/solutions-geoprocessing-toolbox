@@ -1,21 +1,10 @@
-#------------------------------------------------------------------------------
-# Copyright 2013 Esri
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#------------------------------------------------------------------------------
+
+# ==================================================
 # RangeFanByBearingLimits.py
-# Description: Common objects/methods used by test scripts
-# Requirements: ArcGIS Desktop Standard
-# -----------------------------------------------------------------------------
+# --------------------------------------------------
+# Built for ArcGIS 10.1
+# ==================================================
+
 
 # IMPORTS ==========================================
 import os, sys, math, traceback
@@ -24,10 +13,15 @@ from arcpy import env
 
 # ARGUMENTS & LOCALS ===============================
 inFeature = arcpy.GetParameterAsText(0)
-maxRange = float(arcpy.GetParameterAsText(1)) #1000.0 # meters
-leftBearing = float(arcpy.GetParameterAsText(2)) #75.0 # degrees
-rightBearing = float(arcpy.GetParameterAsText(3)) #270.0 # degrees
-outFeature = arcpy.GetParameterAsText(4)
+weaponTable = arcpy.GetParameterAsText(1)
+weaponField = arcpy.GetParameterAsText(2)
+weaponModel = arcpy.GetParameterAsText(3)
+maxRangeField = arcpy.GetParameterAsText(4)
+maxRange = float(arcpy.GetParameterAsText(5)) #1000.0 # meters
+leftBearing = float(arcpy.GetParameterAsText(6)) #75.0 # degrees
+rightBearing = float(arcpy.GetParameterAsText(7)) #270.0 # degrees
+outFeature = arcpy.GetParameterAsText(8)
+
 deleteme = []
 debug = True
 leftAngle = 0.0 # degrees
@@ -63,8 +57,16 @@ try:
     if debug == True: arcpy.AddMessage("START ....")
     currentOverwriteOutput = env.overwriteOutput
     env.overwriteOutput = True
-    GCS_WGS_1984 = arcpy.SpatialReference(r"WGS 1984")
-    webMercator = arcpy.SpatialReference(r"WGS 1984 Web Mercator (Auxiliary Sphere)")
+    sr = arcpy.SpatialReference()
+    sr.factoryCode = 4326
+    sr.create()
+    GCS_WGS_1984 = sr
+    #GCS_WGS_1984 = arcpy.SpatialReference(r"WGS 1984")
+    wbsr = arcpy.SpatialReference()
+    wbsr.factoryCode = 3857
+    wbsr.create()
+    webMercator = wbsr
+    #webMercator = arcpy.SpatialReference(r"WGS 1984 Web Mercator (Auxiliary Sphere)")    
     env.overwriteOutput = True
     scratch = env.scratchWorkspace
     #scratch = r"C:\Users\matt2542\Documents\ArcGIS\Default.gdb"
@@ -156,6 +158,7 @@ try:
     arcpy.AddField_management(tempFans,"Traversal","DOUBLE","#","#","#","Traversal (degrees)")
     arcpy.AddField_management(tempFans,"LeftAz","DOUBLE","#","#","#","Left Bearing (degrees)")
     arcpy.AddField_management(tempFans,"RightAz","DOUBLE","#","#","#","Right Bearing (degrees)")
+    arcpy.AddField_management(tempFans,"Model","TEXT","#","#","#","Weapon Model")
     deleteme.append(tempFans)
     
     # take the points and add them into the output fc
@@ -176,6 +179,7 @@ try:
         feat.Traversal = traversal
         feat.LeftAz = leftBearing
         feat.RightAz = rightBearing
+        feat.Model = str(weaponModel)
         cur.insertRow(feat)
         del lineArray
         del feat
@@ -184,7 +188,7 @@ try:
     arcpy.AddMessage("Projecting Range Fans back to " + str(srInputPoints.name))
     arcpy.Project_management(tempFans,outFeature,srInputPoints)
     
-    arcpy.SetParameter(4,outFeature)
+    arcpy.SetParameter(8,outFeature)
 
 except arcpy.ExecuteError: 
     # Get the tool error messages 
