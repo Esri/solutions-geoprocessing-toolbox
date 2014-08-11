@@ -18,11 +18,11 @@ import arcpy
 from arcpy import env
 from arcpy import sa
 
-observers = arcpy.GetParameterAsText(0)
-input_surface = arcpy.GetParameterAsText(1)
-output_rlos = arcpy.GetParameterAsText(2)
-RADIUS2_to_infinity = arcpy.GetParameterAsText(3)
-GCS_WGS_1984 = arcpy.GetParameterAsText(4)
+observers = r"C:\Demos\Sprints\2 April 2012\Visibility and Range Template\Maps\default.gdb\templateRLOSObserver"# arcpy.GetParameterAsText(0)
+input_surface = r"C:\Demos\Sprints\2 April 2012\Visibility and Range Template\Maps\default.gdb\Jbad_SRTM_USGS_EROS"# arcpy.GetParameterAsText(1)
+output_rlos = r"C:\Demos\Sprints\2 April 2012\Visibility and Range Template\Maps\Toolboxes\scratch\scratch.gdb\RLOS"# arcpy.GetParameterAsText(2)
+RADIUS2_to_infinity = 'false'# arcpy.GetParameterAsText(3)
+envscratchworkspace = r"C:\Demos\Sprints\2 April 2012\Visibility and Range Template\Maps\Toolboxes\scratch\scratch.gdb"
 
 if RADIUS2_to_infinity == 'true':
     arcpy.AddMessage("RLOS to infinity will use horizon for calculation.")
@@ -40,26 +40,17 @@ def maxVizModifiers(obs):
     maxVizMods = {}
     radius2Max = 0.0
     offsetMax = 0.0
-    spotMax = None
-    removeSPOT = False
-    isSPOTPresent = False
-    fieldList = arcpy.ListFields(obs)
-    # check if SPOT is in the fields
-    for f in fieldList:
-        if f.name == "SPOT":
-            isSPOTPresent = True
+    spotMax = 0.0
+    removeSPOT = False  
     rows = arcpy.SearchCursor(obs)
-    # find largest RADIUS2 and OFFSETA
     for row in rows:
         if (row.RADIUS2 > radius2Max): radius2Max = row.RADIUS2
         if (row.OFFSETA > offsetMax): offsetMax = row.OFFSETA
-        if isSPOTPresent == True: # if the SPOT field is present, continue
-            spotValue = row.SPOT  # get the SPOT value
-            if spotValue != None: # if the SPOT value is not None/Null
-                if (row.SPOT > spotMax): # if the SPOT value is greater than the previous large SPOT value
-                    spotMax = row.SPOT
-            else:
-                removeSPOT = True # if any of the SPOT values are None, remove the field
+        spot = row.SPOT
+        if str(spot) == "None":
+            removeSPOT = True
+        else:
+            if (row.SPOT > spotMax): spotMax = row.SPOT
     del row
     del rows
     maxVizMods = {'SPOT':spotMax,'OFFSETA':offsetMax, 'RADIUS2':radius2Max, 'REMOVE_SPOT':removeSPOT}
@@ -110,10 +101,13 @@ def zfactor(dataset):
 try:
     
     # get/set initial environment
+    currentOverwriteOutput = env.overwriteOutput
     env.overwriteOutput = True
+    # check out spatial analyst license
+    arcpy.CheckOutExtension("Spatial")
     installInfo = arcpy.GetInstallInfo("desktop")
     installDirectory = installInfo["InstallDir"]
-    #GCS_WGS_1984 = r"C:\Demos\Sprints\2 April 2012\Visibility and Range Template\Maps\Toolboxes\WGS 1984.prj" # os.path.join(installDirectory,r"Coordinate Systems", r"Geographic Coordinate Systems", r"World",r"WGS 1984.prj")  
+    GCS_WGS_1984 = os.path.join(installDirectory,r"Coordinate Systems", r"Geographic Coordinate Systems", r"World",r"WGS 1984.prj")  
     
     # get observer's vibility modifier maximums
     obsMaximums = maxVizModifiers(observers)
@@ -123,14 +117,14 @@ try:
         arcpy.DeleteField_management(observers,"SPOT")
     
     # Do a Minimum Bounding Geometry (MBG) on the input observers
-    observers_mbg = os.path.join(env.scratchWorkspace,"observers_mbg")
+    observers_mbg = os.path.join(envscratchworkspace,"observers_mbg")#(envscratchworkspace,"observers_mbg")
     delete_me.append(observers_mbg)
     arcpy.AddMessage("Finding observer's minimum bounding envelope ...")
     arcpy.MinimumBoundingGeometry_management(observers,observers_mbg,"RECTANGLE_BY_AREA") # ENVELOPE would be better but would make it ArcInfo-only.
     
     # Now find the center of the (MBG)
     arcpy.AddMessage("Finding center of observers ...")
-    mbgCenterPoint = os.path.join(env.scratchWorkspace,"mbgCenterPoint")
+    mbgCenterPoint = os.path.join(envscratchworkspace,"mbgCenterPoint")#(envscratchworkspace,"mbgCenterPoint")
     mbgExtent = arcpy.Describe(observers_mbg).extent
     mbgSR = arcpy.Describe(observers_mbg).spatialReference
     mbgCenterX = mbgExtent.XMin + (mbgExtent.XMax - mbgExtent.XMin)
@@ -168,7 +162,7 @@ try:
     # reset center of AZED using Lat/Lon of MBG center point
     # Project point to WGS 84
     arcpy.AddMessage("Recentering Azimuthal Equidistant to centroid ...")
-    mbgCenterWGS84 = os.path.join(env.scratchWorkspace,"mbgCenterWGS84")
+    mbgCenterWGS84 = os.path.join(envscratchworkspace,"mbgCenterWGS84")#(envscratchworkspace,"mbgCenterWGS84")
     arcpy.Project_management(mbgCenterPoint,mbgCenterWGS84,GCS_WGS_1984)
     arcpy.AddXY_management(mbgCenterWGS84)
     pointx = 0.0
@@ -188,13 +182,13 @@ try:
     
     # Clip the input surface to the maximum visibilty range and extract it to a 1000 x 1000 raster
     # if going to infinity then clip to horizion extent
-    surf_extract = os.path.join(env.scratchWorkspace,"surf_extract")
+    surf_extract = os.path.join(envscratchworkspace,"surf_extract")#(envscratchworkspace,"surf_extract")
     if RADIUS2_to_infinity == True:
-        mbgBuffer = os.path.join(env.scratchWorkspace,"mbgBuffer")
+        mbgBuffer = os.path.join(envscratchworkspace,"mbgBuffer")#(envscratchworkspace,"mbgBuffer")
         arcpy.Buffer_analysis(observers_mbg,mbgBuffer,horizonDistance)
         delete_me.append(mbgBuffer)
         surfaceSR = arcpy.Describe(input_surface).spatialReference
-        mbgBufferPrj = os.path.join(env.scratchWorkspace,"mbgBufferPrj")
+        mbgBufferPrj = os.path.join(envscratchworkspace,"mbgBufferPrj")#(envscratchworkspace,"mbgBufferPrj")
         arcpy.Project_management(mbgBuffer,mbgBufferPrj,surfaceSR)
         delete_me.append(mbgBufferPrj)
         mbgBufferPrjExtent = arcpy.Describe(mbgBufferPrj).extent
@@ -204,12 +198,12 @@ try:
         arcpy.Clip_management(input_surface,"#",surf_extract,mbgBufferPrj)
     else:
         # buffer MBG by max RADIUS 2 + 10%
-        mbgBuffer = os.path.join(env.scratchWorkspace,"mbgBuffer")
+        mbgBuffer = os.path.join(envscratchworkspace,"mbgBuffer")#(envscratchworkspace,"mbgBuffer")
         arcpy.Buffer_analysis(observers_mbg,mbgBuffer,obsMaximums['RADIUS2'])
         delete_me.append(mbgBuffer)
         # project buffer to surface SR
         surfaceSR = arcpy.Describe(input_surface).spatialReference
-        mbgBufferPrj = os.path.join(env.scratchWorkspace,"mbgBufferPrj")
+        mbgBufferPrj = os.path.join(envscratchworkspace,"mbgBufferPrj")
         arcpy.Project_management(mbgBuffer,mbgBufferPrj,surfaceSR)
         delete_me.append(mbgBufferPrj)
         # clip surface to projected buffer
@@ -217,19 +211,19 @@ try:
     delete_me.append(surf_extract)
 
     # Project surface to the new AZED
-    extract_prj = os.path.join(env.scratchWorkspace,"extract_prj")
+    extract_prj = os.path.join(envscratchworkspace,"extract_prj")
     arcpy.AddMessage("Projecting surface ...")
     arcpy.ProjectRaster_management(surf_extract,extract_prj,strAZED)
     delete_me.append(extract_prj)
     
     # Project observers to the new AZED
-    obs_prj = os.path.join(env.scratchWorkspace,"obs_prj")
+    obs_prj = os.path.join(envscratchworkspace,"obs_prj")
     arcpy.AddMessage("Projecting observers ...")
     arcpy.Project_management(observers,obs_prj,strAZED)
     delete_me.append(obs_prj)
     
     # Project the MBG buffer to AZED
-    obs_buf = os.path.join(env.scratchWorkspace,"obs_buf")
+    obs_buf = os.path.join(envscratchworkspace,"obs_buf")
     #if RADIUS2_to_infinity == True:
     #    arcpy.Buffer_analysis(obs_prj,obs_buf,horizonDistance)
     #else:
@@ -239,22 +233,19 @@ try:
         
     # Finally ... run Viewshed
     arcpy.AddMessage("Calculating Viewshed ...")
-    vshed = os.path.join(env.scratchWorkspace,"vshed")
+    vshed = os.path.join(envscratchworkspace,"vshed")
     delete_me.append(vshed)
     outVshed = sa.Viewshed(extract_prj,obs_prj,1.0,"CURVED_EARTH",terrestrial_refractivity_coefficient)
     outVshed.save(vshed)
     
     # Raster To Polygon
     arcpy.AddMessage("Converting to polygons ...")
-    ras_poly = os.path.join(env.scratchWorkspace,"ras_poly")
+    ras_poly = os.path.join(envscratchworkspace,"ras_poly")
     arcpy.RasterToPolygon_conversion(vshed,ras_poly,polygon_simplify)
     delete_me.append(ras_poly)
     
     # clip output polys to buffer
-    out_buf = os.path.join(env.scratchWorkspace,"out_buf")
-    arcpy.Buffer_analysis(obs_prj,out_buf,"RADIUS2")
-    delete_me.append(out_buf)
-    arcpy.Clip_analysis(ras_poly,out_buf,output_rlos)
+    arcpy.Clip_analysis(ras_poly,obs_buf,output_rlos)
         
     
     # set output
@@ -265,15 +256,15 @@ try:
     for ds in delete_me:
         arcpy.AddMessage(str(ds))
         arcpy.Delete_management(ds)
-
+    # reset overwrite environment to what it was before 
+    env.overwriteOutput = currentOverwriteOutput
     
 except arcpy.ExecuteError:
     error = True
     # Get the tool error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    #print msgs #UPDATE
-    print(msgs)
+    print msgs
 
 except:
     # Get the traceback object
@@ -290,9 +281,9 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    #print pymsg + "\n" #UPDATE
-    print(pymsg + "\n")
-    #print msgs #UPDATE
-    print(msgs)
+    print pymsg + "\n"
+    print msgs
 
-
+finally:
+    # check in spatial analyst
+    arcpy.CheckInExtension("Spatial")

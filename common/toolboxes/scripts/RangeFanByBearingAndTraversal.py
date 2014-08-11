@@ -1,10 +1,21 @@
-
-# ==================================================
-# UpdateRangeFans.py
-# --------------------------------------------------
-# Built for ArcGIS 10.1
-# ==================================================
-
+#------------------------------------------------------------------------------
+# Copyright 2013 Esri
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#------------------------------------------------------------------------------
+# RangeFanByBearingAndTraversal.py
+# Description: Common objects/methods used by test scripts
+# Requirements: ArcGIS Desktop Standard
+# -----------------------------------------------------------------------------
 
 # IMPORTS ==========================================
 import os, sys, math, traceback
@@ -13,23 +24,17 @@ from arcpy import env
 
 # ARGUMENTS & LOCALS ===============================
 inFeature = arcpy.GetParameterAsText(0)
-weaponTable = arcpy.GetParameterAsText(1)
-weaponField = arcpy.GetParameterAsText(2)
-weaponModel = arcpy.GetParameterAsText(3)
-maxRangeField = arcpy.GetParameterAsText(4)
-maxRange = float(arcpy.GetParameterAsText(5)) #1000.0 # meters
-geoBearing = float(arcpy.GetParameterAsText(6)) #45.0 # degrees
-traversal = float(arcpy.GetParameterAsText(7)) #60.0 # degrees
-outFeature = arcpy.GetParameterAsText(8)
-
+maxRange = float(arcpy.GetParameterAsText(1)) #1000.0 # meters
+geoBearing = float(arcpy.GetParameterAsText(2)) #45.0 # degrees
+traversal = float(arcpy.GetParameterAsText(3)) #60.0 # degrees
+outFeature = arcpy.GetParameterAsText(4)
 deleteme = []
 debug = True
 leftAngle = 0.0 # degrees
 rightAngle = 90.0 # degrees
 
-
 # CONSTANTS ========================================
-
+# None
 
 # FUNCTIONS ========================================
 def Geo2Arithmetic(inAngle):
@@ -56,16 +61,8 @@ try:
 
     currentOverwriteOutput = env.overwriteOutput
     env.overwriteOutput = True
-    sr = arcpy.SpatialReference()
-    sr.factoryCode = 4326
-    sr.create()
-    GCS_WGS_1984 = sr
-    #GCS_WGS_1984 = arcpy.SpatialReference(r"WGS 1984")
-    wbsr = arcpy.SpatialReference()
-    wbsr.factoryCode = 3857
-    wbsr.create()
-    webMercator = wbsr
-    #webMercator = arcpy.SpatialReference(r"WGS 1984 Web Mercator (Auxiliary Sphere)")
+    GCS_WGS_1984 = arcpy.SpatialReference(r"WGS 1984")
+    webMercator = arcpy.SpatialReference(r"WGS 1984 Web Mercator (Auxiliary Sphere)")
     env.overwriteOutput = True
     scratch = env.scratchWorkspace
     
@@ -80,97 +77,104 @@ try:
     arcpy.Project_management(copyInFeatures,prjInFeature,webMercator)
     deleteme.append(prjInFeature)
     tempFans = os.path.join(scratch,"tempFans")
-            
-    # put bearing into 0 - 360 range
-    geoBearing = math.fmod(geoBearing,360.0)
-    if debug == True: arcpy.AddMessage("geoBearing: " + str(geoBearing))
-    arithmeticBearing = Geo2Arithmetic(geoBearing) # need to convert from geographic angles (zero north clockwise) to arithmetic (zero east counterclockwise)
-    if debug == True: arcpy.AddMessage("arithmeticBearing: " + str(arithmeticBearing))
     
-    if traversal == 0.0:
-        traversal = 1.0 # modify so there is at least 1 degree of angle.
-        arcpy.AddWarning("Traversal is zero! Forcing traversal to 1.0 degrees.")
-    leftAngle = arithmeticBearing + (traversal / 2.0) # get left angle (arithmetic)
-    leftBearing = geoBearing - (traversal / 2.0) # get left bearing (geographic)
-    if leftBearing < 0.0: leftBearing = 360.0 + leftBearing
+    if traversal < 360:
+        
+        # put bearing into 0 - 360 range
+        geoBearing = math.fmod(geoBearing,360.0)
+        if debug == True: arcpy.AddMessage("geoBearing: " + str(geoBearing))
+        arithmeticBearing = Geo2Arithmetic(geoBearing) # need to convert from geographic angles (zero north clockwise) to arithmetic (zero east counterclockwise)
+        if debug == True: arcpy.AddMessage("arithmeticBearing: " + str(arithmeticBearing))
+        
+        if traversal == 0.0:
+            traversal = 1.0 # modify so there is at least 1 degree of angle.
+            arcpy.AddWarning("Traversal is zero! Forcing traversal to 1.0 degrees.")
+        leftAngle = arithmeticBearing + (traversal / 2.0) # get left angle (arithmetic)
+        leftBearing = geoBearing - (traversal / 2.0) # get left bearing (geographic)
+        if leftBearing < 0.0: leftBearing = 360.0 + leftBearing
+        
+        rightAngle = arithmeticBearing - (traversal / 2.0) # get right angle (arithmetic)
+        rightBearing = geoBearing + (traversal / 2.0) # get right bearing (geographic)
+        if rightBearing < 0.0: rightBearing = 360.0 + rightBearing
+        
+        if debug == True: arcpy.AddMessage("arithemtic left/right: " + str(leftAngle) + "/" + str(rightAngle))
+        if debug == True: arcpy.AddMessage("geo left/right: " + str(leftBearing) + "/" + str(rightBearing))
+        
+        centerPoints = []
+        arcpy.AddMessage("Getting centers ....")
+        shapefieldname = arcpy.Describe(prjInFeature).ShapeFieldName
+        rows = arcpy.SearchCursor(prjInFeature)
+        for row in rows:
+            feat = row.getValue(shapefieldname)
+            pnt = feat.getPart()
+            centerPointX = pnt.X
+            centerPointY = pnt.Y
+            centerPoints.append([centerPointX,centerPointY])
+        del row
+        del rows
+        
+        paths = []
+        arcpy.AddMessage("Creating paths ...")
+        for centerPoint in centerPoints:
+            path = []
+            centerPointX = centerPoint[0]
+            centerPointY = centerPoint[1]
+            path.append([centerPointX,centerPointY]) # add first point
+            step = -1.0 # step in degrees
+            rightAngleRelativeToLeft = leftAngle - traversal - 1
+            for d in xrange(int(leftAngle),int(rightAngleRelativeToLeft),int(step)):
+                x = centerPointX + (maxRange * math.cos(math.radians(d)))
+                y = centerPointY + (maxRange * math.sin(math.radians(d)))
+                path.append([x,y])
+                if debug == True: arcpy.AddMessage("d,x,y: " + str(d) + "," + str(x) + "," + str(y))    
+            path.append([centerPointX,centerPointY]) # add last point
+            paths.append(path)
+            if debug == True: arcpy.AddMessage("Points in path: " + str(len(path)))
+        if debug == True: arcpy.AddMessage("paths: " + str(paths))
+        
+        arcpy.AddMessage("Creating target feature class ...")
+        arcpy.CreateFeatureclass_management(os.path.dirname(tempFans),os.path.basename(tempFans),"Polygon","#","DISABLED","DISABLED",webMercator)
+        arcpy.AddField_management(tempFans,"Range","DOUBLE","#","#","#","Range (meters)")
+        arcpy.AddField_management(tempFans,"Bearing","DOUBLE","#","#","#","Bearing (degrees)")
+        arcpy.AddField_management(tempFans,"Traversal","DOUBLE","#","#","#","Traversal (degrees)")
+        arcpy.AddField_management(tempFans,"LeftAz","DOUBLE","#","#","#","Left Bearing (degrees)")
+        arcpy.AddField_management(tempFans,"RightAz","DOUBLE","#","#","#","Right Bearing (degrees)")
+        deleteme.append(tempFans)
+        
+        arcpy.AddMessage("Building " + str(len(paths)) + " fans ...")
+        cur = arcpy.InsertCursor(tempFans)
+        for outPath in paths:
+            lineArray = arcpy.Array()
+            for vertex in outPath:
+                pnt = arcpy.Point()
+                pnt.X = vertex[0]
+                pnt.Y = vertex[1]
+                lineArray.add(pnt)
+                del pnt
+            feat = cur.newRow()
+            feat.shape = lineArray
+            feat.Range = maxRange
+            feat.Bearing = geoBearing
+            feat.Traversal = traversal
+            feat.LeftAz = leftBearing
+            feat.RightAz = rightBearing
+            cur.insertRow(feat)
+            del lineArray
+            del feat
+        del cur
+        
+                
+    else:
+        if debug == True: arcpy.AddMessage("Traversal is 360 degrees, buffering instead ...")
+        distance = str(maxRange) + " Meters"
+        arcpy.Buffer_analysis(prjInFeature,tempFans,distance)
     
-    rightAngle = arithmeticBearing - (traversal / 2.0) # get right angle (arithmetic)
-    rightBearing = geoBearing + (traversal / 2.0) # get right bearing (geographic)
-    if rightBearing < 0.0: rightBearing = 360.0 + rightBearing
     
-    if debug == True: arcpy.AddMessage("arithemtic left/right: " + str(leftAngle) + "/" + str(rightAngle))
-    if debug == True: arcpy.AddMessage("geo left/right: " + str(leftBearing) + "/" + str(rightBearing))
-    
-    centerPoints = []
-    arcpy.AddMessage("Getting centers ....")
-    shapefieldname = arcpy.Describe(prjInFeature).ShapeFieldName
-    rows = arcpy.SearchCursor(prjInFeature)
-    for row in rows:
-        feat = row.getValue(shapefieldname)
-        pnt = feat.getPart()
-        centerPointX = pnt.X
-        centerPointY = pnt.Y
-        centerPoints.append([centerPointX,centerPointY])
-    del row
-    del rows
-    
-    paths = []
-    arcpy.AddMessage("Creating paths ...")
-    for centerPoint in centerPoints:
-        path = []
-        centerPointX = centerPoint[0]
-        centerPointY = centerPoint[1]
-        path.append([centerPointX,centerPointY]) # add first point
-        step = -1.0 # step in degrees
-        rightAngleRelativeToLeft = leftAngle - traversal - 1
-        for d in xrange(int(leftAngle),int(rightAngleRelativeToLeft),int(step)):
-            x = centerPointX + (maxRange * math.cos(math.radians(d)))
-            y = centerPointY + (maxRange * math.sin(math.radians(d)))
-            path.append([x,y])
-            if debug == True: arcpy.AddMessage("d,x,y: " + str(d) + "," + str(x) + "," + str(y))    
-        path.append([centerPointX,centerPointY]) # add last point
-        paths.append(path)
-        if debug == True: arcpy.AddMessage("Points in path: " + str(len(path)))
-    if debug == True: arcpy.AddMessage("paths: " + str(paths))
-    
-    arcpy.AddMessage("Creating target feature class ...")
-    arcpy.CreateFeatureclass_management(os.path.dirname(tempFans),os.path.basename(tempFans),"Polygon","#","DISABLED","DISABLED",webMercator)
-    arcpy.AddField_management(tempFans,"Range","DOUBLE","#","#","#","Range (meters)")
-    arcpy.AddField_management(tempFans,"Bearing","DOUBLE","#","#","#","Bearing (degrees)")
-    arcpy.AddField_management(tempFans,"Traversal","DOUBLE","#","#","#","Traversal (degrees)")
-    arcpy.AddField_management(tempFans,"LeftAz","DOUBLE","#","#","#","Left Bearing (degrees)")
-    arcpy.AddField_management(tempFans,"RightAz","DOUBLE","#","#","#","Right Bearing (degrees)")
-    arcpy.AddField_management(tempFans,"Model","TEXT","#","#","#","Weapon Model")
-    deleteme.append(tempFans)
-    
-    arcpy.AddMessage("Building " + str(len(paths)) + " fans ...")
-    cur = arcpy.InsertCursor(tempFans)
-    for outPath in paths:
-        lineArray = arcpy.Array()
-        for vertex in outPath:
-            pnt = arcpy.Point()
-            pnt.X = vertex[0]
-            pnt.Y = vertex[1]
-            lineArray.add(pnt)
-            del pnt
-        feat = cur.newRow()
-        feat.shape = lineArray
-        feat.Range = maxRange
-        feat.Bearing = geoBearing
-        feat.Traversal = traversal
-        feat.LeftAz = leftBearing
-        feat.RightAz = rightBearing
-        feat.Model = str(weaponModel)
-        cur.insertRow(feat)
-        del lineArray
-        del feat
-    del cur
-            
     arcpy.AddMessage("Projecting Range Fans back to " + str(srInputPoints.name))
     arcpy.Project_management(tempFans,outFeature,srInputPoints)
     
     
-    arcpy.SetParameter(8,outFeature)
+    arcpy.SetParameter(4,outFeature)
 
 except arcpy.ExecuteError: 
     # Get the tool error messages 

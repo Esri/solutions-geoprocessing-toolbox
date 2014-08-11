@@ -1,3 +1,17 @@
+#------------------------------------------------------------------------------
+# Copyright 2013 Esri
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#------------------------------------------------------------------------------
 
 
 import os, sys, traceback, math, decimal
@@ -24,6 +38,8 @@ try:
     
     # Get SR of Input Centers
     inputCentersSR = arcpy.Describe(input_centers).spatialReference
+    if inputCentersSR == "" or inputCentersSR == None :
+        inputCentersSR = GCS_WGS_1984    
     
     result = arcpy.GetCount_management(input_centers)
     arcpy.AddMessage("Using " + str(result) + " centers ...")
@@ -58,8 +74,7 @@ try:
            addRow.POINT_X = pointX
            addRow.POINT_Y = pointY
            rd = float(x) * ringInterval
-        #   print "row: " + str(x) + " " + str(pointX) + " " + str(pointY) + " " + str(rd)
-           arcpy.AddMessage("row: " + str(x) + " " + str(pointX) + " " + str(pointY) + " " + str(rd))
+           #print "row: " + str(x) + " " + str(pointX) + " " + str(pointY) + " " + str(rd)
            addRow.Range = rd
            addRow.RingRadius = rd * 2.0
            addRow.RingID = y
@@ -131,7 +146,7 @@ try:
         
         # build ellipses
         arcpy.AddMessage("Constructing " + str(results) + " radial features ...")
-        arcpy.BearingDistanceToLine_management(tempRadialTable,outputRadials,"POINT_X","POINT_Y","Range",distanceUnits,"Azimuth",bearingUnits,"RHUMB_LINE","RingID",inputCentersSR)
+        arcpy.BearingDistanceToLine_management(tempRadialTable,outputRadials,"POINT_X","POINT_Y","Range",distanceUnits,"Azimuth",bearingUnits,"GEODESIC","RingID",inputCentersSR)
         
         # Join fields
         tempRadialTableOIDFieldName = arcpy.Describe(tempRadialTable).OIDFieldName
@@ -160,7 +175,8 @@ except arcpy.ExecuteError:
     # Get the tool error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print msgs
+    #print msgs #UPDATE
+    print(msgs)
 
 except:
     # Get the traceback object
@@ -177,7 +193,9 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    #print pymsg + "\n" #UPDATE
+    print(pymsg + "\n")
+    #print msgs #UPDATE
+    print(msgs)
     
     
