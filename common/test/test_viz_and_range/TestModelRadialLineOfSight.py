@@ -72,7 +72,7 @@ def RunTest():
         forceVisibilityToInfinity = False
            
         ########################################################3
-        # Execute the Model under test:   
+        # Execute the Model under test:
         arcpy.RadialLineOfSight_VandR(inputPointsFC, inputSurface, outputVizFC, forceVisibilityToInfinity)
         ########################################################3
     

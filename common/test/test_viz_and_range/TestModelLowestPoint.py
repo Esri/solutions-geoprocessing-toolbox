@@ -70,8 +70,9 @@ def RunTest():
             print "Invalid Input Feature Count: " +  str(inputFeatureCount)                    
            
         ########################################################3
-        # Execute the Model under test:   
-        arcpy.LowestPoint_VandR(inputPolygonFC, inputSurface, outputPointsFC)
+        # Execute the Model under test:
+        # mfunk 8/12/2014: LowestPoints tool was removed
+        #arcpy.LowestPoint_VandR(inputPolygonFC, inputSurface, outputPointsFC)
         ########################################################3
     
         # Verify the results    

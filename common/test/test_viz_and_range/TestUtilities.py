@@ -33,7 +33,7 @@ outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
 defaultGDB = os.path.join(geodatabasePath, "default.gdb")
 scratchGDB = os.path.join(scratchPath, "scratch.gdb")
 
-toolbox = os.path.join(toolboxesPath, "Visibility and Range Tools.tbx")
+toolbox = os.path.join(toolboxesPath, "Visibility And Range Tools.tbx")
 
 def createScratch() :
     try :

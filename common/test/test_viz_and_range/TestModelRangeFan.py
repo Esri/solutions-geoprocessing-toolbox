@@ -76,8 +76,9 @@ def RunTest():
         oberverHeight = 2.0
            
         ########################################################3
-        # Execute the Model under test:   
-        arcpy.RangeFan_VandR(inputPointsFC, maximumRange, bearing, traversal, inputSurface, outputRangeFansFC, outputRangeVizFC, oberverHeight)
+        # Execute the Model under test:
+        # mfunk 8/12/2014: RangeFan tool was removed for RangeFansFromWeaponParameters and RangeFansFromWeaponBearingLimits
+        #arcpy.RangeFan_VandR(inputPointsFC, maximumRange, bearing, traversal, inputSurface, outputRangeFansFC, outputRangeVizFC, oberverHeight)
         ########################################################3
     
         # Verify the results    

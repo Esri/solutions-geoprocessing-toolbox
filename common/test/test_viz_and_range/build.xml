@@ -40,27 +40,16 @@
   </target>
 
   <target name="test_range_fan" depends="set_all_variables">
-<!--<echo message="****SKIPPING TEST (BROKEN)****" />-->
-<!-- Removed until Test Can be fixed: 
-
-Description:
-https://github.com/ArcGIS/defense-and-intel-toolbox/issues/8-->
-
-    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
+<echo message="****SKIPPING TEST (tool removed)****" />
+<!--    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
       <env key="PYTHONPATH" path="${pythonpath}"/>
       <arg line="-u"/>
       <arg line="${dir.src}/TestModelRangeFan.py"/>
     </exec>
-
+-->
   </target>
 
   <target name="test_radial_line_of_sight" depends="set_all_variables">
-<!--<echo message="****SKIPPING TEST (BROKEN)****" />-->
-<!-- Removed until Test Can be fixed: 
-
-Description:
-https://github.com/ArcGIS/defense-and-intel-toolbox/issues/8-->
-
     <exec executable="${dir.arcpy}/python.exe" failonerror="true">
       <env key="PYTHONPATH" path="${pythonpath}"/>
       <arg line="-u"/>
@@ -70,11 +59,12 @@ https://github.com/ArcGIS/defense-and-intel-toolbox/issues/8-->
   </target>
 
   <target name="test_lowest_point" depends="set_all_variables">
-    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
+<echo message="****SKIPPING TEST (tool removed)****" />
+<!--    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
       <env key="PYTHONPATH" path="${pythonpath}"/>
       <arg line="-u"/>
       <arg line="${dir.src}/TestModelLowestPoint.py"/>
-    </exec>
+    </exec>-->
   </target>
 
   <target name="test_highest_point" depends="set_all_variables">
