@@ -71,7 +71,7 @@ def RunTest():
            
         ########################################################3
         # Execute the Model under test:   
-        arcpy.HighestPoint_VandR(inputPolygonFC, inputSurface, outputPointsFC)
+        arcpy.HighestPoints_VandR(inputPolygonFC, inputSurface, outputPointsFC)
         ########################################################3
     
         # Verify the results    

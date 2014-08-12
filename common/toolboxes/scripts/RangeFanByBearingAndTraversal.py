@@ -1,4 +1,19 @@
 
+#------------------------------------------------------------------------------
+# Copyright 2014 Esri
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#------------------------------------------------------------------------------
+
 # ==================================================
 # UpdateRangeFans.py
 # --------------------------------------------------
@@ -123,7 +138,8 @@ try:
         path.append([centerPointX,centerPointY]) # add first point
         step = -1.0 # step in degrees
         rightAngleRelativeToLeft = leftAngle - traversal - 1
-        for d in xrange(int(leftAngle),int(rightAngleRelativeToLeft),int(step)):
+        #for d in xrange(int(leftAngle),int(rightAngleRelativeToLeft),int(step)): #UPDATE
+        for d in range(int(leftAngle),int(rightAngleRelativeToLeft),int(step)):
             x = centerPointX + (maxRange * math.cos(math.radians(d)))
             y = centerPointY + (maxRange * math.sin(math.radians(d)))
             path.append([x,y])
@@ -176,7 +192,8 @@ except arcpy.ExecuteError:
     # Get the tool error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print msgs
+    #print msgs #UPDATE
+    print(msgs)
 
 except:
     # Get the traceback object
@@ -192,8 +209,10 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    #print pymsg + "\n" #UPDATE
+    print(pymsg + "\n")
+    #print msgs #UPDATE
+    print(msgs)
 
 finally:
     # cleanup intermediate datasets
