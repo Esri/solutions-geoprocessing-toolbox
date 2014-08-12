@@ -32,19 +32,21 @@
   </target>
 
   <target name="TestRangeFanByBearingAndTraversal" depends="set_all_variables">
-    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
+<echo message="****SKIPPING TEST (Tool parameters have been modified, this test is no longer valid)****" />
+<!--    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
       <env key="PYTHONPATH" path="${pythonpath}"/>
       <arg line="-u"/>
       <arg line="${dir.src}/TestRangeFanByBearingAndTraversal.py"/>
-    </exec>
+    </exec>-->
   </target>
 
   <target name="TestRangeFanByBearingLimits" depends="set_all_variables">
-    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
+<echo message="****SKIPPING TEST (Tool parameters have been modified, this test is no longer valid)****" />
+<!--    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
       <env key="PYTHONPATH" path="${pythonpath}"/>
       <arg line="-u"/>
       <arg line="${dir.src}/TestRangeFanByBearingLimits.py"/>
-    </exec>
+    </exec>-->
   </target>
 
   <target name="TestCreateRangeFanIndexFeatures" depends="set_all_variables">

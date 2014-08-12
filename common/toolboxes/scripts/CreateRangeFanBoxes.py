@@ -26,7 +26,7 @@ from arcpy import da
 
 # ARGUMENTS & LOCALS ===============================
 deleteme = []
-debug = True
+debug = False
 
 inputFeatures = arcpy.GetParameterAsText(0)
 outputExtentBoxes = arcpy.GetParameterAsText(1)

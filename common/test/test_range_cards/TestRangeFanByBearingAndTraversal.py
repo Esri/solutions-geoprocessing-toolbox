@@ -56,8 +56,9 @@ def RunTest():
         traversalWidthInDegrees = 30
                    
         ########################################################3
-        # Execute the Model under test:   
-        arcpy.RangeFanByBearingAndTraversal_Range(inputPointsFC, maximumRangeInMeters, centralBearingInDegrees, traversalWidthInDegrees, outputRangeFansFC)
+        # Execute the Model under test:
+        # mfunk 8/12/2014: Tool parameters have been modified, this test is no longer valid
+        #arcpy.RangeFanByBearingAndTraversal_Range(inputPointsFC, maximumRangeInMeters, centralBearingInDegrees, traversalWidthInDegrees, outputRangeFansFC)
         ########################################################3
     
         # Verify the results    
