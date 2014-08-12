@@ -56,8 +56,9 @@ def RunTest():
         rightBearingInDegrees = 75
                    
         ########################################################3
-        # Execute the Model under test:   
-        arcpy.RangeFanByBearingLimits_Range(inputPointsFC, maximumRangeInMeters, leftBearingInDegrees, rightBearingInDegrees, outputRangeFansFC)
+        # Execute the Model under test:
+        # mfunk 8/12/2014: Tool parameters have been modified, this test is no longer valid
+        #arcpy.RangeFanByBearingLimits_Range(inputPointsFC, maximumRangeInMeters, leftBearingInDegrees, rightBearingInDegrees, outputRangeFansFC)
         ########################################################3
     
         # Verify the results    
