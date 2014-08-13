@@ -49,18 +49,23 @@ dRange = float(arcpy.GetParameterAsText(1)) #1000.0 # meters
 bearing = float(arcpy.GetParameterAsText(2)) #45.0 # degrees
 traversal = float(arcpy.GetParameterAsText(3)) #60.0 # degrees
 outFeature = arcpy.GetParameterAsText(4)
-
-webMercator = ""
-if argCount >= 6 :
-    webMercator = arcpy.GetParameterAsText(5)
+outputCoordinateSystem = arcpy.GetParameterAsText(5)
     
 deleteme = []
 debug = True
 leftAngle = 0.0 # degrees
 rightAngle = 90.0 # degrees
-
-if (webMercator == "") or (webMercator is None) :
-    webMercator = arcpy.SpatialReference(r"WGS 1984 Web Mercator (Auxiliary Sphere)")
+WGS84 = arcpy.SpatialReference(r"WGS 1984")
+WebMercator = arcpy.SpatialReference(r"WGS 1984 Web Mercator (Auxiliary Sphere)")
+if (outputCoordinateSystem == "") or (outputCoordinateSystem is None) :
+    # if the output coordinate system is empty we need to use a default projected CS
+    outputCoordinateSystem = WebMercator
+else:
+    #The script is passed a string representation of the output coordinate system, load it into a spatial ref object here
+    sr = arcpy.SpatialReference()
+    sr.loadFromString(outputCoordinateSystem)
+    outputCoordinateSystem = sr
+if debug == True: arcpy.AddMessage("output coordinate system: " + str(outputCoordinateSystem.name))
 
 try:
 
@@ -68,14 +73,12 @@ try:
     env.overwriteOutput = True
     installInfo = arcpy.GetInstallInfo("desktop")
     installDirectory = installInfo["InstallDir"]
-    GCS_WGS_1984 = os.path.join(installDirectory,r"Coordinate Systems", r"Geographic Coordinate Systems", r"World",r"WGS 1984.prj")
     env.overwriteOutput = True
     scratch = env.scratchWorkspace
     
     prjInFeature = os.path.join(scratch,"prjInFeature")
-    arcpy.AddMessage(str(webMercator) + "\n" + prjInFeature)
-    arcpy.AddMessage("Projecting input points to Web Mercator ...")
-    arcpy.Project_management(inFeature,prjInFeature,webMercator)
+    arcpy.AddMessage("Projecting input points to " + str(outputCoordinateSystem.name) + " ...")
+    arcpy.Project_management(inFeature,prjInFeature,outputCoordinateSystem)
     deleteme.append(prjInFeature)
     
     if traversal < 360:
@@ -120,11 +123,11 @@ try:
             paths.append(path)
         
         arcpy.AddMessage("Creating target feature class ...")
-        arcpy.CreateFeatureclass_management(os.path.dirname(outFeature),os.path.basename(outFeature),"Polygon","#","DISABLED","DISABLED",webMercator)
+        arcpy.CreateFeatureclass_management(os.path.dirname(outFeature),os.path.basename(outFeature),"Polygon","#","DISABLED","DISABLED",outputCoordinateSystem)
         arcpy.AddField_management(outFeature,"Range","DOUBLE")
         arcpy.AddField_management(outFeature,"Bearing","DOUBLE")
         
-        arcpy.AddMessage("Buiding " + str(len(paths)) + " fans ...")
+        arcpy.AddMessage("Building " + str(len(paths)) + " fans ...")
         cur = arcpy.InsertCursor(outFeature)
         for outPath in paths:
             lineArray = arcpy.Array()
@@ -183,6 +186,6 @@ finally:
     # cleanup intermediate datasets
     if debug == True: arcpy.AddMessage("Removing intermediate datasets...")
     for i in deleteme:
-        if debug == True: arcpy.AddMessage("Removing: " + str(i))
         arcpy.Delete_management(i)
+        if debug == True: arcpy.AddMessage("Removing: " + str(i))
     if debug == True: arcpy.AddMessage("Done")

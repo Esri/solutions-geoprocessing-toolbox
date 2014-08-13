@@ -73,12 +73,10 @@ def RunTest():
         maximumRange = 1000.0
         bearing = 150.0
         traversal = 22.0
-        oberverHeight = 2.0
            
         ########################################################3
         # Execute the Model under test:
-        # mfunk 8/12/2014: RangeFan tool was removed for RangeFansFromWeaponParameters and RangeFansFromWeaponBearingLimits
-        #arcpy.RangeFan_VandR(inputPointsFC, maximumRange, bearing, traversal, inputSurface, outputRangeFansFC, outputRangeVizFC, oberverHeight)
+        arcpy.RangeFan_VandR(inputPointsFC, maximumRange, bearing, traversal, inputSurface, outputRangeFansFC, outputRangeVizFC)
         ########################################################3
     
         # Verify the results    
