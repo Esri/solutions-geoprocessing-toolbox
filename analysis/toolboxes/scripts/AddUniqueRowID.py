@@ -64,6 +64,6 @@ except:
 
     # Print Python error messages for use in Python / Python Window
     #print pymsg + "\n" #UPDATE
-    print(pymsg + "\n")
+    print((pymsg + "\n"))
     #print msgs #UPDATE
     print(msgs)
