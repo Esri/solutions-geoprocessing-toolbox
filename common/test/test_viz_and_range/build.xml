@@ -78,4 +78,17 @@
       <arg line="${dir.src}/TestModelLocalPeaks.py"/>
     </exec>
   </target>
+  
+<!--
+  Need tests for:
+  * Linear Line Of Sight
+  * Attach Profile Graph To LLOS
+  * Radial Line Of Sight - Multiple Positions
+  * Radial Line Of Sight - Single Positions
+  * Radial Line Of Sight and Range
+  * Range Fans From Weapon Bearing Limits
+  * Range Fans From Weapon Parameters
+  * Trajectory
+  -->
+  
 </project>
