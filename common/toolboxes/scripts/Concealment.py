@@ -134,7 +134,8 @@ try:
     rows = arcpy.UpdateCursor(outConcealment)
     for row in rows:
         f_code = row.F_CODE
-        if f_code in FACC_veg_tab.keys():
+        #if f_code in FACC_veg_tab.keys(): #UPDATE
+        if f_code in list(FACC_veg_tab.keys()):
             vegtype = FACC_veg_tab[f_code][0]
             summer = FACC_veg_tab[f_code][1]
             winter = FACC_veg_tab[f_code][2]
@@ -151,7 +152,8 @@ except arcpy.ExecuteError:
     # Get the tool error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print msgs
+    #print msgs #UPDATE
+    print(msgs)
 
 except:
     # Get the traceback object
@@ -167,8 +169,10 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    #print pymsg + "\n" #UPDATE
+    print(pymsg + "\n")
+    #print msgs #UPDATE
+    print(msgs)
 
 finally:
     

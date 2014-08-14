@@ -187,7 +187,8 @@ try:
     ccmFactorList.append(f2)
     
     #TODO: Need more thorough and complete checks of inputs
-    if inputVegetation != types.NoneType and arcpy.Exists(inputVegetation) == True:
+    #if inputVegetation != types.NoneType and arcpy.Exists(inputVegetation) == True: #UPDATE
+    if inputVegetation != None and arcpy.Exists(inputVegetation) == True:
         # f3: vegetation
         f3t = os.path.join(scratch,"f3t")
         f3 = os.path.join(scratch,"f3")
@@ -210,7 +211,8 @@ try:
         #TODO: what about areas in the AOI but outside VEG? No effect (value = 1.0)?
         ccmFactorList.append(f3)
     
-    if inputSoils != types.NoneType and  arcpy.Exists(inputSoils) == True:
+    #if inputSoils != types.NoneType and  arcpy.Exists(inputSoils) == True: #UPDATE
+    if inputSoils != None and  arcpy.Exists(inputSoils) == True:
         # f4: soils
         f4t = os.path.join(scratch,"f4t")
         f4 = os.path.join(scratch,"f4")
@@ -231,7 +233,8 @@ try:
         deleteme.append(f4)
         ccmFactorList.append(f4)
     
-    if inputSurfaceRoughness != types.NoneType and  arcpy.Exists(inputSurfaceRoughness) == True:
+    #if inputSurfaceRoughness != types.NoneType and  arcpy.Exists(inputSurfaceRoughness) == True: #UPDATE
+    if inputSurfaceRoughness != None and  arcpy.Exists(inputSurfaceRoughness) == True:
         # f5: surface roughness
         f5t = os.path.join(scratch,"f5t")
         f5 = os.path.join(scratch,"f5")
@@ -268,7 +271,8 @@ try:
         targetCCM = sa.Raster(ccmFactorList[0]) * sa.Raster(ccmFactorList[1]) * sa.Raster(ccmFactorList[2]) * sa.Raster(ccmFactorList[3]) * sa.Raster(ccmFactorList[4])
     else:
         if debug == True: arcpy.AddMessage("ERROR!!!!!: " + str(ccmFactorList) + str(time.strftime(" %m/%d/%Y  %H:%M:%S", time.localtime())))
-        raise WrongFactors, ccmFactorList
+        #raise WrongFactors, ccmFactorList #UPDATE
+        raise WrongFactors(ccmFactorList)
     targetCCM.save(tempCCM)
     arcpy.CopyRaster_management(tempCCM,outputCCM)
     
@@ -285,10 +289,12 @@ try:
             pass
     if debug == True: arcpy.AddMessage("Done")
     
-except "WrongFactors", ccmlist:
+#except "WrongFactors", ccmlist: #UPDATE
+except "WrongFactors" as ccmlist:
     msg = "Wrong Number of Factors given: " + str(ccmlist)
     arcpy.AddError(msg)
-    print msg
+    #print msg #UPDATE
+    print(msg)
     
 except arcpy.ExecuteError:
     if debug == True: arcpy.AddMessage("CRASH: " + str(time.strftime("%m/%d/%Y  %H:%M:%S", time.localtime())))
@@ -299,7 +305,8 @@ except arcpy.ExecuteError:
     # Get the tool error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print msgs
+    #print msgs #UPDATE
+    print(msgs)
 
 except:
     if debug == True: arcpy.AddMessage("CRASH: " + str(time.strftime("%m/%d/%Y  %H:%M:%S", time.localtime())))
@@ -316,7 +323,9 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    #print pymsg + "\n" #UPDATE
+    print(pymsg + "\n")
+    #print msgs #UPDATE
+    print(msgs)
     
     
