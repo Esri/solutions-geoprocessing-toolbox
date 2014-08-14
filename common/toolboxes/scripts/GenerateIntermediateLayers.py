@@ -27,7 +27,7 @@ featureClassesToMerge = ["AgricultureSrf","SettlementSrf","CultureSrf","Physiogr
 newList = []
 qualifierString = ""
 fqClassesToMerge = []
-debug = True
+debug = False
 
 # MAIN ==========================================================
 try:
@@ -61,16 +61,16 @@ try:
     # merge all FCs into the target FC
     arcpy.AddMessage("Merging features to output (this may take some time)...")
     arcpy.Merge_management(newList,target)
-    
     # set output
-    if debug == True: arcpy.AddMessage("Setting output ...")
+    arcpy.AddMessage("Setting output ...")
     arcpy.SetParameter(2,target)
     
 except arcpy.ExecuteError: 
     # Get the tool error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print msgs
+    #print msgs #UPDATE
+    print(msgs)
 
 except:
     # Get the traceback object
@@ -86,5 +86,7 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    #print pymsg + "\n" #UPDATE
+    print(pymsg + "\n")
+    #print msgs #UPDATE
+    print(msgs)

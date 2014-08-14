@@ -146,15 +146,18 @@ try:
     #    runSIF = True
     
     runVegetation = False
-    if inputVegetation != types.NoneType and arcpy.Exists(inputVegetation) == True:
+    #if inputVegetation != types.NoneType and arcpy.Exists(inputVegetation) == True: #UPDATE
+    if inputVegetation != None and arcpy.Exists(inputVegetation) == True:
         runVegetation = True
     
     runSoils = False
-    if inputSoils != types.NoneType and  arcpy.Exists(inputSoils) == True:
+    #if inputSoils != types.NoneType and  arcpy.Exists(inputSoils) == True: UPDATE
+    if inputSoils != None and  arcpy.Exists(inputSoils) == True:
         runSoils = True
     
     runRoughness = False
-    if inputSurfaceRoughness != types.NoneType and  arcpy.Exists(inputSurfaceRoughness) == True:
+    #if inputSurfaceRoughness != types.NoneType and  arcpy.Exists(inputSurfaceRoughness) == True: #UPDATE
+    if inputSurfaceRoughness != None and  arcpy.Exists(inputSurfaceRoughness) == True:
         runRoughness = True
 
 
@@ -277,8 +280,8 @@ try:
     if debug == True: arcpy.AddMessage(str(time.strftime("RasterToPolygon: %m/%d/%Y  %H:%M:%S", time.localtime())))
     arcpy.RasterToPolygon_conversion(boundaryClean,slopePoly,"NO_SIMPLIFY","VALUE")
     arcpy.AddField_management(slopePoly,"SlopeCat","SHORT")
-    arcpy.CalculateField_management(slopePoly,"SlopeCat","!grid_code!","PYTHON_9.3")
-    arcpy.DeleteField_management(slopePoly,"grid_code")
+    arcpy.CalculateField_management(slopePoly,"SlopeCat","!gridcode!","PYTHON_9.3")
+    arcpy.DeleteField_management(slopePoly,"gridcode")
 
     # Calculate f1 using slope category and vehicle parameters
     # vehicleTable[name] = [classname,name,weight,maxkph,onslope,offslope]
@@ -331,7 +334,8 @@ try:
         for row in rows:
             i = row[0] # OID
             j = row[1] # SlopeCat
-            if OID_SlopeCat_list.has_key(j):
+            #if OID_SlopeCat_list.has_key(j): #UPDATE
+            if j in OID_SlopeCat_list:
                 lst = OID_SlopeCat_list[j]
                 lst.append(int(i)) # add the current OID to the slope category dictionary
                 OID_SlopeCat_list[j] = lst
@@ -433,7 +437,7 @@ try:
         arcpy.AddMessage(str(tileNum) + "     Calculating F2 for the tile...")
         #
         # SIF count with adjustment for 100m contour intervals
-        codeblock = "import types\ndef calcSIF(meancount):\n   if meancount == types.NoneType: meancount = 0.0\n   SIF = (280.0 - float((meancount * 100.0)/20.0))/280.0\n   return SIF"
+        codeblock = "import types\ndef calcSIF(meancount):\n   if meancount == None: meancount = 0.0\n   SIF = (280.0 - float((meancount * 100.0)/20.0))/280.0\n   return SIF"
         arcpy.CalculateField_management(stats2,"f2",r"calcSIF(!MEAN_COUNT_ID!)","PYTHON_9.3",codeblock)
 
         # join intercept stats table to slope polys
@@ -474,7 +478,7 @@ try:
     if len(intersectionList) == 1:
         arcpy.AddMessage("Identity: F1, F2 plus one.")
         if debug == True: arcpy.AddMessage(str(intersectionList))
-        arcpy.Identity_anlaysis(f1_f2,intersectionList[0],outputCCM)
+        arcpy.Identity_analysis(f1_f2,intersectionList[0],outputCCM)
     if len(intersectionList) == 2:
         arcpy.AddMessage("Identity: F1, F2 plus two.")
         if debug == True: arcpy.AddMessage(str(intersectionList))
@@ -482,7 +486,7 @@ try:
         arcpy.Identity_analysis(intersectionList[0],intersectionList[1],twoitem)
         deleteme.append(twoitem)
         arcpy.Identity_anlaysis(f1_f2,twoitem,outputCCM)
-    if len(intersectionLIst) == 3:
+    if len(intersectionList) == 3:
         arcpy.AddMessage("Identity: F1, F2 plus three.")
         if debug == True: arcpy.AddMessage(str(intersectionList))
         twoitem = os.path.join(scratch,"twoitem")
@@ -491,7 +495,7 @@ try:
         threeitem = os.path.join(scratch,"threeitem")
         arcpy.Identity_analysis(twoitem,intersectionList[2],threeitem)
         deleteme.append(threeitem)
-        arcpy.Identity_anlaysis(f1_f2,threeitem,outputCCM)
+        arcpy.Identity_analysis(f1_f2,threeitem,outputCCM)
 
     # make list of applicable factors
     fieldList = arcpy.ListFields(outputCCM)
@@ -505,62 +509,69 @@ try:
     #Calc CCM
     arcpy.AddField_management(outputCCM,"ccm","DOUBLE")
     cursorFieldList = ["OID@","ccm","f1","f2"] + inputFactorList
-    ccmRows = arcpy.da.UpdateCursor(outputCCM,cursorFieldLIst)
+    ccmRows = arcpy.da.UpdateCursor(outputCCM,cursorFieldList)
     for ccmRow in ccmRows:
         ccm = 1.0
         
         # Start with Vehicle/Slope Parameter F1
-        f1 = copyRow[cursorFieldList.index("f1")] 
-        if f1 == types.NoneType:
+        f1 = ccmRow[cursorFieldList.index("f1")] 
+        #if f1 == types.NoneType: #UPDATE
+        if f1 == None:
             f1 = 1.0
-            copyRow[cursorFieldList.index("f1")] = f1
+            ccmRow[cursorFieldList.index("f1")] = f1
         ccm *= f1
         
         # Next use Slope-Intercept Frequency Count F2
-        f2 = copyRow[cursorFieldList.index("f2")]
-        if f2 == types.NoneType:
+        f2 = ccmRow[cursorFieldList.index("f2")]
+        #if f2 == types.NoneType: #UPDATE
+        if f2 == None:
             f2 = 1.0
-            copyRow[cursorFieldList.index("f2")] = f2
+            ccmRow[cursorFieldList.index("f2")] = f2
         ccm *= f2
         
         # If using vegetation minimum
         if "f3min" in cursorFieldList:
-            f3min = copyRow[cursorFieldList.index("f3min")]
-            if f3min == types.NoneType:
+            f3min = ccmRow[cursorFieldList.index("f3min")]
+            #if f3min == types.NoneType: #UPDATE
+            if f3min == None:
                 f3min = 1.0
-                copyRow[cursorFieldList.index("f3min")] = f3min
+                ccmRow[cursorFieldList.index("f3min")] = f3min
             ccm *= f3min
         
         # if using vegetation maximum
         if "f3max" in cursorFieldList:
-            f3max = copyRow[cursorFieldList.index("f3max")]
-            if f3max == types.NoneType:
+            f3max = ccmRow[cursorFieldList.index("f3max")]
+            #if f3max == types.NoneType: #UPDATE
+            if f3max == None:
                 f3max = 1.0
-                copyRow[cursorFieldList.index("f3max")] = f3max
+                ccmRow[cursorFieldList.index("f3max")] = f3max
             ccm *= f3max
         
         # if using dry soils
         if "f4dry" in cursorFieldList:
-            f4dry = copyRow[cursorFieldList.index("f4dry")]
-            if f4dry == types.NoneType:
+            f4dry = ccmRow[cursorFieldList.index("f4dry")]
+            ##if f4dry == types.NoneType: #UPDATE
+            if f4dry == None:
                 f4dry = 1.0
-                copyRow[cursorFieldList.index("f4dry")] = f4dry
+                ccmRow[cursorFieldList.index("f4dry")] = f4dry
             ccm *= f4dry
         
         # if using wet soils
         if "f4wet" in cursorFieldList:
-            f4wet = copyRow[cursorFieldList.index("f4wet")]
-            if f4wet == types.NoneType:
+            f4wet = ccmRow[cursorFieldList.index("f4wet")]
+            #if f4wet == types.NoneType: #UPDATE
+            if f4wet == None:
                 f4wet = 1.0
-                copyRow[cursorFieldList.index("f4wet")] = f4wet
+                ccmRow[cursorFieldList.index("f4wet")] = f4wet
             ccm *= f4wet
         
         # if using surface roughness
         if "f5" in cursorFieldList:
-            f5 = copyRow[cursorFieldList.index("f5")]
-            if f5 == types.NoneType:
+            f5 = ccmRow[cursorFieldList.index("f5")]
+            #if f5 == types.NoneType: #UPDATE
+            if f5 == None:
                 f5 = 1.0
-                copyRow[cursorFieldList.index("f5")] = f5
+                ccmRow[cursorFieldList.index("f5")] = f5
             ccm *= f5
             
         ccmRow[1] = ccm
@@ -600,7 +611,8 @@ except arcpy.ExecuteError:
     # Get the tool error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print msgs
+    #print msgs #UPDATE
+    print(msgs)
 
 except:
     if debug == True: arcpy.AddMessage("CRASH: " + str(time.strftime("%m/%d/%Y  %H:%M:%S", time.localtime())))
@@ -617,7 +629,9 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    #print pymsg + "\n" #UPDATE
+    print(pymsg + "\n")
+    #print msgs #UPDATE
+    print(msgs)
     
     
