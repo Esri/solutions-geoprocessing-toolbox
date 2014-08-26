@@ -1,3 +1,28 @@
+#------------------------------------------------------------------------------
+# Copyright 2014 Esri
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#------------------------------------------------------------------------------
+# 
+# ==================================================
+# CreateGRG.py
+# --------------------------------------------------
+# Built on ArcGIS
+# ==================================================
+# 
+# Creates a Gridded Reference Graphic
+#
+# 
+
 import os, sys, math, traceback
 import arcpy
 # Read in the parameters
@@ -17,10 +42,12 @@ def labelFeatures(layer, field):
         arcpy.RefreshActiveView()
 
 def findLayerByName(layerName):
+    #TODO: Pro updates for arcpy.mapping
     for layer in arcpy.mapping.ListLayers(mxd):
         if layer.name == layerName:
             return layer
 
+#TODO: Pro updates for arcpy.mapping
 mxd = arcpy.mapping.MapDocument('CURRENT')
 df = arcpy.mapping.ListDataFrames(mxd)[0]
 
@@ -72,8 +99,10 @@ for row in cursor:
 
 
 # Get and label the output feature
+#TODO: Pro updates for arcpy.mapping
 layerToAdd = arcpy.mapping.Layer(outputFeatureClass)
 arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
+
 targetLayerName = os.path.basename(outputFeatureClass)
 layer = findLayerByName(targetLayerName)
 

@@ -1,3 +1,28 @@
+#------------------------------------------------------------------------------
+# Copyright 2014 Esri
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#------------------------------------------------------------------------------
+# 
+# ==================================================
+# PointTargetGRG.py
+# --------------------------------------------------
+# Built on ArcGIS
+# ==================================================
+# 
+# Creates a Gridded Reference Graphic
+#
+# 
+
 import os, sys, math, traceback
 import arcpy
 from arcpy import env
@@ -23,6 +48,7 @@ def labelFeatures(layer, field):
         arcpy.RefreshActiveView()
 
 def findLayerByName(layerName):
+    #TODO: Pro updates for arcpy.mapping
     for layer in arcpy.mapping.ListLayers(mxd):
         if layer.name == layerName:
             return layer
@@ -176,7 +202,8 @@ def RotateFeatureClass(inputFC, outputFC,
                 oRow.setValue(TFID,Row.getValue(FID))
                 oRows.insertRow(oRow)
         else:
-            raise Exception, "Shape type {0} is not supported".format(shpType)
+            #raise Exception, "Shape type {0} is not supported".format(shpType) #UPDATE
+            raise Exception("Shape type {0} is not supported".format(shpType))
 
         del oRow, oRows # close write cursor (ensure buffer written)
         oRow, oRows = None, None # restore variables for cleanup
@@ -192,7 +219,8 @@ def RotateFeatureClass(inputFC, outputFC,
         dropList = ";".join(fnames[2:4])
         arcpy.DeleteField_management(lyrOut, dropList)
 
-    except MsgError, xmsg:
+    #except MsgError, xmsg: #UPDATE
+    except MsgError as xmsg:
         arcpy.AddError(str(xmsg))
     except arcpy.ExecuteError:
         tbinfo = traceback.format_tb(sys.exc_info()[2])[0]
@@ -201,7 +229,8 @@ def RotateFeatureClass(inputFC, outputFC,
         numMsg = arcpy.GetMessageCount()
         for i in range(0, numMsg):
             arcpy.AddReturnMessage(i)
-    except Exception, xmsg:
+    #except Exception, xmsg: #UPDATE
+    except Exception as xmsg:
         tbinfo = traceback.format_tb(sys.exc_info()[2])[0]
         arcpy.AddError(tbinfo + str(xmsg))
     finally:
