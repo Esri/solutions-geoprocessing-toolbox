@@ -71,8 +71,7 @@ def RunTest():
            
         ########################################################3
         # Execute the Model under test:
-        # mfunk 8/12/2014: LowestPoints tool was removed
-        #arcpy.LowestPoint_VandR(inputPolygonFC, inputSurface, outputPointsFC)
+        arcpy.LowestPoint_VandR(inputPolygonFC, inputSurface, outputPointsFC)
         ########################################################3
     
         # Verify the results    

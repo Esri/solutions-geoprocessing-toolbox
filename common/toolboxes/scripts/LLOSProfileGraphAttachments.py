@@ -176,8 +176,9 @@ try:
     arcpy.AddMessage("Building match table ...")
     arcpy.GenerateAttachmentMatchTable_management(inputFeatures,scratchFolder,matchTable,"pngname","*.png","ABSOLUTE")
     
-    arcpy.AddMessage("Attaching graphs to lines ...")
-    arcpy.AddAttachments_management(inputFeatures,"OID",matchTable,"MatchID","Filename")
+    arcpy.AddMessage("Attaching profile graphs to sightlines ...")
+    inOIDField = arcpy.Describe(inputFeatures).OIDFieldName
+    arcpy.AddAttachments_management(inputFeatures,inOIDField,matchTable,"MatchID","Filename")
     
         
     # cleanup
