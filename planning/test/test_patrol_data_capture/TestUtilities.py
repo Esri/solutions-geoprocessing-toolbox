@@ -23,14 +23,15 @@ import sys
 
 currentPath = os.path.dirname(__file__)
 geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../data/geodatabases/"))
-scratchPath = os.path.normpath(os.path.join(currentPath, r"../../data/geodatabases/"))
+scratchPath = geodatabasePath
+toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../toolboxes/"))  
 gpxPath = os.path.normpath(os.path.join(currentPath, r"../../data/gpx/"))
-toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../toolboxes/"))                
+               
 
 inputGDB  = os.path.join(geodatabasePath, "test_inputs.gdb")
 outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
-defaultGDB = os.path.join(geodatabasePath, "Data.gdb")
-scratchGDB = os.path.join(scratchPath, "Scratch.gdb")
+defaultGDB = os.path.join(geodatabasePath, "default.gdb")
+scratchGDB = os.path.join(scratchPath, "scratch.gdb")
 gpxFile = os.path.join(gpxPath, "JBad_20100706.gpx")
 
 toolbox = os.path.join(toolboxesPath, "PatrolDataCapture.tbx")
