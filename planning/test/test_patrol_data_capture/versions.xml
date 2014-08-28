@@ -8,12 +8,12 @@
     </description>
 	
 <!-- Set these to the default locations of ArcGIS/ArcPy for the current version (ex. 10.1): -->
-<property name="dir_arcpy_install_current_release" value="C:\Python27\ArcGIS10.3"/>
-<property name="dir_ags_install_current_release" value="C:\Program Files (x86)\ArcGIS\Desktop10.3"/>
+<property name="dir_arcpy_install_current_release" value="C:\Python27\ArcGIS10.2"/>
+<property name="dir_ags_install_current_release" value="C:\Program Files (x86)\ArcGIS\Desktop10.2"/>
 
 <!-- Set these to the default locations for the alternate version of ArcGIS/ArcPy (ex. 10.2): -->
-<property name="dir_arcpy_install_alternate_release" value="C:\Python34"/>
-<property name="dir_ags_install_alternate_release" value="C:\Program Files\ArcGIS Pro"/>
+<property name="dir_arcpy_install_alternate_release" value="C:\Python27\ArcGIS10.3"/>
+<property name="dir_ags_install_alternate_release" value="C:\Program Files (x86)\ArcGIS\Desktop10.3"/>
 
 
 <!-- ************************************************************************************************************ -->

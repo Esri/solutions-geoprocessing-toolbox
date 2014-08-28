@@ -11,7 +11,7 @@
   <property name="pythonpath" value="${dir.arcpy}\DLLs;${dir.arcpy}\lib;${dir.arcpy}\lib\plat-win;${dir.arcpy}\lib\lib-tk;${dir.arcpy};${dir.arcpy}\lib\site-packages;${dir.arcgisdesktop}\bin;${dir.arcgisdesktop}\arcpy"/>
 
   <target name="run_all_tests" 
-    depends="set_all_variables,get_data,test_config,test_range">
+    depends="set_all_variables,get_data,test_config">
     <echo message="All Tests Complete" />
   </target>
 
@@ -32,12 +32,12 @@
   </target>
 
 
-  <target name="test_range" depends="test_config">
+<!--  <target name="test_range" depends="test_config">
     <exec executable="${dir.arcpy}/python.exe" failonerror="true">
       <env key="PYTHONPATH" path="${pythonpath}"/>
       <arg line="-u"/>
       <arg line="${dir.src}/TestRangeFan.py"/>
     </exec>
-  </target>
+  </target>-->
 
 </project>

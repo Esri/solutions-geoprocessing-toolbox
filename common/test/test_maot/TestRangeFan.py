@@ -72,11 +72,11 @@ def RunTest():
         maximumRange = 1000.0
         bearing = 150.0
         traversal = 22.0
-        projection = "#"
+        projection = ""
            
         ########################################################3
         # Execute the Model under test:   
-        arcpy.sourceRangeFan_MAoT(inputPointsFC, maximumRange, bearing, traversal, outputRangeFansFC)
+        arcpy.sourceRangeFan_MAoT(inputPointsFC, maximumRange, bearing, traversal, outputRangeFansFC, projection)
         ########################################################3
     
         outputFeatureCountFans = int(arcpy.GetCount_management(outputRangeFansFC).getOutput(0)) 

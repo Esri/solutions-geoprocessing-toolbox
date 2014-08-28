@@ -163,6 +163,10 @@
 
   </target>
 
+<!--  <target name="run_all_tests">
+    <echo message="Running all tests ...." />
+    <ant dir="../" target="run_all_tests" />
+  </target>-->
   
   <target name="test">
     <echo message="Test" />

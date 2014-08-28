@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="DefenseAndIntelToolboxTest" basedir="." default="run_all_tests">
+<project name="solution-geoprocessing-toolbox" basedir="." default="run_all_tests">
 
   <!-- templatehome = defense-and-intel-analysis-toolbox -->
 
@@ -15,6 +15,12 @@
     <echo message="Done Test: test_range_cards" />
   </target>
 
+  <target name="test_publishable_tasks">
+    <echo message="Running: test_publishable_tasks" />
+    <ant dir="./test_publishable_tasks" target="run_all_tests" />
+    <echo message="Done Test: test_publishable_tasks" />
+  </target>
+  
   <target name="test_position_analysis">
     <echo message="Running: test_position_analysis" />
     <ant dir="./test_position_analysis" target="run_all_tests" />

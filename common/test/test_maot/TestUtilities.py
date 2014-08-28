@@ -31,7 +31,7 @@ outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
 defaultGDB = os.path.join(geodatabasePath, "default.gdb")
 scratchGDB = os.path.join(scratchPath, "scratch.gdb")
 
-toolbox = os.path.join(toolboxesPath, "Military Aspects of Terrain Toolbox.tbx")
+toolbox = os.path.join(toolboxesPath, "Military Aspects of Terrain Tools.tbx")
 
 def createScratch() :
     try :

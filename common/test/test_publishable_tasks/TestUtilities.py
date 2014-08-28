@@ -28,7 +28,7 @@ scratchPath = geodatabasePath
 
 toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../common/toolboxes/"))                
 
-inputElevationURL = r"https://afmcomstaging.esri.com/arcgis/services/Environment/DigitalTerrainModel/ImageServer"
+inputElevationURL = r"http://afmcloud.esri.com/arcgis/services/Environment/DigitalTerrainModel/ImageServer"
 inputGDB  = os.path.join(geodatabasePath, "PublishableTasksData.gdb")
 outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
 defaultGDB = os.path.join(geodatabasePath, "default.gdb")

@@ -5,7 +5,7 @@
   <!-- templatehome = defense-and-intel-analysis-toolbox -->
 
   <target name="run_all_subtests" 
-    depends="test_common,test_emergencymanagement,test_environment">
+    depends="test_common,test_emergencymanagement,test_environment, test_planning">
     <echo message="Running All Tests" />
   </target>
 
@@ -27,5 +27,10 @@
     <echo message="Done Test: test_environment" />
   </target>
 
+  <target name="test_planning">
+    <echo message="Running: test_planning" />
+    <ant dir="./planning/test" target="run_all_tests" />
+    <echo message="Done Test: test_planning" />
+  </target>
 
 </project>
