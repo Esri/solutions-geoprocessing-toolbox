@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!-- 
+ Build.xml
+ Description: Ant script used to fetch and unzip dependent data from ArcGIS Online
+ Requirements: Internet connectivity, Java JRE, Ant
+ -->
+
+<project name="DataDownloadAndConfiguration" basedir="." default="config">
+
+  <!-- templatehome = defense-and-intel-toolbox/common -->
+
+  <property name="dir.datadir" value="./" />
+
+  <target name="config" depends="make_dirs,get_data">
+    <echo message="Gets All Dependent Data used by this template from ArcGIS Online" />
+  </target>
+
+  <!-- Create necessary folder structure (Github will not create empty folders) -->
+  <target name="make_dirs">
+    <echo message="No need to makedirs, unzip makes entire maps, data folders" />
+  </target>
+
+  <!-- Get All Dependent Data from ArcGIS Online -->
+  <target name="get_data">
+    <!-- Data Folder -->
+    <get src="http://www.arcgis.com/sharing/content/items/b818862d16b0425a85e66747874f3a16/data"
+      dest="${dir.datadir}/defense-and-intel-analysis-toolbox-data.zip" 
+      verbose="true"
+      usetimestamp="true"/>
+
+    <!-- Unzip Maps, Data Directories -->
+    <unzip src="${dir.datadir}/defense-and-intel-analysis-toolbox-maps.zip"
+         dest="${dir.datadir}"/>
+
+  </target>
+
+  <!-- Delete All Data Folders and Datasets -->
+  <!-- Normally only for testing from a clean configuration -->
+  <target name="clean">
+    <delete dir="${dir.datadir}/data" />
+    <echo message="Warning: deleting data dirs (only do this if you mean it)" />
+    <echo message="Deleting path: ${dir.datadir}/data" />
+    <echo message="Deleting path: ${dir.datadir}/maps" />
+  </target>
+
+  <target name="test">
+    <echo message="Test" />
+  </target>
+
+</project>
