@@ -21,7 +21,7 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
   * Tools for analyzing the battlefield environment
   * Tools for position analysis
 
-* The [**capability**](./capability/README.md) folder contains:
+* The [**capability**](./capability/README.MD) folder contains:
   * Helicopter Landing Zone Tools
   * Point Of Origin Tools
   * ERG (Emergency Resources Guide) Tools
@@ -93,7 +93,7 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
     * Open Command Prompt>
     * `cd solutions-geoprocessing-toolbox`
     * `> ant`
-    * Verify “Build Succeeded”  
+    * Verify â€œBuild Succeededâ€  
 
 ### Running Verification Tests
 
@@ -107,7 +107,7 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
     * Go to the folder for the area you would like to test, the example below uses the `environment` area/folder, but each area has similar tests 
     * `> cd solutions-geoprocessing-toolbox\environment\test`
     * `> ant`
-    * Verify “Build Succeeded”
+    * Verify â€œBuild Succeededâ€
 
 ## Resources
 
