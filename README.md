@@ -21,7 +21,7 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
   * Tools for analyzing the battlefield environment
   * Tools for position analysis
 
-* The [**capability**](./capability/README.MD) folder contains:
+* The [**capability**](./capability/README.md) folder contains:
   * Helicopter Landing Zone Tools
   * Point Of Origin Tools
   * ERG (Emergency Resources Guide) Tools
