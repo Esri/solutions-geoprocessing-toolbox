@@ -2,7 +2,7 @@
 
 Capability Tools are geoprocessing tools that perform analysis and create results specific to a set of equipment or personnel or material capabilities.
 
-![Image of repository-template](capability_screenshot.png)
+![Image of repository-template](capability_screenshot.jpg)
 
 ## Sections
 

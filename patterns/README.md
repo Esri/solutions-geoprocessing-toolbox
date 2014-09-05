@@ -2,7 +2,7 @@
 
 Find patterns and trends through statistical and visual analysis.
 
-;![Image of repository-template](patterns_screenshot.png)
+;![Image of repository-template](patterns_screenshot.jpg)
 
 ## Sections
 
