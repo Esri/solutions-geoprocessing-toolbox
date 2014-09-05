@@ -1,10 +1,8 @@
 # solutions-geoprocessing-toolbox
 
-The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tools for use in ArcGIS Desktop. These tools provide specialized processing, workflows, and analysis for defense, intelligence, and other solutions domains.
+The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tools for use in ArcGIS Desktop. These tools provide specialized processing, workflows, and analysis for defense, intelligence, emergency management, and other solutions domains.
 
-Important Note: This is the 10.2 and later version of all of the tools from the previous repository at [https://github.com/Esri/defense-and-intel-analysis-toolbox](https://github.com/Esri/defense-and-intel-analysis-toolbox). That repo will be retired once this repo has been fully validated.
-
-![Image of toolbox](ScreenShot.jpg)
+![Image of the toolbox](SolutionsGeoprocessingToolboxGraphic.png)
 
 ## Sections
 
@@ -22,41 +20,51 @@ Important Note: This is the 10.2 and later version of all of the tools from the 
   * Tools for visibility and range analysis
   * Tools for analyzing the battlefield environment
   * Tools for position analysis
-* Specialized geoprocessing models and tools for emergency management
-* The [**common**](./common/README.md) folder contains shared tools:
-  * Military Aspects of Terrain Toolbox
+
+* The [**capability**](./capability/README.md) folder contains:
+  * Helicopter Landing Zone Tools
+  * Point Of Origin Tools
+  * ERG (Emergency Resources Guide) Tools
+  
+* The [**data_management**](./data_management/README.md) folder contains:
+  * Adjust Sample Data Dates Tools
   * Position Analysis Tools
   * Publishable Task Tools
-  * Range Card Tools
-  * Visibility and Range Tools
-* The [**analysis**](./analysis/README.md) folder contains:
-  * AdjustSampleDataDates
-  * Helicopter Landing Zone Tools
-  * Incident Analysis Tools
-  * VillageClearing
-* The [**environment**](./environment/README.md) folder contains:
-  * Build Elevation Mosiac Tools
+  * Build Elevation Mosaic Tools
   * Geonames Tools
-  * Maritime Decision Aid Tools
-  * Network Data Preparation Tools
-  * Path Slope Tools
   * Imagery Basemap Tools
+  * Network Data Preparation Tools
   * Scanned Map Basemap Tools
   * Topographic Basemap Tools
-* The [**emergencymanagement**](./emegencymanagement/README.md) folder contains:
-  * ERG Tools
-* The [**planning**](./planning/README.md) folder contains:
-  * Patrol Data Capture
+  * Patrol Data Capture Tools
+  
+* The [**operational_graphics**](./operational_graphics/README.md) folder contains:
+  * Clearing Operations Tools
+  * Range Card Tools
+  
+* The [**patterns**](./patterns/README.md) folder contains:
+  * Incident Analysis Tools
+  
+* The [**suitability**](./suitability/README.md) folder contains:
+  * Military Aspects of Terrain Tools
+  * Maritime Decision Aid Tools
+  * Path Slope Tools
+
+* The [**visibility**](./visibility/README.md) folder contains:
+  * Sun Position Analysis Tools
+  * Visibility and Range Tools
+  * Visibility Data Prep Tools
 
 ## Requirements
 
-* ArcGIS Desktop 10.1 or later Standard 
+* ArcGIS Desktop 10.2.2 or later Standard 
 * Apache Ant - used to download and extract dependent data and run test drivers
 * Java Runtime Environment (JRE) or Developer Kit (JDK) (required by Ant)
 * Some tools require additional licenses (these tools will be disabled if license is unavailable), see READMEs for more information: 
     * ArcGIS Desktop Advanced (ArcInfo)
     * ArcGIS Spatial Analyst Extension
     * ArcGIS 3D Analyst Extension
+    * ArcGIS Network Analyst Extension
     * For example these tools require Desktop Advanced and Spatial Analyst:
         * Path Slope Tools.tbx\Path Slope
         * Visibility and Range Tools.tbx\Range Fan
@@ -66,7 +74,7 @@ Important Note: This is the 10.2 and later version of all of the tools from the 
 ### General Help
 [New to Github? Get started here.](http://htmlpreview.github.com/?https://github.com/Esri/esri.github.com/blob/master/help/esri-getting-to-know-github.html)
 
-### Getting Started with the toolbox
+### Getting Started with the tools
 
 * Download the Github repository
     * If repository was downloaded as a zip, extract the zip file
@@ -85,7 +93,7 @@ Important Note: This is the 10.2 and later version of all of the tools from the 
     * Open Command Prompt>
     * `cd solutions-geoprocessing-toolbox`
     * `> ant`
-    * Verify ‚ÄúBuild Succeeded‚Äù  
+    * Verify ìBuild Succeededî  
 
 ### Running Verification Tests
 
@@ -99,7 +107,7 @@ Important Note: This is the 10.2 and later version of all of the tools from the 
     * Go to the folder for the area you would like to test, the example below uses the `environment` area/folder, but each area has similar tests 
     * `> cd solutions-geoprocessing-toolbox\environment\test`
     * `> ant`
-    * Verify ‚ÄúBuild Succeeded‚Äù
+    * Verify ìBuild Succeededî
 
 ## Resources
 
@@ -115,7 +123,7 @@ Esri welcomes contributions from anyone and everyone. Please see our [guidelines
 
 ## Licensing
 
-Copyright 2013 Esri
+Copyright 2014 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -132,5 +140,5 @@ limitations under the License.
 A copy of the license is available in the repository's
 [license.txt](license.txt) file.
 
-[](Esri Tags: ArcGIS Defense and Intelligence Military Environment Planning Analysis Emergency Management ArcGISSolutions)
+[](Esri Tags: ArcGIS Defense and Intelligence Military Environment Planning Analysis Emergency Management )
 [](Esri Language: Python)
