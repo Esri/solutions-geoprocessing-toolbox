@@ -6,8 +6,8 @@ Create and visualize graphic products in support of operations.
 
 ## Sections
 
-* [Clearing Operations Tools](#clearing_operations_tools)
-* [Range Card Tools](#range_card_tools)
+* [Clearing Operations Tools](#clearing-operations-tools)
+* [Range Card Tools](#range-card-tools)
 * [Issues](#issues)
 * [Contributing](#contributing)
 * [Licensing](#licensing)

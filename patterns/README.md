@@ -6,7 +6,7 @@ Find patterns and trends through statistical and visual analysis.
 
 ## Sections
 
-* [Incident Analysis Tools](#incident_analysis_tools)
+* [Incident Analysis Tools](#incident-analysis-tools)
 * [Issues](#issues)
 * [Contributing](#contributing)
 * [Licensing](#licensing)
