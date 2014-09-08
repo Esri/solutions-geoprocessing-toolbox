@@ -7,8 +7,8 @@ Tools to determine what you can or cannot see from a location.
 ## Sections
 
 * [Sun Position Analysis Tools](#sun_position_analysis_tools)
-* [Visibility and Range Tools](#visibility_and_range_tools)
-* [Visibility Data Prep Tools](#visibility_data_prep_tools)
+* [Visibility and Range Tools](#visibility-and-range-tools)
+* [Visibility Data Prep Tools](#visibility-data-prep-tools)
 * [Issues](#issues)
 * [Contributing](#contributing)
 * [Licensing](#licensing)

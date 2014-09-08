@@ -7,8 +7,8 @@ Determine areas most suitable for both friendly and adversarial operations.
 ## Sections
 
 * [Maritime Decision Aid Tools](#maritime_decision_aid_tools)
-* [Military Aspects Of Terrain Tools](#military_aspects_of_terrain_tools)
-* [Path Slope Tools](#path_slope_tools)
+* [Military Aspects Of Terrain Tools](#military-aspects-of-terrain-tools)
+* [Path Slope Tools](#path-slope-tools)
 * [Issues](#issues)
 * [Contributing](#contributing)
 * [Licensing](#licensing)
