@@ -203,6 +203,9 @@
     <echo message="Deleting Visibility Test Data" />
     <delete dir="${dir.visibilitydatadir}" />
     
+    <echo message="Deleting ZIP directory" />
+    <delete dir="${dir.zipdir}" />
+    
   </target>
 
 <!--  <target name="run_all_tests">
