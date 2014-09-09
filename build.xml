@@ -9,15 +9,23 @@
 
   <!-- templatehome = defense-and-intel-toolbox -->
   <property name="dir.zipdir" value="./downloaded_data" />
-  <property name="dir.commondir" value="./common" />
-  <property name="dir.commondatadir" value="./common/data" />
-  <property name="dir.commonmapdir" value="./common/maps" />
-  
-  <property name="dir.environmentdir" value="./environment" />
-  <property name="dir.environmentdatadir" value="./environment/data" />
+   
+  <property name="dir.capabilitydir" value="./capability" />
+  <property name="dir.capabilitydatadir" value="./capability/data" />
+  <property name="dir.datamanagementdir" value="./data_management" />
+  <property name="dir.datamanagementdatadir" value="./data_management/data" />
+  <property name="dir.operationalgraphicsdir" value="./operational_graphics" />
+  <property name="dir.operationalgraphicsdatasdir" value="./operational_graphics/data" />
+  <property name="dir.patternsdir" value="./patterns" />
+  <property name="dir.patternsdatadir" value="./patterns/data" />
+  <property name="dir.suitabilitydir" value="./suitability" />
+  <property name="dir.suitabilitydatadir" value="./suitability/data" />
+  <property name="dir.visibilitydir" value="./visibility" />
+  <property name="dir.visibilitydatadir" value="./visibility/data" />
   
 
-  <target name="config" depends="make_dirs,get_common_data,get_environment_data">
+  <target name="config" depends="make_dirs,get_capability_data,get_data_management_data,
+    get_operational_graphics_data,get_patterns_data,get_suitability_data,get_visibility_data">
     <echo message="Gets All Dependent Data used by this template from ArcGIS Online" />
   </target>
 
@@ -26,141 +34,175 @@
     <mkdir dir="${dir.zipdir}"/>
     <echo message="Creating: ${dir.zipdir}" />    
   </target>
-
-
-  <target name="get_common_data">
-  <!-- Get and manage test data for Common tests only -->
+  
+  <target name="get_capability_data">
+    <!-- Helicopter Landing Zone Tools Test Data -->
+    <!-- Point Of Origin Tools Test Data -->
+    <!-- ERG Tools Test Data -->
+  </target>
+  
+  <target name="get_data_management_data">
+    <!-- Adjust Sample Data Dates Tools Test Data -->
     
-    <!--Original toolbox data: 1ab069b8ed5749c083069289151fe127-->
-    <echo message="Downloading common maps"/>
-    <get src="http://www.arcgis.com/sharing/content/items/3cbdf5956c304d8b8c54d3f948f38af4/data"
-      dest="${dir.zipdir}/defense-and-intel-analysis-toolbox-maps.zip" 
-      verbose="true"
-      usetimestamp="true"/>
-    <echo message="Unzipping common maps" />
-    <unzip src="${dir.zipdir}/defense-and-intel-analysis-toolbox-maps.zip"
-         dest="${dir.commondir}"/>
-    
-    <!--Original toolbox maps: b818862d16b0425a85e66747874f3a16-->
-    <echo message="Downloading common data" />
-    <get src="http://www.arcgis.com/sharing/content/items/8e83d00841404fb48c38ef3a2e5ea3b7/data"
-      dest="${dir.zipdir}/defense-and-intel-analysis-toolbox-data.zip" 
-      verbose="true"
-      usetimestamp="true"/>
-    <echo message="Unzipping common data" />
-    <unzip src="${dir.zipdir}/defense-and-intel-analysis-toolbox-data.zip"
-         dest="${dir.commondir}"/>
+    <!-- Position Analysis Tools Test Data: 130f52ac95a040cb80717d99db100409 -->
+    <echo message="Downloading Position Analysis Tools test data." />
+    <get src="http://www.arcgis.com/sharing/content/items/130f52ac95a040cb80717d99db100409/data"
+         dest="${dir.zipdir}/PositionAnalysisToolsTestData.zip"
+         usetimestamp="true"
+         verbose="true"/>
+    <echo message="Unzipping Position Analysis Tools test data."/>
+    <unzip src="${dir.zipdir}/PositionAnalysisToolsTestData.zip"
+          dest="${dir.datamanagementdatadir}/geodatabases"/>
 
     <!--Publishable Tasks geodatabase: 921fc6d5f5e2444dab14831edc01ef9d -->
     <echo message="Downloading publishable tasks data" />
     <get src="http://www.arcgis.com/sharing/content/items/921fc6d5f5e2444dab14831edc01ef9d/data"
-      dest="${dir.zipdir}/PublishableTasksData.gdb.zip"
-      usetimestamp="true"
-      verbose="true"/>
+          dest="${dir.zipdir}/PublishableTasksData.gdb.zip"
+          usetimestamp="true"
+          verbose="true"/>
     <echo message="Unzipping publishable tasks data" />
     <unzip src="${dir.zipdir}/PublishableTasksData.gdb.zip"
-    dest="${dir.commondatadir}/geodatabases"/>
-  
-  </target>
-  
-  <target name="get_environment_data">
-  <!-- Get and manage test data for Environment tests only   -->
+           dest="${dir.datamanagementdatadir}/geodatabases"/>
+           
+    <!-- Build Elevation Mosaic Tools: Uses TOPOGRAPHIC BASEMAP TOOLS TEST DATA BELOW -->
     
-    <!--Original toolbox maps: b818862d16b0425a85e66747874f3a16-->
-    <echo message="Downloading environment data" />
-    <get src="http://www.arcgis.com/sharing/content/items/8e83d00841404fb48c38ef3a2e5ea3b7/data"
-      dest="${dir.zipdir}/defense-and-intel-analysis-toolbox-data.zip" 
-      verbose="true"
-      usetimestamp="true"/>
-    <echo message="Unzipping environment data" />
-    <unzip src="${dir.zipdir}/defense-and-intel-analysis-toolbox-data.zip"
-         dest="${dir.environmentdir}"/>
-    
-    <!--NetworkPrepData.gdb: cf09da3684214d2b9b18c22149130fc4 -->
-    <echo message="Downloading network prep data" />
-    <get src="http://www.arcgis.com/sharing/content/items/cf09da3684214d2b9b18c22149130fc4/data"
-    dest="${dir.zipdir}/NetworkPrepData.gdb.zip"
-    verbose="true"
-    usetimestamp="true"/>
-    <echo message="Unzipping network prep data" />
-    <unzip src="${dir.zipdir}/NetworkPrepData.gdb.zip"
-    dest="${dir.environmentdatadir}/geodatabases" />
-    
-    <!-- Geonames: -->
-    <!-- http://www.arcgis.com/home/item.html?id=afc766d5276648ab80aa85b819af1ffc -->
+    <!-- Geonames Tools Test Data: afc766d5276648ab80aa85b819af1ffc -->
     <echo message="Downloading geonames data" />
     <get src="http://www.arcgis.com/sharing/content/items/afc766d5276648ab80aa85b819af1ffc/data"
-    dest="${dir.zipdir}/Geonames.zip"
-    verbose="true"
-    usetimestamp="true"/>
+          dest="${dir.zipdir}/Geonames.zip"
+          verbose="true"
+          usetimestamp="true"/>
     <echo message="Unzipping Geonames data" />
     <unzip src="${dir.zipdir}/Geonames.zip"
-    dest="${dir.environmentdatadir}" />
+          dest="${dir.datamanagementdatadir}" />
     
-    <!-- Imagery Basemap: -->
-    <!-- http://www.arcgis.com/home/item.html?id=c3c1baa1e65e437a9d04b7c9b9b9d699 -->
+    <!-- Imagery Basemap Tools Test Data: c3c1baa1e65e437a9d04b7c9b9b9d699 -->
     <echo message="Downloading imagery basemap data" />
     <get src="http://www.arcgis.com/sharing/content/items/c3c1baa1e65e437a9d04b7c9b9b9d699/data"
-    dest="${dir.zipdir}/Imagery.zip"
-    verbose="true"
-    usetimestamp="true"/>
+          dest="${dir.zipdir}/Imagery.zip"
+          verbose="true"
+          usetimestamp="true"/>
     <echo message="Unzipping Imagery Basemap data" />
     <unzip src="${dir.zipdir}/Imagery.zip"
-    dest="${dir.environmentdatadir}" />
+          dest="${dir.datamanagementdatadir}" />
     
-    <!-- Scanned Map Basemap: -->
-    <!-- http://www.arcgis.com/home/item.html?id=706e92ad67c34cae8ae95c0fde097a6c -->
+    <!-- Network Data Preparation Tools Test Data: cf09da3684214d2b9b18c22149130fc4 -->
+    <echo message="Downloading network prep data" />
+    <get src="http://www.arcgis.com/sharing/content/items/cf09da3684214d2b9b18c22149130fc4/data"
+          dest="${dir.zipdir}/NetworkPrepData.gdb.zip"
+          verbose="true"
+          usetimestamp="true"/>
+    <echo message="Unzipping network prep data" />
+    <unzip src="${dir.zipdir}/NetworkPrepData.gdb.zip"
+          dest="${dir.datamanagementdatadir}/geodatabases" />
+    
+    <!-- Scanned Map Basemap Tools Test Data: 06e92ad67c34cae8ae95c0fde097a6c -->
     <echo message="Downloading scanned map basemap data" />
     <get src="http://www.arcgis.com/sharing/content/items/706e92ad67c34cae8ae95c0fde097a6c/data"
-    dest="${dir.zipdir}/ScannedMaps.zip"
-    verbose="true"
-    usetimestamp="true"/>
+          dest="${dir.zipdir}/ScannedMaps.zip"
+          verbose="true"
+          usetimestamp="true"/>
     <echo message="Unzipping Scanned Map Basemap data" />
     <unzip src="${dir.zipdir}/ScannedMaps.zip"
-    dest="${dir.environmentdatadir}" />
+          dest="${dir.datamanagementdatadir}" />
     
-    <!-- Topographic Basemap: -->
-    <!-- http://www.arcgis.com/home/item.html?id=8e682b02ca02482d8caaebae05cbdc1a -->
+    <!-- Topographic Basemap Tools Test Data: 8e682b02ca02482d8caaebae05cbdc1a -->
     <echo message="Downloading topographic basemap data" />
     <get src="http://www.arcgis.com/sharing/content/items/8e682b02ca02482d8caaebae05cbdc1a/data"
-    dest="${dir.zipdir}/Topographic.zip"
-    verbose="true"
-    usetimestamp="true"/>
+          dest="${dir.zipdir}/Topographic.zip"
+          verbose="true"
+          usetimestamp="true"/>
     <echo message="Unzipping Topographic Basemap data" />
     <unzip src="${dir.zipdir}/Topographic.zip"
-    dest="${dir.environmentdatadir}" />
-        
+          dest="${dir.datamanagementdatadir}" />  
+    
+    <!-- Patrol Data Capture Tools -->
+    
   </target>
   
-  <target name="get_data_operations_only">
-
-    <!--Download operational environment sample data to Commmon and Environment-->
-    <echo message="Downloading Operational Environment data" />
-    <get src="http://downloads.esri.com/resources/defense/Operational_Environment.zip"
-      dest="${dir.zipdir}/Operational_Environment.zip" 
-      verbose="true"
-      usetimestamp="true"/>
-    <echo message="Unzipping Operational Environment sample data to common" />    
-    <unzip src="${dir.zipdir}/Operational_Environment.zip"
-         dest="${dir.commondatadir}/Operational_Environment"/>
-    <echo message="Unzipping Operational Environment sample data to environment" />
-    <unzip src="${dir.zipdir}/Operational_Environment.zip"
-         dest="${dir.environmentdatadir}/Operational_Environment"/>
-
+  <target name="get_operational_graphics_data">
+    
+    <!-- Range Card Tools Test Data: f5414250daf14dd389cc50199efeef8d -->
+    <echo message="Downloading Range Card Tools test data" />
+    <get src="http://www.arcgis.com/sharing/content/items/f5414250daf14dd389cc50199efeef8d/data"
+         dest="${dir.zipdir}/RangeCardToolsTestData.zip"
+         verbose="true"
+         usetimestamp="true"/>
+    <echo message="Unzipping Range Card Tools test data" />
+    <unzip src="${dir.zipdir}/RangeCardToolsTestData.zip"
+           dest="${dir.operationalgraphicsdatasdir}/geodatabases" />
+    
+    <!-- Clearing Operations Tools Test Data -->
+    
   </target>
-
+  
+  <target name="get_patterns_data">
+    <!-- Incident Analysis Tools Test Data -->
+  </target>
+  
+  <target name="get_suitability_data">
+    
+    <!-- Military Aspects of Terrain Tools Test Data: 127bff2341694342a6df884aaa51237e-->
+    <echo message="Downloading Military Aspects of Terrain Tools test data" />
+    <get src="http://www.arcgis.com/sharing/content/items/127bff2341694342a6df884aaa51237e/data"
+         dest="${dir.zipdir}/MilitaryAspectsOfTerrainTestData.zip"
+         verbose="true"
+         usetimestamp="true" />
+    <echo message="Unzipping Military Aspects of Terrain Tools test data" />
+    <unzip src="${dir.zipdir}/MilitaryAspectsOfTerrainTestData.zip"
+           dest="${dir.suitabilitydatadir}/geodatabases" />
+    
+    <!-- Maritime Decision Aid Tools Test Data -->
+    
+    <!-- Path Slope Tools Test Data: cbb812326b6f4fb2b77cac4a85e734a9 -->
+    <echo message="Downloading Path Slope Tools test data" />
+    <get src="http://www.arcgis.com/sharing/content/items/cbb812326b6f4fb2b77cac4a85e734a9/data"
+          dest="${dir.zipdir}/PathSlopeToolsTestData.zip"
+          verbose="true"
+          usetimestamp="true"/>
+    <echo message="Unzipping Path Slope Tools test data"/>
+    <unzip src="${dir.zipdir}/PathSlopeToolsTestData.zip"
+          dest="${dir.suitabilitydatadir}/geodatabases" />
+    
+  </target>
+  
+  <target name="get_visibility_data">
+    <!-- Sun Position Analysis Tools Test Data -->
+    
+    <!-- Visibility And Range Tools Test Data: 62d971c064e043f48aee2fff9c701042 -->
+    <echo message="Downloading Visibility And Range Tools test data" />
+    <get src="http://www.arcgis.com/sharing/content/items/62d971c064e043f48aee2fff9c701042/data"
+         dest="${dir.zipdir}/VisibilityAndRangeToolsTestData.zip"
+         verbose="true"
+         usetimestamp="true" />
+    <echo message="Unzipping Visibility And Range Tools test data" />
+    <unzip src="${dir.zipdir}/VisibilityAndRangeToolsTestData.zip"
+           dest="${dir.visibilitydatadir}/geodatabases" />
+    
+  </target>
+  
   <!-- Delete All Data Folders and Datasets -->
   <!-- Normally only for testing from a clean configuration -->
   <target name="clean">
-
-    <echo message="Warning: deleting data dirs (only do this if you mean it)" />
-    <echo message="Deleting path: ${dir.commondatadir}" />
-    <delete dir="${dir.commondatadir}" />
-    <echo message="Deleting path: ${dir.commonmapdir}" />
-    <delete dir="${dir.commonmapdir}" />
-    <echo message="Deleting path: ${dir.environmentdatadir}" />
-    <delete dir="${dir.environmentdatadir}" />
-
+    
+    <echo message="Deleting Capability Test Data" />
+    <delete dir="${dir.capabilitydatadir}" />
+    
+    <echo message="Deleting Data Management Test Data" />
+    <delete dir="${dir.datamanagementdatadir}" />
+    
+    <echo message="Deleting Operational Graphics Test Data" />
+    <delete dir="${dir.operationalgraphicsdatasdir}" />
+    
+    <echo message="Deleting Patterns Test Data" />
+    <delete dir="${dir.patternsdatadir}" />
+    
+    <echo message="Deleting Suitability Test Data" />
+    <delete dir="${dir.suitabilitydatadir}" />
+    
+    <echo message="Deleting Visibility Test Data" />
+    <delete dir="${dir.visibilitydatadir}" />
+    
   </target>
 
 <!--  <target name="run_all_tests">
