@@ -33,7 +33,7 @@ try:
     
     #check product for Advanced (ArcInfo)
     productLevel = arcpy.CheckProduct("ArcInfo")
-    print "CheckProduct(ArcInfo): " + productLevel
+    print("CheckProduct(ArcInfo): " + productLevel)
 
     if (productLevel == "Available"):
         import arcinfo
@@ -51,13 +51,13 @@ try:
     
     #Verify Results
     countBeforeRoadFeatures = int(arcpy.GetCount_management(inputUTDSRoadFeatures).getOutput(0))
-    print "Before road feature count: " + str(countBeforeRoadFeatures)
+    print("Before road feature count: " + str(countBeforeRoadFeatures))
     
     countAfterRoadFeatures = int(arcpy.GetCount_management(outputSplitRoadFeatures).getOutput(0))
-    print "After road feature count: " + str(countAfterRoadFeatures)
+    print("After road feature count: " + str(countAfterRoadFeatures))
     
     if (countBeforeRoadFeatures >= countAfterRoadFeatures):
-        print "Feature count is not greater"
+        print("Feature count is not greater")
         raise Exception("Test Failed")
     
     print("Test Passed")
@@ -67,7 +67,7 @@ except arcpy.ExecuteError:
     # Get the arcpy error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print msgs
+    print(msgs)
     
     # return a system error code
     sys.exit(-1)
@@ -86,8 +86,8 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    print(pymsg + "\n")
+    print(msgs)
     
     # return a system error code  
     sys.exit(-1)

@@ -64,7 +64,15 @@
     <unzip src="${dir.zipdir}/PublishableTasksData.gdb.zip"
            dest="${dir.datamanagementdatadir}/geodatabases"/>
            
-    <!-- Build Elevation Mosaic Tools: Uses TOPOGRAPHIC BASEMAP TOOLS TEST DATA BELOW -->
+    <!-- Build Elevation Mosaic Tools: b212e314ae00453aa5c4a0e3a8e072e6 & ALSO USES TOPOGRAPHIC BASEMAP TOOLS TEST DATA BELOW -->
+    <echo message="Downloading Build Elevation Mosaic test data" />
+    <get src="http://www.arcgis.com/sharing/content/items/b212e314ae00453aa5c4a0e3a8e072e6/data"
+          dest="${dir.zipdir}/BuildElevationMosaicToolsTestData.zip"
+          verbose="true"
+          usetimestamp="true"/>
+    <echo message="Unzipping Build Elevation Mosaic test dataGeonames data" />
+    <unzip src="${dir.zipdir}/BuildElevationMosaicToolsTestData.zip"
+          dest="${dir.datamanagementdatadir}/geodatabases" />   
     
     <!-- Geonames Tools Test Data: afc766d5276648ab80aa85b819af1ffc -->
     <echo message="Downloading geonames data" />
@@ -116,7 +124,15 @@
     <unzip src="${dir.zipdir}/Topographic.zip"
           dest="${dir.datamanagementdatadir}" />  
     
-    <!-- Patrol Data Capture Tools -->
+    <!-- Patrol Data Capture Tools Test Data: 853736d171e44a40a55e4c312bf43b66-->
+    <echo message="Downloading Patrol Data Capture Tools test data" />
+    <get src="http://www.arcgis.com/sharing/content/items/853736d171e44a40a55e4c312bf43b66/data"
+          dest="${dir.zipdir}/PatrolDataCaptureToolsTestData.zip"
+          verbose="true"
+          usetimestamp="true"/>
+    <echo message="Unzipping Patrol Data Capture Tools test data" />
+    <unzip src="${dir.zipdir}/PatrolDataCaptureToolsTestData.zip"
+          dest="${dir.datamanagementdatadir}" /> 
     
   </target>
   

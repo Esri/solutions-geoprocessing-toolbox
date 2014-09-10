@@ -25,51 +25,54 @@ import traceback
 import TestUtilities
 
 try:
-    print "Testing ArcPy"
+    print("Testing ArcPy")
     arcpy.AddMessage("ArcPy works")
+    
+    if not arcpy.Exists(TestUtilities.scratchGDB):
+        TestUtilities.createScratch()
     
     # WORKAROUND: delete scratch db (having problems with scratch read-only "scheme lock" errors
     # print "Deleting Scratch Workspace (Workaround)"    
     # TestUtilities.deleteScratch()
       
-    print "Testing Necessary Paths"                
+    print("Testing Necessary Paths")
     
-    print "Running from: " + str(TestUtilities.currentPath)
+    print("Running from: " + str(TestUtilities.currentPath))
            
     paths2Check = []
     paths2Check.extend([TestUtilities.geodatabasePath, TestUtilities.scratchPath, TestUtilities.toolboxesPath])
     
     for path2check in paths2Check :
         if os.path.exists(path2check) :
-            print "Valid Path: " + path2check
+            print("Valid Path: " + path2check)
         else :     
-            print "ERROR: Necessary Path not found: " + path2check 
+            print("ERROR: Necessary Path not found: " + path2check )
             raise Exception('Bad Path')
     
     # WORKAROUND
-    # print "Creating New Scratch Workspace (Workaround)"    
+    # print("Creating New Scratch Workspace (Workaround)")
     # TestUtilities.createScratch()
 
-    print "Testing Necessary Geo Objects"        
+    print("Testing Necessary Geo Objects")
     
     objects2Check = []
     objects2Check.extend([TestUtilities.toolbox, TestUtilities.inputGDB, TestUtilities.outputGDB, TestUtilities.defaultGDB]) 
     for object2Check in objects2Check :
         desc = arcpy.Describe(object2Check)
         if desc == None :
-            print "--> Invalid Object: " + str(object2Check)    
+            print("--> Invalid Object: " + str(object2Check))
             arcpy.AddError("Bad Input")
             raise Exception('Bad Input')
         else :
-            print "Valid Object: " + desc.Name 
+            print("Valid Object: " + desc.Name)
             
-    print "Test Successful"
+    print("Test Successful")
     
 except arcpy.ExecuteError: 
     # Get the arcpy error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print msgs
+    print(msgs)
     
     # return a system error code
     sys.exit(-1)
@@ -88,8 +91,8 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    print(pymsg + "\n")
+    print(msgs)
     
     # return a system error code  
     sys.exit(-1)

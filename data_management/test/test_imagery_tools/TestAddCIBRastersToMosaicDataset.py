@@ -32,11 +32,11 @@ def RunTest():
         arcpy.env.overwriteOutput = True
         
         inputMosaicDataset = os.path.join(TestUtilities.inputGDB, "Imagery_Test")
-        print inputMosaicDataset
+        print(inputMosaicDataset)
         
         # Set environment settings
-        print "Running from: " + str(TestUtilities.currentPath)
-        print "Geodatabase path: " + str(TestUtilities.geodatabasePath)
+        print("Running from: " + str(TestUtilities.currentPath))
+        print("Geodatabase path: " + str(TestUtilities.geodatabasePath))
         
         arcpy.env.overwriteOutput = True
            
@@ -47,16 +47,16 @@ def RunTest():
         
         #Check Output
         inputFeatureCount = int(arcpy.GetCount_management(inputMosaicDataset).getOutput(0)) 
-        print "Input FeatureClass: " + str(inputMosaicDataset)
-        print "Input Feature Count: " +  str(inputFeatureCount)
+        print("Input FeatureClass: " + str(inputMosaicDataset))
+        print("Input Feature Count: " +  str(inputFeatureCount))
             
         if (inputFeatureCount <= 0) :
-            print "Invalid Input Feature Count: " +  str(inputFeatureCount)
+            print("Invalid Input Feature Count: " +  str(inputFeatureCount))
             raise Exception("Test Failed")
          
        
         
-        print "Test Successful"        
+        print("Test Successful")
                 
     except arcpy.ExecuteError: 
         # Get the tool error messages 

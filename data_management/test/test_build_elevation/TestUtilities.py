@@ -22,16 +22,18 @@ import os
 import sys
 
 currentPath = os.path.dirname(__file__)
-geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../environment/data/geodatabases/"))
+geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/data/geodatabases/"))
 scratchPath = geodatabasePath
-toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../environment/toolboxes/"))
+toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/toolboxes/"))
 
-elevSourcePath = os.path.normpath(os.path.join(currentPath, r"../../../environment/data/Topographic/Elevation/Source/"))
+elevSourcePath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/data/Topographic/Elevation/Source/"))
 
-inputGDB  = os.path.join(geodatabasePath, "test_inputs.gdb")
-outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
-defaultGDB = os.path.join(geodatabasePath, "default.gdb")
+inputGDB  = os.path.join(geodatabasePath, "test_build_elevation_mosaic_inputs.gdb")
+#outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
+#defaultGDB = os.path.join(geodatabasePath, "default.gdb")
 scratchGDB = os.path.join(scratchPath, "scratch.gdb")
+outputGDB = scratchGDB
+defaultGDB = scratchGDB
 
 toolbox = os.path.join(toolboxesPath, "Build Elevation Mosaic Tools.tbx")
 
@@ -39,14 +41,15 @@ def createScratch() :
     try :
         arcpy.CreateFileGDB_management(scratchPath, "scratch")                                          
     except:    
-        print "scratch.gdb already exists"
-        
+        print("scratch.gdb already exists")
     return
 
 def deleteScratch() :
     try :   
         arcpy.Delete_management(scratchGDB)
     except:    
-        print "scratch.gdb delete failed"
-        
+        print("scratch.gdb delete failed")
     return    
+
+# create scratch
+createScratch()

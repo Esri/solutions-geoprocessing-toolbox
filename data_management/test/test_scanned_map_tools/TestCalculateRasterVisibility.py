@@ -31,19 +31,19 @@ def RunTest():
         toolbox = TestUtilities.toolbox
         
         # Set environment settings
-        print "Running from: " + str(TestUtilities.currentPath)
-        print "Geodatabase path: " + str(TestUtilities.geodatabasePath)
+        print("Running from: " + str(TestUtilities.currentPath))
+        print("Geodatabase path: " + str(TestUtilities.geodatabasePath))
         
         arcpy.env.overwriteOutput = True
       
         arcpy.ImportToolbox(toolbox, "DefenseScannedMaps")
     
         inputFeatureCount = int(arcpy.GetCount_management(inputMosaicDataset).getOutput(0)) 
-        print "Input FeatureClass: " + str(inputMosaicDataset)
-        print "Input Feature Count: " +  str(inputFeatureCount)
+        print("Input FeatureClass: " + str(inputMosaicDataset))
+        print("Input Feature Count: " +  str(inputFeatureCount))
             
         if (inputFeatureCount < 1) :
-            print "Invalid Input Feature Count: " +  str(inputFeatureCount)
+            print("Invalid Input Feature Count: " +  str(inputFeatureCount))
                        
            
         ########################################################
@@ -51,9 +51,7 @@ def RunTest():
         arcpy.CalculateRasterVisibility_DefenseScannedMaps(inputMosaicDataset, 10)
         ########################################################
 
-        
         # Verify the results  
-
         min = arcpy.da.SearchCursor(inputMosaicDataset, ("MinPS"))
         for row in min:
             if( row[0] < 0) :
@@ -64,11 +62,8 @@ def RunTest():
         for row in max:
             if( row[0] < 0) :
                 raise Exception("Test Failed")
-        
             
-        
-        
-        print "Test Successful"        
+        print("Test Successful"        )
                 
     except arcpy.ExecuteError: 
         # Get the tool error messages 

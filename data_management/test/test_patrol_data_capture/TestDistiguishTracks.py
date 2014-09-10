@@ -38,11 +38,11 @@ def RunTest():
         toolbox = TestUtilities.toolbox
                
         # Set environment settings
-        print "Running from: " + str(TestUtilities.currentPath)
-        print "Geodatabase path: " + str(TestUtilities.geodatabasePath)
+        print("Running from: " + str(TestUtilities.currentPath))
+        print("Geodatabase path: " + str(TestUtilities.geodatabasePath))
         
         arcpy.env.overwriteOutput = True
-        arcpy.ImportToolbox(toolbox, "PDCAlias")
+        arcpy.ImportToolbox(toolbox, "pdc")
                
         dateTimeField = "Date_Time"
         maximumTimeDelta = 100.0
@@ -50,28 +50,28 @@ def RunTest():
         ########################################################
         # Execute the Model under test:   
         # Format: DistinguishTracks_MyAlias(GPS_Data, DateTime_Field, Maximum_Time_Difference, SeparatedGPSData, TrackLines)
-        arcpy.DistinguishTracks_PDCAlias(inputTrackPointsFC, dateTimeField, maximumTimeDelta, outputPointsFC, outputLinesFC)
+        arcpy.DistinguishTracks_pdc(inputTrackPointsFC, dateTimeField, maximumTimeDelta, outputPointsFC, outputLinesFC)
         ########################################################
         
         # Verify the results (Track Points)   
         outputFeatureCount = int(arcpy.GetCount_management(outputPointsFC).getOutput(0)) 
-        print "Output FeatureClass (Points): " + str(outputPointsFC)
-        print "Output Feature Count: " +  str(outputFeatureCount)
+        print("Output FeatureClass (Points): " + str(outputPointsFC))
+        print("Output Feature Count: " +  str(outputFeatureCount))
                     
         if (outputFeatureCount < 1) :
-            print "Invalid Output Feature Count: " +  str(outputFeatureCount)
+            print("Invalid Output Feature Count: " +  str(outputFeatureCount))
             raise Exception("Test Failed")       
         
         # Verify the results (Track Lines)       
         outputFeatureCount = int(arcpy.GetCount_management(outputLinesFC).getOutput(0)) 
-        print "Output FeatureClass (Lines): " + str(outputLinesFC)
-        print "Output Feature Count: " +  str(outputFeatureCount)
+        print("Output FeatureClass (Lines): " + str(outputLinesFC))
+        print("Output Feature Count: " +  str(outputFeatureCount))
                     
         if (outputFeatureCount < 1) :
-            print "Invalid Output Feature Count: " +  str(outputFeatureCount)
+            print("Invalid Output Feature Count: " +  str(outputFeatureCount))
             raise Exception("Test Failed")                                              
         
-        print "Test Successful"        
+        print("Test Successful")
                 
     except arcpy.ExecuteError: 
         # Get the tool error messages 

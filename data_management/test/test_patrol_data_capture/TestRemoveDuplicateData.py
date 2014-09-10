@@ -38,53 +38,53 @@ def RunTest():
             # Delete Output if it exists   
             desc = arcpy.Describe(outputPointsFC)
             if desc != None :
-                print "Deleting: " + str(outputPointsFC)
+                print("Deleting: " + str(outputPointsFC))
                 arcpy.Delete_management(outputPointsFC)
         except:    
-            print "Delete failed for: " + str(outputPointsFC)
+            print("Delete failed for: " + str(outputPointsFC))
        
         try :
             # Copy Input (with Duplicates) to Output
-            print "Copying " + str(inputTrackPointsFC) + " --> " + str(outputPointsFC)
+            print("Copying " + str(inputTrackPointsFC) + " --> " + str(outputPointsFC))
             arcpy.Copy_management(inputTrackPointsFC, outputPointsFC)
         except:    
-            print "Copy failed for: " + str(inputTrackPointsFC) + ":" + str(outputPointsFC)   
+            print("Copy failed for: " + str(inputTrackPointsFC) + ":" + str(outputPointsFC))
                                         
         toolbox = TestUtilities.toolbox
                
         # Set environment settings
-        print "Running from: " + str(TestUtilities.currentPath)
-        print "Geodatabase path: " + str(TestUtilities.geodatabasePath)
+        print("Running from: " + str(TestUtilities.currentPath))
+        print("Geodatabase path: " + str(TestUtilities.geodatabasePath))
         
         arcpy.env.overwriteOutput = True
-        arcpy.ImportToolbox(toolbox, "PDCAlias")
+        arcpy.ImportToolbox(toolbox, "pdc")
                
         ########################################################3
         # Execute the Model under test:   
-        arcpy.RemoveDuplicateGPSData_PDCAlias(outputPointsFC)
+        arcpy.RemoveDuplicateGPSData_pdc(outputPointsFC)
         ########################################################3
         
         # Verify the results (Original Track Points)   
         inputFeatureCount = int(arcpy.GetCount_management(inputTrackPointsFC).getOutput(0)) 
-        print "Input FeatureClass: " + str(inputTrackPointsFC)
-        print "Input Feature Count: " +  str(inputFeatureCount)
+        print("Input FeatureClass: " + str(inputTrackPointsFC))
+        print("Input Feature Count: " +  str(inputFeatureCount))
                     
         if (inputFeatureCount < 1) :
-            print "Invalid Output Feature Count: " +  str(inputFeatureCount)
+            print("Invalid Output Feature Count: " +  str(inputFeatureCount))
             raise Exception("Test Failed")       
         
         # There is only 1 duplicate record so new count will be inputFeatureCount - 1
 
         # Verify the results (New Track Point)   
         outputFeatureCount = int(arcpy.GetCount_management(outputPointsFC).getOutput(0)) 
-        print "Output FeatureClass: " + str(outputPointsFC)
-        print "Output Feature Count: " +  str(outputFeatureCount)
+        print("Output FeatureClass: " + str(outputPointsFC))
+        print("Output Feature Count: " +  str(outputFeatureCount))
                     
         if (outputFeatureCount >= inputFeatureCount) :
-            print "Output Feature Count >= Input Feature Count: " + str(outputFeatureCount)
+            print("Output Feature Count >= Input Feature Count: " + str(outputFeatureCount))
             raise Exception("Test Failed")                                              
         
-        print "Test Successful"        
+        print("Test Successful")
                 
     except arcpy.ExecuteError: 
         # Get the tool error messages 

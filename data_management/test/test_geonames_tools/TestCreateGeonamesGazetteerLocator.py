@@ -36,8 +36,8 @@ def RunTest():
         
         
         # Set environment settings
-        print "Running from: " + str(TestUtilities.currentPath)
-        print "Geodatabase path: " + str(TestUtilities.geodatabasePath)
+        print("Running from: " + str(TestUtilities.currentPath))
+        print("Geodatabase path: " + str(TestUtilities.geodatabasePath))
         
         arcpy.env.overwriteOutput = True
         
@@ -45,9 +45,16 @@ def RunTest():
         locatorFullPath = os.path.join(TestUtilities.inputGDB, locatorName)
         
         if arcpy.Exists(locatorFullPath):
-            print "deleting: " + locatorFullPath
-            arcpy.Delete_management(locatorFullPath)      
-              
+            print("deleting: " + locatorFullPath)
+            
+            # ==================================================================
+            # ERROR 000317: ..\Geonames.gdb\GeonamesLocator cannot be deleted
+            # https://github.com/Esri/solutions-geoprocessing-toolbox/issues/101
+            # THIS IS A BUG IN ArcGIS Desktop 10.2.2
+            arcpy.Delete_management(locatorFullPath,r"AddressLocator")      
+            #
+            # ==================================================================
+            
               
         arcpy.AddMessage("Starting Create Geonames Gazetteer Locator tool...")       
         ########################################################3
@@ -56,10 +63,9 @@ def RunTest():
         ########################################################
          
         # Check For Valid Input     
-        print "Locator Created: " + str(locatorFullPath)      
+        print("Locator Created: " + str(locatorFullPath))
    
-        
-        print "Test Successful"
+        print("Test Successful")
                 
     except arcpy.ExecuteError: 
         # Get the tool error messages 

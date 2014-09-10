@@ -35,11 +35,11 @@ def RunTest():
         arcpy.ImportToolbox(toolbox, "DefenseImagery")
     
         inputFeatureCount = int(arcpy.GetCount_management(inputMosaicDataset).getOutput(0)) 
-        print "Input FeatureClass: " + str(inputMosaicDataset)
-        print "Input Feature Count: " +  str(inputFeatureCount)
+        print("Input FeatureClass: " + str(inputMosaicDataset))
+        print("Input Feature Count: " +  str(inputFeatureCount))
             
         if (inputFeatureCount < 1) :
-            print "Invalid Input Feature Count: " +  str(inputFeatureCount)
+            print("Invalid Input Feature Count: " +  str(inputFeatureCount))
                        
       
            
@@ -65,7 +65,7 @@ def RunTest():
             
         
         
-        print "Test Successful"        
+        print("Test Successful")
                 
     except arcpy.ExecuteError: 
         # Get the tool error messages 

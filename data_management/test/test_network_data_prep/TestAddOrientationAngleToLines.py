@@ -51,7 +51,7 @@ except arcpy.ExecuteError:
     # Get the arcpy error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print msgs
+    print(msgs)
     
     # return a system error code
     sys.exit(-1)
@@ -70,8 +70,8 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    print(pymsg + "\n")
+    print(msgs)
     
     # return a system error code  
     sys.exit(-1)

@@ -23,12 +23,12 @@ import os
 
 currentPath = os.path.dirname(__file__)
 print currentPath
-geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../environment/data/Imagery/Sample/"))
-sampleInputPath = os.path.normpath(os.path.join(currentPath, r"../../../environment/data/Imagery/Sample/SourceData/RPF"))
+geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/data/Imagery/Sample/"))
+sampleInputPath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/data/Imagery/Sample/SourceData/RPF"))
 
 
 
-toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../environment/toolboxes/")) 
+toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/toolboxes/")) 
 print toolboxesPath               
 
 inputGDB  = os.path.join(geodatabasePath, "Imagery.gdb")

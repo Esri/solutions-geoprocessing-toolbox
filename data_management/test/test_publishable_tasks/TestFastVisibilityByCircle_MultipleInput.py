@@ -46,23 +46,23 @@ try:
     
     #Verify Results
     outputFeatureCount = int(arcpy.GetCount_management(psOutput).getOutput(0)) 
-    print "Output Viewshed: " + str(psOutput)
-    print "Output Observer Count: " +  str(outputFeatureCount)
+    print("Output Viewshed: " + str(psOutput))
+    print("Output Observer Count: " +  str(outputFeatureCount))
             
     if (outputFeatureCount < 1):
-        print "Invalid Output Feature Count: " +  str(outputFeatureCount)
+        print("Invalid Output Feature Count: " +  str(outputFeatureCount))
         raise Exception("Test Failed")  
 
     print("Test Passed")
 
 except LicenseError:
-    print "Spatial Analyst license is unavailable"  
+    print("Spatial Analyst license is unavailable")
 
 except arcpy.ExecuteError: 
     # Get the arcpy error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print msgs
+    print(msgs)
     
     # return a system error code
     sys.exit(-1)
@@ -81,8 +81,8 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    print(pymsg + "\n")
+    print(msgs)
     
     # return a system error code  
     sys.exit(-1)

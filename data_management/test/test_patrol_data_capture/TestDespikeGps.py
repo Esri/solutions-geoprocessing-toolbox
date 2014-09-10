@@ -37,11 +37,11 @@ def RunTest():
         toolbox = TestUtilities.toolbox
                
         # Set environment settings
-        print "Running from: " + str(TestUtilities.currentPath)
-        print "Geodatabase path: " + str(TestUtilities.geodatabasePath)
+        print("Running from: " + str(TestUtilities.currentPath))
+        print("Geodatabase path: " + str(TestUtilities.geodatabasePath))
         
         arcpy.env.overwriteOutput = True
-        arcpy.ImportToolbox(toolbox, "PDCAlias")
+        arcpy.ImportToolbox(toolbox, "pdc")
                
         dateTimeField = "Date_Time"
         trackIdField = "TrackGUID"
@@ -51,16 +51,16 @@ def RunTest():
         ########################################################
         # Execute the Model under test:   
         # Format: DespikeGPSLog_MyAlias(GPS_Data_with_Track_Identifiers, DateTime_Field, Track_ID_Field, Despiked_GPS_Log, Percent_to_test, Maximum_Deviation)
-        arcpy.DespikeGPSLog_PDCAlias(inputTrackPointsFC, dateTimeField, trackIdField, outputPointsFC, percent2Test, maximumDeviation)
+        arcpy.DespikeGPSLog_pdc(inputTrackPointsFC, dateTimeField, trackIdField, outputPointsFC, percent2Test, maximumDeviation)
         ########################################################
         
         # Verify the results (Spike Points)   
         outputFeatureCount = int(arcpy.GetCount_management(outputPointsFC).getOutput(0)) 
-        print "Output FeatureClass (Points): " + str(outputPointsFC)
-        print "Output Feature Count: " +  str(outputFeatureCount)
+        print("Output FeatureClass (Points): " + str(outputPointsFC))
+        print("Output Feature Count: " +  str(outputFeatureCount))
                     
         if (outputFeatureCount < 1) :
-            print "Invalid Output Feature Count: " +  str(outputFeatureCount)
+            print("Invalid Output Feature Count: " +  str(outputFeatureCount))
             raise Exception("Test Failed")  
         
         outputSpikePointsLayer = "DespikedGPSData_layer"             
@@ -71,13 +71,13 @@ def RunTest():
         arcpy.SelectLayerByAttribute_management(outputSpikePointsLayer, "NEW_SELECTION", query)
         
         spikedCount = arcpy.GetCount_management(outputSpikePointsLayer)
-        print "Number of Spiked Records is: " + str(spikedCount)
+        print("Number of Spiked Records is: " + str(spikedCount))
         
         if (spikedCount < 1) :
-            print "Invalid Spiked Feature Count: " +  str(spikedCount)
+            print("Invalid Spiked Feature Count: " +  str(spikedCount))
             raise Exception("Test Failed") 
         
-        print "Test Successful"        
+        print("Test Successful")
                 
     except arcpy.ExecuteError: 
         # Get the tool error messages 

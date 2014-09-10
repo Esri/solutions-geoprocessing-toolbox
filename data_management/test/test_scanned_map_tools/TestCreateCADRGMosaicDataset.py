@@ -32,8 +32,8 @@ def RunTest():
         arcpy.env.overwriteOutput = True
         
         # Set environment settings
-        print "Running from: " + str(TestUtilities.currentPath)
-        print "Geodatabase path: " + str(TestUtilities.geodatabasePath)
+        print("Running from: " + str(TestUtilities.currentPath))
+        print("Geodatabase path: " + str(TestUtilities.geodatabasePath))
         
         arcpy.env.overwriteOutput = True
                        
@@ -43,7 +43,7 @@ def RunTest():
         inputMosaicDatasetFullPath = os.path.join(TestUtilities.inputGDB, inputName)
         
         if arcpy.Exists(inputMosaicDatasetFullPath):
-            print "deleting: " + inputMosaicDatasetFullPath
+            print("deleting: " + inputMosaicDatasetFullPath)
             arcpy.Delete_management(inputMosaicDatasetFullPath)
                
         ########################################################3
@@ -54,15 +54,14 @@ def RunTest():
         
         # Check For Valid Input           
         inputFeatureCount = int(arcpy.GetCount_management(inputMosaicDatasetFullPath).getOutput(0)) 
-        print "Input FeatureClass: " + str(inputMosaicDatasetFullPath)
-        print "Input Feature Count: " +  str(inputFeatureCount)
+        print("Input FeatureClass: " + str(inputMosaicDatasetFullPath))
+        print("Input Feature Count: " +  str(inputFeatureCount))
         
         if inputFeatureCount > 0 :
-            print "Mosaic Dataset has already been created and populated"
-               
-           
+            print("Mosaic Dataset has already been created and populated")
         
-        print "Test Successful"        
+        
+        print("Test Successful")
                 
     except arcpy.ExecuteError: 
         # Get the tool error messages 
