@@ -13,16 +13,16 @@
 # limitations under the License.
 #------------------------------------------------------------------------------
 
-# 
+#
 # ==================================================
 # AddTravelTimeToRoads.py
 # --------------------------------------------------
 # Built for ArcGIS 10.1
 # ==================================================
-# 
+#
 # Using the RoadTravelVelocity table this tool adds a
 # travel cost in minutes to road features.
-# 
+#
 
 # IMPORTS ==========================================
 import os, sys, math, traceback
@@ -49,7 +49,7 @@ try:
     for row in rows:
         velocityClasses[row[0]] = [row[1],row[2]]
     del rows
-    
+
     # Add fields to inputFeatures
     fieldsToAdd = {"TF_MINUTES":"DOUBLE","FT_MINUTES":"DOUBLE"}
     fields = arcpy.ListFields(inputFeatures)
@@ -57,14 +57,15 @@ try:
     for f in fields: fieldNames.append(f.name)
     del fields
     if debug == True: arcpy.AddMessage(fieldNames)
-    for addName in fieldsToAdd.iterkeys():
+    #for addName in fieldsToAdd.iterkeys(): #UPDATE
+    for addName in list(fieldsToAdd.keys()):
         fieldType = fieldsToAdd[addName]
         if not addName in fieldNames:
             arcpy.AddMessage("Adding " + addName + " field...")
             arcpy.AddField_management(inputFeatures,addName,fieldType)
         else:
             arcpy.AddWarning( addName + " exists. Updating existing field.")
-   
+
     # TODO: go through roads, for each get roadclass and length. Calc time.....
     arcpy.AddMessage("Calculating travel time for " + str(int(arcpy.GetCount_management(inputFeatures).getOutput(0)) ) + " features ...")
     if debug == True: arcpy.AddMessage("OID, length, type, to-from, from-to")
@@ -76,32 +77,33 @@ try:
         ft_velo = velocityClasses[typ][1]
         if not tf_velo == None:
             tf_velo = (tf_velo) * (1000.0/60.0) # convert kph to meters/minute
-            tf_minutes = (shape.length / tf_velo) 
+            tf_minutes = (shape.length / tf_velo)
             row[2] = tf_minutes
         else:
             row[2] = None # if velocity is None, then time is None
-        
+
         if not ft_velo == None:
             ft_velo = (ft_velo) * (1000.0/60.0)
             ft_minutes = (shape.length / ft_velo)
             row[3] = ft_minutes
         else:
             row[3] = None
-        
+
         rows.updateRow(row)
-        if debug == True: arcpy.AddMessage(str(row[4]) + ", " + str(shape.length) + ", " + str(row[1]) + ", " + str(row[2]) + ", " + str(row[3])) 
+        if debug == True: arcpy.AddMessage(str(row[4]) + ", " + str(shape.length) + ", " + str(row[1]) + ", " + str(row[2]) + ", " + str(row[3]))
     del rows
-    
+
     # Set output
     if debug == True: arcpy.AddMessage("Done.")
     arcpy.SetParameter(2,inputFeatures)
-    
 
-except arcpy.ExecuteError: 
-    # Get the tool error messages 
-    msgs = arcpy.GetMessages() 
-    arcpy.AddError(msgs) 
-    print msgs
+
+except arcpy.ExecuteError:
+    # Get the tool error messages
+    msgs = arcpy.GetMessages()
+    arcpy.AddError(msgs)
+    #print msgs #UPDATE
+    print (msgs)
 
 except:
     # Get the traceback object
@@ -117,8 +119,10 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    #print pymsg + "\n" #UPDATE
+    #print msgs #UPDATE
+    print ((pymsg + "\n"))
+    print (msgs)
 
 finally:
     if debug == False and len(deleteme) > 0:
