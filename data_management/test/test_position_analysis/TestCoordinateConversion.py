@@ -29,27 +29,27 @@ def RunTest():
         arcpy.AddMessage("Starting Test: CoordinateConversion")
         
         # WORKAROUND
-        print "Creating New Scratch Workspace (Workaround)"    
+        print("Creating New Scratch Workspace (Workaround)"    )
         TestUtilities.createScratch()
             
         inputTable =  os.path.join(TestUtilities.csvPath, "SigActs.csv")
-        outputDbf =  os.path.join(TestUtilities.dbfPath, "test_coordinate_cc.dbf")
+        outputDbf =  os.path.join(TestUtilities.scratchPath, "test_coordinate_cc.dbf")
         toolbox = TestUtilities.toolbox        
         
         # Set environment settings
-        print "Running from: " + str(TestUtilities.currentPath)
-        print "Geodatabase path: " + str(TestUtilities.geodatabasePath)
+        print("Running from: " + str(TestUtilities.currentPath))
+        print("Geodatabase path: " + str(TestUtilities.geodatabasePath))
         
         arcpy.env.overwriteOutput = True
         arcpy.env.scratchWorkspace = TestUtilities.scratchGDB
         arcpy.ImportToolbox(toolbox, "Position")
     
         inputFeatureCount = int(arcpy.GetCount_management(inputTable).getOutput(0)) 
-        print "Input FeatureClass: " + str(inputTable)
-        print "Input Feature Count: " +  str(inputFeatureCount)
+        print("Input FeatureClass: " + str(inputTable))
+        print("Input Feature Count: " +  str(inputFeatureCount))
             
         if (inputFeatureCount < 1) :
-            print "Invalid Input Feature Count: " +  str(inputFeatureCount)
+            print("Invalid Input Feature Count: " +  str(inputFeatureCount))
                        
         coordinateConversionFrom = 'MGRS'
         coordinateFieldX = 'Location'
@@ -66,18 +66,18 @@ def RunTest():
     
         # Verify the results    
         outputFeatureCount = int(arcpy.GetCount_management(outputDbf).getOutput(0)) 
-        print "Output FeatureClass: " + str(outputDbf)
-        print "Output Feature Count: " +  str(outputFeatureCount)
+        print("Output FeatureClass: " + str(outputDbf))
+        print("Output Feature Count: " +  str(outputFeatureCount))
                     
         if (outputFeatureCount <>  inputFeatureCount) :
-            print "Input / Output Feature Count don't match: " +  str(inputFeatureCount) + ":" + str(outputFeatureCount)
+            print("Input / Output Feature Count don't match: " +  str(inputFeatureCount) + ":" + str(outputFeatureCount))
             raise Exception("Test Failed")            
             
         # WORKAROUND: delete scratch db
-        print "Deleting Scratch Workspace (Workaround)"    
+        print("Deleting Scratch Workspace (Workaround)")
         TestUtilities.deleteScratch()        
         
-        print "Test Successful"        
+        print("Test Successful")
                 
     except arcpy.ExecuteError: 
         # Get the tool error messages 

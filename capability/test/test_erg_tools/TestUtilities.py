@@ -22,7 +22,7 @@ import os
 import sys
 
 currentPath = os.path.dirname(__file__)
-toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../emergencymanagement/toolboxes/"))
+toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../capability/toolboxes/"))
 
 toolDataPath = os.path.join(toolboxesPath, "tooldata")
 layerPath  = os.path.join(toolboxesPath, "layers")

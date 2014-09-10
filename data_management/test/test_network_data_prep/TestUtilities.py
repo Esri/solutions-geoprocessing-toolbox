@@ -23,9 +23,9 @@ import sys
 
 # properties: paths
 currentPath = os.path.dirname(__file__)
-geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../environment/data/geodatabases/"))
+geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/data/geodatabases/"))
 scratchPath = geodatabasePath
-toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../environment/toolboxes/"))                
+toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/toolboxes/"))                
 # properties: geodatabases
 inputGDB  = os.path.join(geodatabasePath, "NetworkPrepData.gdb")
 outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")

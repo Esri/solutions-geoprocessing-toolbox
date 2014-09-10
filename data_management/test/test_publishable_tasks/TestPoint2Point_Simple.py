@@ -47,23 +47,23 @@ try:
     
     #Verify Results
     outputFeatureCount = int(arcpy.GetCount_management(psOutput).getOutput(0)) 
-    print "Output Route: " + str(psOutput)
-    print "Output Route feature count: " +  str(outputFeatureCount)
+    print("Output Route: " + str(psOutput))
+    print("Output Route feature count: " +  str(outputFeatureCount))
             
     if (outputFeatureCount < 1):
-        print "Invalid Output route count: " +  str(outputFeatureCount)
+        print("Invalid Output route count: " +  str(outputFeatureCount))
         raise Exception("Test Failed")  
 
     print("Test Passed")
 
 except LicenseError:
-    print "Network Analyst license is unavailable"  
+    print("Network Analyst license is unavailable")
 
 except arcpy.ExecuteError: 
     # Get the arcpy error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print msgs
+    print(msgs)
     
     # return a system error code
     sys.exit(-1)
@@ -82,8 +82,8 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    print(pymsg + "\n")
+    print(msgs)
     
     # return a system error code  
     sys.exit(-1)

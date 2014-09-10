@@ -22,12 +22,12 @@ import os
 
 currentPath = os.path.dirname(__file__)
 print currentPath
-geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../environment/data/Topographic/Elevation/"))
-sampleInputPath = os.path.normpath(os.path.join(currentPath, r"../../../environment/data/Topographic/Elevation/Source"))
+geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/data/Topographic/Elevation/"))
+sampleInputPath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/data/Topographic/Elevation/Source"))
 
 
 
-toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../environment/toolboxes/")) 
+toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/toolboxes/")) 
 print toolboxesPath               
 
 inputGDB  = os.path.join(geodatabasePath, "Elevation.gdb")

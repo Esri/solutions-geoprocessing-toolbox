@@ -42,8 +42,8 @@ def RunTest():
         
         
         # Set environment settings
-        print "Running from: " + str(TestUtilities.currentPath)
-        print "Geodatabase path: " + str(TestUtilities.geodatabasePath)
+        print("Running from: " + str(TestUtilities.currentPath))
+        print("Geodatabase path: " + str(TestUtilities.geodatabasePath))
         
         arcpy.env.overwriteOutput = True
         
@@ -58,10 +58,10 @@ def RunTest():
          
         # Check For Valid Input           
         inputFeatureCount = int(arcpy.GetCount_management(featureClass).getOutput(0)) 
-        print "Input FeatureClass: " + str(featureClass)
-        print "Input Feature Count: " +  str(inputFeatureCount)
+        print("Input FeatureClass: " + str(featureClass))
+        print("Input Feature Count: " +  str(inputFeatureCount))
         
-        print "Test Successful"
+        print("Test Successful")
                 
     except arcpy.ExecuteError: 
         # Get the tool error messages 

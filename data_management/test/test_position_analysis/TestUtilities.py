@@ -21,17 +21,18 @@ import arcpy
 import os
 
 currentPath = os.path.dirname(__file__)
-geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../data/geodatabases/"))
-csvPath = os.path.normpath(os.path.join(currentPath, r"../../data/csv/"))
-dbfPath = os.path.normpath(os.path.join(currentPath, r"../../data/dbf/"))
+geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/data/geodatabases/"))
+csvPath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/data/geodatabases/csv/"))
 
 scratchPath = geodatabasePath
 toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../toolboxes/"))                
 
-inputGDB  = os.path.join(geodatabasePath, "test_inputs.gdb")
-outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
-defaultGDB = os.path.join(geodatabasePath, "default.gdb")
+inputGDB  = os.path.join(geodatabasePath, "test_position_analysis_inputs.gdb")
+#outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
+#defaultGDB = os.path.join(geodatabasePath, "default.gdb")
 scratchGDB = os.path.join(scratchPath, "scratch.gdb")
+outputGDB = scratchGDB
+defaultGDB = scratchGDB
 
 toolbox = os.path.join(toolboxesPath, "Position Analysis Tools.tbx")
 
@@ -39,14 +40,12 @@ def createScratch() :
     try :
         arcpy.CreateFileGDB_management(scratchPath, "scratch")                                          
     except:    
-        print "scratch.gdb already exists"
-        
+        print("scratch.gdb already exists")
     return
 
 def deleteScratch() :
     try :   
         arcpy.Delete_management(scratchGDB)
     except:    
-        print "scratch.gdb delete failed"
-        
+        print("scratch.gdb delete failed")
     return    

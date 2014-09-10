@@ -32,11 +32,11 @@ def RunTestTableToPoints():
     outputPointsFC =  os.path.join(TestUtilities.outputGDB, "TableToPoint")
         
     inputFeatureCount = int(arcpy.GetCount_management(inputTable).getOutput(0)) 
-    print "Input FeatureClass: " + str(inputTable)
-    print "Input Feature Count: " +  str(inputFeatureCount)
+    print("Input FeatureClass: " + str(inputTable))
+    print("Input Feature Count: " +  str(inputFeatureCount))
         
     if (inputFeatureCount < 1) :
-        print "Invalid Input Feature Count: " +  str(inputFeatureCount)
+        print("Invalid Input Feature Count: " +  str(inputFeatureCount))
                    
     coordinateConversionFormat = 'MGRS'
     coordinateFieldX = 'MGRS'
@@ -53,14 +53,14 @@ def RunTestTableToPoints():
 
     # Verify the results    
     outputFeatureCount = int(arcpy.GetCount_management(outputPointsFC).getOutput(0)) 
-    print "Output FeatureClass: " + str(outputPointsFC)
-    print "Output Feature Count: " +  str(outputFeatureCount)
+    print("Output FeatureClass: " + str(outputPointsFC))
+    print("Output Feature Count: " +  str(outputFeatureCount))
                 
     if (outputFeatureCount <>  inputFeatureCount) :
-        print "Input / Output Feature Count don't match: " +  str(inputFeatureCount) + ":" + str(outputFeatureCount)
+        print("Input / Output Feature Count don't match: " +  str(inputFeatureCount) + ":" + str(outputFeatureCount))
         raise Exception("Test Failed")                        
     
-    print "Test Successful"   
+    print("Test Successful")
     
 def RunTestTableToPolyline():
     
@@ -70,11 +70,11 @@ def RunTestTableToPolyline():
     outputLinesFC =  os.path.join(TestUtilities.outputGDB, "TableToLine")
         
     inputFeatureCount = int(arcpy.GetCount_management(inputTable).getOutput(0)) 
-    print "Input FeatureClass: " + str(inputTable)
-    print "Input Feature Count: " +  str(inputFeatureCount)
+    print("Input FeatureClass: " + str(inputTable))
+    print("Input Feature Count: " +  str(inputFeatureCount))
         
     if (inputFeatureCount < 1) :
-        print "Invalid Input Feature Count: " +  str(inputFeatureCount)
+        print("Invalid Input Feature Count: " +  str(inputFeatureCount))
                    
     coordinateConversionFormat = 'DD_2'
     coordinateFieldX = 'Lond'
@@ -93,14 +93,14 @@ def RunTestTableToPolyline():
 
     # Verify the results    
     outputFeatureCount = int(arcpy.GetCount_management(outputLinesFC).getOutput(0)) 
-    print "Output FeatureClass: " + str(outputLinesFC)
-    print "Output Feature Count: " +  str(outputFeatureCount)
+    print("Output FeatureClass: " + str(outputLinesFC))
+    print("Output Feature Count: " +  str(outputFeatureCount))
                 
     if (outputFeatureCount < 1) :
-        print "Input / Output Feature Count < 1: " +  str(outputFeatureCount)
+        print("Input / Output Feature Count < 1: " +  str(outputFeatureCount))
         raise Exception("Test Failed")                        
     
-    print "Test Successful"  
+    print("Test Successful")
     
 def RunTestTableToEllipse():
     
@@ -110,11 +110,11 @@ def RunTestTableToEllipse():
     outputEllipsesFC =  os.path.join(TestUtilities.outputGDB, "TableToEllipse")
         
     inputFeatureCount = int(arcpy.GetCount_management(inputTable).getOutput(0)) 
-    print "Input FeatureClass: " + str(inputTable)
-    print "Input Feature Count: " +  str(inputFeatureCount)
+    print("Input FeatureClass: " + str(inputTable))
+    print("Input Feature Count: " +  str(inputFeatureCount))
         
     if (inputFeatureCount < 1) :
-        print "Invalid Input Feature Count: " +  str(inputFeatureCount)
+        print("Invalid Input Feature Count: " +  str(inputFeatureCount))
                    
     coordinateConversionFormat = 'DD_2'
     coordinateFieldX = 'Lond'
@@ -137,14 +137,14 @@ def RunTestTableToEllipse():
 
     # Verify the results    
     outputFeatureCount = int(arcpy.GetCount_management(outputEllipsesFC).getOutput(0)) 
-    print "Output FeatureClass: " + str(outputEllipsesFC)
-    print "Output Feature Count: " +  str(outputFeatureCount)
+    print("Output FeatureClass: " + str(outputEllipsesFC))
+    print("Output Feature Count: " +  str(outputFeatureCount))
                 
     if (outputFeatureCount <>  inputFeatureCount) :
-        print "Input / Output Feature Count don't match: " +  str(inputFeatureCount) + ":" + str(outputFeatureCount)
+        print("Input / Output Feature Count don't match: " +  str(inputFeatureCount) + ":" + str(outputFeatureCount))
         raise Exception("Test Failed")                              
     
-    print "Test Successful"          
+    print("Test Successful")
     
 def RunTestTableToLOB():
     
@@ -154,11 +154,11 @@ def RunTestTableToLOB():
     outputLinesFC =  os.path.join(TestUtilities.outputGDB, "TableToLOB")
         
     inputFeatureCount = int(arcpy.GetCount_management(inputTable).getOutput(0)) 
-    print "Input FeatureClass: " + str(inputTable)
-    print "Input Feature Count: " +  str(inputFeatureCount)
+    print("Input FeatureClass: " + str(inputTable))
+    print("Input Feature Count: " +  str(inputFeatureCount))
         
     if (inputFeatureCount < 1) :
-        print "Invalid Input Feature Count: " +  str(inputFeatureCount)
+        print("Invalid Input Feature Count: " +  str(inputFeatureCount))
                    
     coordinateConversionFormat = 'DD_2'
     coordinateFieldX = 'Lond'
@@ -181,21 +181,21 @@ def RunTestTableToLOB():
 
     # Verify the results    
     outputFeatureCount = int(arcpy.GetCount_management(outputLinesFC).getOutput(0)) 
-    print "Output FeatureClass: " + str(outputLinesFC)
-    print "Output Feature Count: " +  str(outputFeatureCount)
+    print("Output FeatureClass: " + str(outputLinesFC))
+    print("Output Feature Count: " +  str(outputFeatureCount))
                 
     if (outputFeatureCount <>  inputFeatureCount) :
-        print "Input / Output Feature Count don't match: " +  str(inputFeatureCount) + ":" + str(outputFeatureCount)
+        print("Input / Output Feature Count don't match: " +  str(inputFeatureCount) + ":" + str(outputFeatureCount))
         raise Exception("Test Failed")                        
     
-    print "Test Successful"    
+    print("Test Successful")
   
 try:
         
-    print "Running from: " + str(TestUtilities.currentPath)
-    print "Geodatabase path: " + str(TestUtilities.geodatabasePath)
+    print("Running from: " + str(TestUtilities.currentPath))
+    print("Geodatabase path: " + str(TestUtilities.geodatabasePath))
     
-    print "Creating New Scratch Workspace"    
+    print("Creating New Scratch Workspace")
     TestUtilities.createScratch()
 
     toolbox = TestUtilities.toolbox        
@@ -206,7 +206,7 @@ try:
 
     ################################################
     # Run Individual Geometry Importer Tests
-    print "Testing all TableTo{Geometry} Models..."
+    print("Testing all TableTo{Geometry} Models...")
     
     RunTestTableToPoints()
     RunTestTableToPolyline()
@@ -216,7 +216,7 @@ try:
     
     ################################################
     
-    print "Deleting Scratch Workspace"    
+    print("Deleting Scratch Workspace")
     TestUtilities.deleteScratch()        
                 
 except arcpy.ExecuteError: 

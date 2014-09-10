@@ -18,7 +18,7 @@
     <exec executable="${dir.arcpy}/python.exe" failonerror="true">
       <env key="PYTHONPATH" path="${pythonpath}"/>
       <arg line="-u"/>
-      <arg line="${dir.src}/TemplateConfigTest.py"/>
+      <arg line="${dir.src}/TestTemplateConfig.py"/>
     </exec>
   </target>
   

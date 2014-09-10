@@ -47,7 +47,7 @@ try:
     
     #Testing Build Elevation Mosaics - DTED input
     arcpy.AddMessage("Starting Test: Build Elevation Mosaic Tools")
-    arcpy.BuildElevationMosaics_BuildMosaics(TestUtilities.outputGDB,inputElevationFolderPath,inputRasterType,
+    arcpy.BuildElevationMosaics_elevationmosaics(TestUtilities.outputGDB,inputElevationFolderPath,inputRasterType,
                                              inputAspectFunctionTemplateFile,inputPercentSlopeFunctionTemplateFile,
                                              inputHillshadeFunctionTemplateFile,outputDTMMosaic,outputHillshadeMosaic,
                                              outputAspectMosaic,outputPercentSlopeMosaic)
@@ -78,7 +78,7 @@ except arcpy.ExecuteError:
     # Get the arcpy error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print msgs
+    print(msgs)
     
     # return a system error code
     sys.exit(-1)
@@ -97,8 +97,8 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    print(pymsg + "\n")
+    print(msgs)
     
     # return a system error code  
     sys.exit(-1)
