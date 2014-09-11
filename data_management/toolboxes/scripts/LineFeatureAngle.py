@@ -46,7 +46,7 @@ try:
             xdiff = (lastPoint.X - firstPoint.X)
             ydiff = (lastPoint.Y - firstPoint.Y)
             #distance = math.sqrt(math.pow(xdiff,2.0) + math.pow(ydiff,2.0))
-            
+
             # Convert from quadrants to arithmetic
             if (xdiff == 0.0 and ydiff > 0.0):
                 # vertical line, slope infinity
@@ -66,9 +66,9 @@ try:
                 angle = 180.0 + math.fabs(math.degrees(math.atan(ydiff/xdiff)))
             if (xdiff > 0.0 and ydiff < 0.0): # Quadrant IV (+,-)
                 angle = 360.0 - math.fabs(math.degrees(math.atan(ydiff/xdiff)))
-            
+
             #if debug == True: arcpy.AddMessage(str(xdiff) + " -- " + str(angle) + " -- " + str(ydiff))
-            
+
             if not angle == None:
                 row[2] = Geo2Arithmetic(angle)
             else:
@@ -79,11 +79,12 @@ try:
 
     arcpy.SetParameter(2,inputFeatures)
 
-except arcpy.ExecuteError: 
-    # Get the tool error messages 
-    msgs = arcpy.GetMessages() 
-    arcpy.AddError(msgs) 
-    print msgs
+except arcpy.ExecuteError:
+    # Get the tool error messages
+    msgs = arcpy.GetMessages()
+    arcpy.AddError(msgs)
+    #print msgs #UPDATE
+    print (msgs)
 
 except:
     # Get the traceback object
@@ -99,8 +100,10 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    #print pymsg + "\n" UPDATE
+    print ((pymsg + "\n"))
+    #print msgs #UPDATE
+    print (msgs)
 
 finally:
     # cleanup intermediate datasets
