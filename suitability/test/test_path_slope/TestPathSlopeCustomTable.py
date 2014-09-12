@@ -37,9 +37,9 @@ try:
     arcpy.env.overwriteOutput = True
     
     inputPolyArea = os.path.join(TestUtilities.inputGDB, "samplePolygonArea")
-    inputSRT = os.path.join(TestUtilities.defaultGDB, "SlopeRangeTableExample")
-    inputRoads = os.path.join(TestUtilities.defaultGDB, "roads")
-    inputSurface = os.path.join(TestUtilities.defaultGDB, "Jbad_SRTM_USGS_EROS")
+    inputSRT = os.path.join(TestUtilities.inputGDB, "SlopeRangeTableExample")
+    inputRoads = os.path.join(TestUtilities.inputGDB, "roads")
+    inputSurface = os.path.join(TestUtilities.inputGDB, "Jbad_SRTM_USGS_EROS")
     psOutputCT = os.path.join(TestUtilities.outputGDB, "PathSlopeOutputCT")
     
     #Testing Path Slope by Custom Table
@@ -49,23 +49,23 @@ try:
 # Verify Results
 
     outputFeatureCount = int(arcpy.GetCount_management(psOutputCT).getOutput(0)) 
-    print "Output FeatureClass: " + str(psOutputCT)
-    print "Output Feature Count: " +  str(outputFeatureCount)
+    print("Output FeatureClass: " + str(psOutputCT))
+    print("Output Feature Count: " +  str(outputFeatureCount))
             
     if (outputFeatureCount < 1):
-        print "Invalid Output Feature Count: " +  str(outputFeatureCount)
+        print("Invalid Output Feature Count: " +  str(outputFeatureCount))
         raise Exception("Test Failed")  
 
     print("Test Passed")
 
 except LicenseError:
-    print "Spatial Analyst license is unavailable"  
+    print("Spatial Analyst license is unavailable")
 
 except arcpy.ExecuteError: 
     # Get the arcpy error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print msgs
+    print(msgs)
     
     # return a system error code
     sys.exit(-1)
@@ -84,8 +84,8 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    print(pymsg + "\n")
+    print(msgs)
     
     # return a system error code  
     sys.exit(-1)

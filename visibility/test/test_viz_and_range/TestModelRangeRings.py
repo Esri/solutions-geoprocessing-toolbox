@@ -29,7 +29,7 @@ def RunTest():
         arcpy.AddMessage("Starting Test: RangeRings")
         
         # WORKAROUND
-        print "Creating New Scratch Workspace (Workaround)"    
+        print("Creating New Scratch Workspace (Workaround)")
         TestUtilities.createScratch()
             
         # Verify the expected configuration exists
@@ -46,22 +46,22 @@ def RunTest():
             if desc == None :
                 raise Exception("Bad Input")
             else :
-                print "Valid Object: " + desc.Name 
+                print("Valid Object: " + desc.Name)
         
         # Set environment settings
-        print "Running from: " + str(TestUtilities.currentPath)
-        print "Geodatabase path: " + str(TestUtilities.geodatabasePath)
+        print("Running from: " + str(TestUtilities.currentPath))
+        print("Geodatabase path: " + str(TestUtilities.geodatabasePath))
         
         arcpy.env.overwriteOutput = True
         arcpy.env.scratchWorkspace = TestUtilities.scratchGDB
         arcpy.ImportToolbox(toolbox, "VandR")
     
         inputFeatureCount = int(arcpy.GetCount_management(inputPointsFC).getOutput(0)) 
-        print "Input FeatureClass: " + str(inputPointsFC)
-        print "Input Feature Count: " +  str(inputFeatureCount)
+        print("Input FeatureClass: " + str(inputPointsFC))
+        print("Input Feature Count: " +  str(inputFeatureCount))
             
         if (inputFeatureCount < 1) :
-            print "Invalid Input Feature Count: " +  str(inputFeatureCount)
+            print("Invalid Input Feature Count: " +  str(inputFeatureCount))
                        
         numberOfRings = 5
         ringInterval = 1000.0
@@ -75,22 +75,22 @@ def RunTest():
     
         # Verify the results    
         outputFeatureCountRings = int(arcpy.GetCount_management(outputRangeRingsFC).getOutput(0)) 
-        print "Output FeatureClass: " + str(outputRangeRingsFC)
-        print "Output Feature Count: " +  str(outputFeatureCountRings)
+        print("Output FeatureClass: " + str(outputRangeRingsFC))
+        print("Output Feature Count: " +  str(outputFeatureCountRings))
     
         outputFeatureCountRadials = int(arcpy.GetCount_management(outputRangeRadialsFC).getOutput(0))
-        print "Output FeatureClass: " + str(outputRangeRadialsFC)
-        print "Output Feature Count: " +  str(outputFeatureCountRadials)
+        print("Output FeatureClass: " + str(outputRangeRadialsFC))
+        print("Output Feature Count: " +  str(outputFeatureCountRadials))
                 
         if (outputFeatureCountRings < 1) or (outputFeatureCountRadials < 1) :
-            print "Invalid Output Feature Count: " +  str(outputFeatureCountRings) + ":" + str(outputFeatureCountRadials)
+            print("Invalid Output Feature Count: " +  str(outputFeatureCountRings) + ":" + str(outputFeatureCountRadials))
             raise Exception("Test Failed")            
             
         # WORKAROUND: delete scratch db
-        print "Deleting Scratch Workspace (Workaround)"    
+        print("Deleting Scratch Workspace (Workaround)")
         TestUtilities.deleteScratch()        
         
-        print "Test Successful"        
+        print("Test Successful")
                 
     except arcpy.ExecuteError: 
         # Get the tool error messages 

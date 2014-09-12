@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="DefenseAndIntelEnvironmentToolboxTest" basedir="." default="run_all_tests">
+<project name="TestCapability" basedir="." default="run_all_tests">
 
   <!-- templatehome = defense-and-intel-analysis-toolbox -->
 
@@ -14,5 +14,9 @@
     <ant dir="./test_erg_tools" target="run_all_tests" />
     <echo message="Done Test: test_erg_tools" />
   </target>
+  
+  <!-- Test HLZ -->
+  
+  <!-- Test Point Of Origin -->
   
 </project>

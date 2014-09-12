@@ -22,15 +22,17 @@ import os
 import sys
 
 currentPath = os.path.dirname(__file__)
-geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../environment/data/geodatabases/"))
+geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../suitability/data/geodatabases/"))
 scratchPath = geodatabasePath
-toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../environment/toolboxes/"))                
+toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../suitability/toolboxes/"))                
 
-inputGDB  = os.path.join(geodatabasePath, "test_inputs.gdb")
-outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
-if not arcpy.Exists(outputGDB): arcpy.CreateFileGDB_management(os.path.dirname(outputGDB),os.path.basename(outputGDB)[:-4])
-defaultGDB = os.path.join(geodatabasePath, "default.gdb")
+inputGDB  = os.path.join(geodatabasePath, "test_path_slope_inputs.gdb")
+#outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
+#if not arcpy.Exists(outputGDB): arcpy.CreateFileGDB_management(os.path.dirname(outputGDB),os.path.basename(outputGDB)[:-4])
+#defaultGDB = os.path.join(geodatabasePath, "default.gdb")
 scratchGDB = os.path.join(scratchPath, "scratch.gdb")
+outputGDB = scratchGDB
+defaultGDB = scratchGDB
 
 toolbox = os.path.join(toolboxesPath, "Path Slope Tools.tbx")
 
@@ -38,7 +40,7 @@ def createScratch() :
     try :
         arcpy.CreateFileGDB_management(scratchPath, "scratch")                                          
     except:    
-        print "scratch.gdb already exists"
+        print("scratch.gdb already exists")
         
     return
 
@@ -46,6 +48,6 @@ def deleteScratch() :
     try :   
         arcpy.Delete_management(scratchGDB)
     except:    
-        print "scratch.gdb delete failed"
+        print("scratch.gdb delete failed")
         
     return    

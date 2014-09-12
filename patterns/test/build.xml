@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<project name="TestPatterns" basedir="." default="run_all_tests">
+
+  <!-- templatehome = solution-geoprocessing-toolbox -->
+
+  <target name="run_all_tests" 
+    depends="test_template">
+    <echo message="Running All Tests" />
+  </target>
+
+  <target name="test_template">
+    <echo message="Running: test_range_cards" />
+    <ant dir="./path_to_template" target="run_all_tests" />
+    <echo message="Done Test: test_template" />
+  </target>
+
+</project>

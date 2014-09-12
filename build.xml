@@ -5,7 +5,7 @@
  Requirements: Internet connectivity, Java JRE, Ant
  -->
 
-<project name="DataDownloadAndConfiguration" basedir="." default="config">
+<project name="solutions-geoprocessing-toolbox Get Data" basedir="." default="config">
 
   <!-- templatehome = defense-and-intel-toolbox -->
   <property name="dir.zipdir" value="./downloaded_data" />
@@ -28,7 +28,7 @@
     get_operational_graphics_data,get_patterns_data,get_suitability_data,get_visibility_data">
     <echo message="Gets All Dependent Data used by this template from ArcGIS Online" />
   </target>
-
+  
   <!-- Create necessary folder structure (Github will not create empty folders) -->
   <target name="make_dirs">
     <mkdir dir="${dir.zipdir}"/>
@@ -226,7 +226,7 @@
 
 <!--  <target name="run_all_tests">
     <echo message="Running all tests ...." />
-    <ant dir="../" target="run_all_tests" />
+    <ant dir="./." target="run_all_tests" />
   </target>-->
   
   <target name="test">
