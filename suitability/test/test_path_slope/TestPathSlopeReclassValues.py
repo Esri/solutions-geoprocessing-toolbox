@@ -38,8 +38,8 @@ try:
     arcpy.env.scratchWorkspace = TestUtilities.scratchGDB
     
     inputPolyArea = os.path.join(TestUtilities.inputGDB, "samplePolygonArea")
-    inputRoads = os.path.join(TestUtilities.defaultGDB, "roads")
-    inputSurface = os.path.join(TestUtilities.defaultGDB, "Jbad_SRTM_USGS_EROS")
+    inputRoads = os.path.join(TestUtilities.inputGDB, "roads")
+    inputSurface = os.path.join(TestUtilities.inputGDB, "Jbad_SRTM_USGS_EROS")
     psOutputRV = os.path.join(TestUtilities.outputGDB, "PathSlopeOutputRV")
     classValue = '0 3 1;3 10 2;10 15 3;15 20 4;20 30 5;30 45 6;45 60 7;60 85 8;85 10000000000000 9;NODATA 0'
     
@@ -51,23 +51,23 @@ try:
     
     #Test for Feature Outpu
     outputFeatureCount = int(arcpy.GetCount_management(psOutputRV).getOutput(0)) 
-    print "Output FeatureClass: " + str(psOutputRV)
-    print "Output Feature Count: " +  str(outputFeatureCount)
+    print("Output FeatureClass: " + str(psOutputRV))
+    print("Output Feature Count: " +  str(outputFeatureCount))
             
     if (outputFeatureCount < 1):
-        print "Invalid Output Feature Count: " +  str(outputFeatureCount)
+        print("Invalid Output Feature Count: " +  str(outputFeatureCount))
         raise Exception("Test Failed")  
 
     print("Test Passed")
 
 except LicenseError:
-    print "Spatial Analyst license is unavailable"  
+    print("Spatial Analyst license is unavailable")
 
 except arcpy.ExecuteError: 
     # Get the arcpy error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print msgs
+    print(msgs)
     
     # return a system error code
     sys.exit(-1)
@@ -86,8 +86,8 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
+    print(pymsg + "\n")
+    print(msgs)
     
     # return a system error code  
     sys.exit(-1)

@@ -21,15 +21,17 @@ import arcpy
 import os
 
 currentPath = os.path.dirname(__file__)
-geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../data/geodatabases/"))
+geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../operational_graphics/data/geodatabases/"))
 
 scratchPath = geodatabasePath
-toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../toolboxes/"))                
+toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../operational_graphics/toolboxes/"))                
 
-inputGDB  = os.path.join(geodatabasePath, "test_inputs.gdb")
-outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
-defaultGDB = os.path.join(geodatabasePath, "RangeCard.gdb")
+inputGDB  = os.path.join(geodatabasePath, "test_range_card_inputs.gdb")
+#outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
+#defaultGDB = os.path.join(geodatabasePath, "RangeCard.gdb")
 scratchGDB = os.path.join(scratchPath, "scratch.gdb")
+outputGDB = scratchGDB
+defaultGDB = scratchGDB
 
 toolbox = os.path.join(toolboxesPath, "Range Card Tools.tbx")
 
@@ -38,7 +40,6 @@ def createScratch() :
         arcpy.CreateFileGDB_management(scratchPath, "scratch")                                          
     except:    
         print "scratch.gdb already exists"
-        
     return
 
 def deleteScratch() :
@@ -46,5 +47,4 @@ def deleteScratch() :
         arcpy.Delete_management(scratchGDB)
     except:    
         print "scratch.gdb delete failed"
-        
     return    

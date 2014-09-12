@@ -25,7 +25,6 @@ currentPath = os.path.dirname(__file__)
 geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/data/geodatabases/"))
 
 scratchPath = geodatabasePath
-
 toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/toolboxes/"))                
 
 inputElevationURL = r"http://afmcloud.esri.com/arcgis/services/Environment/DigitalTerrainModel/ImageServer"

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="solutions-geoprocessing-tool-test" basedir="." default="run_all_subtests">
+<project name="solutions-geoprocessing-tool Run Tests" basedir="." default="run_all_subtests">
 
   <!-- templatehome = solutions-geoprocessing-toolbox -->
 

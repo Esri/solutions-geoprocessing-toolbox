@@ -42,7 +42,7 @@ def createScratch() :
     try :
         arcpy.CreateFileGDB_management(scratchPath, "scratch")                                          
     except:    
-        print "scratch.gdb already exists"
+        print("scratch.gdb already exists")
         
     return
 
@@ -50,6 +50,6 @@ def deleteScratch() :
     try :   
         arcpy.Delete_management(scratchGDB)
     except:    
-        print "scratch.gdb delete failed"
+        print("scratch.gdb delete failed")
         
     return    

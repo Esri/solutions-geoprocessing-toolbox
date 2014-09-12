@@ -28,11 +28,11 @@ def RunTest():
     try:
         arcpy.AddMessage("Starting Test: TestLocalPeaks")
         
-        TEST_IMPLEMENTED = False
-        
-        if not TEST_IMPLEMENTED :
-            arcpy.AddWarning("***Test Not Yet Implemented***")
-            return
+        #TEST_IMPLEMENTED = False
+        #
+        #if not TEST_IMPLEMENTED :
+        #    arcpy.AddWarning("***Test Not Yet Implemented***")
+        #    return
         
         # TODO: once model has a version that works with local surface data 
         # (rather than image service), then finish this test/implementation below
@@ -50,36 +50,37 @@ def RunTest():
         arcpy.env.scratchWorkspace = TestUtilities.scratchGDB
                 
         # WORKAROUND
-        print "Creating New Scratch Workspace (Workaround)"    
+        print("Creating New Scratch Workspace (Workaround)")
         TestUtilities.createScratch()
             
         # Verify the expected configuration exists
         inputPolygonFC =  os.path.join(TestUtilities.inputGDB, "samplePolygonArea")
-        inputSurface =  "TODO_MUST_BE_IMAGE_SERVICE"
+        inputSurface =  TestUtilities.inputElevationURL
         outputPointsFC =  os.path.join(TestUtilities.outputGDB, "LocalPeaks")
         toolbox = TestUtilities.toolbox
         arcpy.ImportToolbox(toolbox, "MAoT")        
         
         # Check For Valid Input
         objects2Check = []
-        objects2Check.extend([inputPolygonFC, inputSurface, toolbox])
+        #objects2Check.extend([inputPolygonFC, inputSurface, toolbox])
+        objects2Check.extend([inputPolygonFC, toolbox])
         for object2Check in objects2Check :
             desc = arcpy.Describe(object2Check)
             if desc == None :
                 raise Exception("Bad Input")
             else :
-                print "Valid Object: " + desc.Name 
+                print("Valid Object: " + desc.Name)
         
         # Set environment settings
-        print "Running from: " + str(TestUtilities.currentPath)
-        print "Geodatabase path: " + str(TestUtilities.geodatabasePath)    
+        print("Running from: " + str(TestUtilities.currentPath))
+        print("Geodatabase path: " + str(TestUtilities.geodatabasePath))
     
         inputFeatureCount = int(arcpy.GetCount_management(inputPolygonFC).getOutput(0)) 
-        print "Input FeatureClass: " + str(inputPolygonFC)
-        print "Input Feature Count: " +  str(inputFeatureCount)
+        print("Input FeatureClass: " + str(inputPolygonFC))
+        print("Input Feature Count: " +  str(inputFeatureCount))
             
         if (inputFeatureCount < 1) :
-            print "Invalid Input Feature Count: " +  str(inputFeatureCount)                    
+            print("Invalid Input Feature Count: " +  str(inputFeatureCount))
            
         numberOfPeaks = 3
            
@@ -90,18 +91,18 @@ def RunTest():
     
         # Verify the results    
         outputFeatureCount = int(arcpy.GetCount_management(outputPointsFC).getOutput(0)) 
-        print "Output FeatureClass: " + str(outputPointsFC)
-        print "Output Feature Count: " +  str(outputFeatureCount)
+        print("Output FeatureClass: " + str(outputPointsFC))
+        print("Output Feature Count: " +  str(outputFeatureCount))
                 
         if (outputPointsFC < 3) :
-            print "Invalid Output Feature Count: " +  str(outputFeatureCount) 
+            print("Invalid Output Feature Count: " +  str(outputFeatureCount))
             raise Exception("Test Failed")
             
         # WORKAROUND: delete scratch db
-        print "Deleting Scratch Workspace (Workaround)"    
+        print("Deleting Scratch Workspace (Workaround)")
         TestUtilities.deleteScratch()        
         
-        print "Test Successful"
+        print("Test Successful")
                 
     except arcpy.ExecuteError: 
         # Get the tool error messages 

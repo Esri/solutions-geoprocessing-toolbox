@@ -27,6 +27,9 @@ try:
     print "Testing ArcPy"
     arcpy.AddMessage("ArcPy works")
     
+    if not arcpy.Exists(TestUtilities.scratchGDB):
+        TestUtilities.createScratch()
+    
     # Add all datasets that will be needed by the unit tests here
     print("Checking that all necessary objects exist.")
       

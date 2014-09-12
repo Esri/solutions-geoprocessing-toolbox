@@ -39,8 +39,8 @@ def RunTest():
         TestUtilities.createScratch()
             
         # Verify the expected configuration exists
-        inputPointsFC =  os.path.join(TestUtilities.defaultGDB, "sampleRangePoints")
-        inputSurface =  os.path.join(TestUtilities.defaultGDB, "Jbad_SRTM_USGS_EROS")
+        inputPointsFC =  os.path.join(TestUtilities.inputGDB, "sampleRangePoints")
+        inputSurface =  os.path.join(TestUtilities.inputGDB, "Jbad_SRTM_USGS_EROS")
         outputRangeFansFC =  os.path.join(TestUtilities.outputGDB, "RangeFans")
         outputRangeVizFC =  os.path.join(TestUtilities.outputGDB, "RangeViz") 
         toolbox = TestUtilities.toolbox
@@ -53,22 +53,22 @@ def RunTest():
             if desc == None :
                 raise Exception("Bad Input")
             else :
-                print "Valid Object: " + desc.Name 
+                print("Valid Object: " + desc.Name)
         
         # Set environment settings
-        print "Running from: " + str(TestUtilities.currentPath)
-        print "Geodatabase path: " + str(TestUtilities.geodatabasePath)
+        print("Running from: " + str(TestUtilities.currentPath))
+        print("Geodatabase path: " + str(TestUtilities.geodatabasePath))
         
         arcpy.env.overwriteOutput = True
         arcpy.env.scratchWorkspace = TestUtilities.scratchGDB
         arcpy.ImportToolbox(toolbox, "VandR")
     
         inputFeatureCount = int(arcpy.GetCount_management(inputPointsFC).getOutput(0)) 
-        print "Input FeatureClass: " + str(inputPointsFC)
-        print "Input Feature Count: " +  str(inputFeatureCount)
+        print("Input FeatureClass: " + str(inputPointsFC))
+        print("Input Feature Count: " +  str(inputFeatureCount))
             
         if (inputFeatureCount < 1) :
-            print "Invalid Input Feature Count: " +  str(inputFeatureCount)
+            print("Invalid Input Feature Count: " +  str(inputFeatureCount))
                        
         maximumRange = 1000.0
         bearing = 150.0
@@ -81,22 +81,22 @@ def RunTest():
     
         # Verify the results    
         outputFeatureCountFans = int(arcpy.GetCount_management(outputRangeFansFC).getOutput(0)) 
-        print "Output FeatureClass: " + str(outputRangeFansFC)
-        print "Output Feature Count: " +  str(outputFeatureCountFans)
+        print("Output FeatureClass: " + str(outputRangeFansFC))
+        print("Output Feature Count: " +  str(outputFeatureCountFans))
     
         outputFeatureCountViz = int(arcpy.GetCount_management(outputRangeVizFC).getOutput(0))
-        print "Output FeatureClass: " + str(outputRangeVizFC)
-        print "Output Feature Count: " +  str(outputFeatureCountViz)
+        print("Output FeatureClass: " + str(outputRangeVizFC))
+        print("Output Feature Count: " +  str(outputFeatureCountViz))
                 
         if (outputFeatureCountFans < 1) or (outputFeatureCountViz < 1):
-            print "Invalid Output Feature Count: " +  str(outputFeatureCountFans) + ":" + str(outputFeatureCountViz) 
+            print("Invalid Output Feature Count: " +  str(outputFeatureCountFans) + ":" + str(outputFeatureCountViz))
             raise Exception("Test Failed")
             
         # WORKAROUND: delete scratch db
-        print "Deleting Scratch Workspace (Workaround)"    
+        print("Deleting Scratch Workspace (Workaround)")
         TestUtilities.deleteScratch()        
         
-        print "Test Successful"
+        print("Test Successful")
                 
     except arcpy.ExecuteError: 
         # Get the tool error messages 

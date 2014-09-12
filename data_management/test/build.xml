@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 
-<project name="solutions-geoprocessing-toolbox/data_management" basedir="." default="run_all_tests">
+<project name="TestDataManagement" basedir="." default="run_all_tests">
 
   <!-- templatehome = solution-geoprocessing-toolbox -->
 
   <target name="run_all_tests"
     depends="test_build_elevation,test_network_data_prep,test_imagery_tools,test_topographic_tools,
-    test_publishable_tasks,test_position_analysis,test_geonames_tools,test_scanned_map_tools,
-    test_patrol_data_capture">
+    test_publishable_tasks,test_position_analysis,test_scanned_map_tools,test_patrol_data_capture,
+    test_geonames_tools">
     <echo message="Running All Tests" />
   </target>
   

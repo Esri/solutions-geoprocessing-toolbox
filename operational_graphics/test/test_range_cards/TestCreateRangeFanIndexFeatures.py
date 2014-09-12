@@ -29,7 +29,7 @@ def RunTest():
         arcpy.AddMessage("Starting Test: TestCreateRangeFanIndexFeatures")
         
         # WORKAROUND
-        print "Creating New Scratch Workspace (Workaround)"    
+        print("Creating New Scratch Workspace (Workaround)")
         TestUtilities.createScratch()
             
         inputPolygonFC =  os.path.join(TestUtilities.inputGDB, "RangeFans")
@@ -38,19 +38,19 @@ def RunTest():
         toolbox = TestUtilities.toolbox
                 
         # Set environment settings
-        print "Running from: " + str(TestUtilities.currentPath)
-        print "Geodatabase path: " + str(TestUtilities.geodatabasePath)
+        print("Running from: " + str(TestUtilities.currentPath))
+        print("Geodatabase path: " + str(TestUtilities.geodatabasePath))
         
         arcpy.env.overwriteOutput = True
         arcpy.env.scratchWorkspace = TestUtilities.scratchGDB
         arcpy.ImportToolbox(toolbox, "Range")
     
         inputFeatureCount = int(arcpy.GetCount_management(inputPolygonFC).getOutput(0)) 
-        print "Input FeatureClass: " + str(inputPolygonFC)
-        print "Input Feature Count: " +  str(inputFeatureCount)
+        print("Input FeatureClass: " + str(inputPolygonFC))
+        print("Input Feature Count: " +  str(inputFeatureCount))
             
         if (inputPolygonFC < 1) :
-            print "Invalid Input Feature Count: " +  str(inputPolygonFC)                       
+            print("Invalid Input Feature Count: " +  str(inputPolygonFC)                       )
                    
         ########################################################3
         # Execute the Model under test:   
@@ -59,22 +59,22 @@ def RunTest():
     
         # Verify the results    
         outputFeatureCountExtent = int(arcpy.GetCount_management(outputExtentBoxes).getOutput(0)) 
-        print "Output FeatureClass: " + str(outputExtentBoxes)
-        print "Output Feature Count: " +  str(outputFeatureCountExtent)
+        print("Output FeatureClass: " + str(outputExtentBoxes))
+        print("Output Feature Count: " +  str(outputFeatureCountExtent))
     
         outputFeatureCountPoints = int(arcpy.GetCount_management(outputRangeVertices).getOutput(0))
-        print "Output FeatureClass: " + str(outputRangeVertices)
-        print "Output Feature Count: " +  str(outputFeatureCountPoints)
+        print("Output FeatureClass: " + str(outputRangeVertices))
+        print("Output Feature Count: " +  str(outputFeatureCountPoints))
                 
         if (outputFeatureCountExtent < 1) or (outputFeatureCountPoints < 1) :
-            print "Invalid Output Feature Count: " +  str(outputFeatureCountExtent) + ":" + str(outputFeatureCountPoints)
+            print("Invalid Output Feature Count: " +  str(outputFeatureCountExtent) + ":" + str(outputFeatureCountPoints))
             raise Exception("Test Failed")                                  
             
         # WORKAROUND: delete scratch db
         print "Deleting Scratch Workspace (Workaround)"    
         TestUtilities.deleteScratch()        
         
-        print "Test Successful"        
+        print("Test Successful")
                 
     except arcpy.ExecuteError: 
         # Get the tool error messages 

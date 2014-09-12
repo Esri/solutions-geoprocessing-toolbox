@@ -35,12 +35,12 @@ def RunTest():
             raise Exception("LicenseError")        
         
         # WORKAROUND
-        print "Creating New Scratch Workspace (Workaround)"    
+        print("Creating New Scratch Workspace (Workaround)")
         TestUtilities.createScratch()
             
         # Verify the expected configuration exists
         inputPointsFC =  os.path.join(TestUtilities.inputGDB, "RlosObserverWebMerc")
-        inputSurface =  os.path.join(TestUtilities.defaultGDB, "Jbad_SRTM_USGS_EROS")
+        inputSurface =  os.path.join(TestUtilities.inputGDB, "Jbad_SRTM_USGS_EROS")
         outputVizFC =  os.path.join(TestUtilities.outputGDB, "RlosVizOutput") 
         toolbox = TestUtilities.toolbox
         
@@ -52,22 +52,22 @@ def RunTest():
             if desc == None :
                 raise Exception("Bad Input")
             else :
-                print "Valid Object: " + desc.Name 
+                print("Valid Object: " + desc.Name)
         
         # Set environment settings
-        print "Running from: " + str(TestUtilities.currentPath)
-        print "Geodatabase path: " + str(TestUtilities.geodatabasePath)
+        print("Running from: " + str(TestUtilities.currentPath))
+        print("Geodatabase path: " + str(TestUtilities.geodatabasePath))
         
         arcpy.env.overwriteOutput = True
         arcpy.env.scratchWorkspace = TestUtilities.scratchGDB
         arcpy.ImportToolbox(toolbox, "VandR")
     
         inputFeatureCount = int(arcpy.GetCount_management(inputPointsFC).getOutput(0)) 
-        print "Input FeatureClass: " + str(inputPointsFC)
-        print "Input Feature Count: " +  str(inputFeatureCount)
+        print("Input FeatureClass: " + str(inputPointsFC))
+        print("Input Feature Count: " +  str(inputFeatureCount))
             
         if (inputFeatureCount < 1) :
-            print "Invalid Input Feature Count: " +  str(inputFeatureCount)
+            print("Invalid Input Feature Count: " +  str(inputFeatureCount))
                        
         forceVisibilityToInfinity = False
            
@@ -78,18 +78,18 @@ def RunTest():
     
         # Verify the results    
         outputFeatureCountViz = int(arcpy.GetCount_management(outputVizFC).getOutput(0)) 
-        print "Output FeatureClass: " + str(outputVizFC)
-        print "Output Feature Count: " +  str(outputFeatureCountViz)
+        print("Output FeatureClass: " + str(outputVizFC))
+        print("Output Feature Count: " +  str(outputFeatureCountViz))
                  
         if (outputFeatureCountViz < 1) :
-            print "Invalid Output Feature Count: " + str(outputFeatureCountViz)
+            print("Invalid Output Feature Count: " + str(outputFeatureCountViz))
             raise Exception("Test Failed")
             
         # WORKAROUND: delete scratch db
-        print "Deleting Scratch Workspace (Workaround)"    
+        print("Deleting Scratch Workspace (Workaround)")
         TestUtilities.deleteScratch()        
         
-        print "Test Successful"
+        print("Test Successful")
                 
     except arcpy.ExecuteError: 
         # Get the tool error messages 

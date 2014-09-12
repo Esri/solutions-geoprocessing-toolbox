@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="solution-geoprocessing-toolbox" basedir="." default="run_all_tests">
+<project name="TestSuitability" basedir="." default="run_all_tests">
 
   <!-- templatehome = defense-and-intel-analysis-toolbox -->
 
@@ -9,7 +9,6 @@
     <echo message="Running All Tests" />
   </target>
 
-  
   <target name="test_maot">
     <echo message="Running: test_maot" />
     <ant dir="./test_maot" target="run_all_tests" />

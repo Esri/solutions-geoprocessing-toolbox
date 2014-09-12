@@ -32,7 +32,7 @@ try:
     # print "Deleting Scratch Workspace (Workaround)"    
     # TestUtilities.deleteScratch()
       
-    print("Testing Necessary Paths"                )
+    print("Testing Necessary Paths")
     
     print("Running from: " + str(TestUtilities.currentPath))
            

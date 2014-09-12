@@ -21,15 +21,19 @@ import arcpy
 import os
 
 currentPath = os.path.dirname(__file__)
-geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../common/data/geodatabases/"))
+geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../suitability/data/geodatabases/"))
 
 scratchPath = geodatabasePath
-toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../common/toolboxes/"))                
+toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../suitability/toolboxes/"))                
 
-inputGDB  = os.path.join(geodatabasePath, "test_inputs.gdb")
-outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
-defaultGDB = os.path.join(geodatabasePath, "default.gdb")
+inputGDB  = os.path.join(geodatabasePath, "test_maot_input.gdb")
+#inputElevationURL = r"http://afmcloud.esri.com/arcgis/services/Environment/DigitalTerrainModel/ImageServer"
+inputElevationURL = r"http://afmcloud.esri.com/arcgis/rest/services/Environment/DigitalTerrainModel/ImageServer"
+#outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
+#defaultGDB = os.path.join(geodatabasePath, "default.gdb")
 scratchGDB = os.path.join(scratchPath, "scratch.gdb")
+outputGDB = scratchGDB
+defaultGDB = scratchGDB
 
 toolbox = os.path.join(toolboxesPath, "Military Aspects of Terrain Tools.tbx")
 
@@ -37,7 +41,7 @@ def createScratch() :
     try :
         arcpy.CreateFileGDB_management(scratchPath, "scratch")                                          
     except:    
-        print "scratch.gdb already exists"
+        print("scratch.gdb already exists")
         
     return
 
@@ -45,6 +49,6 @@ def deleteScratch() :
     try :   
         arcpy.Delete_management(scratchGDB)
     except:    
-        print "scratch.gdb delete failed"
+        print("scratch.gdb delete failed")
         
     return    
