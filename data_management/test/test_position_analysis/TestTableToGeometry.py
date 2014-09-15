@@ -132,7 +132,8 @@ def RunTestTableToEllipse():
     # sample params:
     # 'data\csv\ellipsewizard.csv', 'DD_2', 'Lond', 'Latd', 'Major', 'Minor', 'KILOMETERS', 'Orient', 'DEGREES'
     # '#', 'geodatabases\test_outputs.gdb\TableToEllipse'
-    arcpy.TableToEllipse_Position(inputTable, coordinateConversionFormat, coordinateFieldX, coordinateFieldY, majorAxisField, minorAxisField, axisUnit, orientationField, orientationUnit, sr, outputEllipsesFC)
+    arcpy.TableToEllipse_Position(inputTable, coordinateConversionFormat, coordinateFieldX, coordinateFieldY, majorAxisField,
+                                  minorAxisField, axisUnit, outputEllipsesFC, orientationField, orientationUnit, sr)
     ########################################################3
 
     # Verify the results    
@@ -176,7 +177,8 @@ def RunTestTableToLOB():
     # 'data\csv\lobwizard.csv', 'DD_2', 'Lond', 'Latd', 'DEGREES', 'Azimuth', 'METERS', 
     # 'Distance', 'GEODESIC', 'data\geodatabases\test_outputs\TableToLOB'    
             
-    arcpy.TableToLOB_Position(inputTable, coordinateConversionFormat, coordinateFieldX,  coordinateFieldY, bearingUnit, bearingField, distanceUnit, distanceField, lineType, outputLinesFC)
+    arcpy.TableToLOB_Position(inputTable, coordinateConversionFormat, coordinateFieldX,  coordinateFieldY, bearingUnit,
+                              bearingField, distanceUnit, distanceField, outputLinesFC, lineType)
     ########################################################3
 
     # Verify the results    
