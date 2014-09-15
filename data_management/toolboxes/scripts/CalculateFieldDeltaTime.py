@@ -20,14 +20,14 @@
 # a numeric field, the name of which is passed as a parameter.
 # Each track (as identified in the Track ID Field) will be
 # treated separately
-# INPUTS: 
+# INPUTS:
 #    GPS Track Points (FEATURECLASS)
 #    DateTime Field (FIELD)
 #    Field in which to store time spent (FIELD)
 #    Track ID Field (FIELD)
 # OUTPUTS:
 #    GPS Track Points - derived (FEATURECLASS)
-# 
+#
 # Date: June 30, 2010
 #------------------------------------------------------
 
@@ -44,16 +44,19 @@ try:
     inDateField = arcpy.GetParameterAsText(1)
     inDeltaTimeField = arcpy.GetParameterAsText(2)
     inTrackIDField = arcpy.GetParameterAsText(3)
-   
+
     srch_cursor = arcpy.SearchCursor(inPoints,"",None,"",inDateField + " A")
-    nextfeat = srch_cursor.next()
-    nextfeat = srch_cursor.next() # this cursor looks at the point after the one being updated
+    #nextfeat = srch_cursor.next() #UPDATE
+    nextfeat = next(srch_cursor)
+    #nextfeat = srch_cursor.next() # this cursor looks at the point after the one being updated #UPDATE
+    nextfeat = next(srch_cursor) # this cursor looks at the point after the one being updated
     updt_cursor = arcpy.UpdateCursor(inPoints,"",None,"",inDateField + " A")
-    updatefeat = updt_cursor.next()
+    #updatefeat = updt_cursor.next() #UPDATE
+    updatefeat = next(updt_cursor)
 
     lastdt = None
     lastid, thisid, nextid = None, None, None
-    
+
     while updatefeat:
         thisdt = updatefeat.getValue(inDateField)
         if inTrackIDField:
@@ -86,9 +89,11 @@ try:
 
         lastid = thisid
         lastdt = thisdt
-        updatefeat = updt_cursor.next()        
+        #updatefeat = updt_cursor.next() #UPDATE
+        updatefeat = next(updt_cursor)
         if updatefeat:
-            nextfeat = srch_cursor.next()
+            #nextfeat = srch_cursor.next() #UPDATE
+            nextfeat = next(srch_cursor)
 
     arcpy.SetParameterAsText(4, inPoints)
 

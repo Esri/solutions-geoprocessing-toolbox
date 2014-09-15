@@ -19,7 +19,7 @@
 # a new track must be starting. All points in each
 # track are applied a GUID to distinguish them as
 # belonging to a unique track.
-# INPUTS: 
+# INPUTS:
 #    Input Points Feature Class (FEATURECLASS)
 #    DateTime Field - holding the GPS Timestamp (FIELD)
 #    DeltaTime Field - holding the difference in time (secs) between the points either side (FIELD)
@@ -46,15 +46,16 @@ try:
     guidfield = arcpy.GetParameterAsText(3)
     maxdeltatime = arcpy.GetParameterAsText(4)
 
-    maxdeltatime = float(maxdeltatime)    
-    
+    maxdeltatime = float(maxdeltatime)
+
     features = arcpy.UpdateCursor(points,"",None,"",datetimefield + " A")
-    feature = features.next()
+    #feature = features.next() #UPDATE
+    feature = next(features)
 
     guid = uuid.uuid4()
 
-    endoftrack = None    
-    
+    endoftrack = None
+
     while feature:
         deltatimeval = feature.getValue(deltatimefield)
         if (deltatimeval > maxdeltatime):
@@ -68,10 +69,11 @@ try:
             endoftrack = None
         feature.setValue(guidfield, "{" + str(guid) + "}")
         features.updateRow(feature)
-        feature = features.next()
+        #feature = features.next()
+        feature = next(features)
 
     arcpy.SetParameterAsText(5, points)
-    
+
 except:
     if not arcpy.GetMessages() == "":
         arcpy.AddMessage(arcpy.GetMessages(2))
