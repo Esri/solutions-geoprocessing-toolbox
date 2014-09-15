@@ -16,13 +16,13 @@
 # Calculate Field FloatDate
 # This script will calculate the Unix timestamp of a date
 # field and populate a 'FloatDate' field with the result
-# INPUTS: 
+# INPUTS:
 #    Input Table (TABLE)
 #    DateTime Field (FIELD)
 #    Field in which to store FloatDate (FIELD)
 # OUTPUTS:
 #    Output Table - derived (TABLE)
-# 
+#
 # Date: June 30, 2010
 #------------------------------------------------------
 
@@ -38,18 +38,19 @@ try:
     inTable = arcpy.GetParameterAsText(0)
     inDateField = arcpy.GetParameterAsText(1)
     inFloatDateField = arcpy.GetParameterAsText(2)
-   
-    updt_cursor = arcpy.UpdateCursor(inTable,"",None,"",inDateField + " A")
-    updatefeat = updt_cursor.next()
 
-    
+    updt_cursor = arcpy.UpdateCursor(inTable,"",None,"",inDateField + " A")
+    #updatefeat = updt_cursor.next() #UPDATE
+    updatefeat = next(updt_cursor)
+
     while updatefeat:
         dt = updatefeat.getValue(inDateField)
         floatdate = mktime(dt.timetuple()) + 1e-6*dt.microsecond
         updatefeat.setValue(inFloatDateField, floatdate)
         updt_cursor.updateRow(updatefeat)
-        updatefeat = updt_cursor.next()        
- 
+        #updatefeat = updt_cursor.next() #UDPATE
+        updatefeat = next(updt_cursor)
+
     arcpy.SetParameterAsText(3, inTable)
 
 except:
