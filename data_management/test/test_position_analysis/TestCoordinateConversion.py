@@ -29,7 +29,7 @@ def RunTest():
         arcpy.AddMessage("Starting Test: CoordinateConversion")
         
         # WORKAROUND
-        print("Creating New Scratch Workspace (Workaround)"    )
+        print("Creating New Scratch Workspace (Workaround)")
         TestUtilities.createScratch()
             
         inputTable =  os.path.join(TestUtilities.csvPath, "SigActs.csv")
@@ -53,14 +53,9 @@ def RunTest():
                        
         coordinateConversionFrom = 'MGRS'
         coordinateFieldX = 'Location'
-        coordinateFieldY = '#'
+        coordinateFieldY = None
         
-        ########################################################3
-        # Execute the Model under test:   
-        
-        # sample params:
-        # 'data\csv\SigActs.csv', 'MGRS', 'Location', '#', 'data\test_coordinate_cc.dbf', 
-        
+        ########################################################3       
         arcpy.ConvertCoordinates_Position(inputTable, coordinateConversionFrom, coordinateFieldX, coordinateFieldY, outputDbf)
         ########################################################3
     
