@@ -18,13 +18,13 @@
 # infield which represents the value higher
 # than which only x% of values lie (which
 # are likely to include any outliers)
-# INPUTS: 
+# INPUTS:
 #    Input Table (TABLE)
 #    Field to test (FIELD)
 #    Proportion (x) to test (FLOAT)
 # OUTPUTS:
 #    Output Value (STRING)
-# 
+#
 # Date: June 10, 2010
 #------------------------------------------------------
 
@@ -38,24 +38,26 @@ try:
     inTable = arcpy.GetParameterAsText(0)
     inField = arcpy.GetParameterAsText(1)
     inPercent = arcpy.GetParameterAsText(2)
-    
+
     numrows = int(arcpy.GetCount_management(inTable).getOutput(0))
     arcpy.AddMessage(str(numrows) + " rows")
     upperval = 0
     count = 0
-    
+
     features = arcpy.SearchCursor(inTable,"",None,"",inField + " A")
-    feature = features.next()
-    
+    #feature = features.next() #UPDATE
+    feature = next(features)
+
     while feature:
         count += 1
         if (count >= numrows * (1- float(inPercent))):
             upperval = feature.getValue(inField)
             break
-        feature = features.next()
-        
+        #feature = features.next() #UPDATE
+        feature = nextxt(features)
+
     arcpy.AddMessage("Cut-off Value = " + str(upperval))
-    
+
     arcpy.SetParameterAsText(3, upperval)
 
 except:

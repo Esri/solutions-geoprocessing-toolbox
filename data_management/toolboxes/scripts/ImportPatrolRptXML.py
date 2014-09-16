@@ -18,7 +18,7 @@
 # add the 'PatrolReport' elements as a row to
 # an ArcGIS Table of identical schema, against
 # the specified Track ID
-# INPUTS: 
+# INPUTS:
 #    XML file (FILE)
 #    Track ID (STRING)
 # OUTPUTS:
@@ -32,48 +32,48 @@ import re
 
 def ptrlreptodict(xmlfile):
     ''' Parses the xml to extract the PatrolReport fields into a dictionary '''
-   
-    PATROLREPORT_NS = '{http://helyx.co.uk/infopath/2003/myXSD/2010-06-09}'        
-    
+
+    PATROLREPORT_NS = '{http://helyx.co.uk/infopath/2003/myXSD/2010-06-09}'
+
     tree = ElementTree.parse(xmlfile)
-       
+
     d = {}
     ''' get each of the grouped nodes '''
     report = tree.find(PATROLREPORT_NS + 'Report')
     patrol = tree.find(PATROLREPORT_NS + 'Patrol')
-    task = tree.find(PATROLREPORT_NS + 'Task')    
+    task = tree.find(PATROLREPORT_NS + 'Task')
     observations = tree.find(PATROLREPORT_NS + 'Observations')
     patrolcondition = tree.find(PATROLREPORT_NS + 'PatrolCondition')
     ''' get report nodes '''
-    reportnumber = report.find(PATROLREPORT_NS + 'ReportNumber').text      
-    classification = report.find(PATROLREPORT_NS + 'Classification').text      
-    _to = report.find(PATROLREPORT_NS + 'To').text      
-    _from = report.find(PATROLREPORT_NS + 'From').text      
+    reportnumber = report.find(PATROLREPORT_NS + 'ReportNumber').text
+    classification = report.find(PATROLREPORT_NS + 'Classification').text
+    _to = report.find(PATROLREPORT_NS + 'To').text
+    _from = report.find(PATROLREPORT_NS + 'From').text
     reportdatetime = report.find(PATROLREPORT_NS + 'ReportDateTime').text
     ''' get patrol nodes '''
-    callsign = patrol.find(PATROLREPORT_NS + 'Callsign').text      
-    subunit = patrol.find(PATROLREPORT_NS + 'Subunit').text      
-    patrolbase = patrol.find(PATROLREPORT_NS + 'PatrolBase').text      
-    patroltype = patrol.find(PATROLREPORT_NS + 'PatrolType').text      
-    patrolcommand = patrol.find(PATROLREPORT_NS + 'PatrolCommand').text      
-    interpreter = patrol.find(PATROLREPORT_NS + 'Interpreter').text      
-    patrolsize = patrol.find(PATROLREPORT_NS + 'PatrolSize').text      
-    composition = patrol.find(PATROLREPORT_NS + 'Composition').text      
+    callsign = patrol.find(PATROLREPORT_NS + 'Callsign').text
+    subunit = patrol.find(PATROLREPORT_NS + 'Subunit').text
+    patrolbase = patrol.find(PATROLREPORT_NS + 'PatrolBase').text
+    patroltype = patrol.find(PATROLREPORT_NS + 'PatrolType').text
+    patrolcommand = patrol.find(PATROLREPORT_NS + 'PatrolCommand').text
+    interpreter = patrol.find(PATROLREPORT_NS + 'Interpreter').text
+    patrolsize = patrol.find(PATROLREPORT_NS + 'PatrolSize').text
+    composition = patrol.find(PATROLREPORT_NS + 'Composition').text
     ''' get task nodes '''
-    opname = task.find(PATROLREPORT_NS + 'OpName').text      
-    taskname = task.find(PATROLREPORT_NS + 'TaskName').text      
-    taskdescription = task.find(PATROLREPORT_NS + 'TaskDescription').text      
+    opname = task.find(PATROLREPORT_NS + 'OpName').text
+    taskname = task.find(PATROLREPORT_NS + 'TaskName').text
+    taskdescription = task.find(PATROLREPORT_NS + 'TaskDescription').text
     ''' get observation nodes '''
-    terraindescription = observations.find(PATROLREPORT_NS + 'TerrainDescription').text      
-    miscinfo = observations.find(PATROLREPORT_NS + 'MiscInfo').text      
+    terraindescription = observations.find(PATROLREPORT_NS + 'TerrainDescription').text
+    miscinfo = observations.find(PATROLREPORT_NS + 'MiscInfo').text
     conclusions = observations.find(PATROLREPORT_NS + 'Conclusions').text
     ''' ignore the EnemySightings nodes which go in another table '''
     ''' get patrolcondition nodes '''
-    numpatrolok = patrolcondition.find(PATROLREPORT_NS + 'NumPatrolOK').text      
-    numpatrolwounded = patrolcondition.find(PATROLREPORT_NS + 'NumPatrolWounded').text      
-    numpatrolkia = patrolcondition.find(PATROLREPORT_NS + 'NumPatrolKIA').text      
-    numpatrolmissing = patrolcondition.find(PATROLREPORT_NS + 'NumPatrolMissing').text      
-    numpatrolcaptured = patrolcondition.find(PATROLREPORT_NS + 'NumPatrolCaptured').text      
+    numpatrolok = patrolcondition.find(PATROLREPORT_NS + 'NumPatrolOK').text
+    numpatrolwounded = patrolcondition.find(PATROLREPORT_NS + 'NumPatrolWounded').text
+    numpatrolkia = patrolcondition.find(PATROLREPORT_NS + 'NumPatrolKIA').text
+    numpatrolmissing = patrolcondition.find(PATROLREPORT_NS + 'NumPatrolMissing').text
+    numpatrolcaptured = patrolcondition.find(PATROLREPORT_NS + 'NumPatrolCaptured').text
 
     yield reportnumber, classification, _to, _from, reportdatetime, \
           callsign, subunit, patrolbase, patroltype, patrolcommand, \
@@ -81,38 +81,39 @@ def ptrlreptodict(xmlfile):
           taskdescription, terraindescription, miscinfo, conclusions, \
           numpatrolok, numpatrolwounded, numpatrolkia, numpatrolmissing, \
           numpatrolcaptured
-        
-def parse_timestamp(s): 
-  ''' Returns (datetime, tz offset in minutes) or (None, None). ''' 
-  m = re.match(""" ^ 
-    (?P<year>-?[0-9]{4}) - (?P<month>[0-9]{2}) - (?P<day>[0-9]{2}) 
-    T (?P<hour>[0-9]{2}) : (?P<minute>[0-9]{2}) : (?P<second>[0-9]{2}) 
-    (?P<microsecond>\.[0-9]{1,6})? 
-    (?P<tz> 
-      Z | (?P<tz_hr>[-+][0-9]{2}) : (?P<tz_min>[0-9]{2}) 
-    )? 
-    $ """, s, re.X) 
-  if m is not None: 
-    values = m.groupdict() 
-    if values["tz"] in ("Z", None): 
-      tz = 0 
-    else: 
-      tz = int(values["tz_hr"]) * 60 + int(values["tz_min"]) 
-    if values["microsecond"] is None: 
-      values["microsecond"] = 0 
-    else: 
-      values["microsecond"] = values["microsecond"][1:] 
-      values["microsecond"] += "0" * (6 - len(values["microsecond"])) 
-    values = dict((k, int(v)) for k, v in values.iteritems() 
-                  if not k.startswith("tz")) 
-    try: 
-      return datetime(**values), tz 
-    except ValueError: 
-      pass 
-  return None, None 
+
+def parse_timestamp(s):
+  ''' Returns (datetime, tz offset in minutes) or (None, None). '''
+  m = re.match(""" ^
+    (?P<year>-?[0-9]{4}) - (?P<month>[0-9]{2}) - (?P<day>[0-9]{2})
+    T (?P<hour>[0-9]{2}) : (?P<minute>[0-9]{2}) : (?P<second>[0-9]{2})
+    (?P<microsecond>\.[0-9]{1,6})?
+    (?P<tz>
+      Z | (?P<tz_hr>[-+][0-9]{2}) : (?P<tz_min>[0-9]{2})
+    )?
+    $ """, s, re.X)
+  if m is not None:
+    values = m.groupdict()
+    if values["tz"] in ("Z", None):
+      tz = 0
+    else:
+      tz = int(values["tz_hr"]) * 60 + int(values["tz_min"])
+    if values["microsecond"] is None:
+      values["microsecond"] = 0
+    else:
+      values["microsecond"] = values["microsecond"][1:]
+      values["microsecond"] += "0" * (6 - len(values["microsecond"]))
+    #values = dict((k, int(v)) for k, v in values.iteritems() #UPDATE
+    values = dict((k, int(v)) for k, v in list(values.items())
+                  if not k.startswith("tz"))
+    try:
+      return datetime(**values), tz
+    except ValueError:
+      pass
+  return None, None
 
 if __name__ == "__main__":
-    
+
     #Get GPX and Output directory paramaters
     xmlfile = arcpy.GetParameterAsText(0)
     trackid = arcpy.GetParameterAsText(1)
@@ -120,11 +121,11 @@ if __name__ == "__main__":
 
     rows, row = None, None
 
-    try:    
+    try:
         rows = arcpy.InsertCursor(outTable)
 
-        recComplete = 0    
-    
+        recComplete = 0
+
         # walk through each patrol report, create and insert a record into the table for each
         for reportnumber, classification, _to, _from, reportdatetime, \
          callsign, subunit, patrolbase, patroltype, patrolcommand, \
@@ -132,8 +133,8 @@ if __name__ == "__main__":
          taskdescription, terraindescription, miscinfo, conclusions, \
          numpatrolok, numpatrolwounded, numpatrolkia, numpatrolmissing, \
          numpatrolcaptured \
-         in ptrlreptodict(xmlfile):         
-            row = rows.newRow()           
+         in ptrlreptodict(xmlfile):
+            row = rows.newRow()
             row.ReportNumber = reportnumber
             row.Classification = classification
             row.ReportTo = _to
@@ -160,15 +161,16 @@ if __name__ == "__main__":
             row.NumPatrolCaptured = numpatrolcaptured
             ''' Add the Track ID, which was passed as a parameter, to link report to a track '''
             row.FK_TrackGUID = trackid
-        
+
             rows.insertRow(row)
             recComplete += 1
-        
+
             arcpy.AddMessage("Processed " + str(recComplete) + " records.")
 
             arcpy.SetParameterAsText(3,'True')
-            
-    except Exception, ErrorDesc:
+
+    #except Exception, ErrorDesc: #UPDATE
+    except Exception as ErrorDesc:
             arcpy.AddError(str(ErrorDesc))
 
     finally:

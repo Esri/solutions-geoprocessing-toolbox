@@ -17,7 +17,7 @@
 # This script will take any number of tracks selected in
 #'inTrackLines' and condense them to one track, updating
 # all the associated points to the new single track id
-# INPUTS: 
+# INPUTS:
 #    Input Track Lines (FEATURELAYER)
 #    Input Track Points (FEATURELAYER)
 #    Field in which Track IDs are stored (FIELD)
@@ -51,26 +51,29 @@ try:
     #desc = arcpy.Describe(inTrackLines)
     #shapefieldname = desc.ShapeFieldName
 
-    #iterate over each track line, gathering data and deleting all but the first    
+    #iterate over each track line, gathering data and deleting all but the first
     updt_cursor = arcpy.UpdateCursor(inTrackLines,"",None,"",inStartDateTimeField)
-    updatefeat = updt_cursor.next()
+    #updatefeat = updt_cursor.next() #UDPATE
+    updatefeat = next(updt_cursor)
 
     loweststart = None
     highestfinish = None
     newtrackid = None
     changedtrackids = None
     ptarray = arcpy.Array()
-    
+
     while updatefeat:
         startdt = updatefeat.getValue(inStartDateTimeField)
         finishdt = updatefeat.getValue(inFinishDateTimeField)
         shp = updatefeat.shape
         polyline = shp.getPart(0)
-        pt = polyline.next()
+        #pt = polyline.next() #UDPATE
+        pt = next(polyline)
         while pt:
             #add the polyline to the point array that will be used to recreate a joined polyline later
             ptarray.add(pt)
-            pt = polyline.next()
+            #pt = polyline.next() #UPDATE
+            pt = next(polyline)
         if loweststart:
             if startdt < loweststart:
                 loweststart = startdt
@@ -81,7 +84,7 @@ try:
                 highestfinish = finishdt
         else:
             highestfinish = finishdt
-            
+
         if newtrackid:
             if changedtrackids:
                 changedtrackids += " OR \"" + inTrackIDField + "\" = '" + updatefeat.getValue(inTrackIDField) + "'"
@@ -90,11 +93,13 @@ try:
             updt_cursor.deleteRow(updatefeat)
         else:
             newtrackid = updatefeat.getValue(inTrackIDField)
-        updatefeat = updt_cursor.next()
+        #updatefeat = updt_cursor.next() #UPDATE
+        updatefeat = next(updt_cursor)
 
     #now, update the track line being left with new start and finish datetimes, and new geometry
     linecursor = arcpy.UpdateCursor(inTrackLines)
-    ft = linecursor.next()
+    #ft = linecursor.next() #UPDATE
+    ft = next(linecursor)
     ft.setValue(inStartDateTimeField, loweststart)
     ft.setValue(inFinishDateTimeField, highestfinish)
     ft.shape = ptarray
@@ -103,13 +108,15 @@ try:
     #finally, update all points with the Track IDs affected to the new Track ID
     arcpy.AddMessage("update track points where " + changedtrackids)
     ptcursor = arcpy.UpdateCursor(inTrackPoints,changedtrackids)
-    feat = ptcursor.next()
+    #feat = ptcursor.next() #UPDATE
+    feat = next(ptcursor)
 
     while feat:
         feat.setValue(inTrackIDField, newtrackid)
         ptcursor.updateRow(feat)
-        feat = ptcursor.next()
-    
+        #feat = ptcursor.next() #UPDATE
+        feat = next(ptcursor)
+
     arcpy.SetParameterAsText(5, inTrackLines)
     arcpy.SetParameterAsText(6, inTrackPoints)
 
