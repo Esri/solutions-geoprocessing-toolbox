@@ -20,7 +20,7 @@
 # specified line feature class that correspond to the
 # point features. This was built specifically for the
 # purpose of converting GPS track points to track lines.
-# INPUTS: 
+# INPUTS:
 #    Input Points Feature Class (FEATURE LAYER)
 #    Output Line Feature Class (FEATURE LAYER)
 #    ID Field - holding an ID that identifies the points as belonging to unique lines (FIELD)
@@ -46,7 +46,7 @@ else:
     cursorSort = IDField
 
 
-	
+
 try:
     # Assign empty values to array, cursor and row objects
     array, iCur, sRow, sCur, feat = None, None, None, None, None
@@ -61,7 +61,8 @@ try:
     sCur = arcpy.SearchCursor(inPts)
 
 
-    sRow = sCur.next()
+    #sRow = sCur.next() #UPDATE
+    sRow = next(sCur)
 
     # Create an array and point object needed to create features
     #
@@ -84,8 +85,9 @@ try:
 	if ID == -1: ID = currentValue
 
 
-        if ID <> currentValue:
-            if array.count >= 2:                   
+        #if ID <> currentValue: #UPDATE
+        if ID != currentValue:
+            if array.count >= 2:
                 feat = iCur.newRow()
                 if IDField:
                     if ID: #in case the value is None/Null
@@ -94,12 +96,13 @@ try:
                 iCur.insertRow(feat)
             else:
                 arcpy.AddIDMessage("WARNING", 1059, str(ID))
-                                  
+
             array.removeAll()
 
         array.add(pt)
         ID = currentValue
-        sRow = sCur.next()
+        #sRow = sCur.next() #UPDATE
+        sRow = next(sCur)
 
 
 
@@ -116,7 +119,7 @@ try:
         arcpy.AddIDMessage("WARNING", 1059, str(ID))
     array.removeAll()
 
-    arcpy.SetParameterAsText(4, outFeatures)    
+    arcpy.SetParameterAsText(4, outFeatures)
 
 except Exception as err:
     arcpy.AddError(err.message)

@@ -19,7 +19,7 @@
 # a max distance value and max deviation,
 # identifies potential spikes (exceeding both
 # max values)
-# INPUTS: 
+# INPUTS:
 #    Input Points Feature Class (FEATURECLASS)
 #    Distance Field - holding dist from last point to this (FIELD)
 #    Bearing Field - holding deviation around this point (FIELD)
@@ -56,11 +56,14 @@ try:
 
     features = arcpy.UpdateCursor(points,"",None,"",datetimefield + " A")
     findfeatures = arcpy.SearchCursor(points,"",None,"",datetimefield + " A")
-    feature = features.next()
-    nextfeature = findfeatures.next()
-    
+    #feature = features.next() #UPDATE
+    feature= next(features)
+    #nextfeature = findfeatures.next() #UPDATE
+    nextfeature = next(findfeatures)
+
     while feature:
-        nextfeature = findfeatures.next()
+        #nextfeature = findfeatures.next() #UPDATE
+        nextfeature = next(findfeatures)
         distanceval = feature.getValue(distancefield)
         bearingval = feature.getValue(bearingfield)
         feature.setValue(spikefield, "false")
@@ -78,9 +81,10 @@ try:
                     if (deviation > maxdeviation) and ((360 - deviation) > maxdeviation):
                         feature.setValue(spikefield, "true")
         features.updateRow(feature)
-        feature = features.next()
+        #feature = features.next() #UPDATE
+        feature = next(features)
 
-    arcpy.SetParameterAsText(7, points)    
+    arcpy.SetParameterAsText(7, points)
 
 except:
     if not arcpy.GetMessages() == "":
