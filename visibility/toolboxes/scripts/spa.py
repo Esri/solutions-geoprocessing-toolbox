@@ -91,7 +91,8 @@ def CenterPoint(fc):
     # Get the centerpoint and project on the fly to WGS84 due to the calculations
     # used by the Sun Position algorithm (lat/lon required)
     rows = arcpy.SearchCursor(aoiCenter, "", GCS_WGS_1984, shapeName)
-    row = rows.next()
+    #row = rows.next() #UPDATE
+    row = next(rows)
     geom = row.getValue(shapeName)
     point = geom.getPart()
 
@@ -334,7 +335,8 @@ except arcpy.ExecuteError:
     # Get the tool error messages
     msgs = arcpy.GetMessages()
     arcpy.AddError(msgs)
-    print msgs
+    #print msgs #UPDATE
+    print(msgs)
 except MissingParameterError as e:
     if debug == True:
         arcpy.AddMessage("CRASH: " + str(time.strftime("%m/%d/%Y  %H:%M:%S", time.localtime())))
@@ -345,7 +347,8 @@ except MissingParameterError as e:
     # Get the tool error messages
     msg = e.value + " parameter is missing."
     arcpy.AddError(msg)
-    print msg
+    #print msg #UPDATE
+    print (msg)
 except:
     if debug == True:
         arcpy.AddMessage("CRASH: " + str(time.strftime("%m/%d/%Y  %H:%M:%S", time.localtime())))
@@ -362,9 +365,10 @@ except:
     arcpy.AddError(msgs)
 
     # Print Python error messages for use in Python / Python Window
-    print pymsg + "\n"
-    print msgs
-
+    #print pymsg + "\n" #UPDATE
+    #print msgs #UPDATE
+    print ((pymsg + "\n"))
+    print (msgs)
 finally:
 
     arcpy.CheckInExtension("Spatial")
