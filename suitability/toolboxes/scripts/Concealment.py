@@ -59,7 +59,12 @@ FACC_veg_tab = {"AL020":["Built-Up Area",2,2],
                 "ED020":["Swamp",1,0],
                 "EE000":["Miscellaneous Vegetation",1,1],
                 "EE010":["Logging Area",0,0],
-                "EE020":["Land devoid of vegetation",0,0]}
+                "EE020":["Land devoid of vegetation",0,0],
+		"AJ085":["Barn",2,2],
+		"AM020":["Grain Bin/Silo",2,2],
+		"AJ110":["Greenhouse",2,2],
+		"AJ080":["Stable",2,2],
+		"AJ050":["Windmill",2,2]}
 
 try:
     if debug == True: arcpy.AddMessage("Begin: " + str(time.strftime("%m/%d/%Y  %H:%M:%S", time.localtime())))
