@@ -83,8 +83,8 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 ### Downloading Data Dependencies/Test Data
 
 * Install and configure Apache Ant
-    * Download Ant from the [Apache Ant Project](http://ant.apache.org/bindownload.cgi) and unzip to a location on your machine
-    * Set environment variable `ANT_HOME` to Ant Install Location
+    * Download Ant from the [Apache Ant Project](http://ant.apache.org/bindownload.cgi) and unzip to a location on your machine, for example 'c:\apache-ant-1.9.2'.
+    * Set environment variable `ANT_HOME` to Ant Install Location (e.g. the folder from first step)
     * Add Ant\bin to your path: `%ANT_HOME%\bin`
     * NOTE: Ant requires Java [Runtime Environment (JRE) or Developer Kit (JDK)](http://www.oracle.com/technetwork/java/javase/downloads/index.html) to be installed and the environment variable `JAVA_HOME` to be set to this location
     * To verify your Ant Installation: Open Command Prompt> `ant -h` and verify it runs and returns the help options correctly 
