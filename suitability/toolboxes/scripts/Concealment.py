@@ -64,6 +64,7 @@ FACC_veg_tab = {"AL020":["Built-Up Area",2,2],
 		"AM020":["Grain Bin/Silo",2,2],
 		"AJ110":["Greenhouse",2,2],
 		"AJ080":["Stable",2,2],
+		"AK120":["Park",0,0],
 		"AJ050":["Windmill",2,2]}
 
 try:
