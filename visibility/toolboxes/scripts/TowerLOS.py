@@ -78,29 +78,33 @@ def updateValue(fc, field, value):
 
 
 # Script arguments
-input_surface = arcpy.GetParameterAsText(0)
-RADIUS2_to_infinity = arcpy.GetParameterAsText(1)
-towerClass = arcpy.GetParameterAsText(2)
-descField= arcpy.GetParameterAsText(3)
-towerName = arcpy.GetParameterAsText(4)
+input_surface = arcpy.GetParameterAsText(0) #Input Surface
+RADIUS2_to_infinity = arcpy.GetParameterAsText(1) #Force visibility to infinity
+towerClass = arcpy.GetParameterAsText(2) #Defensive Position Feature Class
+descField= arcpy.GetParameterAsText(3) #Defensive Position Description Field
+towerName = arcpy.GetParameterAsText(4) #Defensive Position Description
+towerHeightField = arcpy.GetParameterAsText(5) #Defensive Position Height Field
 # The name of the workspace in which the features should be stored
-outWorkspace = arcpy.GetParameterAsText(7)
+outWorkspace = arcpy.GetParameterAsText(6) #Output Workspace
 # The name of the featureclass in which the features should be stored
-outFeatureClassName = arcpy.GetParameterAsText(8)
+outFeatureClassName = arcpy.GetParameterAsText(7) #Output Visibility
+
 # Scrub the name
 scrubbedFeatureClassName = arcpy.ValidateTableName(outFeatureClassName,outWorkspace)
+
 # Put it all together
 output_rlos = os.path.join(outWorkspace,scrubbedFeatureClassName)
 if RADIUS2_to_infinity == '#' or not RADIUS2_to_infinity:
     RADIUS2_to_infinity = "false"
-towerHeight = arcpy.GetParameterAsText(6)
 
 terrestrial_refractivity_coefficient = 0.13
 polygon_simplify = "SIMPLIFY"
 
+
 delete_me = []
 DEBUG = True
 arcpy.AddMessage("Using scratch GDB of: " + arcpy.env.scratchWorkspace)
+
 
 if RADIUS2_to_infinity == 'true':
     RADIUS2_to_infinity = True
@@ -111,7 +115,7 @@ if DEBUG == True:
     arcpy.AddMessage("Input surface is " + input_surface)
     arcpy.AddMessage("Output is " + output_rlos)
     arcpy.AddMessage("Tower Name is " + towerName)
-    arcpy.AddMessage("Tower Height is " + towerHeight)
+    arcpy.AddMessage("Tower Height Field is " + towerHeightField)
     arcpy.AddMessage("RADIUS2_to_infinity:" + str(RADIUS2_to_infinity))
     arcpy.AddMessage("outWorkspace:" + str(outWorkspace))
     arcpy.AddMessage("outFeatureClassName:" + outFeatureClassName)
@@ -141,9 +145,21 @@ try:
     env.overwriteOutput = True
     installInfo = arcpy.GetInstallInfo("desktop")
     installDirectory = installInfo["InstallDir"]
+    
+    # Get the towerHeight value from the towerHeightField (assuming that there is only one)
+    towerHeight = None
+    towerRows = arcpy.da.SearchCursor(towerClass,[descField,towerHeightField])
+    for towerRow in towerRows:
+        if str(towerRow[0]) == str(towerName):
+            towerHeight = float(towerRow[1])
+    if DEBUG == True: arcpy.AddMessage("towerHeight: " + str(towerHeight))
+    del towerRow
+    del towerRows
 
     # get observer's vibility modifier maximums
     obsMaximums = {'SPOT':None,'OFFSETA':towerHeight, 'RADIUS2':4000, 'REMOVE_SPOT':False}
+    #TODO: Why is RADIUS2 hardcoded to be 4000?
+    
     removeSPOT = obsMaximums['REMOVE_SPOT']
     if (removeSPOT == True):
         if DEBUG == True:
@@ -262,13 +278,15 @@ try:
     obs_prj = os.path.join(env.scratchWorkspace,"obs_prj_towerlos")
     arcpy.AddMessage("Projecting observers ...")
     arcpy.Project_management(mbgCenterPoint,obs_prj,strAZED)
+    
     #Add viewshed-utilized fields
     if DEBUG == True: arcpy.AddMessage("Adding OFFSETA field to: " + str(obs_prj))
     arcpy.AddField_management(obs_prj, "OFFSETA", "DOUBLE", "", "", "", "Observer Offset", "NULLABLE", "NON_REQUIRED", "")
-    arcpy.CalculateField_management(obs_prj, "OFFSETA", maxOffset, "PYTHON", "")
+    arcpy.CalculateField_management(obs_prj, "OFFSETA", maxOffset, "PYTHON_9.3", "")
+    
     if DEBUG == True: arcpy.AddMessage("Adding RADIUS2 field to: " + str(obs_prj))
     arcpy.AddField_management(obs_prj, "RADIUS2", "DOUBLE", "", "", "", "Farthest distance", "NULLABLE", "NON_REQUIRED", "")
-    arcpy.CalculateField_management(obs_prj, "RADIUS2", maxRad, "PYTHON", "")
+    arcpy.CalculateField_management(obs_prj, "RADIUS2", maxRad, "PYTHON_9.3", "")
     delete_me.append(obs_prj)
 
     # Project the MBG buffer to AZED
@@ -317,12 +335,17 @@ try:
     arcpy.CalculateField_management(output_rlos, "visibility", "!gridcode!", "PYTHON", "")
 
     # Add the layer to the map
-    layerSymLocation = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'layers'))
-    mxd = arcpy.mapping.MapDocument('CURRENT')
-    df = arcpy.mapping.ListDataFrames(mxd)[0]
-    layerToAdd = arcpy.mapping.Layer(output_rlos)
-    arcpy.ApplySymbologyFromLayer_management(layerToAdd, layerSymLocation + "\Radial Line Of Sight Output.lyr")
-    arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
+    #UPDATE
+    #layerSymLocation = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'layers'))
+    #mxd = arcpy.mapping.MapDocument('CURRENT')
+    #df = arcpy.mapping.ListDataFrames(mxd)[0]
+    #layerToAdd = arcpy.mapping.Layer(output_rlos)
+    #arcpy.ApplySymbologyFromLayer_management(layerToAdd, layerSymLocation + "\Radial Line Of Sight Output.lyr")
+    #arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
+        
+    #Set the tool output
+    arcpy.SetParameter(8,output_rlos)
+    
 
 except arcpy.ExecuteError:
     # Get the tool error messages
