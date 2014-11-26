@@ -128,6 +128,10 @@ if DEBUG == True:
         arcpy.AddMessage("Setting snap raster to: " + input_surface)
 env.snapRaster = input_surface
 
+
+# mf 11/26/2014: Fix issue #150
+arcpy.SelectLayerByAttribute_management(towerClass, "CLEAR_SELECTION")
+
 try:
 
     # Local variables:

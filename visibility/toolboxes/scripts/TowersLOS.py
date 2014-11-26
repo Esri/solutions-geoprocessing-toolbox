@@ -321,11 +321,12 @@ try:
             arcpy.ApplySymbologyFromLayer_management(layerToAdd, layerFile)
             arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
         elif gisVersion in proVersion: #This Is  ArcGIS Pro  11.0+
-            proj = arcpy.mapping.ArcGISProject
-            # ... get map
-            layerFile = os.path.join(layerSymFolder,r"Radial Line Of Sight Output.lyrx")
+            aprx = arcpy.mapping.ArcGISProject(r"current")
+            m = aprx.listMaps("Map")[0]
+            layerFile = os.path.join(layerSymFolder,r"Radial Line Of Sight Output.lyr") # might need LYRX for this one.
+            layerToAdd = arcpy.mapping.Layer(thisOutputFeatureClass)
             arcpy.ApplySymbologyFromLayer_management(layerToAdd, layerFile)
-            # ... add to map and arrange
+            m.AddLayer(layerToAdd,"AUTO_ARRANGE")
         else:
             arcpy.AddWarning("   Could not determine version.\n   Looking for ArcMap " + str(desktopVersion) + ", or ArcGIS Pro " + str(proVersion) + ".\n   Found " + str(gisVersion))
             arcpy.AddWarning("   " + str(thisOutputFeatureClass) + " will be added to Output Workspace, but will not be added to the map.")
