@@ -33,6 +33,8 @@ These tools help to pre-process Landsat 5 and 7 data to prepare it for Change De
 * LTK Cloud Detector
 * ACCA Cloud Detector 
 
+The toolset is based upon the ArcGISScriptTools by Jerrod Lessel: https://github.com/jerrod-lessel/ArcgisScriptTools
+
 ## Change Detection Tools
 
 These tools help you to identify change in your image. There are a number of tools within the toolbox:
@@ -40,7 +42,9 @@ These tools help you to identify change in your image. There are a number of too
 * Cloud Mask model
 * Dark Object Subtraction model
 * Pseudo Invariant Factor model
-* Iteratively Re-weighted MAD script - this is a script based on the below references: 
+* Iteratively Re-weighted MAD script 
+
+The IR-MAD script is based on the below references: 
 
 1. Nielsen, A. A. (2007) The Regularized Iteratively Reweighted MAD Method for Change Detection in Multi- and Hyperspectral Data. IEEE Transactions on Image Processing. Vol. 16 (2) pp. 463-478
 
