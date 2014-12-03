@@ -44,6 +44,8 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
   
 * The [**patterns**](./patterns/README.md) folder contains:
   * Incident Analysis Tools
+  * Landsat Tools
+  * Change Detection Tools
   
 * The [**suitability**](./suitability/README.md) folder contains:
   * Military Aspects of Terrain Tools
