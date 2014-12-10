@@ -25,6 +25,9 @@ Tools in toolbox:
 
 Tool for finding touchdown points within a helicopter landing zone.
 
+The Helicopter Landing Zone Tools is associated with the Helicopter Landing Zone template:
+(http://www.arcgis.com/home/item.html?id=384d223647b24bcf9d2c6fd44f90d17f)
+
 Tools in toolbox:
 * HLZ Touchdown Points
 

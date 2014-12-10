@@ -22,6 +22,7 @@ Analyze sun position and hillshade based on a date and time.
 ## Visibility and Range Tools
 
 Tools to help basic visibility and distance analysis from locations.
+These tools are part of the Visibility and Range Template: http://www.arcgis.com/home/item.html?id=891cb1cec454482c9503f23d62b8a8df
 
 * Visibility Services
   * Fast Visibility By Circle
@@ -46,7 +47,8 @@ Tools to help basic visibility and distance analysis from locations.
 
 ## Visibility Data Prep Tools
 
-Tools use to update position data for Visibility and Range Template.
+Tools use to update position data for Visibility and Range Template
+The Template can be downloaded from: http://www.arcgis.com/home/item.html?id=891cb1cec454482c9503f23d62b8a8df
 
 * Update Defensive Position Domain
 

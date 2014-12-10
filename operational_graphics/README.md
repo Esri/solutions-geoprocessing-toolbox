@@ -25,6 +25,7 @@ Tools for building gridded reference graphics (GRG) for marking buildings and st
 ## Range Card Tools
 
 Tools to build range cards for defensive positions.
+These tools are part of the Range Cards Template: http://www.arcgis.com/home/item.html?id=22b1015a131e48a9ba31bf785272f08e
 
 * Create Range Fan Index Features
 * Merge (System Tool)
