@@ -37,9 +37,9 @@ try:
     #inputAspectFunctionTemplateFile = os.path.join(TestUtilities.toolboxesPath,"Raster Functions","Aspect.rft.xml")
     #inputPercentSlopeFunctionTemplateFile = os.path.join(TestUtilities.toolboxesPath,"Raster Functions","PercentSlope.rft.xml")
     #inputHillshadeFunctionTemplateFile = os.path.join(TestUtilities.toolboxesPath,"Raster Functions","Hillshade.rft.xml")
-    inputAspectFunctionTemplateFile = os.path.join(TestUtilities.toolboxesPath,"Raster Functions","AspectNumericValues.rft.xml")
-    inputPercentSlopeFunctionTemplateFile = os.path.join(TestUtilities.toolboxesPath,"Raster Functions","SlopePercentRise.rft.xml")
-    inputHillshadeFunctionTemplateFile = os.path.join(TestUtilities.toolboxesPath,"Raster Functions","GreyScaleHillshade.rft.xml")
+    inputAspectFunctionTemplateFile = os.path.join(TestUtilities.toolboxesPath,"Raster Functions","10.3","AspectNumericValues.rft.xml")
+    inputPercentSlopeFunctionTemplateFile = os.path.join(TestUtilities.toolboxesPath,"Raster Functions","10.3","SlopePercentRise.rft.xml")
+    inputHillshadeFunctionTemplateFile = os.path.join(TestUtilities.toolboxesPath,"Raster Functions","10.3","GreyScaleHillshade.rft.xml")
     outputDTMMosaic = "DigitalTerrainModel"
     outputHillshadeMosaic = os.path.join(TestUtilities.outputGDB, "Hillshade")
     outputAspectMosaic = os.path.join(TestUtilities.outputGDB,"Aspect")
