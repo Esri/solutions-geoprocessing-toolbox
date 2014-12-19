@@ -23,7 +23,7 @@ inputUTDSFeatureDataset = arcpy.GetParameterAsText(0)
 inputMAOTWorkspace = arcpy.GetParameterAsText(1)
 
 # LOCALS ========================================================
-featureClassesToMerge = ["HydrographySrf"]
+featureClassesToMerge = ["HydrographySrf","UtilityInfrastructureSrf","TransportationGroundSrf","StructureSrf", "StorageSrf", "IndustrySrf","MilitarySrf"]
 newList = []
 qualifierString = ""
 fqClassesToMerge = []
@@ -55,7 +55,7 @@ try:
     if debug == True: arcpy.AddMessage("newList: " + str(newList))
 
     # output feature class name
-    target = os.path.join(inputMAOTWorkspace,"HLZHydrographyOutput")
+    target = os.path.join(inputMAOTWorkspace,"HLZPolyObstacleOutput")
     if debug == True: arcpy.AddMessage("target: " + str(target))
 
     # merge all FCs into the target FC
