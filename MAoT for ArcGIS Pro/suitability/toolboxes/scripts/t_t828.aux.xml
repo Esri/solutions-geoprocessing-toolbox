@@ -1,9 +1,0 @@
-<PAMDataset>
-  <PAMRasterBand band="1">
-    <Description>t_t828</Description>
-    <NoDataValue>2.55000000000000E+002</NoDataValue>
-    <Metadata>
-      <MDI key="RepresentationType">THEMATIC</MDI>
-    </Metadata>
-  </PAMRasterBand>
-</PAMDataset>
