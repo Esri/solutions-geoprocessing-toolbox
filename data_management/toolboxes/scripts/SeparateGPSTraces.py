@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright 2010-2013 Esri
+# Copyright 2010-2014 Esri
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -20,66 +20,86 @@
 # track are applied a GUID to distinguish them as
 # belonging to a unique track.
 # INPUTS:
-#    Input Points Feature Class (FEATURECLASS)
-#    DateTime Field - holding the GPS Timestamp (FIELD)
-#    DeltaTime Field - holding the difference in time (secs) between the points either side (FIELD)
-#    GUID Field - this script will populate this field with a GUID value, different for each track (FIELD)
-#    Maximum DeltaTime - value above which a point is considered to be the start of a new track (DOUBLE)
+#	Input Points Feature Class (FEATURECLASS)
+#	DateTime Field - holding the GPS Timestamp (FIELD)
+#	DeltaTime Field - holding the difference in time (secs) between the points either side (FIELD)
+#	GUID Field - this script will populate this field with a GUID value, different for each track (FIELD)
+#	Maximum DeltaTime - value above which a point is considered to be the start of a new track (DOUBLE)
 # OUTPUTS:
-#    Output Points (DERIVED FEATURECLASS)
+#	Output Points (DERIVED FEATURECLASS)
 #-------------------------------------------------------------------------------
 
 import arcpy
 import time
 import datetime
+import sys
 import uuid
 
 try:
-    #set features and cursors so that they are deletable in
-    #'finally' block should the script fail prior to their creation
-    feature, features = None, None
-    deltatimeval = None
+	#set features and cursors so that they are deletable in
+	#'finally' block should the script fail prior to their creation
+	feature, features = None, None
+	deltatimeval = None
 
-    points = arcpy.GetParameterAsText(0)
-    datetimefield = arcpy.GetParameterAsText(1)
-    deltatimefield = arcpy.GetParameterAsText(2)
-    guidfield = arcpy.GetParameterAsText(3)
-    maxdeltatime = arcpy.GetParameterAsText(4)
+	points = arcpy.GetParameterAsText(0)
+	datetimefield = arcpy.GetParameterAsText(1)
+	deltatimefield = arcpy.GetParameterAsText(2)
+	guidfield = arcpy.GetParameterAsText(3)
+	maxdeltatime = arcpy.GetParameterAsText(4)
 
-    maxdeltatime = float(maxdeltatime)
+	maxdeltatime = float(maxdeltatime)
 
-    features = arcpy.UpdateCursor(points,"",None,"",datetimefield + " A")
-    #feature = features.next() #UPDATE
-    feature = next(features)
+	fields = datetimefield + ';' + deltatimefield + ';' + guidfield
+	
+	features = None
+	
+	arcpy.AddMessage("Beginning update of FeatureClass: " + str(points))
+	
+	# WARNING: Workaround encountered using this script in Pro	
+	# WARNING 2: SearchCursor now also requires fields at Arcpy Pro	
+	if (sys.version_info.major < 3) : 	
+		features = arcpy.UpdateCursor(points, "", None, fields, datetimefield + " A")
+	else : 
+		features = arcpy.gp.UpdateCursor(points, "", None, fields, datetimefield + " A")
+		
+	arcpy.AddMessage("Adding GUIDs to Track Points")
+		
+	if features is None : 
+		arcpy.AddError("No features found in FeatureClass: " + str(points))
+	
+	guid = uuid.uuid4()
 
-    guid = uuid.uuid4()
+	endoftrack = None
+	
+	count = 0
+	for feature in features:
+		deltatimeval = feature.getValue(deltatimefield)
+		if not (deltatimeval is None) :
+			if (deltatimeval > maxdeltatime):
+				if endoftrack:
+					#start of a new trace, so need new GUID
+					guid = uuid.uuid4()
+					endoftrack = None
+				else:
+					endoftrack = "true"
+			else:
+				endoftrack = None
+			count += 1
+		
+		feature.setValue(guidfield, "{" + str(guid) + "}")
+		features.updateRow(feature)
 
-    endoftrack = None
+	arcpy.AddMessage("Finished adding GUID to features, count= " + str(count))
+	
+	arcpy.SetParameterAsText(5, points)
 
-    while feature:
-        deltatimeval = feature.getValue(deltatimefield)
-        if (deltatimeval > maxdeltatime):
-            if endoftrack:
-                #start of a new trace, so need new GUID
-                guid = uuid.uuid4()
-                endoftrack = None
-            else:
-                endoftrack = "true"
-        else:
-            endoftrack = None
-        feature.setValue(guidfield, "{" + str(guid) + "}")
-        features.updateRow(feature)
-        #feature = features.next()
-        feature = next(features)
-
-    arcpy.SetParameterAsText(5, points)
-
-except:
-    if not arcpy.GetMessages() == "":
-        arcpy.AddMessage(arcpy.GetMessages(2))
+except Exception as err:
+	import traceback
+	arcpy.AddError(
+		traceback.format_exception_only(type(err), err)[0].rstrip())		
 
 finally:
-    if feature:
-        del feature
-    if features:
-        del features
+	if feature:
+		del feature
+	if features:
+		del features
