@@ -43,7 +43,7 @@ def RunTest():
                
         ########################################################3
         # Execute the Model under test:   
-        arcpy.GPX2Layer_pdc(inputGpxFile, outputPointsFC, True)
+        arcpy.GPX2Layer_pdc(inputGpxFile, outputPointsFC)
         ########################################################3
     
         # Verify the results (Track Points)   
@@ -53,17 +53,7 @@ def RunTest():
                     
         if (outputFeatureCount < 1) :
             print("Invalid Output Feature Count: " +  str(outputFeatureCount))
-            raise Exception("Test Failed")       
-        
-        # Verify the results (Track Lines)
-        outputLinesFC = str(outputPointsFC) + "_line"        
-        outputFeatureCount = int(arcpy.GetCount_management(outputLinesFC).getOutput(0)) 
-        print("Output FeatureClass (Lines): " + str(outputLinesFC))
-        print("Output Feature Count: " +  str(outputFeatureCount))
-                    
-        if (outputFeatureCount < 1) :
-            print("Invalid Output Feature Count: " +  str(outputFeatureCount))
-            raise Exception("Test Failed")                                              
+            raise Exception("Test Failed")                                                    
         
         print("Test Successful")
                 
