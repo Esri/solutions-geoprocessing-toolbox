@@ -12,16 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #------------------------------------------------------------------------------
-# 
+#
 # ==================================================
 # CanvasAreaGRG.py
 # --------------------------------------------------
 # Built on ArcGIS 10.?
 # ==================================================
-# 
+#
 # Creates a Gridded Reference Graphic
 #
-# 
+#
 
 import os, sys, math, traceback, inspect
 import arcpy
@@ -250,10 +250,21 @@ def labelFeatures(layer, field):
         arcpy.RefreshActiveView()
 
 def findLayerByName(layerName):
-    #TODO: Pro updates for arcpy.mapping
-    for layer in arcpy.mapping.ListLayers(mxd):
-        if layer.name == layerName:
-            return layer
+    #UPDATE
+    if isPro:
+          for layer in maplist.listLayers():
+            if layer.name == layerName:
+                arcpy.AddMessage("Found matching layer [" + layer.name + "]")
+                return layer
+            else:
+                arcpy.AddMessage("Incorrect layer: [" + layer.name + "]")
+    else:
+        for layer in arcpy.mapping.ListLayers(mxd):
+            if layer.name == layerName:
+                arcpy.AddMessage("Found matching layer [" + layer.name + "]")
+                return layer
+            else:
+                arcpy.AddMessage("Incorrect layer: [" + layer.name + "]")
 
 #Converts an index into a letter, labeled like excel columns, A to Z, AA to ZZ, etc.
 def ColIdxToXlName(index):
@@ -270,9 +281,22 @@ def ColIdxToXlName(index):
 # Calculates distance between two points
 def CalculatePointDistance(firstPoint, secondPoint):
     return math.sqrt(math.pow((firstPoint.X - secondPoint.X),2) + math.pow((firstPoint.Y - secondPoint.Y),2))
-#TODO: Pro updates for arcpy.mapping
-mxd = arcpy.mapping.MapDocument('CURRENT')
-df = arcpy.mapping.ListDataFrames(mxd)[0]
+
+#UPDATE
+gisVersion = arcpy.GetInstallInfo()["Version"]
+
+mxd, df, aprx, mapList = None, None, None, None
+isPro = False
+if gisVersion == "1.0": #Pro:
+    from arcpy import mp
+    aprx = arcpy.mp.ArcGISProject("CURRENT")
+    maplist = aprx.listMaps()[0]
+    isPro = True
+else:
+    from arcpy import mapping
+    mxd = arcpy.mapping.MapDocument('CURRENT')
+    df = arcpy.mapping.ListDataFrames(mxd)[0]
+    isPro = False
 
 # From the template extent, get the origin, y axis, and opposite corner corrdinates
 extents = str.split(str(templateExtent))
@@ -310,11 +334,6 @@ if float(cellWidth) == 0 and float(cellHeight) == 0:
     yDiff = topRight[1] - topLeft[1]
     xDiff = topRight[0] - topLeft[0]
 
-    #extentHeight = float(extents[3]) - float(extents[1])
- #   yAxisCoordinate = str(float(extents[0]) + xDiff) + " " + str(float(extents[1]) + yDiff + extentHeight)
-   # originCoordinate = str(extents[0]) + " " + str(extents[3])
-    #oppCornerCoordinate = str(extents[2]) + " " + str(float(extents[3])+ extentHeight)
-
     # Calculate angle
     hypotenuse = math.sqrt(math.pow(topLeft[0] - topRight[0], 2) + math.pow(topLeft[1] - topRight[1], 2))
     adjacent = topRight[0] - topLeft[0]
@@ -341,10 +360,13 @@ elif (labelStartPos == "Lower-Right"):
 
 # Import the custom toolbox with the fishnet tool in it, and run this. This had to be added to a model,
 # because of a bug, which will now allow you to pass variables to the Create Fishnet tool.
-toolboxPath = os.path.dirname(os.path.dirname(arcpy.env.workspace)) + "\\toolboxes\ClearingOperations.tbx"
+#UPDATE
+if isPro:
+    toolboxPath = os.path.dirname(arcpy.env.workspace) + "\\ClearingOperations.tbx"
+else:
+    toolboxPath = os.path.dirname(os.path.dirname(arcpy.env.workspace)) + "\\toolboxes\ClearingOperations.tbx"
 arcpy.ImportToolbox(toolboxPath, "ClearingOperations")
 arcpy.AddMessage("Creating Fishnet Grid")
-#if (yAxisCoordinate == originCoordinate):
 arcpy.CreateFishnet_ClearingOperations(tempOutput, originCoordinate, yAxisCoordinate, str(cellWidth), str(cellHeight), 0, 0, oppCornerCoordinate, "NO_LABELS", templateExtent, "POLYGON")
 
 # Sort the grid upper left to lower right, and delete the in memory one
@@ -399,16 +421,20 @@ else:
 arcpy.Delete_management(tempSort)
 
 # Get and label the output feature
-#TODO: Pro updates for arcpy.mapping
-layerToAdd = arcpy.mapping.Layer(outputFeatureClass)
-arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
-targetLayerName = os.path.basename(outputFeatureClass)
-layer = findLayerByName(targetLayerName)
+#TODO: Update once applying symbology in Pro is fixed.
+#UPDATE
+if isPro == False:
+    layerToAdd = arcpy.mapping.Layer(outputFeatureClass)
+    arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
 
-if(layer):
-    arcpy.AddMessage("Labeling grids")
-    labelFeatures(layer, gridField)
+    targetLayerName = os.path.basename(outputFeatureClass)
+    layer = findLayerByName(targetLayerName)
+
+    if(layer):
+        arcpy.AddMessage("Labeling grids")
+        labelFeatures(layer, gridField)
 
 # Apply symbology to the GRG layer
-symbologyPath = os.path.dirname(workspace) + "\\Layers\GRG.lyr"
-arcpy.ApplySymbologyFromLayer_management(layer, symbologyPath)
+#UPDATE
+#symbologyPath = os.path.dirname(workspace) + "\\Layers\GRG.lyr"
+#arcpy.ApplySymbologyFromLayer_management(layer, symbologyPath)
