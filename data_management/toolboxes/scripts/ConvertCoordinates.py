@@ -28,7 +28,8 @@ try:
     
     # Load required toolboxes
     scriptpath = sys.path[0]
-    toolboxpath = os.path.join(scriptpath,"..\\Position Analysis Tools.tbx")
+    #toolboxpath = os.path.join(scriptpath,"..\\Position Analysis Tools.tbx")
+    toolboxpath = os.path.join(scriptpath,"..\\Coordinate and Conversion Tools.tbx")
     arcpy.ImportToolbox(toolboxpath) 
     
     # Script arguments

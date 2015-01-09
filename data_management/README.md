@@ -12,7 +12,7 @@ Data Management tools help to prepare, format, filter, and organize your data in
 * [Imagery Basemap Tools](#imagery-basemap-tools)
 * [Network Data Preparation Tools](#network-data-preparation-tools)
 * [Patrol Data Capture Tools](#patrol-data-capture-tools)
-* [Position Analysis Tools](#position-analysis-tools)
+* [Coordinate and Conversion Tools](#coordinate-and-conversion-tools)
 * [Publishable Task Tools](#publishable-task-tools)
 * [Scanned Map Basemap Tools](#scanned-map-basemap-tools)
 * [Topographic Basemap Tools](#topographic-basemap-tools)
@@ -76,7 +76,7 @@ These tools are a part of the Patrol Data Capture template: http://www.arcgis.co
 * Rejoin Track Parts
 * Remove Duplicate GPS Data
 
-## Position Analysis Tools
+## Coordinate and Conversion Tools (formerly Position Analysis Tools)
 
 Tools for converting tabular information to different geometries, and generating positional datasets.
 These tools are a part of the Position Analysis Template: http://www.arcgis.com/home/item.html?id=f10d78ae29cd471ebe2e96bad9b67277
