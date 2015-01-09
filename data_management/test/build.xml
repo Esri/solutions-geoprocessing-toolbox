@@ -6,7 +6,7 @@
 
   <target name="run_all_tests"
     depends="test_build_elevation,test_network_data_prep,test_imagery_tools,test_topographic_tools,
-    test_publishable_tasks,test_position_analysis,test_scanned_map_tools,test_patrol_data_capture,
+    test_publishable_tasks,test_coordinate_and_conversion,test_scanned_map_tools,test_patrol_data_capture,
     test_geonames_tools">
     <echo message="Running All Tests" />
   </target>
@@ -19,10 +19,10 @@
     <echo message="Done Test: test_publishable_tasks" />
   </target>
   
-  <target name="test_position_analysis">
-    <echo message="Running: test_position_analysis" />
-    <ant dir="./test_position_analysis" target="run_all_tests" />
-    <echo message="Done Test: test_position_analysis" />
+  <target name="test_coordinate_and_conversion">
+    <echo message="Running: test_coordinate_and_conversion" />
+    <ant dir="./test_coordinate_and_conversion" target="run_all_tests" />
+    <echo message="Done Test: test_coordinate_and_conversion" />
   </target>
   
   <target name="test_build_elevation">
