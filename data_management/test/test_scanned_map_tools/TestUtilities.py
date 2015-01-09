@@ -29,4 +29,4 @@ print toolboxesPath
 
 inputGDB  = os.path.join(geodatabasePath, "ScannedMaps.gdb")
 
-toolbox = os.path.join(toolboxesPath, "Scanned Map Basemap Tools.tbx")
+toolbox = os.path.join(toolboxesPath, "Scanned Map Basemap Tools_10.3.tbx")

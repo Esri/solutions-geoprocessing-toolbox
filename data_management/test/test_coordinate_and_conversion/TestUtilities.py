@@ -33,7 +33,7 @@ inputGDB  = os.path.join(geodatabasePath, "test_position_analysis_inputs.gdb")
 scratchGDB = os.path.join(scratchPath, "scratch.gdb")
 outputGDB = scratchGDB
 defaultGDB = scratchGDB
-toolbox = os.path.join(toolboxesPath, "Coordinate and Conversion Tools.tbx")
+toolbox = os.path.join(toolboxesPath, "Coordinate and Conversion Tools_10.3.tbx")
 
 def createScratch() :
     try :
