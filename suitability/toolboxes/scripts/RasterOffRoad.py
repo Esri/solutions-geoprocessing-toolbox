@@ -18,7 +18,7 @@
 # --------------------------------------------------
 # Built for ArcGIS 10.1
 # --------------------------------------------------
-# 
+#
 # ==================================================
 
 
@@ -35,7 +35,7 @@ from arcpy import sa
 deleteme = []
 debug = False
 GCS_WGS_1984 = arcpy.SpatialReference("WGS 1984")
-webMercator = arcpy.SpatialReference("WGS 1984 Web Mercator (Auxiliary Sphere)")
+## webMercator = arcpy.SpatialReference("WGS 1984 Web Mercator (Auxiliary Sphere)")
 ccmFactorList = []
 
 # ARGUMENTS ========================================
@@ -62,7 +62,7 @@ inputSurfaceRoughnessTable = arcpy.GetParameterAsText(13)
 # ==================================================
 
 try:
-    
+
     if debug == True: arcpy.AddMessage("START: " + str(time.strftime("%m/%d/%Y  %H:%M:%S", time.localtime())))
     scratch = env.scratchGDB
     if debug == True: arcpy.AddMessage("scratch: " + str(scratch))
@@ -102,14 +102,14 @@ try:
     outSlope = sa.ExtractByMask(inputSlope,inputAOI)
     outSlope.save(slopeClip)
     deleteme.append(slopeClip)
-    
+
     # Set all Slope values greater than the vehicle's off road max to that value
     arcpy.AddMessage("Reclassifying Slope ...")
     reclassSlope = os.path.join(os.path.dirname(scratch),"reclassSlope.tif")
     if debug == True: arcpy.AddMessage("reclassSlope: " + str(reclassSlope))
     #float(vehicleParams[5])
     if debug == True: arcpy.AddMessage(str(time.strftime("Con: %m/%d/%Y  %H:%M:%S", time.localtime())))
-    outCon = sa.Con(sa.Raster(slopeClip) > float(vehicleParams[5]),float(vehicleParams[5]),sa.Raster(slopeClip))    
+    outCon = sa.Con(sa.Raster(slopeClip) > float(vehicleParams[5]),float(vehicleParams[5]),sa.Raster(slopeClip))
     # FAILS HERE:
     outCon.save(reclassSlope)
     # ERROR 010240: Could not save raster dataset to C:\Workspace\MAoT for A4W\A4W\test.gdb\reclassSlope with output format FGDBR.
@@ -139,13 +139,13 @@ try:
     outElev = sa.ExtractByMask(inputElevation,inputAOI)
     outElev.save(elevClip)
     deleteme.append(elevClip)
-    
+
     # make constant raster
     constNoEffect = os.path.join(env.scratchGDB,"constNoEffect")
     outConstNoEffect = sa.CreateConstantRaster(1.0,"FLOAT",env.cellSize,arcpy.Describe(inputAOI).Extent)
     outConstNoEffect.save(constNoEffect)
     deleteme.append(constNoEffect)
-    
+
     # f1: vehicle parameters
     f1 = os.path.join(env.scratchFolder,"f1.tif")
     # f1 = (vehicle max off-road slope %) - (surface slope %) / (vehicle max on-road slope %) / (vehicle max KPH)
@@ -157,7 +157,7 @@ try:
     outF1.save(f1)
     ccmFactorList.append(f1)
     deleteme.append(f1)
-    
+
 
     # f2: surface change
     arcpy.AddMessage("Surface Curvature ...")
@@ -180,12 +180,12 @@ try:
     fsRasStat = sa.Raster(focalStats)
     if debug == True:
         arcpy.AddMessage("maxRasStat: " + str(maxRasStat) + " - " + str(type(maxRasStat)))
-        arcpy.AddMessage("fsRasStat: " + str(fsRasStat) + " - " + str(type(fsRasStat)))        
+        arcpy.AddMessage("fsRasStat: " + str(fsRasStat) + " - " + str(type(fsRasStat)))
     f2Calc = (maxRasStat - fsRasStat) / maxRasStat # (max - cell/max)
     f2Calc.save(f2)
     deleteme.append(f2)
     ccmFactorList.append(f2)
-    
+
     #TODO: Need more thorough and complete checks of inputs
     #if inputVegetation != types.NoneType and arcpy.Exists(inputVegetation) == True: #UPDATE
     if inputVegetation != None and arcpy.Exists(inputVegetation) == True:
@@ -210,7 +210,7 @@ try:
         deleteme.append(f3)
         #TODO: what about areas in the AOI but outside VEG? No effect (value = 1.0)?
         ccmFactorList.append(f3)
-    
+
     #if inputSoils != types.NoneType and  arcpy.Exists(inputSoils) == True: #UPDATE
     if inputSoils != None and  arcpy.Exists(inputSoils) == True:
         # f4: soils
@@ -232,7 +232,7 @@ try:
         outF4T.save(f4)
         deleteme.append(f4)
         ccmFactorList.append(f4)
-    
+
     #if inputSurfaceRoughness != types.NoneType and  arcpy.Exists(inputSurfaceRoughness) == True: #UPDATE
     if inputSurfaceRoughness != None and  arcpy.Exists(inputSurfaceRoughness) == True:
         # f5: surface roughness
@@ -275,11 +275,11 @@ try:
         raise WrongFactors(ccmFactorList)
     targetCCM.save(tempCCM)
     arcpy.CopyRaster_management(tempCCM,outputCCM)
-    
+
     # set the output
     arcpy.SetParameter(5,outputCCM)
     if debug == True: arcpy.AddMessage("DONE: " + str(time.strftime("%m/%d/%Y  %H:%M:%S", time.localtime())))
-    
+
     # cleanup intermediate datasets
     if debug == True: arcpy.AddMessage("Removing intermediate datasets...")
     for i in deleteme:
@@ -288,23 +288,23 @@ try:
             arcpy.Delete_management(i)
             pass
     if debug == True: arcpy.AddMessage("Done")
-    
+
 #except "WrongFactors", ccmlist: #UPDATE
 except "WrongFactors" as ccmlist:
     msg = "Wrong Number of Factors given: " + str(ccmlist)
     arcpy.AddError(msg)
     #print msg #UPDATE
     print(msg)
-    
+
 except arcpy.ExecuteError:
     if debug == True: arcpy.AddMessage("CRASH: " + str(time.strftime("%m/%d/%Y  %H:%M:%S", time.localtime())))
         # Get the traceback object
     tb = sys.exc_info()[2]
     tbinfo = traceback.format_tb(tb)[0]
     arcpy.AddError("Traceback: " + tbinfo)
-    # Get the tool error messages 
-    msgs = arcpy.GetMessages() 
-    arcpy.AddError(msgs) 
+    # Get the tool error messages
+    msgs = arcpy.GetMessages()
+    arcpy.AddError(msgs)
     #print msgs #UPDATE
     print(msgs)
 
@@ -327,5 +327,5 @@ except:
     print(pymsg + "\n")
     #print msgs #UPDATE
     print(msgs)
-    
-    
+
+

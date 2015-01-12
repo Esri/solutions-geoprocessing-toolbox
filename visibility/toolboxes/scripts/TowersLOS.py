@@ -69,7 +69,7 @@ def updateValue(fc, field, value):
 DEBUG = True
 
 desktopVersion = ["10.2.2","10.3"]
-proVersion = ["11.0"]
+proVersion = ["1.0"]
 
 # Get the parameters
 input_surface = arcpy.GetParameterAsText(0) #Input Surface
@@ -308,6 +308,7 @@ try:
 
         # Add the layer to the map
         layerSymFolder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'layers'))
+        if DEBUG == True: arcpy.AddMessage("layerSymFolder dirname: " + str(os.path.dirname(__file__)))
         
         # Apply proper symbology file type by version
         gisVersion = arcpy.GetInstallInfo()["Version"]
@@ -320,13 +321,42 @@ try:
             layerFile = os.path.join(layerSymFolder,r"Radial Line Of Sight Output.lyr")
             arcpy.ApplySymbologyFromLayer_management(layerToAdd, layerFile)
             arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
-        elif gisVersion in proVersion: #This Is  ArcGIS Pro  11.0+
-            aprx = arcpy.mapping.ArcGISProject(r"current")
-            m = aprx.listMaps("Map")[0]
+            
+        elif gisVersion in proVersion: #This Is  ArcGIS Pro  1.0+
+            if DEBUG == True: arcpy.AddMessage("1")
+            aprx = arcpy.mp.ArcGISProject(r"current")
+            if DEBUG == True: arcpy.AddMessage("2")
+            m = aprx.listMaps()[0]
+            if DEBUG == True: arcpy.AddMessage("3")
             layerFile = os.path.join(layerSymFolder,r"Radial Line Of Sight Output.lyr") # might need LYRX for this one.
-            layerToAdd = arcpy.mapping.Layer(thisOutputFeatureClass)
-            arcpy.ApplySymbologyFromLayer_management(layerToAdd, layerFile)
-            m.AddLayer(layerToAdd,"AUTO_ARRANGE")
+            if DEBUG == True: arcpy.AddMessage("4")
+            layerFileObj = arcpy.mp.LayerFile(layerFile)
+            if DEBUG == True: arcpy.AddMessage("5")
+            layerName = str(os.path.basename(thisOutputFeatureClass))
+            if DEBUG == True: arcpy.AddMessage("6")
+            mfl = arcpy.MakeFeatureLayer_management(thisOutputFeatureClass,layerName)[0]
+            if DEBUG == True: arcpy.AddMessage("7")
+            lyrInMap = m.addLayer(mfl,"AUTO_ARRANGE")[0]
+            if DEBUG == True: arcpy.AddMessage("8")
+            
+            #lyrInMap = m.listLayers(layerName)[0]  # THIS LINE STOPS APP FROM RESPONDING
+            #lyrInMap = m.listLayers(layerName)      # THIS CAUSES ERROR IN APPLYSYMBOLOGYFROMLAYER:
+            
+                                    #PYTHON ERRORS:
+                                    #Traceback info:
+                                    #  File "C:\Workspace\GitSourceTree\solutions-geoprocessing-toolbox\visibility\toolboxes\scripts\TowersLOS.py", line 347, in <module>
+                                    #    arcpy.ApplySymbologyFromLayer_management(lyrInMap, layerFileObj)
+                                    #
+                                    #Error Info:
+                                    #Object: Error in executing tool
+            
+            if DEBUG == True: arcpy.AddMessage("lyrInMap: " + str(lyrInMap))
+            if DEBUG == True: arcpy.AddMessage("9")
+            arcpy.ApplySymbologyFromLayer_management(lyrInMap, layerFileObj)
+            #arcpy.ApplySymbologyFromLayer_management(mfl, layerFileObj)
+            if DEBUG == True: arcpy.AddMessage("10")
+            del lyrInMap, m, aprx
+
         else:
             arcpy.AddWarning("   Could not determine version.\n   Looking for ArcMap " + str(desktopVersion) + ", or ArcGIS Pro " + str(proVersion) + ".\n   Found " + str(gisVersion))
             arcpy.AddWarning("   " + str(thisOutputFeatureClass) + " will be added to Output Workspace, but will not be added to the map.")

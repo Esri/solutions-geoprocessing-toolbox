@@ -72,26 +72,28 @@ try:
 
     scratch = env.scratchWorkspace
     env.overwriteOutput = True
-    
+
     installDir = arcpy.GetInstallInfo('desktop')["InstallDir"]
     prjWGS1984 = arcpy.SpatialReference("WGS 1984")
-    prjWebMercator = arcpy.SpatialReference("WGS 1984 Web Mercator (Auxiliary Sphere)")
+   ## prjWebMercator = arcpy.SpatialReference("WGS 1984 Web Mercator (Auxiliary Sphere)") #We are to not use Web Mercator. This can be a place holder for later use.
+
     
-    # if AOI is Geographic, project to Web Mercator
-    if (arcpy.Describe(input_AOI_Feature).SpatialReference.type == "Geographic"):
-        arcpy.AddMessage("AOI features are Geographic, projecting to Web Mercator...")
-        newAOI = os.path.join(scratch,"newAOI")
-        arcpy.Project_management(input_AOI_Feature,newAOI,prjWebMercator)
-        input_AOI_Feature = newAOI
-        deleteme.append(newAOI)
+   ## PLACE HOLDER FOR TRANSFORMATION. WE CAN NOT USE WEB MERCATOR
+     #if AOI is Geographic, project to Web Mercator
+   ## if (arcpy.Describe(input_AOI_Feature).SpatialReference.type == "Geographic"):
+   ##     arcpy.AddMessage("AOI features are Geographic, projecting to Web Mercator...")
+    newAOI = os.path.join(scratch,"newAOI")
+    arcpy.Project_management(input_AOI_Feature,newAOI,prjWGS1984)
+    input_AOI_Feature = newAOI
+    deleteme.append(newAOI)
     prjAOI = arcpy.Describe(input_AOI_Feature).SpatialReference
-    
+
     # clip vegetation
     prjAOIveg = os.path.join(scratch,"AOIVeg")
     srVeg = arcpy.Describe(baseVegetation).SpatialReference
     arcpy.Project_management(input_AOI_Feature,prjAOIveg,srVeg)
         # clip veg (clip veg_poly from base_veg_poly using envelope)
-    vegPoly = os.path.join(scratch,"vegPoly")    
+    vegPoly = os.path.join(scratch,"vegPoly")
     arcpy.AddMessage("Clip veg polys to AOI...")
     arcpy.Clip_analysis(baseVegetation, prjAOIveg, vegPoly)
 
@@ -111,13 +113,13 @@ try:
     if lengthField != "": keepFields.append(lengthField)
     subtypeFieldName = vegDesc.subtypeFieldName
     if subtypeFieldName != "": keepFields.append(subtypeFieldName)
-    
+
     for child in vegDesc.children:
         if child.datasetType == 'RepresentationClass':
             keepFields.append(child.overrideFieldName)
             keepFields.append(child.ruleIDFieldName)
     keepFields.append("F_CODE")
-    
+
     # remove any unnecessary fields
     removeFields = []
     fields = arcpy.ListFields(outConcealment)
@@ -128,13 +130,13 @@ try:
             removeFields.append(field.name)
     if debug == True: arcpy.AddMessage("Removing unnecessary fields...")
     arcpy.DeleteField_management(outConcealment,removeFields)
-    
+
     # add suitibilty fields in veg
     if debug == True: arcpy.AddMessage("Adding concealment fields...")
     arcpy.AddField_management(outConcealment,"vegname","TEXT","","",70,"FACC_Vegetation_Type","NULLABLE","NON_REQUIRED")
     arcpy.AddField_management(outConcealment,"sumsuit","LONG",2,"","","Summer_Suitability","NULLABLE","NON_REQUIRED")
     arcpy.AddField_management(outConcealment,"winsuit","LONG",2,"","","Winter_Suitability","NULLABLE","NON_REQUIRED")
-    
+
     # Add suitiblity values to fields
     arcpy.AddMessage("Updating rows...")
     rows = arcpy.UpdateCursor(outConcealment)
@@ -154,10 +156,10 @@ try:
     arcpy.SetParameterAsText(2,outConcealment)
 
 
-except arcpy.ExecuteError: 
-    # Get the tool error messages 
-    msgs = arcpy.GetMessages() 
-    arcpy.AddError(msgs) 
+except arcpy.ExecuteError:
+    # Get the tool error messages
+    msgs = arcpy.GetMessages()
+    arcpy.AddError(msgs)
     #print msgs #UPDATE
     print(msgs)
 
@@ -181,11 +183,11 @@ except:
     print(msgs)
 
 finally:
-    
+
     #### cleanup intermediate datasets
     arcpy.AddMessage("Removing intermediate datasets...")
     for i in deleteme:
         if debug == True: arcpy.AddMessage("Removing: " + str(i))
         arcpy.Delete_management(i)
-    
+
     if debug == True: arcpy.AddMessage("END: " + str(time.strftime("%m/%d/%Y  %H:%M:%S", time.localtime())))
