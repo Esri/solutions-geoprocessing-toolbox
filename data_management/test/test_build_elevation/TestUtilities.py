@@ -35,7 +35,7 @@ scratchGDB = os.path.join(scratchPath, "scratch.gdb")
 outputGDB = scratchGDB
 defaultGDB = scratchGDB
 
-toolbox = os.path.join(toolboxesPath, "Build Elevation Mosaic Tools.tbx")
+toolbox = os.path.join(toolboxesPath, "Build Elevation Mosaic Tools_10.3.tbx")
 
 def createScratch() :
     try :

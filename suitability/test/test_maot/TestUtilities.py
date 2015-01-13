@@ -35,7 +35,7 @@ scratchGDB = os.path.join(scratchPath, "scratch.gdb")
 outputGDB = scratchGDB
 defaultGDB = scratchGDB
 
-toolbox = os.path.join(toolboxesPath, "Military Aspects of Terrain Tools.tbx")
+toolbox = os.path.join(toolboxesPath, "Military Aspects of Terrain Tools_10.3.tbx")
 
 def createScratch() :
     try :

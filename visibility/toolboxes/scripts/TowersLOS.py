@@ -323,21 +323,13 @@ try:
             arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
             
         elif gisVersion in proVersion: #This Is  ArcGIS Pro  1.0+
-            if DEBUG == True: arcpy.AddMessage("1")
             aprx = arcpy.mp.ArcGISProject(r"current")
-            if DEBUG == True: arcpy.AddMessage("2")
             m = aprx.listMaps()[0]
-            if DEBUG == True: arcpy.AddMessage("3")
             layerFile = os.path.join(layerSymFolder,r"Radial Line Of Sight Output.lyr") # might need LYRX for this one.
-            if DEBUG == True: arcpy.AddMessage("4")
             layerFileObj = arcpy.mp.LayerFile(layerFile)
-            if DEBUG == True: arcpy.AddMessage("5")
             layerName = str(os.path.basename(thisOutputFeatureClass))
-            if DEBUG == True: arcpy.AddMessage("6")
             mfl = arcpy.MakeFeatureLayer_management(thisOutputFeatureClass,layerName)[0]
-            if DEBUG == True: arcpy.AddMessage("7")
             lyrInMap = m.addLayer(mfl,"AUTO_ARRANGE")[0]
-            if DEBUG == True: arcpy.AddMessage("8")
             
             #lyrInMap = m.listLayers(layerName)[0]  # THIS LINE STOPS APP FROM RESPONDING
             #lyrInMap = m.listLayers(layerName)      # THIS CAUSES ERROR IN APPLYSYMBOLOGYFROMLAYER:

@@ -37,7 +37,7 @@ inputGDB  = os.path.join(geodatabasePath, "Imagery.gdb")
 #defaultGDB = os.path.join(geodatabasePath, "default.gdb")
 
 
-toolbox = os.path.join(toolboxesPath, "Imagery Basemap Tools.tbx")
+toolbox = os.path.join(toolboxesPath, "Imagery Basemap Tools_10.3.tbx")
 
 # def createScratch() :
 #     try :

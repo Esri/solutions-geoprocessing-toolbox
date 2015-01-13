@@ -78,8 +78,7 @@ These tools are a part of the Patrol Data Capture template: http://www.arcgis.co
 
 ## Coordinate and Conversion Tools (formerly Position Analysis Tools)
 
-Tools for converting tabular information to different geometries, and generating positional datasets.
-These tools are a part of the Position Analysis Template: http://www.arcgis.com/home/item.html?id=f10d78ae29cd471ebe2e96bad9b67277
+Tools for converting tabular information to different geometries, and generating coordinate location datasets.
 
 * Convert Coordinates
 * Locate Event
