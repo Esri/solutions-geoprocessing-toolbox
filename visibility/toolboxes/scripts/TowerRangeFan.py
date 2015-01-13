@@ -395,6 +395,8 @@ try:
     arcpy.AddMessage("LayerSymLocation: " + str(layerSymLocation))
     
     gisVersion = arcpy.GetInstallInfo()["Version"]
+    lblExpressionPython = '"Range: " + [Range] + " m\nBearing: " + [Bearing] + " deg.\nModel: " + [Model]'
+    lblExpressionVBScript = '"Range: " & [Range] & " m " & vbcrlf & "Bearing: " & [Bearing] & " deg." & vbcrlf & "Model: " & [Model]'
     if gisVersion in desktopVersion: #This is ArcMap 10.3 or 10.2.2
    
         # Retrieve the layer file that specifies the symbology
@@ -411,7 +413,7 @@ try:
         if layerToAdd.supports("LABELCLASSES"):
             for lblclass in layerToAdd.labelClasses:
                 lblclass.showClassLabels = True
-                lblclass.expression = "Range: " + str([Range]) + " m\nBearing: " + str([Bearing]) + " deg.\nModel: " + str([Model])
+                lblclass.expression = lblExpressionVBScript #Use VBS for now as it is the default label expression parser
         layerToAdd.showLabels = True
         arcpy.ApplySymbologyFromLayer_management(layerToAdd, sourceLayer)
         #    Add the layer
@@ -420,14 +422,15 @@ try:
     elif gisVersion in proVersion: #This Is  ArcGIS Pro  1.0+
         aprx = arcpy.mp.ArcGISProject(r"current")
         m = aprx.listMaps()[0]
-        mfl = arcpy.MakeFeatureLayer_management(outFeature,"Range Fan")[0]
-        sourceLayer = arcpy.mp.LayerFile(os.path.join(layerSymLocation,r"Radial Line Of Sight Output With Range Fans.lyrx"))[0]
-        sourceLayer.showLabels = True
-        lblClass = sourceLayer.listLbelClasses()[0]
-        lblClass.visible = True
-        lblClass.expression = "Range: " + str([Range]) + " m\nBearing: " + str([Bearing]) + " deg.\nModel: " + str([Model])
-        arcpy.ApplySymbologyFromLayer_management(mfl,sourceLayer)
-        lyrInMap = m.addLayer(mfl,"AUTO_ARRANGE")[0]
+        sourceLayerFile = arcpy.mp.LayerFile(os.path.join(layerSymLocation,r"Radial Line Of Sight Output With Range Fans.lyrx"))
+        sourceLayer = sourceLayerFile.listLayers()[0]
+        sourceLayer.dataSource = outFeature
+        if sourceLayer.supports("SHOWLABELS"):
+            sourceLayer.showLabels = True
+            lblClass = sourceLayer.listLbelClasses()[0]
+            lblClass.visible = True
+            lblClass.expression = lblExpressionVBScript #Use VBS for now as it is the default label expression parser
+        lyrInMap = m.addLayer(sourceLayer,"AUTO_ARRANGE")[0]
 
     else:
         arcpy.AddWarning("Could not determine version.\n   Looking for ArcMap " + str(desktopVersion) + ", or ArcGIS Pro " + str(proVersion) + ".\n   Found version " + str(gisVersion))
