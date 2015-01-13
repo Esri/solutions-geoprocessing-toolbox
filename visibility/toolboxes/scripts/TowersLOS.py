@@ -144,8 +144,8 @@ try:
         scrubbedTowerName = ''.join(e for e in towerName if (e.isalnum() or e == " " or e == "_"))
         scrubbedTowerName = scrubbedTowerName.replace(" ", "_")
         if DEBUG == True:
-            arcpy.AddMessage("   towerName: " + towerName)
-            arcpy.AddMessage("   scrubbedTowerName: " + scrubbedTowerName)
+            arcpy.AddMessage("...towerName: " + towerName)
+            arcpy.AddMessage("...scrubbedTowerName: " + scrubbedTowerName)
 
         # Just the name of the feature class to create
         thisOutputFeatureClassName = outputBaseName + "_" +  scrubbedTowerName
@@ -161,11 +161,11 @@ try:
         # Do a Minimum Bounding Geometry (MBG) on the input tower
         observers_mbg = os.path.join(env.scratchWorkspace,"observers_mbg_towerlos_" + scrubbedTowerName)
         delete_me.append(observers_mbg)
-        arcpy.AddMessage("   Finding observer's minimum bounding envelope ...")
+        arcpy.AddMessage("...Finding observer's minimum bounding envelope ...")
         arcpy.MinimumBoundingGeometry_management(tower,observers_mbg)
 
         # Now find the center of the (MBG)
-        arcpy.AddMessage("   Finding center of tower ...")
+        arcpy.AddMessage("...Finding center of tower ...")
         mbgCenterPoint = os.path.join(env.scratchWorkspace,"mbgCenterPoint_towerlos_" + scrubbedTowerName)
         mbgExtent = arcpy.Describe(observers_mbg).extent
         mbgSR = arcpy.Describe(observers_mbg).spatialReference
@@ -188,20 +188,20 @@ try:
 
         if RADIUS2_to_infinity == True:
             # if going to infinity what we really need is the distance to the horizon based on height/elevation
-            arcpy.AddMessage("   Finding horizon distance ...")
+            arcpy.AddMessage("...Finding horizon distance ...")
             result = arcpy.GetCellValue_management(input_surface, str(mbgCenterX) + " " + str(mbgCenterY))
             centroid_elev = result.getOutput(0)
             R2 = float(centroid_elev) + float(maxOffset)
             R = 6378137.0 # length, in meters, of semimajor axis of WGS_1984 spheroid.
             horizonDistance = math.sqrt(math.pow((R + R2),2) - math.pow(R,2))
-            arcpy.AddMessage("   " + str(horizonDistance) + " meters.")
+            arcpy.AddMessage("..." + str(horizonDistance) + " meters.")
             horizonExtent = str(mbgCenterX - horizonDistance) + " " + str(mbgCenterY - horizonDistance) + " " + str(mbgCenterX + horizonDistance) + " " + str(mbgCenterY + horizonDistance)
         else:
             pass
 
         # reset center of AZED using Lat/Lon of MBG center point
         # Project point to WGS 84
-        arcpy.AddMessage("   Recentering Azimuthal Equidistant to centroid ...")
+        arcpy.AddMessage("...Recentering Azimuthal Equidistant to centroid ...")
         mbgCenterWGS84 = os.path.join(env.scratchWorkspace,"mbgCenterWGS84")
         arcpy.Project_management(mbgCenterPoint,mbgCenterWGS84,GCS_WGS_1984)
         arcpy.AddXY_management(mbgCenterWGS84)
@@ -224,46 +224,46 @@ try:
         # Determine the proper buffer distance based on whether visibility should be generated to Infinity
         bufferDistance = obsMaximums['RADIUS2']
         if RADIUS2_to_infinity == True:
-            arcpy.AddMessage("   Running viewshed to infinity...")
+            arcpy.AddMessage(r"...Running viewshed to infinity...")
             bufferDistance = horizonDistance
             if DEBUG == True:
-                arcpy.AddMessage("   Creating a buffer from the observer points to the horizion distance.  infinity (horizon): " + str(bufferDistance))
+                arcpy.AddMessage(r"...Creating a buffer from the observer points to the horizion distance.  infinity (horizon): " + str(bufferDistance))
         else:
-            arcpy.AddMessage("   Running viewshed to the maximum observer radius...")
+            arcpy.AddMessage(r"...Running viewshed to the maximum observer radius...")
             if DEBUG == True:
-                arcpy.AddMessage("   Creating a buffer from the observer points to the horizion distance.  maximum observer radius: " + str(bufferDistance))
+                arcpy.AddMessage(r"...Creating a buffer from the observer points to the horizion distance.  maximum observer radius: " + str(bufferDistance))
 
         # Create the processing buffer to the appropriate distance
         mbgBuffer = os.path.join(env.scratchWorkspace,"mbgBuffer_towerslos")
         arcpy.Buffer_analysis(observers_mbg,mbgBuffer,obsMaximums['RADIUS2'])
         delete_me.append(mbgBuffer)
         if DEBUG == True:
-            arcpy.AddMessage("   Projecting the buffer to Azimuthal Equidistant")
+            arcpy.AddMessage(r"...Projecting the buffer to Azimuthal Equidistant")
         mbgBufferPrj = os.path.join(env.scratchWorkspace,"mbgBuffersPrj_towerlos_" + scrubbedTowerName)
         arcpy.Project_management(mbgBuffer,mbgBufferPrj,strAZED)
         delete_me.append(mbgBufferPrj)
         mbgBufferPrjExtent = arcpy.Describe(mbgBufferPrj).extent
         if DEBUG == True:
-            arcpy.AddMessage("   Setting procesing extent to: " + str(mbgBufferPrjExtent))
+            arcpy.AddMessage(r"...Setting procesing extent to: " + str(mbgBufferPrjExtent))
         env.extent = mbgBufferPrjExtent
 
         # Project surface to the new AZED
         extract_prj = os.path.join(env.scratchWorkspace,"extract_prj_towerlos_" + scrubbedTowerName)
-        arcpy.AddMessage("   Projecting surface ...")
+        arcpy.AddMessage(r"...Projecting surface ...")
         arcpy.ProjectRaster_management(input_surface,extract_prj,strAZED)
         delete_me.append(extract_prj)
 
         # Project tower to the new AZED
 
         obs_prj = os.path.join(env.scratchWorkspace,"obs_prj_towerlos")
-        arcpy.AddMessage("   Projecting tower ...")
+        arcpy.AddMessage(r"...Projecting tower ...")
         arcpy.Project_management(tower,obs_prj,strAZED)
 
         #Add viewshed-utilized fields
-        if DEBUG == True: arcpy.AddMessage("   Adding OFFSETA field to: " + str(obs_prj))
+        if DEBUG == True: arcpy.AddMessage(r"...Adding OFFSETA field to: " + str(obs_prj))
         arcpy.AddField_management(obs_prj, "OFFSETA", "DOUBLE", "", "", "", "Observer Offset", "NULLABLE", "NON_REQUIRED", "")
         arcpy.CalculateField_management(obs_prj, "OFFSETA", maxOffset, "PYTHON", "")
-        if DEBUG == True: arcpy.AddMessage("   Adding RADIUS2 field to: " + str(obs_prj))
+        if DEBUG == True: arcpy.AddMessage(r"...Adding RADIUS2 field to: " + str(obs_prj))
         arcpy.AddField_management(obs_prj, "RADIUS2", "DOUBLE", "", "", "", "Farthest distance", "NULLABLE", "NON_REQUIRED", "")
         arcpy.CalculateField_management(obs_prj, "RADIUS2", maxRad, "PYTHON", "")
         delete_me.append(obs_prj)
@@ -279,7 +279,7 @@ try:
         delete_me.append(obs_buf)
 
         # Finally ... run Viewshed
-        arcpy.AddMessage("   Calculating Viewshed ...")
+        arcpy.AddMessage(r"...Calculating Viewshed ...")
         vshed = os.path.join(env.scratchWorkspace,"vshed_towerlos")
         delete_me.append(vshed)
         #Use the visibility tool instead of the viewshed. This will allow is to set the observation height offset for the tower
@@ -288,7 +288,7 @@ try:
         outVshed.save(vshed)
 
         # Raster To Polygon
-        arcpy.AddMessage("   Converting to polygons ...")
+        arcpy.AddMessage(r"...Converting to polygons ...")
         ras_poly = os.path.join(env.scratchWorkspace,"ras_poly_towerlos_" + scrubbedTowerName)
         arcpy.RasterToPolygon_conversion(vshed,ras_poly,polygon_simplify)
         delete_me.append(ras_poly)
@@ -308,11 +308,11 @@ try:
 
         # Add the layer to the map
         layerSymFolder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'layers'))
-        if DEBUG == True: arcpy.AddMessage("layerSymFolder dirname: " + str(os.path.dirname(__file__)))
+        if DEBUG == True: arcpy.AddMessage(r"...layerSymFolder dirname: " + str(os.path.dirname(__file__)))
         
         # Apply proper symbology file type by version
         gisVersion = arcpy.GetInstallInfo()["Version"]
-        if DEBUG == True: arcpy.AddMessage("   gisVersion: " + str(gisVersion))
+        if DEBUG == True: arcpy.AddMessage(r"...gisVersion: " + str(gisVersion))
         if gisVersion in desktopVersion: #This is ArcMap 10.3 or 10.2.2
             mdoc = arcpy.mapping.MapDocument
             mxd = arcpy.mapping.MapDocument('CURRENT')
@@ -325,33 +325,17 @@ try:
         elif gisVersion in proVersion: #This Is  ArcGIS Pro  1.0+
             aprx = arcpy.mp.ArcGISProject(r"current")
             m = aprx.listMaps()[0]
-            layerFile = os.path.join(layerSymFolder,r"Radial Line Of Sight Output.lyr") # might need LYRX for this one.
-            layerFileObj = arcpy.mp.LayerFile(layerFile)
-            layerName = str(os.path.basename(thisOutputFeatureClass))
-            mfl = arcpy.MakeFeatureLayer_management(thisOutputFeatureClass,layerName)[0]
-            lyrInMap = m.addLayer(mfl,"AUTO_ARRANGE")[0]
-            
-            #lyrInMap = m.listLayers(layerName)[0]  # THIS LINE STOPS APP FROM RESPONDING
-            #lyrInMap = m.listLayers(layerName)      # THIS CAUSES ERROR IN APPLYSYMBOLOGYFROMLAYER:
-            
-                                    #PYTHON ERRORS:
-                                    #Traceback info:
-                                    #  File "C:\Workspace\GitSourceTree\solutions-geoprocessing-toolbox\visibility\toolboxes\scripts\TowersLOS.py", line 347, in <module>
-                                    #    arcpy.ApplySymbologyFromLayer_management(lyrInMap, layerFileObj)
-                                    #
-                                    #Error Info:
-                                    #Object: Error in executing tool
-            
-            if DEBUG == True: arcpy.AddMessage("lyrInMap: " + str(lyrInMap))
-            if DEBUG == True: arcpy.AddMessage("9")
-            arcpy.ApplySymbologyFromLayer_management(lyrInMap, layerFileObj)
-            #arcpy.ApplySymbologyFromLayer_management(mfl, layerFileObj)
-            if DEBUG == True: arcpy.AddMessage("10")
+            sourceLayerFilePath = os.path.join(layerSymFolder,r"Radial Line Of Sight Output.lyrx") # might need LYRX for this one.
+            sourceLayerFile = arcpy.mp.LayerFile(sourceLayerFilePath)
+            sourceLayer = sourceLayerFile.listLayers()[0]
+            sourceLayer.dataSource = thisOutputFeatureClass
+            sourceLayer.name = sourceLayer.name + r": " + towerName
+            lyrInMap = m.addLayer(sourceLayer,"AUTO_ARRANGE")[0]
             del lyrInMap, m, aprx
 
         else:
-            arcpy.AddWarning("   Could not determine version.\n   Looking for ArcMap " + str(desktopVersion) + ", or ArcGIS Pro " + str(proVersion) + ".\n   Found " + str(gisVersion))
-            arcpy.AddWarning("   " + str(thisOutputFeatureClass) + " will be added to Output Workspace, but will not be added to the map.")
+            arcpy.AddWarning(r"...Could not determine version.\n   Looking for ArcMap " + str(desktopVersion) + ", or ArcGIS Pro " + str(proVersion) + ".\n   Found " + str(gisVersion))
+            arcpy.AddWarning(r"..." + str(thisOutputFeatureClass) + " will be added to Output Workspace, but will not be added to the map.")
             
     
         #Add to list of output feature classes
