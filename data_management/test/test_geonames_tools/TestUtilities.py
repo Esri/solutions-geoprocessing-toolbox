@@ -28,5 +28,5 @@ print "toolboxesPath: " + toolboxesPath
 
 inputGDB  = os.path.join(geodatabasePath, "Geonames.gdb")
 
-toolbox = os.path.join(toolboxesPath, "Geonames Tools.tbx")
+toolbox = os.path.join(toolboxesPath, "Geonames Tools_10.3.tbx")
 

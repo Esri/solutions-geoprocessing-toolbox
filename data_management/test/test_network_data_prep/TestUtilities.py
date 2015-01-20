@@ -33,7 +33,7 @@ outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
 if not arcpy.Exists(outputGDB): arcpy.CreateFileGDB_management(os.path.dirname(outputGDB),os.path.basename(outputGDB)[:-4])
 
 # properties: toolboxescls
-toolbox = os.path.join(toolboxesPath, "Network Data Preparation Tools.tbx")
+toolbox = os.path.join(toolboxesPath, "Network Data Preparation Tools_10.3.tbx")
 
 def createScratch() :
     try :

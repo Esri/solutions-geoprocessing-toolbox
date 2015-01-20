@@ -36,7 +36,7 @@ outputGDB = scratchGDB
 defaultGDB = scratchGDB
 gpxFile = os.path.join(gpxPath, "JBad_20100706.gpx")
 
-toolbox = os.path.join(toolboxesPath, "Patrol Data Capture Tools.tbx")
+toolbox = os.path.join(toolboxesPath, "Patrol Data Capture Tools_10.3.tbx")
 
 def createScratch() :
     try :

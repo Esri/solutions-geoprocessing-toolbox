@@ -15,7 +15,7 @@
 #------------------------------------------------------------------------------
 
 # ==================================================
-# UpdateRangeFans.py
+# TowerRangeFans.py
 # --------------------------------------------------
 # Built for ArcGIS 10.1
 # ==================================================
@@ -28,6 +28,9 @@ from arcpy import env
 from arcpy import sa
 
 # ARGUMENTS & LOCALS ===============================
+# (0)
+# (1)
+# (2)
 defPosFeatClass = arcpy.GetParameterAsText(3)
 descField = arcpy.GetParameterAsText(4)
 input_surface = arcpy.GetParameterAsText(16)
@@ -51,6 +54,8 @@ if arcpy.Exists(outFeature):
 
 deleteme = []
 DEBUG = True
+desktopVersion = ["10.2.2","10.3"]
+proVersion = ["1.0"]
 leftAngle = 0.0 # degrees
 rightAngle = 90.0 # degrees
 
@@ -388,31 +393,48 @@ try:
     # Add the layer to the map.  Need to go through these steps to ensure that labels are properly applied
     layerSymLocation = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'layers'))
     arcpy.AddMessage("LayerSymLocation: " + str(layerSymLocation))
-    # Retrieve the layer file that specifies the symbology
-    sourceLayer = arcpy.mapping.Layer(layerSymLocation + "\Radial Line Of Sight Output With Range Fans.lyr")
-    sourceLayer.name= os.path.basename(outFeature)
-    # Grab the MXD and Dataframe
-    mxd = arcpy.mapping.MapDocument('CURRENT')
-    df = arcpy.mapping.ListDataFrames(mxd)[0]
-    # Create the new layer from the output data
-    layerToAdd = arcpy.mapping.Layer(outFeature)
-    layerToAdd.name = os.path.basename(outFeature)
-    # Configure and turn on labeling - this has to be done manually because the layer file's labeling specs are ignored
-    layerToAdd.showLabels = True
-    if layerToAdd.supports("LABELCLASSES"):
-        for lblclass in layerToAdd.labelClasses:
-            lblclass.showClassLabels = True
-            lblclass.expression = "\"Range: \" & [Range] & \" m\" & vbcrlf & \"Bearing: \" & [Bearing] & \" deg.\" & vbcrlf & \"Model: \" & [Model]"
-    layerToAdd.showLabels = True
-    arcpy.ApplySymbologyFromLayer_management(layerToAdd, sourceLayer)
-    #    Add the layer
-    arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
+    
+    gisVersion = arcpy.GetInstallInfo()["Version"]
+    lblExpressionPython = '"Range: " + [Range] + " m\nBearing: " + [Bearing] + " deg.\nModel: " + [Model]'
+    lblExpressionVBScript = '"Range: " & [Range] & " m " & vbcrlf & "Bearing: " & [Bearing] & " deg." & vbcrlf & "Model: " & [Model]'
+    if gisVersion in desktopVersion: #This is ArcMap 10.3 or 10.2.2
+   
+        # Retrieve the layer file that specifies the symbology
+        sourceLayer = arcpy.mapping.Layer(layerSymLocation + "\Radial Line Of Sight Output With Range Fans.lyr")
+        sourceLayer.name= os.path.basename(outFeature)
+        # Grab the MXD and Dataframe
+        mxd = arcpy.mapping.MapDocument('CURRENT')
+        df = arcpy.mapping.ListDataFrames(mxd)[0]
+        # Create the new layer from the output data
+        layerToAdd = arcpy.mapping.Layer(outFeature)
+        layerToAdd.name = os.path.basename(outFeature)
+        # Configure and turn on labeling - this has to be done manually because the layer file's labeling specs are ignored
+        layerToAdd.showLabels = True
+        if layerToAdd.supports("LABELCLASSES"):
+            for lblclass in layerToAdd.labelClasses:
+                lblclass.showClassLabels = True
+                lblclass.expression = lblExpressionVBScript #Use VBS for now as it is the default label expression parser
+        layerToAdd.showLabels = True
+        arcpy.ApplySymbologyFromLayer_management(layerToAdd, sourceLayer)
+        #    Add the layer
+        arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
 
-#    df = arcpy.mapping.ListDataFrames(mxd)[0]   
-#    updateLayer = arcpy.mapping.ListLayers(mxd, layerToAdd, df)[0]
-#    if DEBUG == True: arcpy.AddMessage("df: " + str(df))
-#    if DEBUG == True: arcpy.AddMessage("updateLayer: " + str(updateLayer))
-#    arcpy.mapping.UpdateLayer(df, updateLayer, sourceLayer, False)
+    elif gisVersion in proVersion: #This Is  ArcGIS Pro  1.0+
+        aprx = arcpy.mp.ArcGISProject(r"current")
+        m = aprx.listMaps()[0]
+        sourceLayerFile = arcpy.mp.LayerFile(os.path.join(layerSymLocation,r"Radial Line Of Sight Output With Range Fans.lyrx"))
+        sourceLayer = sourceLayerFile.listLayers()[0]
+        sourceLayer.dataSource = outFeature
+        if sourceLayer.supports("SHOWLABELS"):
+            sourceLayer.showLabels = True
+            lblClass = sourceLayer.listLbelClasses()[0]
+            lblClass.visible = True
+            lblClass.expression = lblExpressionVBScript #Use VBS for now as it is the default label expression parser
+        lyrInMap = m.addLayer(sourceLayer,"AUTO_ARRANGE")[0]
+
+    else:
+        arcpy.AddWarning("Could not determine version.\n   Looking for ArcMap " + str(desktopVersion) + ", or ArcGIS Pro " + str(proVersion) + ".\n   Found version " + str(gisVersion))
+
 
 except arcpy.ExecuteError: 
     # Get the tool error messages 
