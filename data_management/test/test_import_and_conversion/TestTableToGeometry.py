@@ -48,7 +48,7 @@ def RunTestTableToPoints():
     # sample params:
     # '\csv\ConversionPoints.csv', 'MGRS', 'MGRS', 'MGRS', 'geodatabases\test_outputs.gdb\TableToPoint'
     
-    arcpy.TableToPoint_CnC(inputTable, coordinateConversionFormat, coordinateFieldX, coordinateFieldY, outputPointsFC)
+    arcpy.TableToPoint_InC(inputTable, coordinateConversionFormat, coordinateFieldX, coordinateFieldY, outputPointsFC)
     ########################################################3
 
     # Verify the results    
@@ -88,7 +88,7 @@ def RunTestTableToPolyline():
     # 'data\csv\linewizard.csv', 'DD_2', 'Lond', 'Latd', 
     # 'data\geodatabases\test_outputs.gdb\TableToMultipoint', 'Id', "#', "#'
             
-    arcpy.TableToPolyline_CnC(inputTable, coordinateConversionFormat, coordinateFieldX, coordinateFieldY, outputLinesFC, lineJoinIdField)
+    arcpy.TableToPolyline_InC(inputTable, coordinateConversionFormat, coordinateFieldX, coordinateFieldY, outputLinesFC, lineJoinIdField)
     ########################################################3
 
     # Verify the results    
@@ -132,7 +132,7 @@ def RunTestTableToEllipse():
     # sample params:
     # 'data\csv\ellipsewizard.csv', 'DD_2', 'Lond', 'Latd', 'Major', 'Minor', 'KILOMETERS', 'Orient', 'DEGREES'
     # '#', 'geodatabases\test_outputs.gdb\TableToEllipse'
-    arcpy.TableToEllipse_CnC(inputTable, coordinateConversionFormat, coordinateFieldX, coordinateFieldY, majorAxisField,
+    arcpy.TableToEllipse_InC(inputTable, coordinateConversionFormat, coordinateFieldX, coordinateFieldY, majorAxisField,
                                   minorAxisField, axisUnit, outputEllipsesFC, orientationField, orientationUnit, sr)
     ########################################################3
 
@@ -177,7 +177,7 @@ def RunTestTableToLOB():
     # 'data\csv\lobwizard.csv', 'DD_2', 'Lond', 'Latd', 'DEGREES', 'Azimuth', 'METERS', 
     # 'Distance', 'GEODESIC', 'data\geodatabases\test_outputs\TableToLOB'    
             
-    arcpy.TableToLOB_CnC(inputTable, coordinateConversionFormat, coordinateFieldX,  coordinateFieldY, bearingUnit,
+    arcpy.TableToLOB_InC(inputTable, coordinateConversionFormat, coordinateFieldX,  coordinateFieldY, bearingUnit,
                               bearingField, distanceUnit, distanceField, outputLinesFC, lineType)
     ########################################################3
 
@@ -204,7 +204,7 @@ try:
             
     arcpy.env.overwriteOutput = True
     arcpy.env.scratchWorkspace = TestUtilities.scratchGDB
-    arcpy.ImportToolbox(toolbox, "CnC")
+    arcpy.ImportToolbox(toolbox, "InC")
 
     ################################################
     # Run Individual Geometry Importer Tests

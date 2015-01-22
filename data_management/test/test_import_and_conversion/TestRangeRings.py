@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #------------------------------------------------------------------------------
-# Name: TestCoordinateConversion.py
+# Name: TestRangeRings.py
 # Description: Automatic Test of Range Rings Model
 # Requirements: ArcGIS Desktop Standard
 #------------------------------------------------------------------------------
@@ -26,15 +26,26 @@ import TestUtilities
 
 def RunTest():
     try:
-        arcpy.AddMessage("Starting Test: CoordinateConversion")
+        arcpy.AddMessage("Starting Test: RangeRings")
         
         # WORKAROUND
         print("Creating New Scratch Workspace (Workaround)")
         TestUtilities.createScratch()
             
-        inputTable =  os.path.join(TestUtilities.csvPath, "SigActs.csv")
-        outputDbf =  os.path.join(TestUtilities.scratchPath, "test_coordinate_cc.dbf")
-        toolbox = TestUtilities.toolbox        
+        inputPointsFC =  os.path.join(TestUtilities.inputGDB, "sampleRangePoints")
+        outputRangeRingsFC =  os.path.join(TestUtilities.outputGDB, "RangeRings")
+        outputRangeRadialsFC =  os.path.join(TestUtilities.outputGDB, "RangeRadials") 
+        toolbox = TestUtilities.toolbox
+        
+        # Check For Valid Input
+        objects2Check = []
+        objects2Check.extend([inputPointsFC, toolbox])
+        for object2Check in objects2Check :
+            desc = arcpy.Describe(object2Check)
+            if desc == None :
+                raise Exception("Bad Input")
+            else :
+                print("Valid Object: " + desc.Name)
         
         # Set environment settings
         print("Running from: " + str(TestUtilities.currentPath))
@@ -44,28 +55,34 @@ def RunTest():
         arcpy.env.scratchWorkspace = TestUtilities.scratchGDB
         arcpy.ImportToolbox(toolbox, "CnC")
     
-        inputFeatureCount = int(arcpy.GetCount_management(inputTable).getOutput(0)) 
-        print("Input FeatureClass: " + str(inputTable))
+        inputFeatureCount = int(arcpy.GetCount_management(inputPointsFC).getOutput(0)) 
+        print("Input FeatureClass: " + str(inputPointsFC))
         print("Input Feature Count: " +  str(inputFeatureCount))
             
         if (inputFeatureCount < 1) :
             print("Invalid Input Feature Count: " +  str(inputFeatureCount))
                        
-        coordinateConversionFrom = 'MGRS'
-        coordinateFieldX = 'Location'
-        coordinateFieldY = None
-        
-        ########################################################3       
-        arcpy.ConvertCoordinates_CnC(inputTable, coordinateConversionFrom, coordinateFieldX, coordinateFieldY, outputDbf)
+        numberOfRings = 5
+        ringInterval = 1000.0
+        distanceUnits = "METERS"
+        numberOfRadials = 8
+           
+        ########################################################3
+        # Execute the Model under test:   
+        arcpy.RangeRings_InC(inputPointsFC, numberOfRings, ringInterval, distanceUnits, numberOfRadials, outputRangeRingsFC, outputRangeRadialsFC)
         ########################################################3
     
         # Verify the results    
-        outputFeatureCount = int(arcpy.GetCount_management(outputDbf).getOutput(0)) 
-        print("Output FeatureClass: " + str(outputDbf))
-        print("Output Feature Count: " +  str(outputFeatureCount))
-                    
-        if (outputFeatureCount <>  inputFeatureCount) :
-            print("Input / Output Feature Count don't match: " +  str(inputFeatureCount) + ":" + str(outputFeatureCount))
+        outputFeatureCountRings = int(arcpy.GetCount_management(outputRangeRingsFC).getOutput(0)) 
+        print("Output FeatureClass: " + str(outputRangeRingsFC))
+        print("Output Feature Count: " +  str(outputFeatureCountRings))
+    
+        outputFeatureCountRadials = int(arcpy.GetCount_management(outputRangeRadialsFC).getOutput(0))
+        print("Output FeatureClass: " + str(outputRangeRadialsFC))
+        print("Output Feature Count: " +  str(outputFeatureCountRadials))
+                
+        if (outputFeatureCountRings < 1) or (outputFeatureCountRadials < 1) :
+            print("Invalid Output Feature Count: " +  str(outputFeatureCountRings) + ":" + str(outputFeatureCountRadials))
             raise Exception("Test Failed")            
             
         # WORKAROUND: delete scratch db
