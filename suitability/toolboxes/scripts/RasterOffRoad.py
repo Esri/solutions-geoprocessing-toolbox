@@ -91,7 +91,7 @@ try:
         raise
     
     if calcCellSize == 0.0:
-        arcpy.AddError("Calculated a zero cell size. Spatial references might not be compatible.")
+        arcpy.AddError("Calculated a zero cell size. Spatial references might not be comparable.")
         raise
     
     env.spatialReference = commonSpatialReference
