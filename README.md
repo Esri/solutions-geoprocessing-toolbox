@@ -29,7 +29,7 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
   
 * The [**data_management**](./data_management/README.md) folder contains:
   * Adjust Sample Data Dates Tools
-  * Coordinate and Conversion Tools (formerly Position Analysis Tools)
+  * Import and Conversion Tools (formerly Position Analysis Tools)
   * Publishable Task Tools
   * Build Elevation Mosaic Tools
   * Geonames Tools
