@@ -34,6 +34,7 @@ deleteme = []
 #   1:FAIR
 #   2:GOOD
 #
+
 FACC_veg_tab = {"AL020":["Built-Up Area",2,2],
                 "BH090":["Land subject to inundation",1,1],
                 "BH095":["Marsh/Swamp",1,1],
@@ -60,12 +61,26 @@ FACC_veg_tab = {"AL020":["Built-Up Area",2,2],
                 "EE000":["Miscellaneous Vegetation",1,1],
                 "EE010":["Logging Area",0,0],
                 "EE020":["Land devoid of vegetation",0,0],
-		"AJ085":["Barn",2,2],
-		"AM020":["Grain Bin/Silo",2,2],
-		"AJ110":["Greenhouse",2,2],
-		"AJ080":["Stable",2,2],
-		"AK120":["Park",0,0],
-		"AJ050":["Windmill",2,2]}
+                "AJ085":["Barn",2,2],
+                "AM020":["Grain Bin/Silo",2,2],
+                "AJ110":["Greenhouse",2,2],
+                "AJ080":["Stable",2,2],
+                "AK120":["Park",0,0],
+                "AJ050":["Windmill",2,2],
+                "AL170":["Plaza",1,1],
+                "AK040":["Athletic Field",0,0],
+                "AL030":["Cemetery",1,1],
+                "AJ030":["Stockyard",1,1],
+                "DA010":["Bare Ground",0,0],
+                "AK100":["Golf Course",1,0],
+                "AK170":["Swimming Pool",0,0],
+                "AK160":["Stadium",2,2],
+                "DB090":["Embankment",0,0],
+                "AK060":["Campground",2,1],
+                "AK164":["Unknown",0,0],
+                "AK070":["Unknown",0,0],
+                "AI021":["Unknown",0,0]}
+
 
 try:
     if debug == True: arcpy.AddMessage("Begin: " + str(time.strftime("%m/%d/%Y  %H:%M:%S", time.localtime())))

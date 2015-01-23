@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright 2014 Esri
+# Copyright 2015 Esri
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -14,9 +14,9 @@
 #------------------------------------------------------------------------------
 
 # ==================================================
-# FastSingleVehicleCCM.py
+# RasterOffRoad.py
 # --------------------------------------------------
-# Built for ArcGIS 10.1
+# Built for ArcGIS 10.3
 # --------------------------------------------------
 #
 # ==================================================
@@ -59,6 +59,10 @@ wet_dry = arcpy.GetParameterAsText(11) # "DRY" or "WET", where "DRY" is default
 
 inputSurfaceRoughness = arcpy.GetParameterAsText(12)
 inputSurfaceRoughnessTable = arcpy.GetParameterAsText(13)
+commonSpatialReference = arcpy.GetParameter(14)
+commonSpatialReferenceAsText = arcpy.GetParameterAsText(14)
+
+
 # ==================================================
 
 try:
@@ -71,9 +75,28 @@ try:
     env.compression = "LZ77"
     env.extent = arcpy.Describe(inputAOI).Extent
     env.mask = inputAOI
-    env.cellSize = max(arcpy.Describe(inputAOI).Extent.width,arcpy.Describe(inputAOI).Extent.height)/2000.0
-    #env.cellSize = 90.0
-    if debug == True: arcpy.AddMessage("Cell Size: " + str(env.cellSize))
+    
+    calcCellSize = None
+    GridSize = 2000.0
+    if commonSpatialReferenceAsText == '':
+        commonSpatialReference = arcpy.Describe(inputAOI).spatialReference
+        arcpy.AddWarning("Spatial Reference is not defined. Using Spatial Reference of Input Area Of Interest: " + str(commonSpatialReference.name))
+        calcCellSize = max(arcpy.Describe(inputAOI).Extent.width,arcpy.Describe(inputAOI).Extent.height)/GridSize
+    elif commonSpatialReference.type == "Projected":
+        inputAOIExtent = arcpy.Describe(inputAOI).extent
+        newAOIExtent = inputAOIExtent.projectAs(commonSpatialReference)
+        calcCellSize = max(newAOIExtent.width,newAOIExtent.height)/GridSize
+    else:
+        arcpy.AddError("Undefined Spatial Reference or type is Geographic.\nInput Area of Interest feature or Spatial Reference must be of type Projected.")
+        raise
+    
+    if calcCellSize == 0.0:
+        arcpy.AddError("Calculated a zero cell size. Spatial references might not be comparable.")
+        raise
+    
+    env.spatialReference = commonSpatialReference
+    arcpy.AddMessage("Using cell size: " + str(calcCellSize))
+    env.cellSize = calcCellSize
     intersectionList = []
 
     # Load vehicle Parameters Table into a dictionary

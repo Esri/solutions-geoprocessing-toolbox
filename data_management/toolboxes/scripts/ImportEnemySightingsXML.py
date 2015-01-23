@@ -25,105 +25,108 @@
 #    Output Table (TABLE)
 #-------------------------------------------------------------------------------
 
-
 from xml.etree import ElementTree
 from datetime import datetime
 import arcpy, string
 import re
 
 def enemysightingstodict(xmlfile):
-    ''' Parses the xml to extract the EnemySightings fields into a dictionary '''
+	''' Parses the xml to extract the EnemySightings fields into a dictionary '''
 
-    PATROLREPORT_NS = '{http://helyx.co.uk/infopath/2003/myXSD/2010-06-09}'
+	PATROLREPORT_NS = '{http://helyx.co.uk/infopath/2003/myXSD/2010-06-09}'
 
-    tree = ElementTree.parse(xmlfile)
+	tree = ElementTree.parse(xmlfile)
 
-    for node in tree.findall('.//' + PATROLREPORT_NS + 'Observations/' + PATROLREPORT_NS + 'EnemySightings'):
-        d = {}
-        ''' get each of the nodes '''
-        datetimesighted = node.find(PATROLREPORT_NS + 'DateTimeSighted').text
-        strength = node.find(PATROLREPORT_NS + 'Strength').text
-        activityattitude = node.find(PATROLREPORT_NS + 'ActivityAttitude').text
-        weaponsequipment = node.find(PATROLREPORT_NS + 'WeaponsEquipment').text
-        disposition = node.find(PATROLREPORT_NS + 'Disposition').text
-        intention = node.find(PATROLREPORT_NS + 'Intention').text
-        additionalobservations = node.find(PATROLREPORT_NS + 'AdditionalObservations').text
+	for node in tree.findall(PATROLREPORT_NS + 'Observations/' + PATROLREPORT_NS + 'EnemySightings'):
+		d = {}
+		''' get each of the nodes '''
+		datetimesighted = node.find(PATROLREPORT_NS + 'DateTimeSighted').text
+		strength = node.find(PATROLREPORT_NS + 'Strength').text
+		activityattitude = node.find(PATROLREPORT_NS + 'ActivityAttitude').text
+		weaponsequipment = node.find(PATROLREPORT_NS + 'WeaponsEquipment').text
+		disposition = node.find(PATROLREPORT_NS + 'Disposition').text
+		intention = node.find(PATROLREPORT_NS + 'Intention').text
+		additionalobservations = node.find(PATROLREPORT_NS + 'AdditionalObservations').text
 
-        yield datetimesighted, strength, activityattitude, weaponsequipment, \
-              disposition, intention, additionalobservations
+		yield datetimesighted, strength, activityattitude, weaponsequipment, \
+			  disposition, intention, additionalobservations
 
 def parse_timestamp(s):
-  ''' Returns (datetime, tz offset in minutes) or (None, None). '''
-  m = re.match(""" ^
-    (?P<year>-?[0-9]{4}) - (?P<month>[0-9]{2}) - (?P<day>[0-9]{2})
-    T (?P<hour>[0-9]{2}) : (?P<minute>[0-9]{2}) : (?P<second>[0-9]{2})
-    (?P<microsecond>\.[0-9]{1,6})?
-    (?P<tz>
-      Z | (?P<tz_hr>[-+][0-9]{2}) : (?P<tz_min>[0-9]{2})
-    )?
-    $ """, s, re.X)
-  if m is not None:
-    values = m.groupdict()
-    if values["tz"] in ("Z", None):
-      tz = 0
-    else:
-      tz = int(values["tz_hr"]) * 60 + int(values["tz_min"])
-    if values["microsecond"] is None:
-      values["microsecond"] = 0
-    else:
-      values["microsecond"] = values["microsecond"][1:]
-      values["microsecond"] += "0" * (6 - len(values["microsecond"]))
-    #values = dict((k, int(v)) for k, v in values.iteritems() #UPDATE
-    values = dict((k, int(v)) for k, v in list(values.items())
-                  if not k.startswith("tz"))
-    try:
-      return datetime(**values), tz
-    except ValueError:
-      pass
-  return None, None
+	''' Returns (datetime, tz offset in minutes) or (None, None). '''
+	m = re.match(""" ^
+	(?P<year>-?[0-9]{4}) - (?P<month>[0-9]{2}) - (?P<day>[0-9]{2})
+	T (?P<hour>[0-9]{2}) : (?P<minute>[0-9]{2}) : (?P<second>[0-9]{2})
+	(?P<microsecond>\.[0-9]{1,6})?
+	(?P<tz>
+	  Z | (?P<tz_hr>[-+][0-9]{2}) : (?P<tz_min>[0-9]{2})
+	)?
+	$ """, s, re.X)
+
+	if m is not None:
+		values = m.groupdict()
+		
+	if values["tz"] in ("Z", None):
+		tz = 0
+	else:
+		tz = int(values["tz_hr"]) * 60 + int(values["tz_min"])
+		
+	if values["microsecond"] is None:
+		values["microsecond"] = 0
+	else:
+		values["microsecond"] = values["microsecond"][1:]
+		values["microsecond"] += "0" * (6 - len(values["microsecond"]))
+
+	values = dict((k, int(v)) for k, v in list(values.items())
+		if not k.startswith("tz"))
+	try:
+		return datetime(**values), tz
+	except ValueError:
+		pass
+		
+	return None, None
 
 if __name__ == "__main__":
 
-    #Get GPX and Output directory paramaters
-    xmlfile = arcpy.GetParameterAsText(0)
-    trackid = arcpy.GetParameterAsText(1)
-    outTable = arcpy.GetParameterAsText(2)
+	xmlfile = arcpy.GetParameterAsText(0)
+	trackid = arcpy.GetParameterAsText(1)
+	outTable = arcpy.GetParameterAsText(2)
 
-    rows, row = None, None
+	rows, row = None, None
 
-    try:
-        rows = arcpy.InsertCursor(outTable)
+	try:
+		rows = arcpy.InsertCursor(outTable)
 
-        recComplete = 0
+		recComplete = 0
 
-        # walk through each enemy sighting, create and insert a record into the table for each
-        for datetimesighted, strength, activityattitude, weaponsequipment, \
-         disposition, intention, additionalobservations \
-         in enemysightingstodict(xmlfile):
-            row = rows.newRow()
-            row.SightingDateTime = parse_timestamp(datetimesighted)[0]
-            row.Strength = strength
-            row.ActivityAttitude = activityattitude
-            row.WeaponsEquipment = weaponsequipment
-            row.Disposition = disposition
-            row.Intention = intention
-            row.AdditionalObservations = additionalobservations
-            ''' Add the Track ID, which was passed as a parameter, to link report to a track '''
-            row.FK_TrackGUID = trackid
+		# walk through each enemy sighting, create and insert a record into the table for each
+		for datetimesighted, strength, activityattitude, weaponsequipment, \
+		 disposition, intention, additionalobservations \
+		 in enemysightingstodict(xmlfile):
+			row = rows.newRow()
+			row.SightingDateTime = parse_timestamp(datetimesighted)[0]
+			row.Strength = strength
+			row.ActivityAttitude = activityattitude
+			row.WeaponsEquipment = weaponsequipment
+			row.Disposition = disposition
+			row.Intention = intention
+			row.AdditionalObservations = additionalobservations
+			''' Add the Track ID, which was passed as a parameter, to link report to a track '''
+			row.FK_TrackGUID = trackid
 
-            rows.insertRow(row)
-            recComplete += 1
+			rows.insertRow(row)
+			recComplete += 1
 
-            arcpy.AddMessage("Processed " + str(recComplete) + " records.")
+		arcpy.AddMessage("Processed " + str(recComplete) + " records.")
 
-            arcpy.SetParameterAsText(3, 'True')
+		arcpy.SetParameterAsText(3, 'True')
 
-    #except Exception, ErrorDesc: #UPDATE
-    except Exception as ErrorDesc:
-            arcpy.AddError(str(ErrorDesc))
+	except Exception as err: 
+		import traceback
+		arcpy.AddError(traceback.format_exception_only(type(err), err)[0].rstrip())
 
-    finally:
-        if rows:
-            del rows
-        if row:
-            del row
+	finally:
+		if rows:
+			del rows
+		if row:
+			del row
+

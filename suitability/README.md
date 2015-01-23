@@ -39,12 +39,13 @@ These tools are part of the Military Aspects of Terrain template: http://www.arc
   * Range Fan From Bearing and Traversal With Visibility
 * Suitability Tools
   * Artillery Slope Tint
-  * Find Unused HLZs
+  * Deliberate HLZ Analysis
   * FM 5-33 CCM
+  * Hasty HLZ Analysis
   * Raster Off-road Mobility
   * Suitable Drop Zones
-  * Suitable HLZs
 * Generate Intermedate Layers
+* Generate Linear Obstacle Layer
 
 ## Path Slope Tools
 
