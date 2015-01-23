@@ -28,7 +28,7 @@ class LicenseError(Exception):
 
 try:
         
-    arcpy.ImportToolbox(TestUtilities.toolbox)
+    arcpy.ImportToolbox(TestUtilities.toolbox,"elevationmosaics")
     arcpy.env.overwriteOutput = True
     
     #Set tool param variables
@@ -47,10 +47,9 @@ try:
     
     #Testing Build Elevation Mosaics - DTED input
     arcpy.AddMessage("Starting Test: Build Elevation Mosaic Tools")
-    arcpy.BuildElevationMosaics_elevationmosaics(TestUtilities.outputGDB,inputElevationFolderPath,inputRasterType,
-                                             inputAspectFunctionTemplateFile,inputPercentSlopeFunctionTemplateFile,
-                                             inputHillshadeFunctionTemplateFile,outputDTMMosaic,outputHillshadeMosaic,
-                                             outputAspectMosaic,outputPercentSlopeMosaic)
+    arcpy.BuildElevationMosaics_elevationmosaics(TestUtilities.outputGDB,inputElevationFolderPath,inputRasterType,inputAspectFunctionTemplateFile,
+                                                 inputPercentSlopeFunctionTemplateFile,inputHillshadeFunctionTemplateFile, outputDTMMosaic,
+                                                 outputHillshadeMosaic,outputAspectMosaic,outputPercentSlopeMosaic)
     
     #Verify Results
     countDTMFootprints = int(arcpy.GetCount_management(os.path.join(TestUtilities.outputGDB,outputDTMMosaic)).getOutput(0))

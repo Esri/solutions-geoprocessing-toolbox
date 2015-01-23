@@ -53,7 +53,7 @@ def RunTest():
         
         arcpy.env.overwriteOutput = True
         arcpy.env.scratchWorkspace = TestUtilities.scratchGDB
-        arcpy.ImportToolbox(toolbox, "CnC")
+        arcpy.ImportToolbox(toolbox, "InC")
     
         inputFeatureCount = int(arcpy.GetCount_management(inputPointsFC).getOutput(0)) 
         print("Input FeatureClass: " + str(inputPointsFC))

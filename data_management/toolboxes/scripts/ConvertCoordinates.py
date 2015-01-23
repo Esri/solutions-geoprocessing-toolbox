@@ -29,7 +29,7 @@ try:
     # Load required toolboxes
     scriptpath = sys.path[0]
     #toolboxpath = os.path.join(scriptpath,"..\\Position Analysis Tools.tbx")
-    toolboxpath = os.path.join(scriptpath,"..\\Coordinate and Conversion Tools.tbx")
+    toolboxpath = os.path.join(scriptpath,"..\\Import and Conversion Tools_10.3.tbx")
     arcpy.ImportToolbox(toolboxpath) 
     
     # Script arguments
@@ -77,7 +77,7 @@ try:
     arcpy.CopyRows_management(Input_Table, Output_Table, "")
     
     # Process: Add Unique Row ID
-    arcpy.gp.AddUniqueRowID(Output_Table, "JoinID")
+    arcpy.AddUniqueRowID_InC(Output_Table, "JoinID")
     
     # Process: Convert Coordinate Notation (GARS)
     arcpy.AddMessage("Converting & appending GARS ...")

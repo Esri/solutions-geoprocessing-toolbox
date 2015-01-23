@@ -29,8 +29,9 @@ try:
     arcpy.AddMessage("ArcPy works")
     
     # WORKAROUND: delete scratch db (having problems with scratch read-only "scheme lock" errors
-    # print "Deleting Scratch Workspace (Workaround)"    
-    # TestUtilities.deleteScratch()
+    print "Deleting Scratch Workspace (Workaround)"    
+    TestUtilities.deleteScratch()
+    TestUtilities.createScratch()
       
     print("Testing Necessary Paths")                
     
