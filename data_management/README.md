@@ -82,13 +82,14 @@ Tools for converting tabular information to different geometries, and generating
 
 * Convert Coordinates
 * Locate Event
-* Range Rings
 * Table To 2-Point Line
 * Table To Ellipse
 * Table To Line Of Bearing
 * Table To Point
 * Table To Polygon
 * Table To Polyline
+
+** - Range Rings has been removed from Import and conversion as it is a duplication of the same tool in Visibility and Range Tools.
 
 ## Publishable Task Tools
 
