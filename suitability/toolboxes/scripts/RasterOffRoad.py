@@ -33,7 +33,7 @@ from arcpy import sa
 
 # LOCALS ===========================================
 deleteme = []
-debug = False
+debug = True
 GCS_WGS_1984 = arcpy.SpatialReference("WGS 1984")
 ## webMercator = arcpy.SpatialReference("WGS 1984 Web Mercator (Auxiliary Sphere)")
 ccmFactorList = []
@@ -214,7 +214,8 @@ try:
     if inputVegetation != None and arcpy.Exists(inputVegetation) == True:
         # f3: vegetation
         f3t = os.path.join(scratch,"f3t")
-        f3 = os.path.join(scratch,"f3")
+        #f3 = os.path.join(scratch,"f3") #ERROR 010240 : Could not save raster dataset to <value> with output format <value>.
+        f3 = os.path.join(os.path.dirname(scratch),"f3.tif")
         arcpy.AddMessage("Clipping vegetation to fishnet and joining parameter table...")
         vegetation = os.path.join("in_memory","vegetation")
         if debug == True: arcpy.AddMessage(str(time.strftime("Clip Vegetation: %m/%d/%Y  %H:%M:%S", time.localtime())))
@@ -238,7 +239,8 @@ try:
     if inputSoils != None and  arcpy.Exists(inputSoils) == True:
         # f4: soils
         f4t = os.path.join(scratch,"f4t")
-        f4 = os.path.join(scratch,"f4")
+        #f4 = os.path.join(scratch,"f4") #ERROR 010240 : Could not save raster dataset to <value> with output format <value>.
+        f4 = os.path.join(os.path.dirname(scratch),"f4.tif")
         arcpy.AddMessage("Clipping soils to fishnet and joining parameter table...")
         clipSoils = os.path.join("in_memory","clipSoils")
         if debug == True: arcpy.AddMessage(str(time.strftime("Clip Soils: %m/%d/%Y  %H:%M:%S", time.localtime())))
@@ -260,7 +262,8 @@ try:
     if inputSurfaceRoughness != None and  arcpy.Exists(inputSurfaceRoughness) == True:
         # f5: surface roughness
         f5t = os.path.join(scratch,"f5t")
-        f5 = os.path.join(scratch,"f5")
+        #f5 = os.path.join(scratch,"f5") #ERROR 010240 : Could not save raster dataset to <value> with output format <value>.
+        f5 = os.path.join(os.path.dirname(scratch),"f5.tif")
         arcpy.AddMessage("Clipping roughness to fishnet and joining parameter table...")
         clipRoughness = os.path.join("in_memory","clipRoughness")
         if debug == True: arcpy.AddMessage(str(time.strftime("Clip Roughness: %m/%d/%Y  %H:%M:%S", time.localtime())))
