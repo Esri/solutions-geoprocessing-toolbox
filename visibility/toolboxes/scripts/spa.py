@@ -1,20 +1,22 @@
-# ==================================================
+#------------------------------------------------------------------------------
+# Copyright 2014 Esri
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#------------------------------------------------------------------------------
 # spa.py
-# --------------------------------------------------
-# Built on ArcGIS 10.2
-# --------------------------------------------------
-#
-# Performs a suitability analysis on terrain for the purpose of creating a Drop Zone
-#
-# Data is presumed to be in the WGS 1984 Auxiliary Sphere spatial reference (GCS_WGS_1984)
-#
-# Spatial Analyst is required for the use of the Hillshade tool.
-#
-# ==================================================
-# Usage: dropzones <inputAOI> <inputElevation> <inputDatetime> <outputHillshade>
-# Description:
-# Preliminary selection of areas that can support troops and material delivered by parachute.
-# ---------------------------------------------------------------------------3
+# Description: Sun Position and Hillshade
+# Requirements: ArcGIS Desktop Standard
+#------------------------------------------------------------------------------
+
 
 # IMPORTS ==========================================
 import os, sys, math, traceback, types, datetime, time
