@@ -36,6 +36,7 @@ labelStyle = arcpy.GetParameterAsText(5)
 outputFeatureClass = arcpy.GetParameterAsText(6)
 labelStartPos = arcpy.GetParameterAsText(7)
 tempOutput = "in_memory" + "\\" + "tempFishnetGrid"
+sysPath = sys.path[0]
 
 def RotateFeatureClass(inputFC, outputFC,
                        angle=0, pivot_point=None):
@@ -361,13 +362,10 @@ elif (labelStartPos == "Lower-Right"):
 # Import the custom toolbox with the fishnet tool in it, and run this. This had to be added to a model,
 # because of a bug, which will now allow you to pass variables to the Create Fishnet tool.
 #UPDATE
-if isPro:
-    toolboxPath = os.path.dirname(arcpy.env.workspace) + "\\ClearingOperations.tbx"
-else:
-    toolboxPath = os.path.dirname(os.path.dirname(arcpy.env.workspace)) + "\\toolboxes\ClearingOperations.tbx"
-arcpy.ImportToolbox(toolboxPath, "ClearingOperations")
+toolboxPath = os.path.dirname(sysPath) + "\\Clearing Operations Tools.tbx"
+arcpy.ImportToolbox(toolboxPath)
 arcpy.AddMessage("Creating Fishnet Grid")
-arcpy.CreateFishnet_ClearingOperations(tempOutput, originCoordinate, yAxisCoordinate, str(cellWidth), str(cellHeight), 0, 0, oppCornerCoordinate, "NO_LABELS", templateExtent, "POLYGON")
+arcpy.Fishnet_ClearingOperations(tempOutput, originCoordinate, yAxisCoordinate, str(cellWidth), str(cellHeight), 0, 0, oppCornerCoordinate, "NO_LABELS", templateExtent, "POLYGON")
 
 # Sort the grid upper left to lower right, and delete the in memory one
 arcpy.AddMessage("Sorting the grid for labeling")
@@ -434,7 +432,7 @@ if isPro == False:
         arcpy.AddMessage("Labeling grids")
         labelFeatures(layer, gridField)
 
-# Apply symbology to the GRG layer
-#UPDATE
-#symbologyPath = os.path.dirname(workspace) + "\\Layers\GRG.lyr"
-#arcpy.ApplySymbologyFromLayer_management(layer, symbologyPath)
+### Apply symbology to the GRG layer
+###UPDATE
+###symbologyPath = os.path.dirname(workspace) + "\\Layers\GRG.lyr"
+###arcpy.ApplySymbologyFromLayer_management(layer, symbologyPath)

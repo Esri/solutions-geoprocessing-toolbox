@@ -38,6 +38,7 @@ labelStyle = arcpy.GetParameterAsText(7)
 outputFeatureClass = arcpy.GetParameterAsText(8)
 labelStartPos = arcpy.GetParameterAsText(9)
 tempOutput = "in_memory" + "\\" + "tempFishnetGrid"
+sysPath = sys.path[0]
 
 def labelFeatures(layer, field):
     if layer.supports("LABELCLASSES"):
@@ -416,13 +417,10 @@ elif (labelStartPos == "Lower-Right"):
 # Import the custom toolbox with the fishnet tool in it, and run this. This had to be added to a model,
 # because of a bug, which will now allow you to pass variables to the Create Fishnet tool.
 #UPDATE
-if isPro:
-    toolboxPath = os.path.dirname(arcpy.env.workspace) + "\\ClearingOperations.tbx"
-else:
-    toolboxPath = os.path.dirname(os.path.dirname(arcpy.env.workspace)) + "\\toolboxes\ClearingOperations.tbx"
-arcpy.ImportToolbox(toolboxPath, "ClearingOperations")
+toolboxPath = os.path.dirname(sysPath) + "\\Clearing Operations Tools.tbx"
+arcpy.ImportToolbox(toolboxPath)
 arcpy.AddMessage("Creating Fishnet Grid")
-arcpy.CreateFishnet_ClearingOperations(tempOutput, originCoordinate, yAxisCoordinate, 0, 0, str(numberCellsHo), str(numberCellsVert), oppCornerCoordinate, "NO_LABELS", fullExtent, "POLYGON")
+arcpy.Fishnet_ClearingOperations(tempOutput, originCoordinate, yAxisCoordinate, 0, 0, str(numberCellsHo), str(numberCellsVert), oppCornerCoordinate, "NO_LABELS", fullExtent, "POLYGON")
 
 # Sort the grid upper left to lower right, and delete the in memory one
 arcpy.AddMessage("Sorting the grid for labeling")
