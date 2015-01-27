@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright 2014 Esri
+# Copyright 2015 Esri
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,6 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #------------------------------------------------------------------------------
+# Concealment.py
+#
+#
+#------------------------------------------------------------------------------
+# 1/27/2015 - mf - Added Spatial Reference parameter and set as env.outputCoordinateSystem and added tool validation
+#
+#------------------------------------------------------------------------------
+
+
 
 # IMPORTS ----------------------------------------------------------------
 import os, sys, random, time, traceback
@@ -22,6 +31,9 @@ from arcpy import env
 input_AOI_Feature = arcpy.GetParameterAsText(0)
 baseVegetation = arcpy.GetParameterAsText(1)
 outConcealment = arcpy.GetParameterAsText(2)
+commonSpatialReference = arcpy.GetParameter(3)
+commonSpatialReferenceAsText = arcpy.GetParameterAsText(3)
+
 
 # LOCALS -----------------------------------------------------------------
 debug = False
@@ -90,15 +102,14 @@ try:
 
     installDir = arcpy.GetInstallInfo('desktop')["InstallDir"]
     prjWGS1984 = arcpy.SpatialReference("WGS 1984")
-   ## prjWebMercator = arcpy.SpatialReference("WGS 1984 Web Mercator (Auxiliary Sphere)") #We are to not use Web Mercator. This can be a place holder for later use.
-
     
-   ## PLACE HOLDER FOR TRANSFORMATION. WE CAN NOT USE WEB MERCATOR
-     #if AOI is Geographic, project to Web Mercator
-   ## if (arcpy.Describe(input_AOI_Feature).SpatialReference.type == "Geographic"):
-   ##     arcpy.AddMessage("AOI features are Geographic, projecting to Web Mercator...")
+    if (commonSpatialReferenceAsText == ""):
+        commonSpatialReference = arcpy.Describe(input_AOI_Feature).spatialReference
+        arcpy.AddMessage("Using spatial reference of Input Area Of Interest: " + str(commonSpatialReference.name))
+    env.outputSpatialReference = commonSpatialReference    
+   
     newAOI = os.path.join(scratch,"newAOI")
-    arcpy.Project_management(input_AOI_Feature,newAOI,prjWGS1984)
+    arcpy.Project_management(input_AOI_Feature,newAOI,commonSpatialReference)
     input_AOI_Feature = newAOI
     deleteme.append(newAOI)
     prjAOI = arcpy.Describe(input_AOI_Feature).SpatialReference
@@ -107,7 +118,7 @@ try:
     prjAOIveg = os.path.join(scratch,"AOIVeg")
     srVeg = arcpy.Describe(baseVegetation).SpatialReference
     arcpy.Project_management(input_AOI_Feature,prjAOIveg,srVeg)
-        # clip veg (clip veg_poly from base_veg_poly using envelope)
+    # clip veg (clip veg_poly from base_veg_poly using envelope)
     vegPoly = os.path.join(scratch,"vegPoly")
     arcpy.AddMessage("Clip veg polys to AOI...")
     arcpy.Clip_analysis(baseVegetation, prjAOIveg, vegPoly)
