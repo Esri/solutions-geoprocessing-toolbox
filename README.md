@@ -61,7 +61,8 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 
 ## Requirements
 
-* ArcGIS Desktop 10.2.2 or later Standard 
+* ArcGIS Desktop 10.3 or ArcGIS Pro 1.0
+* License level and extensions will vary by toolbox
 * Apache Ant - used to download and extract dependent data and run test drivers
 * Java Runtime Environment (JRE) or Developer Kit (JDK) (required by Ant)
 * Some tools require additional licenses (these tools will be disabled if license is unavailable), see READMEs for more information: 
