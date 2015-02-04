@@ -11,7 +11,7 @@
   <property name="pythonpath" value="${dir.arcpy}\DLLs;${dir.arcpy}\lib;${dir.arcpy}\lib\plat-win;${dir.arcpy}\lib\lib-tk;${dir.arcpy};${dir.arcpy}\lib\site-packages;${dir.arcgisdesktop}\bin;${dir.arcgisdesktop}\arcpy"/>
 
   <target name="run_all_tests" 
-    depends="set_all_variables,get_data,test_config,TestRangeRings,TestCoordinateConversion,TestTableToGeometry">
+    depends="set_all_variables,get_data,test_config,TestCoordinateConversion,TestTableToGeometry">
     <echo message="All Tests Complete" />
   </target>
 
@@ -28,14 +28,6 @@
       <env key="PYTHONPATH" path="${pythonpath}"/>
       <arg line="-u"/>
       <arg line="${dir.src}/TestTemplateConfig.py"/>
-    </exec>
-  </target>
-
-  <target name="TestRangeRings" depends="set_all_variables">
-    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
-      <env key="PYTHONPATH" path="${pythonpath}"/>
-      <arg line="-u"/>
-      <arg line="${dir.src}/TestRangeRings.py"/>
     </exec>
   </target>
 

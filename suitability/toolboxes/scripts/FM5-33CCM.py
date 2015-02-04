@@ -18,6 +18,7 @@
 # --------------------------------------------------
 # Built for ArcGIS 10.1
 # ==================================================
+# 2/4/2015 - mf - Updates to change Web Mercator to user-selected coordinate system
 
 
 # IMPORTS ==========================================
@@ -130,6 +131,10 @@ wet_dry = arcpy.GetParameterAsText(11) # "DRY" or "WET", where "DRY" is default
 
 inputSurfaceRoughness = arcpy.GetParameterAsText(12)
 inputSurfaceRoughnessTable = arcpy.GetParameterAsText(13)
+
+commonSpatialReference = arcpy.GetParameter(14)
+commonSpatialReferenceAsText = arcpy.GetParameterAsText(14)
+
 # ==================================================
 
 try:
@@ -179,11 +184,14 @@ try:
     vehicleParams = vehicleTable[inputVehicleType]
     if debug == True: arcpy.AddMessage("vehicleParams: " + str(vehicleParams))
 
+    if commonSpatialReferenceAsText == "":
+        arcpy.AddWarning("Spatial Reference is not defined. Using Spatial Reference of Input Area Of Interest: " + str(commonSpatialReference.name))
+        commonSpatialReference = arcpy.Describe(inputAOI).spatialReference
 
     descAOI = arcpy.Describe(inputAOI)
-    srAOI = descAOI.SpatialReference
-    env.outputCoordinateSystem = srAOI
+    env.outputCoordinateSystem = commonSpatialReference
     extAOI = descAOI.Extent
+    
     
     # get rows/columns/height/width of AOI 
     numRows, numCols = 1,1
@@ -309,7 +317,7 @@ try:
         
         # create a clipping polygon from the tile shape
         tileClip = os.path.join(scratch,"tileClip")
-        arcpy.CreateFeatureclass_management(os.path.dirname(tileClip),os.path.basename(tileClip),"POLYGON","#","#","#",srAOI)
+        arcpy.CreateFeatureclass_management(os.path.dirname(tileClip),os.path.basename(tileClip),"POLYGON","#","#","#",env.outputCoordinateSystem)
         arcpy.AddField_management(tileClip,"FnetID","LONG")
         arcpy.CalculateField_management(tileClip,"FnetID",tileOID)
         deleteme.append(tileClip)
@@ -388,7 +396,7 @@ try:
         # generate diagonals for each point
         arcpy.AddMessage(str(tileNum) + "     Building diagonals...")
         diagonals = os.path.join(scratch,"diagonals")
-        arcpy.CreateFeatureclass_management(os.path.dirname(diagonals), os.path.basename(diagonals), "POLYLINE", "#", "#", "#", arcpy.Describe(slopePoly).SpatialReference, "#", "#", "#", "#")
+        arcpy.CreateFeatureclass_management(os.path.dirname(diagonals), os.path.basename(diagonals), "POLYLINE", "#", "#", "#", env.outputCoordinateSystem, "#", "#", "#", "#")
         arcpy.AddField_management(diagonals,"RNDID","LONG")
         deleteme.append(diagonals)
         rows = arcpy.da.SearchCursor(randomPoint,["OID@","SHAPE@XY"])

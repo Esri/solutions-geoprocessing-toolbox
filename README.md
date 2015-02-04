@@ -130,7 +130,11 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 
 ## Resources
 
-* Learn more about Esri's [ArcGIS for Defense maps and apps](http://resources.arcgis.com/en/communities/defense-and-intelligence/).
+* Learn more about [ArcGIS Solutions](http://solutions.arcgis.com/).
+* Learn more about [ArcGIS for the Military](http://solutions.arcgis.com/military/).
+* Learn more about [ArcGIS for Intelligence](http://solutions.arcgis.com/intelligence/).
+* Learn more about [ArcGIS for Emergency Management](http://solutions.arcgis.com/emergency-management/).
+* Learn more about [ArcGIS Pro](http://pro.arcgis.com/en/pro-app/).
 
 ## Issues
 
