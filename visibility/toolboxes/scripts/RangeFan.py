@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright 2014 Esri
+# Copyright 2015 Esri
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -49,31 +49,25 @@ dRange = float(arcpy.GetParameterAsText(1)) #1000.0 # meters
 bearing = float(arcpy.GetParameterAsText(2)) #45.0 # degrees
 traversal = float(arcpy.GetParameterAsText(3)) #60.0 # degrees
 outFeature = arcpy.GetParameterAsText(4)
-outputCoordinateSystem = arcpy.GetParameterAsText(5)
+outputCoordinateSystem = arcpy.GetParameter(5)
+outputCoordinateSystemAsText = arcpy.GetParameterAsText(5)
     
 deleteme = []
 debug = True
 leftAngle = 0.0 # degrees
 rightAngle = 90.0 # degrees
-WGS84 = arcpy.SpatialReference(r"WGS 1984")
-WebMercator = arcpy.SpatialReference(r"WGS 1984 Web Mercator (Auxiliary Sphere)")
-if (outputCoordinateSystem == "") or (outputCoordinateSystem is None) :
-    # if the output coordinate system is empty we need to use a default projected CS
-    outputCoordinateSystem = WebMercator
-else:
-    #The script is passed a string representation of the output coordinate system, load it into a spatial ref object here
-    sr = arcpy.SpatialReference()
-    sr.loadFromString(outputCoordinateSystem)
-    outputCoordinateSystem = sr
-if debug == True: arcpy.AddMessage("output coordinate system: " + str(outputCoordinateSystem.name))
 
 try:
 
+    if (outputCoordinateSystemAsText == ""):
+        outputCoordinateSystem = arcpy.Describe(inFeature).spatialReference
+        arcpy.AddWarning("Spatial Reference is not defined. Using Spatial Reference of input features: " + str(outputCoordinateSystem .name))
+   
+    env.outputCoordinateSystem = outputCoordinateSystem
     currentOverwriteOutput = env.overwriteOutput
     env.overwriteOutput = True
     installInfo = arcpy.GetInstallInfo("desktop")
     installDirectory = installInfo["InstallDir"]
-    env.overwriteOutput = True
     scratch = env.scratchWorkspace
     
     prjInFeature = os.path.join(scratch,"prjInFeature")

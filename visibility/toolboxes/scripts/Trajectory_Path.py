@@ -22,10 +22,6 @@ from arcpy import env
 
 
 # CONSTANTS ========================================
-prjWGS1984Path = arcpy.SpatialReference("WGS 1984")
-prjWebMercator = arcpy.SpatialReference("WGS 1984 Web Mercator (auxiliary sphere)")
-
-useSurface = True
 debug = True
 
 
@@ -37,8 +33,10 @@ azimuthAngleDegrees = float(arcpy.GetParameterAsText(3)) #315.0 # degrees, arith
 analysisType = arcpy.GetParameterAsText(4) #IDEAL
 # Currently this tool is developed using IDEAL projectile conditions (no air drag, no wind deflection, etc.)
 # future versions of this tool may include calculations for other conditions
-inputSurface = arcpy.GetParameterAsText(5) #r"\\mattf\Trajectory\IrwinWebMercator.gdb\IrwinDTED_WebMerc"  #surface dataset
+inputSurface = arcpy.GetParameterAsText(5) #surface dataset
 outFeature = arcpy.GetParameterAsText(6)
+commonSpatialReference = arcpy.GetParameter(7)
+commonSpatialReferenceAsText = arcpy.GetParameterAsText(7)
 
 deleteme = [] # stuff to get rid of when we're done
 
@@ -101,13 +99,19 @@ try:
     
     env.overwriteOutput = True
     scratch = env.scratchWorkspace
+    
+    if commonSpatialReferenceAsText == '':
+        arcpy.AddWarning("Spatial Reference is not defined. Using Spatial Reference of Weapon Location: " + str(commonSpatialReference.name))
+        commonSpatialReference = arcpy.Describe(inputFeature).spatialReference
+    
+    env.outputCoordinateSystem = commonSpatialReference
 
     # angular inputs in radians
     azimuthAngleRadians = math.radians(float(Geo2Arithmetic(azimuthAngleDegrees)))
     elevationAngleRadians = math.radians(float(elevationAngleDegrees))
     
     # create output layer
-    arcpy.CreateFeatureclass_management(os.path.dirname(outFeature),os.path.basename(outFeature),"POLYLINE","","ENABLED","ENABLED",prjWebMercator)
+    arcpy.CreateFeatureclass_management(os.path.dirname(outFeature),os.path.basename(outFeature),"POLYLINE","","ENABLED","ENABLED",env.outputCoordinateSystem)
     arcpy.AddField_management(outFeature,"Bearing","DOUBLE","","","","Bearing from north (deg)")
     arcpy.AddField_management(outFeature,"ElevAngle","DOUBLE","","","","Elevation angle from surface (deg)")
     arcpy.AddField_management(outFeature,"InitV","DOUBLE","","","","Initial velocity (m/sec)")
@@ -132,9 +136,9 @@ try:
     arcpy.AddField_management(extractPoints,"Z","DOUBLE")
     arcpy.CalculateField_management(extractPoints,"Z","!RASTERVALU!","PYTHON_9.3")
     
-    # make dictionary from observer XYs and project to Web Merc
+    # make dictionary from observer XYs and project to commonSpatialReference
     initialObservers = {}
-    observersWebMerc = {}  
+    observersProj = {}  
     #rows = arcpy.da.SearchCursor(inputFeature,["OID@","SHAPE@XY","Z"]) # use for interpolated points, not extracted
     rows = arcpy.da.SearchCursor(extractPoints,["OID@","SHAPE@XY","Z"])
     for row in rows:
@@ -142,18 +146,17 @@ try:
         pnt = row[1]
         Z = row[2]
         initialObservers[OID] = [pnt[0],pnt[1],Z]
-        # project to Web Merc and add to separate dictionary
+        # project to outputCoordinateSystem and add to separate dictionary
         #pnt2 = arcpy.Geometry("POINT",arcpy.Point(pnt[0],pnt[1],Z),arcpy.Describe(inputFeature).spatialReference,True) # user for interpolated points, not extracted
         pnt2 = arcpy.Geometry("POINT",arcpy.Point(pnt[0],pnt[1],Z),arcpy.Describe(extractPoints).spatialReference,True)
-        pntWM = pnt2.projectAs(prjWebMercator)
-        observersWebMerc[OID] = [pntWM.firstPoint.X,pntWM.firstPoint.Y,Z] 
+        pntCS = pnt2.projectAs(env.outputCoordinateSystem)
+        observersProj[OID] = [pntCS.firstPoint.X,pntCS.firstPoint.Y,Z] 
     if debug == True:
         arcpy.AddMessage("Initial Observers: " + str(initialObservers))
-        arcpy.AddMessage("Web Merc Observer: " + str(observersWebMerc))
     del rows
     
     # are we working in feet or meters?
-    linearUnits = prjWebMercator.linearUnitName # for now do all work in Web Merc
+    linearUnits = env.outputCoordinateSystem.linearUnitName 
     linearUnitsSurface = arcpy.Describe(inputSurface).spatialReference.linearUnitName
     gravitationalConstant = 9.80665 # meters/second^2
     
@@ -167,12 +170,12 @@ try:
     
     # go through each observer and build a trajectory path
     # TODO: check for analysis type. For first release this is under IDEAL conditions
-    #for obsOID in observersWebMerc.keys(): #UPDATE
-    for obsOID in list(observersWebMerc.keys()):
+    #for obsOID in observersProj.keys(): #UPDATE
+    for obsOID in list(observersProj.keys()):
         if debug == True: arcpy.AddMessage("Starting observer OID: " + str(obsOID))
         path = []
         pathArray = arcpy.Array() # this is giong to be the array storing the points that become each path polyline
-        coordTriple = observersWebMerc[obsOID]
+        coordTriple = observersProj[obsOID]
         longitudeOfObserver = coordTriple[0]
         latitudeOfObserver = coordTriple[1]
         elevationOfObserver = coordTriple[2]
@@ -284,7 +287,7 @@ try:
     
         # add the trajectory path and attributes to the output features
         if debug == True: arcpy.AddMessage("Adding row to output FC...")
-        addRows.insertRow([arcpy.Polyline(pathArray,prjWebMercator,True,True),maxHeight,dddRange,tMax,azimuthAngleDegrees,elevationAngleDegrees,initialVelocityMPS])
+        addRows.insertRow([arcpy.Polyline(pathArray,env.outputCoordinateSystem,True,True),maxHeight,dddRange,tMax,azimuthAngleDegrees,elevationAngleDegrees,initialVelocityMPS])
         del pathArray
 
     del addRows

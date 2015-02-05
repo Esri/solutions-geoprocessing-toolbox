@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
-<project name="TestImageryTools" basedir="." default="run_all_tests">
+<!--<project name="TestImageryTools" basedir="." default="run_all_tests">-->
+<project name="TestImageryTools" basedir="." default="nodata">
 
   <!-- templatehome = solutions-geoprocessing-toolbox/environment/test/test_imagery_tools -->
 <import file="../versions.xml"/>
@@ -15,6 +16,10 @@
     <echo message="All Tests Complete" />
   </target>
 
+  <target name="nodata">
+    <echo message="TEST HAS NO DATA TO RUN."/>
+  </target>
+  
   <target name="get_data">
     <!-- TODO: determine if we need to run data fetch script here @ ../../data/build.xml -->
     <!-- TODO: for now just issue a warning -->

@@ -84,15 +84,7 @@
     <unzip src="${dir.zipdir}/Geonames.zip"
           dest="${dir.datamanagementdatadir}" />
     
-    <!-- Imagery Basemap Tools Test Data: c3c1baa1e65e437a9d04b7c9b9b9d699 -->
-    <echo message="Downloading imagery basemap data" />
-    <get src="http://www.arcgis.com/sharing/content/items/c3c1baa1e65e437a9d04b7c9b9b9d699/data"
-          dest="${dir.zipdir}/Imagery.zip"
-          verbose="true"
-          usetimestamp="true"/>
-    <echo message="Unzipping Imagery Basemap data" />
-    <unzip src="${dir.zipdir}/Imagery.zip"
-          dest="${dir.datamanagementdatadir}" />
+    <!-- Imagery Basemap Tools Test Data: HAS BEEN REMOVED -->
     
     <!-- Network Data Preparation Tools Test Data: cf09da3684214d2b9b18c22149130fc4 -->
     <echo message="Downloading network prep data" />
@@ -104,15 +96,7 @@
     <unzip src="${dir.zipdir}/NetworkPrepData.gdb.zip"
           dest="${dir.datamanagementdatadir}/geodatabases" />
     
-    <!-- Scanned Map Basemap Tools Test Data: 06e92ad67c34cae8ae95c0fde097a6c -->
-    <echo message="Downloading scanned map basemap data" />
-    <get src="http://www.arcgis.com/sharing/content/items/706e92ad67c34cae8ae95c0fde097a6c/data"
-          dest="${dir.zipdir}/ScannedMaps.zip"
-          verbose="true"
-          usetimestamp="true"/>
-    <echo message="Unzipping Scanned Map Basemap data" />
-    <unzip src="${dir.zipdir}/ScannedMaps.zip"
-          dest="${dir.datamanagementdatadir}" />
+    <!-- Scanned Map Basemap Tools Test Data: HAS BEEN REMOVED-->
     
     <!-- Topographic Basemap Tools Test Data: 8e682b02ca02482d8caaebae05cbdc1a -->
     <echo message="Downloading topographic basemap data" />
