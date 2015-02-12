@@ -242,11 +242,11 @@ sr.factoryCode = 4326
 sr.create()
 GCS_WGS_1984 = sr
 
-# Web Mercator
-sr = arcpy.SpatialReference()
-sr.factoryCode = 3857
-sr.create()
-webMercator = sr
+## Web Mercator
+#sr = arcpy.SpatialReference()
+#sr.factoryCode = 3857
+#sr.create()
+#webMercator = sr
 
 # Local variables:
 
