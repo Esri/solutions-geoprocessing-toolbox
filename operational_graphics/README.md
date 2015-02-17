@@ -28,6 +28,8 @@ Tools to build range cards for defensive positions.
 These tools are part of the Range Cards Template: http://www.arcgis.com/home/item.html?id=22b1015a131e48a9ba31bf785272f08e
 
 * Create Range Fan Index Features
+* Data Driven Pages Simulator (DDP-S)
+ * NOTE - __The DDP-S script is a temporary workaround until the ArcGIS Pro team implements that functionality in the core software. It will be included here until it is added to the proper GitHub repository, and then we will list it as a submodule here.__
 * Merge (System Tool)
 * Range Fans From Bearing And Traversal
 * Range Fans From Bearing Limits

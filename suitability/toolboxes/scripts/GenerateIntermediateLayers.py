@@ -19,7 +19,7 @@
 import os, arcpy, traceback
 
 # ARGUMENTS =====================================================
-inputUTDSFeatureDataset = arcpy.GetParameterAsText(0)
+inputTDSFeatureDataset = arcpy.GetParameterAsText(0)
 inputMAOTWorkspace = arcpy.GetParameterAsText(1)
 
 # LOCALS ========================================================
@@ -33,23 +33,23 @@ debug = False
 try:
     # add qualifier string to FC list name
     arcpy.AddMessage("Getting database qualifier string ...")
-    featureDatasetName = os.path.basename(inputUTDSFeatureDataset)
-    if len(os.path.basename(inputUTDSFeatureDataset)) > 4:
-       qualifierString = os.path.basename(inputUTDSFeatureDataset)[:-4]
+    featureDatasetName = os.path.basename(inputTDSFeatureDataset)
+    if len(os.path.basename(inputTDSFeatureDataset)) > 4:
+       qualifierString = os.path.basename(inputTDSFeatureDataset)[:-4]
     if debug == True: arcpy.AddMessage("qualifier string: " + qualifierString)
     for i in featureClassesToMerge:
        fqClassesToMerge.append(str(qualifierString + i))
     if debug == True: arcpy.AddMessage("fqClassesToMerge: " + str(fqClassesToMerge))
     
     # get a list of feature classes in the UTDS feature dataset
-    workspace = os.path.dirname(inputUTDSFeatureDataset)
+    workspace = os.path.dirname(inputTDSFeatureDataset)
     arcpy.env.workspace = workspace
-    utdsFeatureClasses = arcpy.ListFeatureClasses("*","Polygon",os.path.basename(inputUTDSFeatureDataset))
-    if debug == True: arcpy.AddMessage("utdsFeatureClasses: " + str(utdsFeatureClasses))
+    tdsFeatureClasses = arcpy.ListFeatureClasses("*","Polygon",os.path.basename(inputTDSFeatureDataset))
+    if debug == True: arcpy.AddMessage("tdsFeatureClasses: " + str(tdsFeatureClasses))
     
     # now go through the list of all of them and see which names match our target list, if so, add them to a new list
     arcpy.AddMessage("Building list of input features ...")
-    for fc in utdsFeatureClasses:
+    for fc in tdsFeatureClasses:
         if fc in fqClassesToMerge:
             newList.append(str(os.path.join(workspace,featureDatasetName,fc)))
     if debug == True: arcpy.AddMessage("newList: " + str(newList))

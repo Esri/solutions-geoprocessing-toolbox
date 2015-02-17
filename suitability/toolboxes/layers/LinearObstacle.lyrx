@@ -27,11 +27,11 @@
       "featureElevationExpression" : "Shape.Z",
       "featureTable" : {
         "type" : "CIMFeatureTable",
-        "displayField" : "fcsubtype",
+        "displayField" : "FCSubtype",
         "editable" : true,
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=..\\..\\..\\..\\Users\\erik0000\\Documents\\ArcGIS\\Projects\\Military Aspects of Terrain\\Military Aspects of Terrain.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\..\\..\\..\\..\\Shared\\Data\\California_Data_for_FEDUC.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "CombinedLinearObstacleFeature",
           "datasetType" : "esriDTFeatureClass"
@@ -62,7 +62,7 @@
       "labelClasses" : [
         {
           "type" : "CIMLabelClass",
-          "expression" : "[fcsubtype]",
+          "expression" : "[FCSubtype]",
           "expressionEngine" : "VBScript",
           "featuresToLabel" : "AllVisibleFeatures",
           "maplexLabelPlacementProperties" : {
@@ -282,108 +282,14 @@
               {
                 "type" : "CIMPlacedPointSymbols",
                 "enable" : true,
-                "colorLocked" : false,
+                "colorLocked" : true,
                 "pointSymbolPlacementEffect" : {
                   "type" : "CIMPointSymbolPlacementAlongLineSameSize",
                   "angleToLine" : true,
                   "controlPointPlacement" : "WithMarkers",
-                  "endings" : "Custom",
-                  "offsetAlongLine" : 15,
+                  "endings" : "WithMarkers",
                   "placementTemplate" : [
-                    60
-                  ]
-                },
-                "pointSymbol" : {
-                  "type" : "CIMPointSymbol",
-                  "symbolLayers" : [
-                    {
-                      "type" : "CIMVectorMarker",
-                      "enable" : true,
-                      "colorLocked" : false,
-                      "anchorPointUnits" : "Relative",
-                      "dominantSizeAxis3D" : "Y",
-                      "size" : 5,
-                      "billboardMode3D" : "FaceNearPlane",
-                      "frame" : {
-                        "xmin" : -3.1340623855590821,
-                        "ymin" : -2.8409374999999994,
-                        "xmax" : 3.148125114440917,
-                        "ymax" : 2.8299999999999996
-                      },
-                      "markerGraphics" : [
-                        {
-                          "type" : "CIMMarkerGraphic",
-                          "geometry" : {
-                            "x" : 0,
-                            "y" : 0
-                          },
-                          "symbol" : {
-                            "type" : "CIMPointSymbol",
-                            "symbolLayers" : [
-                              {
-                                "type" : "CIMCharacterMarker",
-                                "enable" : true,
-                                "colorLocked" : false,
-                                "anchorPoint" : {
-                                  "x" : 0,
-                                  "y" : 0
-                                },
-                                "anchorPointUnits" : "Points",
-                                "dominantSizeAxis3D" : "Y",
-                                "size" : 10,
-                                "billboardMode3D" : "FaceNearPlane",
-                                "characterIndex" : 35,
-                                "fontFamilyName" : "ESRI Default Marker",
-                                "fontStyleName" : "Regular",
-                                "scaleX" : 1,
-                                "symbol" : {
-                                  "type" : "CIMPolygonSymbol",
-                                  "symbolLayers" : [
-                                    {
-                                      "type" : "CIMFill",
-                                      "enable" : true,
-                                      "colorLocked" : false,
-                                      "pattern" : {
-                                        "type" : "CIMSolidPattern",
-                                        "color" : {
-                                          "type" : "CIMRGBColor",
-                                          "values" : [
-                                            0,
-                                            0,
-                                            0,
-                                            100
-                                          ]
-                                        }
-                                      }
-                                    }
-                                  ]
-                                }
-                              }
-                            ],
-                            "haloSize" : 0,
-                            "scaleX" : 1
-                          }
-                        }
-                      ],
-                      "scaleStrokesAndFills" : true
-                    }
-                  ],
-                  "haloSize" : 1,
-                  "scaleX" : 1
-                }
-              },
-              {
-                "type" : "CIMPlacedPointSymbols",
-                "enable" : true,
-                "colorLocked" : false,
-                "pointSymbolPlacementEffect" : {
-                  "type" : "CIMPointSymbolPlacementAlongLineSameSize",
-                  "angleToLine" : true,
-                  "controlPointPlacement" : "NoConstraint",
-                  "endings" : "Custom",
-                  "offsetAlongLine" : 45,
-                  "placementTemplate" : [
-                    60
+                    16
                   ]
                 },
                 "pointSymbol" : {
@@ -394,75 +300,68 @@
                       "enable" : true,
                       "colorLocked" : false,
                       "anchorPoint" : {
-                        "x" : 0,
-                        "y" : 0
+                        "x" : 8.881784197001254e-018,
+                        "y" : -0.50000000000000011
                       },
                       "anchorPointUnits" : "Relative",
                       "dominantSizeAxis3D" : "Y",
-                      "size" : 5,
+                      "size" : 6,
                       "billboardMode3D" : "FaceNearPlane",
                       "frame" : {
-                        "xmin" : -3.1340623855590821,
-                        "ymin" : -2.8409374999999994,
-                        "xmax" : 3.148125114440917,
-                        "ymax" : 2.8299999999999996
+                        "xmin" : -5.7699999999999996,
+                        "ymin" : -5,
+                        "xmax" : 5.7699999999999996,
+                        "ymax" : 5
                       },
                       "markerGraphics" : [
                         {
                           "type" : "CIMMarkerGraphic",
                           "geometry" : {
-                            "x" : 0,
-                            "y" : 0
+                            "rings" : [
+                              [
+                                [
+                                  0,
+                                  5
+                                ],
+                                [
+                                  5.7699999999999996,
+                                  -5
+                                ],
+                                [
+                                  -5.7699999999999996,
+                                  -5
+                                ],
+                                [
+                                  0,
+                                  5
+                                ]
+                              ]
+                            ]
                           },
                           "symbol" : {
-                            "type" : "CIMPointSymbol",
+                            "type" : "CIMPolygonSymbol",
                             "symbolLayers" : [
                               {
-                                "type" : "CIMCharacterMarker",
+                                "type" : "CIMFill",
                                 "enable" : true,
                                 "colorLocked" : false,
-                                "anchorPoint" : {
-                                  "x" : 0,
-                                  "y" : 0
-                                },
-                                "anchorPointUnits" : "Points",
-                                "dominantSizeAxis3D" : "Y",
-                                "size" : 10,
-                                "billboardMode3D" : "FaceNearPlane",
-                                "characterIndex" : 35,
-                                "fontFamilyName" : "ESRI Default Marker",
-                                "fontStyleName" : "Regular",
-                                "scaleX" : 1,
-                                "symbol" : {
-                                  "type" : "CIMPolygonSymbol",
-                                  "symbolLayers" : [
-                                    {
-                                      "type" : "CIMFill",
-                                      "enable" : true,
-                                      "colorLocked" : false,
-                                      "pattern" : {
-                                        "type" : "CIMSolidPattern",
-                                        "color" : {
-                                          "type" : "CIMRGBColor",
-                                          "values" : [
-                                            0,
-                                            0,
-                                            0,
-                                            100
-                                          ]
-                                        }
-                                      }
-                                    }
-                                  ]
+                                "pattern" : {
+                                  "type" : "CIMSolidPattern",
+                                  "color" : {
+                                    "type" : "CIMRGBColor",
+                                    "values" : [
+                                      0,
+                                      0,
+                                      0,
+                                      100
+                                    ]
+                                  }
                                 }
                               }
-                            ],
-                            "haloSize" : 0,
-                            "scaleX" : 1
+                            ]
                           }
                         }
-                      ],
-                      "scaleStrokesAndFills" : true
+                      ]
                     }
                   ],
                   "haloSize" : 1,
@@ -471,19 +370,8 @@
               },
               {
                 "type" : "CIMSolidStroke",
-                "effects" : [
-                  {
-                    "type" : "CIMGeometricEffectDashes",
-                    "lineDashEnding" : "HalfPattern",
-                    "controlPointEnding" : "NoConstraint"
-                  },
-                  {
-                    "type" : "CIMGeometricEffectOffset",
-                    "joinStyle" : "Bevel"
-                  }
-                ],
                 "enable" : true,
-                "colorLocked" : false,
+                "colorLocked" : true,
                 "capStyle" : "Round",
                 "joinStyle" : "Round",
                 "lineStyle3D" : "Strip",
