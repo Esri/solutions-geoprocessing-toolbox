@@ -95,6 +95,7 @@ try:
         raise
     
     env.spatialReference = commonSpatialReference
+    env.outputCoordinateSystem = commonSpatialReference
     arcpy.AddMessage("Using cell size: " + str(calcCellSize))
     env.cellSize = calcCellSize
     intersectionList = []
@@ -165,7 +166,7 @@ try:
 
     # make constant raster
     constNoEffect = os.path.join(env.scratchGDB,"constNoEffect")
-    outConstNoEffect = sa.CreateConstantRaster(1.0,"FLOAT",env.cellSize,arcpy.Describe(inputAOI).Extent)
+    outConstNoEffect = sa.CreateConstantRaster(1.0,"FLOAT",env.cellSize,arcpy.Describe(inputAOI).Extent.projectAs(env.outputCoordinateSystem))
     outConstNoEffect.save(constNoEffect)
     deleteme.append(constNoEffect)
 
@@ -315,12 +316,6 @@ try:
             pass
     if debug == True: arcpy.AddMessage("Done")
 
-#except "WrongFactors", ccmlist: #UPDATE
-except "WrongFactors" as ccmlist:
-    msg = "Wrong Number of Factors given: " + str(ccmlist)
-    arcpy.AddError(msg)
-    #print msg #UPDATE
-    print(msg)
 
 except arcpy.ExecuteError:
     if debug == True: arcpy.AddMessage("CRASH: " + str(time.strftime("%m/%d/%Y  %H:%M:%S", time.localtime())))

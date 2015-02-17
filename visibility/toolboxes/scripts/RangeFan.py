@@ -16,6 +16,9 @@
 # Description: Create Range Fan
 # Requirements: ArcGIS Desktop Standard
 # -----------------------------------------------------------------------------
+# 2/5/2015 - mf - Updates to change Web Mercator to user-selected coordinate system
+#
+#
 
 # IMPORTS ==========================================
 import os, sys, math, traceback
@@ -53,7 +56,7 @@ outputCoordinateSystem = arcpy.GetParameter(5)
 outputCoordinateSystemAsText = arcpy.GetParameterAsText(5)
     
 deleteme = []
-debug = True
+debug = False
 leftAngle = 0.0 # degrees
 rightAngle = 90.0 # degrees
 

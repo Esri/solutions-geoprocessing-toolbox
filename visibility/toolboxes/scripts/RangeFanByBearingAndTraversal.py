@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# Copyright 2014 Esri
+# Copyright 2015 Esri
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -15,10 +15,11 @@
 #------------------------------------------------------------------------------
 
 # ==================================================
-# UpdateRangeFans.py
+# RangeFanByBearingAndTraversal.py
 # --------------------------------------------------
-# Built for ArcGIS 10.1
+# Built for ArcGIS Desktop 10.x and ArcGIS Pro 1.x
 # ==================================================
+# 2/5/2015 - mf - Updates to change Web Mercator to user-selected coordinate system
 
 
 # IMPORTS ==========================================
@@ -36,9 +37,11 @@ maxRange = float(arcpy.GetParameterAsText(5)) #1000.0 # meters
 geoBearing = float(arcpy.GetParameterAsText(6)) #45.0 # degrees
 traversal = float(arcpy.GetParameterAsText(7)) #60.0 # degrees
 outFeature = arcpy.GetParameterAsText(8)
+commonSpatialReference = arcpy.GetParameter(9)
+commonSpatialReferenceAsText = arcpy.GetParameterAsText(9)
 
 deleteme = []
-debug = True
+debug = False
 leftAngle = 0.0 # degrees
 rightAngle = 90.0 # degrees
 
@@ -71,16 +74,12 @@ try:
 
     currentOverwriteOutput = env.overwriteOutput
     env.overwriteOutput = True
-    sr = arcpy.SpatialReference()
-    sr.factoryCode = 4326
-    sr.create()
-    GCS_WGS_1984 = sr
-    #GCS_WGS_1984 = arcpy.SpatialReference(r"WGS 1984")
-    wbsr = arcpy.SpatialReference()
-    wbsr.factoryCode = 3857
-    wbsr.create()
-    webMercator = wbsr
-    #webMercator = arcpy.SpatialReference(r"WGS 1984 Web Mercator (Auxiliary Sphere)")
+        
+    if commonSpatialReferenceAsText == '':
+        commonSpatialReference = arcpy.Describe(inFeature).spatialReference
+        arcpy.AddWarning("Spatial Reference is not defined. Using Spatial Reference of input features: " + str(commonSpatialReference.name))    
+    env.outputCoordinateSystem = commonSpatialReference
+    
     env.overwriteOutput = True
     scratch = env.scratchWorkspace
     
@@ -91,8 +90,8 @@ try:
     
     prjInFeature = os.path.join(scratch,"prjInFeature")
     srInputPoints = arcpy.Describe(copyInFeatures).spatialReference
-    arcpy.AddMessage("Projecting input points to Web Mercator ...")
-    arcpy.Project_management(copyInFeatures,prjInFeature,webMercator)
+    arcpy.AddMessage("Projecting input points to " + str(env.outputCoordinateSystem.name) + " ...")
+    arcpy.Project_management(copyInFeatures,prjInFeature,env.outputCoordinateSystem)
     deleteme.append(prjInFeature)
     tempFans = os.path.join(scratch,"tempFans")
             
@@ -150,7 +149,7 @@ try:
     if debug == True: arcpy.AddMessage("paths: " + str(paths))
     
     arcpy.AddMessage("Creating target feature class ...")
-    arcpy.CreateFeatureclass_management(os.path.dirname(tempFans),os.path.basename(tempFans),"Polygon","#","DISABLED","DISABLED",webMercator)
+    arcpy.CreateFeatureclass_management(os.path.dirname(tempFans),os.path.basename(tempFans),"Polygon","#","DISABLED","DISABLED",env.outputCoordinateSystem)
     arcpy.AddField_management(tempFans,"Range","DOUBLE","#","#","#","Range (meters)")
     arcpy.AddField_management(tempFans,"Bearing","DOUBLE","#","#","#","Bearing (degrees)")
     arcpy.AddField_management(tempFans,"Traversal","DOUBLE","#","#","#","Traversal (degrees)")
@@ -185,8 +184,8 @@ try:
     arcpy.AddMessage("Projecting Range Fans back to " + str(srInputPoints.name))
     arcpy.Project_management(tempFans,outFeature,srInputPoints)
     
-    
     arcpy.SetParameter(8,outFeature)
+    
 
 except arcpy.ExecuteError: 
     # Get the tool error messages 
