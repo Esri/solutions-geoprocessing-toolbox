@@ -43,6 +43,25 @@ def Geo2Arithmetic(inAngle):
 
     return float(outAngle)
 
+def frange3(start, end=None, inc=None):
+    """A range function, that does accept float increments..."""
+    """http://code.activestate.com/recipes/66472-frange-a-range-function-with-float-increments/"""
+    if end == None:
+        end = start + 0.0
+        start = 0.0
+    else: start += 0.0 # force it to be a float
+
+    if inc == None:
+        inc = 1.0
+    count = int(math.ceil((end - start) / inc))
+    count += 1
+
+    L = [None,] * count
+
+    L[0] = start
+    for i in range(1,count):        
+        L[i] = L[i-1] + inc
+    return L
 
 # ARGUMENTS & LOCALS ===============================
 argCount = arcpy.GetArgumentCount()
@@ -112,7 +131,8 @@ try:
             #print leftAngle,rightAngle #UPDATE
             print(leftAngle,rightAngle)
             #for d in xrange(int(leftAngle),int(rightAngle),step): #UPDATE
-            for d in range(int(leftAngle),int(rightAngle),step):    
+            #for d in range(int(leftAngle),int(rightAngle),step):
+            for d in frange3(leftAngle, rightAngle, step):    
                 x = centerPointX + (dRange * math.cos(math.radians(d)))
                 y = centerPointY + (dRange * math.sin(math.radians(d)))
                 path.append([x,y])
