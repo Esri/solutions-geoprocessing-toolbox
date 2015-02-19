@@ -23,9 +23,9 @@ import sys
 
 currentPath = os.path.dirname(__file__)
 toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../capability/toolboxes/"))
-testDataPath = os.path.normpath(os.path.join(currentPath,r"../../../capability/data/"))
+testDataPath = os.path.normpath(os.path.join(currentPath,r"../../../capability/data/geodatabases/"))
 toolDataPath = os.path.join(toolboxesPath,r"tooldata")
 layerPath  = os.path.join(toolboxesPath, "layers")
 toolDataGDB = os.path.join(toolDataPath, "PointOfOrigin.gdb")
-testDataGDB = os.path.join(testDataPath,"PointOfOriginTestData.gdb")
+testDataGDB = os.path.join(testDataPath,"test_poo_tools.gdb")
 toolbox = os.path.join(toolboxesPath, "Point Of Origin Tools_10.3.tbx")

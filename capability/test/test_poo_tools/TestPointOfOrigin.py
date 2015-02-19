@@ -34,43 +34,57 @@ try:
     #Set tool param variables
     inputImpactPoints = os.path.join(TestUtilities.testDataGDB,r"impacts")
     inputWeaponsTable = os.path.join(TestUtilities.toolDataGDB,r"Weapons")
-    inputWeaponsAsString = "82mm Soviet Mortar; 88mm American Mortar; 120mm American Mortar"
+    inputWeaponsAsString = "'82mm Soviet Mortar';'88mm American Mortar';'120mm American Mortar'"
+    print("inputWeaponsAsString: " + str(inputWeaponsAsString))
     inputWeaponsAsList = inputWeaponsAsString.split(";")
+    print("inputWeaponsAsList: " + str(inputWeaponsAsList))
     outputWorkspace = arcpy.env.scratchGDB
     outImpactPrefix = r"imp"
     outPooPrefix = r"poo"
     outRangePrefix = r"rng"
-    sr = arcpy.spatialReference(32642) #WGS_1984_UTM_Zone_42N using factoryCode
+    sr = arcpy.SpatialReference(32642) #WGS_1984_UTM_Zone_42N using factoryCode
     
     #Testing Point Of Origin Site Detection
     arcpy.AddMessage("Starting Test: Point of Origin Site Detection")
-    results = arcpy.PointOfOriginSiteDetection_ptorigin(inputImpactPoints, InputWeaponsTable,
+    results = arcpy.PointOfOriginSiteDetection_ptorigin(inputImpactPoints, inputWeaponsTable,
                                               inputWeaponsAsString, outputWorkspace,
                                               outImpactPrefix,outPooPrefix,
                                               outRangePrefix,sr)
-    outImpactFeatures = results.getOutput[0]
-    outPOOFeatures = results.getOutput[1].split(";")
-    outRangeFeatures = results.getOutput[2].split(";")
     
+    #print("results.outputCount: " + str(results.outputCount))
+    #for i in range(0,results.outputCount):
+    #    print("output " + str(i) + ": " + str(results.getOutput(i)))
+       
     #Verify Results
+    print("Checking results...")
+    outImpactFeatures = results.getOutput(0)
+    outPOOFeatures = results.getOutput(1).split(";")
+    outRangeFeatures = results.getOutput(2).split(";")
+    
+    # check that the same number of impact points between the input and output
     countInputImpactPoints = int(arcpy.GetCount_management(inputImpactPoints).getOutput(0))
     countOutputImpactPoints = int(arcpy.GetCount_management(outImpactFeatures).getOutput(0))
-    if (countInputImpactPoints != countOutputImpactPOints):
+    if (countInputImpactPoints != countOutputImpactPoints):
         print("Error: Impact points are not the same. In: " + str(countInputImpactPoints) + ", Out: " + str(countOutputImpactPoints))
         raise Exception("Test Failed")
+    print("Number of input and output impact points match.")
     
+    # check the number of combined POO feature classes returned by the tool
     countPOOFeatureClasses = int(len(outPOOFeatures))
-    if (countInputImpactPoints != countPOOFeatureClasses):
-        print("Error: Output Point Of Origin features are not the same as impact points. Impacts: " + str(countInputImpactPoints) + ", POO: " + str(countPOOFeatureClasses))
+    if (len(inputWeaponsAsList)!= countPOOFeatureClasses):
+        print("Error: Number of Output Point of Origin features do not match number of selected weapon systems. # weaopns: " + str(len(inputWeaponsAsList)) + ", POO: " + str(countPOOFeatureClasses))
         raise Exception("Test Failed")
+    print("Number of selected weapons match number of output Point Of Origin features.")
     
+    # check the number of range feature classes returned by the tool
     countImpactXWeapons = int(countInputImpactPoints * len(inputWeaponsAsList))
     countRangeFeatureClasses = int(len(outRangeFeatures))
     if (countImpactXWeapons != countRangeFeatureClasses):
         print("Error: Number of Range feature classes does not match Impact Points x Weapon Models. ImpxWeap: " + str(countImpactXWeapons) + ", Ranges:" + str(countRangeFeatureClasses))
         raise Exception("Test Failed")
+    print("Number of Impacts x Weapons match output range features.")
     
-    print("Test Passed")
+    print("All tests passed.")
 
 
 except arcpy.ExecuteError: 
