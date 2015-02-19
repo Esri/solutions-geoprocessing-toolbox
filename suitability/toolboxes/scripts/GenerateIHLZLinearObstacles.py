@@ -23,7 +23,7 @@ inputTDSFeatureDataset = arcpy.GetParameterAsText(0)
 inputMAOTWorkspace = arcpy.GetParameterAsText(1)
 
 # LOCALS ========================================================
-featureClassesToMerge = ["UtilityInfrastructureCrv","StructureCrv","MilitaryCrv","PhysiographyCrv","RecreationCrv","VegetationCrv", "HydrographyCrv","TransportationWaterCrv"]
+featureClassesToMerge = ["UtilityInfrastructureCrv","StructureCrv","MilitaryCrv","PhysiographyCrv","RecreationCrv","VegetationCrv", "HydrographyCrv","TransportationWaterCrv","TransportationGroundCrv"]
 newList = []
 qualifierString = ""
 fqClassesToMerge = []
