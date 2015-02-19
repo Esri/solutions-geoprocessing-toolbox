@@ -92,6 +92,7 @@ try:
         arcpy.AddMessage("Getting Range for: " + selectedModel)
         arcpy.AddMessage("Minimum Range: " + str(minRange))
         arcpy.AddMessage("Maximum Range: " + str(maxRange))
+        del cursor, record
 
         # combine buffers of all impact points
         impactPointBuffersList = []
@@ -140,7 +141,7 @@ try:
         outputPointsOfOriginFeatures.append(output_poo)
 
         modelOriginsDict[scrubbedModel] = [{"ranges":impactPointBuffersList},{"combined":output_poo}]
-        del rows
+        del rows, row, indexWeaponModel
     # model loop ends here, on to next model
     
     # now for symbology...
@@ -211,32 +212,31 @@ try:
         m = aprx.listMaps()[0]
         
         # make top group layer
-        if DEBUG == True: arcpy.AddMessage("groupLayerPath1")
-        groupLayerPath = os.path.join(layerSymLocation,"New Group Layer.lyr")
-        if DEBUG == True: arcpy.AddMessage("groupLayerPath2")
+        groupLayerPath = os.path.join(layerSymLocation,"New_Group_Layer.lyrx")
         initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
-        if DEBUG == True: arcpy.AddMessage("groupLayerPath3")
         initialGroupLayer.name = "Point Of Origin Results"
-        if DEBUG == True: arcpy.AddMessage("groupLayerPath4")
         m.addLayer(initialGroupLayer,"AUTO_ARRANGE")
-        if DEBUG == True: arcpy.AddMessage("groupLayerPath5")
         topGroupLayer  = m.listLayers("Point Of Origin Results")[0]
-        if DEBUG == True: arcpy.AddMessage("groupLayerPath6")
-        #del initialGroupLayer  #Pro tool dialog is unresponsive here....
         initialGroupLayer = None
+        #del initialGroupayer # this line hangs tool dialog.
         
-        # add the impact points
-        if DEBUG == True: arcpy.AddMessage("impactPointLayer1")
-        impactPointLayerList= arcpy.mp.LayerFile(os.path.join(layerSymLocation,"Impact Point Centers.lyr")).listLayers()
-        if DEBUG == True: arcpy.AddMessage("impactPointLayer1a")
-        impactPointLayer = impactPointLayerList[0] #Pro tool dialog is unresponsive her
-        if DEBUG == True: arcpy.AddMessage("impactPointLayer2")
-        impactPointLayer.dataSource = outputImpactPointFeatures
-        if DEBUG == True: arcpy.AddMessage("impactPointLayer3")
-        impactPointLayer.name = "Impact points"
-        if DEBUG == True: arcpy.AddMessage("impactPointLayer4")
-        m.addLayerToGroup(topGroupLayer,impactPointLayer,"TOP")
-        if DEBUG == True: arcpy.AddMessage("impactPointLayer5")
+        ## add the impact points
+        #if DEBUG == True: arcpy.AddMessage("impactPointLayer1")
+        impactPointLayerFilePath = os.path.join(layerSymLocation,"Impact_Point_Centers.lyrx")
+        #if DEBUG == True: arcpy.AddMessage("impactPointLayer1a")
+        #impactPointLayer = arcpy.mp.LayerFile(impactPointLayerFilePath).listLayers()[0] # this line hangs tool dialog...
+        #if DEBUG == True: arcpy.AddMessage("impactPointLayer2")
+        #impactPointLayer.dataSource = outputImpactPointFeatures
+        #if DEBUG == True: arcpy.AddMessage("impactPointLayer3")
+        #impactPointLayer.name = "Impact points"
+        #if DEBUG == True: arcpy.AddMessage("impactPointLayer4")
+        #m.addLayerToGroup(topGroupLayer,impactPointLayer,"TOP")
+        #if DEBUG == True: arcpy.AddMessage("impactPointLayer5")
+        
+        ipName = "Impact points"
+        results = arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,ipName).getOutput(0)
+        m.addLayerToGroup(topGroupLayer,results,"TOP")
+        arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy doesn't apply the symbology
         
         # for all items in the combinedPooDict 
         for model in modelOriginsDict:
@@ -248,14 +248,13 @@ try:
             m.addLayerToGroup(topGroupLayer,initialGroupLayer,"BOTTOM")
             modelGroupLayer = m.listLayers(model)[0]
             initialGroupLayer = None
-            #del initialGroupLayer
             
             # get range and POO data from this model
             modelData = modelOriginsDict[model]
             
             # make layer for combined area and add to model layer
             combinedDict = modelData[1]
-            combinedAreaLayer = arcpy.mp.LayerFile(os.path.join(layerSymLocation, "PointOfOrigin.lyr")).listLayers()[0]
+            combinedAreaLayer = arcpy.mp.LayerFile(os.path.join(layerSymLocation, "PointOfOrigin.lyrx")).listLayers()[0]
             combinedAreaLayer.dataSource = combinedDict["combined"]
             combinedAreaLayer.name = model + " Point Of Origin"
             m.addLayerToGroup(modelGroupLayer,combinedAreaLayer,"BOTTOM")
@@ -266,12 +265,11 @@ try:
             m.addLayerToGroup(modelGroupLayer,initialGroupLayer,"BOTTOM")
             rangeGroupLayer = m.listLayers(rangeLayerName)[0]
             initialGroupLayer = None
-            #del initialGroupLayer
             
             # Add the individual ranges to the range group layer
             modelRanges = modelData[0]['ranges']
             for r in modelRanges:
-                rangeToAdd = arcpy.mp.LayerFile(os.path.join(layerSymLocation, "ImpactRange.lyr")).listLayers()[0]
+                rangeToAdd = arcpy.mp.LayerFile(os.path.join(layerSymLocation, "ImpactRange.lyrx")).listLayers()[0]
                 rangeToAdd.dataSource = r
                 rangeToAdd.name = os.path.basename(r)
                 m.addLayerToGroup(rangeGroupLayer,rangeToAdd,"BOTTOM")
