@@ -37,7 +37,17 @@
   
   <target name="get_capability_data">
     <!-- Helicopter Landing Zone Tools Test Data -->
-    <!-- Point Of Origin Tools Test Data -->
+    
+    <!-- Point Of Origin Tools Test Data: 9d8a534a70d54a74911d9ddb60b5a1d9 -->
+    <echo message="Downloading Point Of Origin Tools test data." />
+    <get src="http://www.arcgis.com/sharing/content/items/9d8a534a70d54a74911d9ddb60b5a1d9/data"
+         dest="${dir.zipdir}/PointOfOriginToolsTestData.zip"
+         usetimestamp="true"
+         verbose="true"/>
+    <echo message="Unzipping Point Of Origin Tools test data."/>
+    <unzip src="${dir.zipdir}/PointOfOriginToolsTestData.zip"
+          dest="${dir.capabilitydatadir}/geodatabases"/>
+    
     <!-- ERG Tools Test Data -->
   </target>
   
