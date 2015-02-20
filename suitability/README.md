@@ -44,7 +44,7 @@ These tools are part of the Military Aspects of Terrain template: http://www.arc
   * Hasty HLZ Analysis
   * Raster Off-road Mobility
   * Suitable Drop Zones
-* Generate Intermedate Layers
+* Generate Intermediate Layers
 * Generate Linear Obstacle Layer
 
 ## Path Slope Tools
