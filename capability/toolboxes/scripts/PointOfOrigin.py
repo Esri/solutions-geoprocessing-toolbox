@@ -35,7 +35,7 @@ outputCoordinateSystem = arcpy.GetParameter(13) # Coordinate System
 outputCoordinateSystemAsText = arcpy.GetParameterAsText(13) # String
 
 delete_me = []
-DEBUG = True
+DEBUG = False
 desktopVersion = ["10.2.2","10.3"]
 proVersion = ["1.0"]
 
@@ -62,7 +62,7 @@ try:
         arcpy.AddWarning("Spatial Reference is not defined. Using Spatial Reference of Impact Points: " + str(outputCoordinateSystem .name))
     env.outputCoordinateSystem = outputCoordinateSystem
     
-    #Project doesn't like in_memory featureclasses, copy to scratch
+    arcpy.AddMessage("Building impact points...")
     copyInFeatures = os.path.join(scratch,"copyInFeatures")
     outputImpactPointFeatures = os.path.join(outWorkspace,scrubbedImpactOutPrefix)
     arcpy.CopyFeatures_management(inFeature,copyInFeatures)
@@ -79,12 +79,11 @@ try:
         selectedModel = selectedWeaponModels[indexWeaponModel]
         scrubbedModel = ''.join(e for e in selectedModel if (e.isalnum() or e == " " or e == "_"))
         scrubbedModel = scrubbedModel.replace(" ", "_")
-        
+        arcpy.AddMessage("Getting Range for: " + selectedModel)
         if DEBUG == True: 
            arcpy.AddMessage("Model: " + selectedModel) 
            arcpy.AddMessage("Scrubbed Model: " + scrubbedModel)
            
-        arcpy.AddMessage("Getting impact points ....")
         
         #Set the minimum and maximum range based on the selected weapon system
         where = modelField + " = " + selectedModel
@@ -93,9 +92,10 @@ try:
         record = cursor.next()
         minRange =  record.getValue(minRangeField)
         maxRange =  record.getValue(maxRangeField)
-        arcpy.AddMessage("Getting Range for: " + selectedModel)
-        arcpy.AddMessage("Minimum Range: " + str(minRange))
-        arcpy.AddMessage("Maximum Range: " + str(maxRange))
+        if DEBUG == True:
+            arcpy.AddMessage("Minimum Range: " + str(minRange))
+            arcpy.AddMessage("Maximum Range: " + str(maxRange))
+            
         del cursor, record
 
         # combine buffers of all impact points
@@ -217,11 +217,12 @@ try:
     
     # if Pro:
     elif gisVersion in proVersion: #This Is  ArcGIS Pro  1.0
-        
+        arcpy.AddMessage("Working in ArcGIS Pro " + str(gisVersion))
         aprx = arcpy.mp.ArcGISProject(r"current")
         m = aprx.listMaps()[0]
         
         # make top group layer
+        arcpy.AddMessage("Adding Top Group Layer...")
         groupLayerPath = os.path.join(layerSymLocation,"New_Group_Layer.lyrx")
         initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
         initialGroupLayer.name = "Point Of Origin Results"
@@ -231,6 +232,7 @@ try:
         #del initialGroupayer # this line hangs tool dialog.
         
         ## add the impact points
+        arcpy.AddMessage("Adding Impact Points ...")
         #if DEBUG == True: arcpy.AddMessage("impactPointLayer1")
         impactPointLayerFilePath = os.path.join(layerSymLocation,"Impact_Point_Centers.lyrx")
         #if DEBUG == True: arcpy.AddMessage("impactPointLayer1a")
@@ -244,13 +246,16 @@ try:
         #if DEBUG == True: arcpy.AddMessage("impactPointLayer5")
         
         ipName = "Impact points"
+        if DEBUG == True: arcpy.AddMessage("arcpy.MakeFeatureLayer(...)")
         results = arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,ipName).getOutput(0)
+        if DEBUG == True: arcpy.AddMessage("m.addLayerToGroup(...)")
         m.addLayerToGroup(topGroupLayer,results,"TOP")
+        if DEBUG == True: arcpy.AddMessage("ApplySymbologyFromLayer")
         arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy doesn't apply the symbology
         
         # for all items in the combinedPooDict 
         for model in modelOriginsDict:
-            if DEBUG == True: arcpy.AddMessage("model: " + str(model))
+            arcpy.AddMessage("Adding model: " + str(model))
             
             # make a group layer for each model
             initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
