@@ -34,6 +34,9 @@ try:
     #Set tool param variables
     inputImpactPoints = os.path.join(TestUtilities.testDataGDB,r"impacts")
     inputWeaponsTable = os.path.join(TestUtilities.toolDataGDB,r"Weapons")
+    inModelField = 'Model'
+    inMinRangeField = 'Minimum_range'
+    inMaxRangeField = 'Maximum_range'
     inputWeaponsAsString = "'82mm Soviet Mortar';'88mm American Mortar';'120mm American Mortar'"
     print("inputWeaponsAsString: " + str(inputWeaponsAsString))
     inputWeaponsAsList = inputWeaponsAsString.split(";")
@@ -47,9 +50,10 @@ try:
     #Testing Point Of Origin Site Detection
     arcpy.AddMessage("Starting Test: Point of Origin Site Detection")
     results = arcpy.PointOfOriginSiteDetection_ptorigin(inputImpactPoints, inputWeaponsTable,
-                                              inputWeaponsAsString, outputWorkspace,
-                                              outImpactPrefix,outPooPrefix,
-                                              outRangePrefix,sr)
+                                                        inModelField, inMinRangeField,inMaxRangeField,
+                                                        inputWeaponsAsString, outputWorkspace,
+                                                        outImpactPrefix,outPooPrefix,
+                                                        outRangePrefix,sr)
     
     #print("results.outputCount: " + str(results.outputCount))
     #for i in range(0,results.outputCount):
