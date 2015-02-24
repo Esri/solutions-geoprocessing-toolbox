@@ -299,7 +299,9 @@ try:
     else:
         if debug == True: arcpy.AddMessage("ERROR!!!!!: " + str(ccmFactorList) + str(time.strftime(" %m/%d/%Y  %H:%M:%S", time.localtime())))
         #raise WrongFactors, ccmFactorList #UPDATE
-        raise WrongFactors(ccmFactorList)
+        arcpy.AddError("Wrong number of ccm factors: " + str(ccmFactorList))
+        raise
+    
     targetCCM.save(tempCCM)
     arcpy.CopyRaster_management(tempCCM,outputCCM)
 
