@@ -17,7 +17,7 @@
 # Requirements: ArcGIS Desktop Standard
 # -----------------------------------------------------------------------------
 # 2/5/2015 - mf - Updates to change Web Mercator to user-selected coordinate system
-#
+# 2/18/2015 - ps - addition to allow floating point angle
 #
 
 # IMPORTS ==========================================
@@ -127,14 +127,21 @@ try:
             path.append([centerPointX,centerPointY]) # add first point
             step = 1 # step in degrees
             #print "Left Angle, Right Angle" #UPDATE
-            print("Left Angle, Right Angle")
+            if debug == True: arcpy.AddMessage("Left Angle, Right Angle")
             #print leftAngle,rightAngle #UPDATE
-            print(leftAngle,rightAngle)
+            if debug == True: arcpy.AddMessage("leftAngle: " + str(leftAngle) + ", rightAngle: " + str(rightAngle))
             #for d in xrange(int(leftAngle),int(rightAngle),step): #UPDATE
             #for d in range(int(leftAngle),int(rightAngle),step):
             for d in frange3(leftAngle, rightAngle, step):    
-                x = centerPointX + (dRange * math.cos(math.radians(d)))
-                y = centerPointY + (dRange * math.sin(math.radians(d)))
+                if debug == True: arcpy.AddMessage("dRange: " + str(dRange))
+                a = math.cos(math.radians(d))
+                x = centerPointX + (dRange * a)
+                if debug == True: arcpy.AddMessage("x + " + str(dRange * a))
+                b = math.sin(math.radians(d))
+                y = centerPointY + (dRange * b)
+                if debug == True:
+                    arcpy.AddMessage("y + " + str(dRange * b))
+                    arcpy.AddMessage("d: " + str(math.sqrt(math.pow(a,2) + math.pow(b,2))))
                 path.append([x,y])
             path.append([centerPointX,centerPointY]) # add last point
             paths.append(path)

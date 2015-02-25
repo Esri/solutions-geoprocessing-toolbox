@@ -8,7 +8,7 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 
 * [Features](#features)
 * [Requirements](#requirements)
-* [A Tale of Two Toolboxes](#a tale of two toolboxes)
+* [A Tale of Two Toolboxes](#a-tale-of-two-toolboxes)
 * [Instructions](#instructions)
 * [Resources](#resources)
 * [Issues](#issues)
