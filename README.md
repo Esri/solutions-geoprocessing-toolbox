@@ -128,6 +128,8 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
     * `> ant`
     * Verify “Build Succeeded”
 
+ 
+
 ## Resources
 
 * Learn more about [ArcGIS Solutions](http://solutions.arcgis.com/).
@@ -144,9 +146,47 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 
 Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
 
+
+### Fork and Clone the Repo
+Start contributing to the solutions-geoprocessing-toolbox repo by making a fork and cloning it to your local machine.
+
+* Fork the repo in github.com with ![fork button](ForkButtonIcon.png)
+* Clone your remote onto your local system ![clone button](CloneInDesktopButtonIcon.png)
+* Get the *mdcs-py* submodule:
+	* `> git submodule init`
+	* `> git submodule update`
+
+### Set Your Upstream
+Setting the parent repo to get changes from.
+
+* `> git remote -v`
+
+if no *upstream* is listed continue with:
+
+* `> git remote add upstream https://github.com/Esri/solutions-geoprocessing-toolbox`
+* `> git remote set-url upstream --push no_push`
+
+check that an *upstream* is registered:
+
+* `> git remote -v`
+
+### Getting Changes from Upstream
+The solutions-geoprocessing-toolbox repo changes often, so make sure you are getting the latest updates often.
+
+* `> git fetch upstream`
+* `> git merge upstream/master`
+*
+
+### Share Your Mods
+If you've made changes to the repo that you want to share with the community.
+
+* Commit your changes to your local
+* Sync local with your remote fork
+* Make a **Pull Request** from your remote fork on github.com ![New Pull Request](NewPullRequestButtonIcon.png)
+
 ## Licensing
 
-Copyright 2014 Esri
+Copyright 2015 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -163,5 +203,5 @@ limitations under the License.
 A copy of the license is available in the repository's
 [license.txt](license.txt) file.
 
-[](Esri Tags: ArcGIS Defense and Intelligence Military Environment Planning Analysis Emergency Management )
+[](Esri Tags: ArcGIS Defense and Intelligence Military Emergency Management National Security)
 [](Esri Language: Python)
