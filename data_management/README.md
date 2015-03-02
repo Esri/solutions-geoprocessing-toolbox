@@ -16,6 +16,7 @@ Data Management tools help to prepare, format, filter, and organize your data in
 * [Publishable Task Tools](#publishable-task-tools)
 * [Scanned Map Basemap Tools](#scanned-map-basemap-tools)
 * [Topographic Basemap Tools](#topographic-basemap-tools)
+* [Setting up mdcs-py](#setting-up-mdcs-py)
 * [Issues](#issues)
 * [Contributing](#contributing)
 * [Licensing](#licensing)
@@ -122,6 +123,15 @@ These tools are part of the Topographic Basemap Map Template: http://www.arcgis.
 
 * Add DTED 1,2 to Elevation Mosaic Dataset
 * Create Elevation Mosaic Dataset
+
+## Setting up mdcs-py
+A few of these toolboxes use the Esri Mosaic Dataset Configuration Script (MDCS) repo as a source. You must add the files to your cloned repo and then update the default by adding configuation files. :
+
+1. Open a command prompt
+2. `> cd <github folder>\solutions-geoprocessing-toolbox\data_management\toolboxes\config_mdcs`
+3. `> config_mdcs.bat`
+
+The .BAT file automates the initialization of the MDCS submodule and the copying of files.
 
 ## Issues
 

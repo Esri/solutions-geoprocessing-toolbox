@@ -1,3 +1,4 @@
+echo off
 rem ------------------------------------------------------------------------------
 rem  Copyright 2015 Esri
 rem  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +17,13 @@ rem  Name: config_mdcs.bat
 rem  Description: Configure MDCS submodule
 rem  Requirements:
 rem ------------------------------------------------------------------------------
+rem 3/5/2015 - mf - created BAT to automate file overlay to MDCS-PY
+rem
+rem ------------------------------------------------------------------------------
 
-echo Adding configuration files to MDCS-PY...
+echo Initializing MDCS-PY submodule..
+git submodule init
+git submodule update
 
 echo Copying Raster Function Templates...
 copy *.rft.xml ..\mdcs\Parameter\RasterFunctionTemplates\*.*
@@ -31,7 +37,6 @@ md ..\mdcs\Parameter\Config\Elevation
 copy D_Mosaic.xml ..\mdcs\Parameter\Config\Elevation\D_Mosaic.xml
 copy S_DTED.xml ..\mdcs\Parameter\Config\Elevation\S_DTED.xml
 copy S_RasterData.xml ..\mdcs\Parameter\Config\Elevation\S_RasterData.xml
-
 
 echo Copying CADRG ECRG Tools config files...
 copy cadrgecrg.xml ..\mdcs\Parameter\Config\cadrgecrg.xml
