@@ -13,6 +13,7 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 * [Resources](#resources)
 * [Issues](#issues)
 * [Contributing](#contributing)
+* [Credits](#credits)
 * [Licensing](#licensing)
 
 ## Features
@@ -183,6 +184,10 @@ If you've made changes to the repo that you want to share with the community.
 * Commit your changes to your local
 * Sync local with your remote fork
 * Make a **Pull Request** from your remote fork on github.com ![New Pull Request](NewPullRequestButtonIcon.png)
+
+
+## Credits
+Mosaic Dataset Configuration Scripts (MDCS) is an Esri repo available at [https://github.com/Esri/mdcs-py](https://github.com/Esri/mdcs-py) and [licensed](https://github.com/Esri/mdcs-py/blob/master/license.txt) under Apache License Version 2.0, January 2004.
 
 ## Licensing
 
