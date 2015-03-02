@@ -1,0 +1,3 @@
+[submodule "data_management/toolboxes/mdcs"]
+	path = data_management/toolboxes/mdcs
+	url = https://github.com/Esri/mdcs-py
