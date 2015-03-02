@@ -29,7 +29,7 @@ A few of these toolboxes use the Esri Mosaic Dataset Configuration Script repo (
 * CIB Tools.pyt
 * Elevation Tool.pyt
 
-You must add the mdcs-py files to your cloned repo and then update the default by adding configuation files. :
+You must add the mdcs-py files to your cloned repo and then add configuation files:
 
 1. Open Git Shell
 2. `> cd <github folder>\solutions-geoprocessing-toolbox\data_management\toolboxes\config_mdcs`
