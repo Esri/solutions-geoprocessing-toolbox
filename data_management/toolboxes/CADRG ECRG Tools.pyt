@@ -1,15 +1,27 @@
-#-------------------------------------------------------------------------------
-# Name  	    	: Tools_MD.pyt
-# ArcGIS Version	: ArcGIS 10.1 sp1
+#------------------------------------------------------------------------------
+# Copyright 2015 Esri
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#------------------------------------------------------------------------------
+# Name  	    	: CADRG ECRG Tools.pyt
+# ArcGIS Version	: ArcGIS 10.3
 # Script Version	: 20130404
 # Name of Company 	: Environmental System Research Institute
 # Author        	: ESRI raster solution team
 # Purpose 	    	: Collection of tools required for Mosaic Datasets.
 # Required Argument 	: Not applicable
 # Optional Argument 	: Not applicable
-# Usage         	: Load tools_md.pyt within ArcMap
-# Copyright	    : (c) ESRI 2013
-# License	    : <your license>
+# Usage         	: Load CADRG ECRG Tools.pyt within ArcMap
+# Copyright	    : (c) ESRI 2015
 #-------------------------------------------------------------------------------
 #!/usr/bin/env python
 
