@@ -6,6 +6,7 @@ Data Management tools help to prepare, format, filter, and organize your data in
 
 ## Sections
 
+* [Setting up mdcs-py](#setting-up-mdcs-py)
 * [Adjust Sample Data Dates Tools](#adjust-sample-data-dates-tools)
 * [Build Elevation Mosaic Tools](#build-elevation-mosaic-tools)
 * [Geonames Tools](#geonames-tools)
@@ -19,6 +20,22 @@ Data Management tools help to prepare, format, filter, and organize your data in
 * [Issues](#issues)
 * [Contributing](#contributing)
 * [Licensing](#licensing)
+
+
+## Setting up mdcs-py
+A few of these toolboxes use the Esri Mosaic Dataset Configuration Script repo (mdcs-py) as a source:
+
+* CADRG ECRG Tools.pyt
+* CIB Tools.pyt
+* Elevation Tool.pyt
+
+You must add the mdcs-py files to your cloned repo and then add configuation files:
+
+1. Open Git Shell
+2. `> cd <github folder>\solutions-geoprocessing-toolbox\data_management\toolboxes\config_mdcs`
+3. `> config_mdcs.bat`
+
+The .BAT file automates the initialization of the MDCS submodule and the copying of files.
 
 ## Adjust Sample Data Dates Tools
 

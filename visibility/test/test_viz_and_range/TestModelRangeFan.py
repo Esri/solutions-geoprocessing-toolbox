@@ -44,6 +44,7 @@ def RunTest():
         outputRangeFansFC =  os.path.join(TestUtilities.outputGDB, "RangeFans")
         outputRangeVizFC =  os.path.join(TestUtilities.outputGDB, "RangeViz") 
         toolbox = TestUtilities.toolbox
+        sr = arcpy.SpatialReference(32642) #WGS_1984_UTM_Zone_42N using factoryCode
         
         # Check For Valid Input
         objects2Check = []
@@ -76,7 +77,7 @@ def RunTest():
            
         ########################################################3
         # Execute the Model under test:
-        arcpy.RangeFan_VandR(inputPointsFC, maximumRange, bearing, traversal, inputSurface, outputRangeFansFC, outputRangeVizFC)
+        arcpy.RangeFan_VandR(inputPointsFC, maximumRange, bearing, traversal, inputSurface, outputRangeFansFC, outputRangeVizFC, sr)
         ########################################################3
     
         # Verify the results    
