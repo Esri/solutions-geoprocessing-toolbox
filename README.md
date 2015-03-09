@@ -24,35 +24,39 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
   * Tools for data management and coordinates
 
 * The [**capability**](./capability/README.md) folder contains:
+  * ERG (Emergency Resources Guide) Tools
   * Helicopter Landing Zone Tools
   * Point Of Origin Tools
-  * ERG (Emergency Resources Guide) Tools
   
 * The [**data_management**](./data_management/README.md) folder contains:
   * Adjust Sample Data Dates Tools
-  * Import and Conversion Tools (formerly Position Analysis Tools)
-  * Publishable Task Tools
-  * Build Elevation Mosaic Tools
+  * Build Elevation Mosaic Tools - **To be deprecated**, replaced by Elevation Tools
+  * CADRG ECRG Tools
+  * CIB Tools
+  * Elevation Tools
   * Geonames Tools
-  * Imagery Basemap Tools
+  * Imagery Basemap Tools - **To be deprecated**, replaced by CIB Tools
+  * Import and Conversion Tools - formerly Position Analysis Tools
+  * LiDAR Elevation Tools
   * Network Data Preparation Tools
-  * Scanned Map Basemap Tools
-  * Topographic Basemap Tools
   * Patrol Data Capture Tools
+  * Publishable Task Tools
+  * Scanned Map Basemap Tools - **To be deprecated**, replaced by CADRG ECRG Tools
+  * Topographic Basemap Tools - **To be deprecated**, replaced by Elevation Tools
   
 * The [**operational_graphics**](./operational_graphics/README.md) folder contains:
   * Clearing Operations Tools
   * Range Card Tools
   
 * The [**patterns**](./patterns/README.md) folder contains:
-  * Incident Analysis Tools
-  * Landsat Tools
   * Change Detection Tools
+  * Incident Analysis Tools
+  * Landsat Pre Processing Tools
   * Movement Analysis Tools
   
 * The [**suitability**](./suitability/README.md) folder contains:
-  * Military Aspects of Terrain Tools
   * Maritime Decision Aid Tools
+  * Military Aspects of Terrain Tools
   * Path Slope Tools
 
 * The [**visibility**](./visibility/README.md) folder contains:
@@ -62,7 +66,7 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 
 ## Requirements
 
-* ArcGIS Desktop 10.3 or ArcGIS Pro 1.0
+* ArcGIS Desktop 10.3+ or ArcGIS Pro 1.0+
     * Check [Releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases) for tools for previous versions of ArcGIS Desktop
 * Apache Ant - used to download and extract dependent data and run test drivers
 * Java Runtime Environment (JRE) or Developer Kit (JDK) (required by Ant)
