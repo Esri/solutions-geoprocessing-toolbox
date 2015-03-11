@@ -12,7 +12,7 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 * [Instructions](#instructions)
 	* [General Help](#general-help)
 	* [Getting Started with the tools](#getting-started-with-the-tools)
-	* [Downloading Data Dependencies/Test Data](#downloading-data-dependencies/test-data)
+	* [Downloading Data Dependencies/Test Data](#downloading-data-dependencies-test-data)
 	* [Running Verification Tests](#running-verification-tests)
 * [Resources](#resources)
 * [Issues](#issues)
@@ -102,7 +102,7 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 ### General Help
 [New to Github? Get started here.](http://htmlpreview.github.com/?https://github.com/Esri/esri.github.com/blob/master/help/esri-getting-to-know-github.html)
 
-Test Data and Verification Tests are only available through the GitHub repository, and are not available from other download versions of the repository.
+[Downloading Data Dependencies/Test Data](#downloading-data-dependencies-test-data) and [Running Verification Tests](#running-verification-tests) are only available through the GitHub repository, and are not available from other download versions of the repository.
 
 ### Getting Started with the tools
 
