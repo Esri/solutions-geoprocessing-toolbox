@@ -10,6 +10,10 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 * [Requirements](#requirements)
 * [A Tale of Two Toolboxes](#a-tale-of-two-toolboxes)
 * [Instructions](#instructions)
+	* [General Help](###general help)
+	* [Getting Started with the tools](###getting started with the tools)
+	* [Downloading Data Dependencies/Test Data](###downloading data dependencies/test data)
+	* [Running Verification Tests](###running verification tests)
 * [Resources](#resources)
 * [Issues](#issues)
 * [Contributing](#contributing)
@@ -98,6 +102,8 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 ### General Help
 [New to Github? Get started here.](http://htmlpreview.github.com/?https://github.com/Esri/esri.github.com/blob/master/help/esri-getting-to-know-github.html)
 
+Test Data and Verification Tests are only available through the GitHub repository, and are not available from other download versions of the repository.
+
 ### Getting Started with the tools
 
 * Download the Github repository
@@ -149,7 +155,7 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 
 ## Contributing
 
-Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
+Esri welcomes contributions from anyone and everyone through GitHub. Please see our [guidelines for contributing](https://github.com/esri/contributing).
 
 
 ### Fork and Clone the Repo
