@@ -26,7 +26,6 @@ Tools included in this toolbox help analysts understand threats against operatio
 ## Military Aspects Of Terrain Tools
 
 Contains tools used in the Military Aspects Of Terrain (MAoT) template. They are tools for doing terrain analysis as part of the Intelligence Preparation of the Battlefield process.
-These tools are part of the Military Aspects of Terrain template: http://www.arcgis.com/home/item.html?id=e3efcbb9fb9f442caeb9968bdf9b8f37
 
 * Cover and Concealment
   * Concealment from Aerial Detection
@@ -46,6 +45,8 @@ These tools are part of the Military Aspects of Terrain template: http://www.arc
   * Suitable Drop Zones
 * Generate Intermediate Layers
 * Generate Linear Obstacle Layer
+
+These tools are part of the [Military Aspects of Terrain template](http://www.arcgis.com/home/item.html?id=e3efcbb9fb9f442caeb9968bdf9b8f37)
 
 ## Path Slope Tools
 

@@ -6,14 +6,18 @@ Data Management tools help to prepare, format, filter, and organize your data in
 
 ## Sections
 
-* [Setting up mdcs-py](#setting-up-mdcs-py)
+* [Relationship to mdcs-py](#relationship-to-mdcs-py)
 * [Adjust Sample Data Dates Tools](#adjust-sample-data-dates-tools)
 * [Build Elevation Mosaic Tools](#build-elevation-mosaic-tools)
+* [CADRG ECRG Tools](#cadrg-ecrg-tools)
+* [CIB Tools](#cib-tools)
+* [Elevation Tools](#elevation-tools)
 * [Geonames Tools](#geonames-tools)
 * [Imagery Basemap Tools](#imagery-basemap-tools)
+* [Import and Conversion Tools](#import-and-conversion-tools)
+* [LiDAR Elevation Tools](#lidar-elevation-tools)
 * [Network Data Preparation Tools](#network-data-preparation-tools)
 * [Patrol Data Capture Tools](#patrol-data-capture-tools)
-* [Import and Conversion Tools](#import-and-conversion-tools)
 * [Publishable Task Tools](#publishable-task-tools)
 * [Scanned Map Basemap Tools](#scanned-map-basemap-tools)
 * [Topographic Basemap Tools](#topographic-basemap-tools)
@@ -22,27 +26,22 @@ Data Management tools help to prepare, format, filter, and organize your data in
 * [Licensing](#licensing)
 
 
-## Setting up mdcs-py
-A few of these toolboxes use the Esri Mosaic Dataset Configuration Script repo (mdcs-py) as a source:
+## Relationship to mdcs-py
+Mosaic Dataset Configuration Scripts (MDCS) is a set of tools used to create and manage mosaic datasets in ArcGIS. A few of the Data Management toolboxes in this repository require the MDCS tools to run:
 
 * CADRG ECRG Tools.pyt
 * CIB Tools.pyt
 * Elevation Tool.pyt
 
-You must add the mdcs-py files to your cloned repo and then add configuation files:
-
-1. Open Git Shell
-2. `> cd <github folder>\solutions-geoprocessing-toolbox\data_management\toolboxes\config_mdcs`
-3. `> config_mdcs.bat`
-
-The .BAT file automates the initialization of the MDCS submodule and the copying of files.
+MDCS is maintained as a separate repository from Solutions Geoprocessing Toolbox ([mdcs-py](https://github.com/Esri/mdcs-py)). But for convenience the mdcs-py repository has been copied to a subfolder named **mdcs**.
 
 ## Adjust Sample Data Dates Tools
 
 This toolbox contains a tool to adjust the date fields of the sample data included with the Inciedent Analysis toolbox.
-These tools are a part of the Incident Analysis Template: http://www.arcgis.com/home/item.html?id=384d223647b24bcf9d2c6fd44f90d17f
 
 * Change Sample Data Dates to Recent Dates
+
+These tools are a part of the [Incident Analysis Template](http://www.arcgis.com/home/item.html?id=384d223647b24bcf9d2c6fd44f90d17f)
 
 ## Build Elevation Mosaic Tools
 
@@ -51,8 +50,23 @@ This toolbox contains tools that take raster or LIDAR data and create surface or
 * Build Elevation Mosaics
 * Create Derived Elevation Mosaic
 * Create Source Elevation Mosaics
-* Create Source LAS Ground Elevation Mosaics
-* Create Source LAS Surface Elevation Mosaics
+
+**These tools will be deprecated soon, and replaced by Elevation Tools**
+
+## CADRG ECRG Tools
+
+This toolbox will help to automate the creation of CADRG/ECRG Mosaic Datasets. 
+
+* CADRG/ECRG Mosaic Datasets
+
+## CIB Tools
+
+* Create CIB Mosaic
+
+## Elevation Tools
+
+* Create Derived Elevation Mosaic
+* Create Source Elevation Mosaic
 
 ## Geonames Tools
 
@@ -68,6 +82,31 @@ Tools to assist in building an imagery basemap from standard defense raster form
 * Add CIB Rasters to Mosaic Dataset
 * Calculate Raster Visibility
 * Create CIB Mosaic Dataset
+
+
+**These tools will be deprecated soon, and replaced by CIB Tools**
+
+## Import and Conversion Tools (formerly Position Analysis Tools)
+
+Tools for converting tabular information to different geometries, and generating coordinate location datasets.
+
+* Convert Coordinates
+* Locate Event
+* Table To 2-Point Line
+* Table To Ellipse
+* Table To Line Of Bearing
+* Table To Point
+* Table To Polygon
+* Table To Polyline
+
+** - Range Rings has been removed from Import and Conversion as it is a duplication of the same tool in Visibility and Range Tools.
+
+## LiDAR Elevation Tools
+
+This toolbox contains tools that  create surface or terrain mosaics from LiDAR data.
+
+* Create Source LAS Ground Elevation Mosaic
+* Create Source LAS Surface Elevation Mosaic
 
 ## Network Data Preparation Tools
 
@@ -93,21 +132,6 @@ These tools are a part of the Patrol Data Capture template: http://www.arcgis.co
 * Rejoin Track Parts
 * Remove Duplicate GPS Data
 
-## Import and Conversion Tools (formerly Position Analysis Tools)
-
-Tools for converting tabular information to different geometries, and generating coordinate location datasets.
-
-* Convert Coordinates
-* Locate Event
-* Table To 2-Point Line
-* Table To Ellipse
-* Table To Line Of Bearing
-* Table To Point
-* Table To Polygon
-* Table To Polyline
-
-** - Range Rings has been removed from Import and conversion as it is a duplication of the same tool in Visibility and Range Tools.
-
 ## Publishable Task Tools
 
 Publishable Tasks are a series of models that should be published as geoprocessing services for:
@@ -132,6 +156,9 @@ These tools are part of the Scanned Maps Template: http://www.arcgis.com/home/it
 * Calculate Raster Visibility
 * Create CADRG/ECRG Mosaic Dataset
 
+
+**These tools will be deprecated soon, and replaced by CADRG ECRG Tools**
+
 ## Topographic Basemap Tools
 
 Tools to assist in building a topographic basemap from feature data in the Urban Topographic Data Store (NGA's TFDM) geodatabase schema.
@@ -139,6 +166,9 @@ These tools are part of the Topographic Basemap Map Template: http://www.arcgis.
 
 * Add DTED 1,2 to Elevation Mosaic Dataset
 * Create Elevation Mosaic Dataset
+
+
+**These tools will be deprecated soon, and replaced by Elevation Tools**
 
 ## Issues
 
