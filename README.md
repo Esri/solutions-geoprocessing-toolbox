@@ -12,7 +12,7 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 * [Instructions](#instructions)
 	* [General Help](#general-help)
 	* [Getting Started with the tools](#getting-started-with-the-tools)
-	* [Downloading Data Dependencies/Test Data](#downloading-data-dependencies-test-data)
+	* [Downloading Test Data](#downloading-test-data)
 	* [Running Verification Tests](#running-verification-tests)
 * [Resources](#resources)
 * [Issues](#issues)
@@ -102,7 +102,7 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 ### General Help
 [New to Github? Get started here.](http://htmlpreview.github.com/?https://github.com/Esri/esri.github.com/blob/master/help/esri-getting-to-know-github.html)
 
-[Downloading Data Dependencies/Test Data](#downloading-data-dependencies-test-data) and [Running Verification Tests](#running-verification-tests) are only available through the GitHub repository, and are not available from other download versions of the repository.
+[Downloading Test Data](#downloading-test-data) and [Running Verification Tests](#running-verification-tests) are only available through the GitHub repository, and are not available from other download versions of the repository.
 
 ### Getting Started with the tools
 
@@ -110,7 +110,7 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
     * If repository was downloaded as a zip, extract the zip file
     * Make note of this directory, the steps below assume it will be called "solutions-geoprocessing-toolbox"
 
-### Downloading Data Dependencies/Test Data
+### Downloading Test Data
 
 * Install and configure Apache Ant
     * Download Ant from the [Apache Ant Project](http://ant.apache.org/bindownload.cgi) and unzip to a location on your machine, for example 'c:\apache-ant-1.9.2'.
