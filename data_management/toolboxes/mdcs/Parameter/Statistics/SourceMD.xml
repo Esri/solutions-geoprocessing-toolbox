@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<RasterStatistics xml:lang="en"><DatasetName>WorldDSM</DatasetName><Band Name="Band_1"><min>-450</min><max>8700</max><mean>400</mean><stddev>870</stddev></Band></RasterStatistics>
