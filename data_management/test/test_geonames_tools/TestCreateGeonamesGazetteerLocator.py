@@ -50,7 +50,7 @@ def RunTest():
             # ==================================================================
             # ERROR 000317: ..\Geonames.gdb\GeonamesLocator cannot be deleted
             # https://github.com/Esri/solutions-geoprocessing-toolbox/issues/101
-            # THIS IS A BUG IN ArcGIS Desktop 10.2.2
+            # THIS IS A BUG IN ArcGIS Desktop 10.2.2, and 10.3
             arcpy.Delete_management(locatorFullPath,r"AddressLocator")      
             #
             # ==================================================================

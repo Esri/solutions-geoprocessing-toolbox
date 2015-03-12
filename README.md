@@ -10,6 +10,10 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 * [Requirements](#requirements)
 * [A Tale of Two Toolboxes](#a-tale-of-two-toolboxes)
 * [Instructions](#instructions)
+	* [General Help](#general-help)
+	* [Getting Started with the tools](#getting-started-with-the-tools)
+	* [Downloading Test Data](#downloading-test-data)
+	* [Running Verification Tests](#running-verification-tests)
 * [Resources](#resources)
 * [Issues](#issues)
 * [Contributing](#contributing)
@@ -98,13 +102,15 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 ### General Help
 [New to Github? Get started here.](http://htmlpreview.github.com/?https://github.com/Esri/esri.github.com/blob/master/help/esri-getting-to-know-github.html)
 
+[Downloading Test Data](#downloading-test-data) and [Running Verification Tests](#running-verification-tests) are only available through the GitHub repository, and are not available from other download versions of the repository.
+
 ### Getting Started with the tools
 
 * Download the Github repository
     * If repository was downloaded as a zip, extract the zip file
     * Make note of this directory, the steps below assume it will be called "solutions-geoprocessing-toolbox"
 
-### Downloading Data Dependencies/Test Data
+### Downloading Test Data
 
 * Install and configure Apache Ant
     * Download Ant from the [Apache Ant Project](http://ant.apache.org/bindownload.cgi) and unzip to a location on your machine, for example 'c:\apache-ant-1.9.2'.
@@ -149,7 +155,7 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 
 ## Contributing
 
-Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
+Esri welcomes contributions from anyone and everyone through GitHub. Please see our [guidelines for contributing](https://github.com/esri/contributing).
 
 
 ### Fork and Clone the Repo
