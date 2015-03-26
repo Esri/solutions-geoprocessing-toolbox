@@ -85,7 +85,7 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 
 ## A Tale of Two Toolboxes
 
-The solutions-geoprocessing-toolbox repo is now supporting toolboxes for both ArcMap/ArcCatalog/ArcGlobe/ArcScene and also ArcGIS Pro. Toolboxes that are modified in ArcGIS Pro are not
+The solutions-geoprocessing-toolbox repo is now supporting toolboxes for both ArcMap/ArcCatalog/ArcGlobe/ArcScene (collectively called ArcGIS for Desktop) and also ArcGIS Pro. Toolboxes that are modified in ArcGIS Pro are not
 backwards compatible with other ArcGIS Desktop applications (ArcMap), so most toolboxes are duplicated for one or the other. The naming of these toolboxes is as follows:
 
 * Toolboxes that are for ArcGIS Desktop 10.3 will include *_10.3* after the toolbox name. For example: **Visibility and Range Tools_10.3.tbx**
