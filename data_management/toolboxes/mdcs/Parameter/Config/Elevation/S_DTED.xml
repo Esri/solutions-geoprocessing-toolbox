@@ -57,7 +57,7 @@
 	  <max_num_of_records_returned>2000</max_num_of_records_returned>
 	  <data_source_type>ELEVATION</data_source_type>
 	  <minimum_pixel_contribution>#</minimum_pixel_contribution>
-	  <processing_templates>AspectNumericValues.rft.xml;AspectRGBColorMap.rft.xml;GreyScaleHillshade.rft.xml;ShadedRelief.rft.xml;SlopePercent.rft.xml</processing_templates>
+	  <processing_templates>None;AspectNumericValues.rft.xml;AspectRGBColorMap.rft.xml;GreyScaleHillshade.rft.xml;ShadedRelief.rft.xml;SlopePercent.rft.xml</processing_templates>
 	  <default_processing_template>None</default_processing_template>
         </DefaultProperties>
          <Table>
