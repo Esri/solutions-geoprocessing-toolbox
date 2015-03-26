@@ -35,6 +35,7 @@ def RunTest():
         
         featureClass = os.path.join(TestUtilities.inputGDB, "GeonamesTestPy")
         textfile = os.path.join(TestUtilities.geodatabasePath, "fr.txt")
+        #textfile = os.path.join(TestUtilities.geodatabasePath, "af.txt")
         countryCodes = os.path.join(TestUtilities.inputGDB, "CountryCodes")
         adminCodes = os.path.join(TestUtilities.inputGDB, "AdminCodes")
         featureCodes = os.path.join(TestUtilities.inputGDB, "FeatureCodes")

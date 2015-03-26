@@ -208,11 +208,11 @@ class Base(object):
 
         self.m_code_base = path
 
-        self.const_statistics_path_ = os.path.join(self.m_code_base, '..\\parameter\\Statistics')
-        self.const_raster_function_templates_path_ = os.path.join(self.m_code_base, '..\\parameter\\RasterFunctionTemplates')
-        self.const_raster_type_path_ = os.path.join(self.m_code_base, '..\\parameter\\Rastertype')
-        self.const_workspace_path_ = os.path.join(self.m_code_base, '..\\')      #.gdb output
-        self.const_import_geometry_features_path_ = os.path.join(self.m_code_base, '..\\parameter')
+        self.const_statistics_path_ = os.path.join(self.m_code_base, '..\\..\\parameter\\Statistics')
+        self.const_raster_function_templates_path_ = os.path.join(self.m_code_base, '..\\..\\parameter\\RasterFunctionTemplates')
+        self.const_raster_type_path_ = os.path.join(self.m_code_base, '..\\..\\parameter\\Rastertype')
+        self.const_workspace_path_ = os.path.join(self.m_code_base, '..\\..\\')      #.gdb output
+        self.const_import_geometry_features_path_ = os.path.join(self.m_code_base, '..\\..\\parameter')
 
         return self.m_code_base
 
