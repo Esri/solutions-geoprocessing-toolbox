@@ -25,13 +25,13 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 * Specialized geoprocessing models and tools for general defense and intelligence analysis tasks including
   * Tools for visibility and range analysis
   * Tools for analyzing the battlefield environment
-  * Tools for data management and coordinates
+  * Tools for data management and coordinates 
 
 * The [**capability**](./capability/README.md) folder contains:
   * ERG (Emergency Resources Guide) Tools
   * Helicopter Landing Zone Tools
   * Point Of Origin Tools
-  
+
 * The [**data_management**](./data_management/README.md) folder contains:
   * Adjust Sample Data Dates Tools
   * Build Elevation Mosaic Tools - **To be deprecated**, replaced by Elevation Tools
@@ -47,7 +47,7 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
   * Publishable Task Tools
   * Scanned Map Basemap Tools - **To be deprecated**, replaced by CADRG ECRG Tools
   * Topographic Basemap Tools - **To be deprecated**, replaced by Elevation Tools
-  
+
 * The [**operational_graphics**](./operational_graphics/README.md) folder contains:
   * Clearing Operations Tools
   * Range Card Tools
@@ -57,10 +57,11 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
   * Incident Analysis Tools
   * Landsat Pre Processing Tools
   * Movement Analysis Tools
-  
+
 * The [**suitability**](./suitability/README.md) folder contains:
   * Maritime Decision Aid Tools
   * Military Aspects of Terrain Tools
+  * Military Aspects of Weather Tools
   * Path Slope Tools
 
 * The [**visibility**](./visibility/README.md) folder contains:

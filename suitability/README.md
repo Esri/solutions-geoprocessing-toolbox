@@ -7,7 +7,8 @@ Determine areas most suitable for both friendly and adversarial operations.
 ## Sections
 
 * [Maritime Decision Aid Tools](#maritime_decision_aid_tools)
-* [Military Aspects Of Terrain Tools](#military-aspects-of-terrain-tools)
+* [Military Aspects of Terrain Tools](#military-aspects-of-terrain-tools)
+* [Military Aspects of Weather Tools](#military-aspects-of-weather-tools)
 * [Path Slope Tools](#path-slope-tools)
 * [Issues](#issues)
 * [Contributing](#contributing)
@@ -47,6 +48,17 @@ Contains tools used in the Military Aspects Of Terrain (MAoT) template. They are
 * Generate Linear Obstacle Layer
 
 These tools are part of the [Military Aspects of Terrain template](http://www.arcgis.com/home/item.html?id=e3efcbb9fb9f442caeb9968bdf9b8f37)
+
+## Military Aspects of Weather Tools
+
+Tools for describing and importing weather data in GRIB and NetCDF format.
+
+* Import GRIB Files
+* Import NetCDF Files
+* Inspect GRIB Folder
+* Inspect NetCDF File
+
+These tools are part of the [Military Aspects of Weather template](http://www.arcgis.com/home/item.html?id=0d49f0dac6884609b67a319e653c32d0)
 
 ## Path Slope Tools
 
