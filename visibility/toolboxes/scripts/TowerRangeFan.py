@@ -54,7 +54,7 @@ if arcpy.Exists(outFeature):
 
 deleteme = []
 DEBUG = True
-desktopVersion = ["10.2.2","10.3"]
+desktopVersion = ["10.2.2","10.3","10.3.1"]
 proVersion = ["1.0"]
 leftAngle = 0.0 # degrees
 rightAngle = 90.0 # degrees

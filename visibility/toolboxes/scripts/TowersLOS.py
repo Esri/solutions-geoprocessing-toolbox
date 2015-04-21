@@ -68,7 +68,7 @@ def updateValue(fc, field, value):
 
 DEBUG = True
 
-desktopVersion = ["10.2.2","10.3"]
+desktopVersion = ["10.2.2","10.3","10.3.1"]
 proVersion = ["1.0"]
 
 # Get the parameters

@@ -198,11 +198,11 @@ def main():
             R = 6378137.0
             horizonDistance = math.sqrt(math.pow((R + R2), 2) - math.pow(R, 2))
             arcpy.AddMessage(str(horizonDistance) + " meters.")
-            # horizonExtent = (str(mbgCenterX - horizonDistance) + " " +
+            horizonExtent = (str(mbgCenterX - horizonDistance) + " " +
                              str(mbgCenterY - horizonDistance) + " " +
                              str(mbgCenterX + horizonDistance) + " " +
                              str(mbgCenterY + horizonDistance))
-            since we are doing infinity we can drop the RADIUS2 field
+            # since we are doing infinity we can drop the RADIUS2 field
             arcpy.AddMessage("Analysis to edge of surface, dropping RADIUS2 field ...")
             arcpy.DeleteField_management(observers, "RADIUS2")
         else:
