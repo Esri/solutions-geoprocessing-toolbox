@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/Esri/solutions-geoprocessing-toolbox.png?label=ready&title=Ready)](https://waffle.io/Esri/solutions-geoprocessing-toolbox)
 # solutions-geoprocessing-toolbox
 
 The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tools for use in ArcGIS Desktop. These tools provide specialized processing, workflows, and analysis for defense, intelligence, emergency management, and other solutions domains.
