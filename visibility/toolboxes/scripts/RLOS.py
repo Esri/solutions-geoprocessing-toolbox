@@ -25,6 +25,7 @@
 # ==================================================
 # history:
 # 4/1/2015 - mf - update for coding standards
+# 4/23/2015 - mf - Updates for Extent properties
 # ==================================================
 
 import os
@@ -102,7 +103,7 @@ def zfactor(dataset):
     if desc.spatialReference.type != "Geographic":
         return 1.0
     extent = desc.Extent
-    extent_split = [extent.xmin, extent.ymin, extent.xmax, extent.ymax]
+    extent_split = [extent.XMin, extent.YMin, extent.XMax, extent.YMax]
 
     top = float(extent_split[3])
     bottom = float(extent_split[1])

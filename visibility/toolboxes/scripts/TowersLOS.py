@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #------------------------------------------------------------------------------
+# history:
+# 4/23/2015 - mf - Updates for Extent properties
+# ==================================================
 
 # Import arcpy module
 import os, sys, traceback, math, decimal
@@ -25,7 +28,7 @@ def zfactor(dataset):
     if desc.spatialReference.type != "Geographic":
         return 1.0
     extent = desc.Extent
-    extent_split = [extent.xmin,extent.ymin,extent.xmax,extent.ymax]
+    extent_split = [extent.XMin,extent.YMin,extent.XMax,extent.YMax]
 
     top = float(extent_split[3])
     bottom = float(extent_split[1])
@@ -153,6 +156,7 @@ try:
         thisOutputFeatureClass = os.path.join(outWorkspace, outputBaseName + "_" +  scrubbedTowerName)
 
         # get observer's vibility modifier maximums
+        #TODO: should not be a static 4000 for RADIUS2 here... will give an error if edge of surface is less than 4000.
         obsMaximums = {'SPOT':None,'OFFSETA':towerHeight, 'RADIUS2':4000, 'REMOVE_SPOT':False}
 
         # Copy defensive position to its own feature layer for calculations
