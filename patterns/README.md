@@ -7,9 +7,9 @@ Find patterns and trends through statistical and visual analysis.
 ## Sections
 
 * [Incident Analysis Tools](#incident-analysis-tools)
-* [Landsat Tools] (#landsat-tools)
-* [Change Detection Tools] (#change-detection-tools)
-* [Movement Analysis Tools] (#movement-analysis-tools)
+* [Landsat Tools](#landsat-tools)
+* [Change Detection Tools](#change-detection-tools)
+* [Movement Analysis Tools](#movement-analysis-tools)
 * [Issues](#issues)
 * [Contributing](#contributing)
 * [Licensing](#licensing)
@@ -17,7 +17,6 @@ Find patterns and trends through statistical and visual analysis.
 ## Incident Analysis Tools
 
 These tools help you discover spatial patterns and trends in significant activity in your area of interest.
-These tools are part of the Incident Analysis Template: http://www.arcgis.com/home/item.html?id=fd6e2c3272c14826b9781e93580dacfe
 
 * Cluster Analysis
 * Count Incidents By LOC
@@ -26,6 +25,8 @@ These tools are part of the Incident Analysis Template: http://www.arcgis.com/ho
 * Incident Density
 * Incident Hot Spots
 * Incident Table To Point
+
+These tools are part of the [Incident Analysis Template](http://www.arcgis.com/home/item.html?id=fd6e2c3272c14826b9781e93580dacfe)
 
 ## Landsat Tools
 These tools help to pre-process Landsat 5 and 7 data to prepare it for Change Detection. The toolbox includes:
@@ -41,10 +42,10 @@ The toolset is based upon the ArcGISScriptTools by Jerrod Lessel: https://github
 
 These tools help you to identify change in your image. There are a number of tools within the toolbox:
 
-* Cloud Mask model
-* Dark Object Subtraction model
-* Pseudo Invariant Factor model
-* Iteratively Re-weighted MAD script 
+* Classification Accuracy
+* Dark Object Subtraction
+* IMAD Analysis
+* PseudoInvariantFactor
 
 The IR-MAD script is based on the below references: 
 

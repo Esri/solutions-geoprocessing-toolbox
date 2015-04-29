@@ -1,3 +1,8 @@
+[![Planned Issues](https://badge.waffle.io/Esri/solutions-geoprocessing-toolbox.png?label=0%20-%20backlog&title=In%20Backlog)](https://waffle.io/Esri/solutions-geoprocessing-toolbox)
+[![Issues in Progress](https://badge.waffle.io/Esri/solutions-geoprocessing-toolbox.png?label=2%20-%20In%20Progress&title=In%20Progress)](https://waffle.io/Esri/solutions-geoprocessing-toolbox)
+[![Issues waiting for Verification](https://badge.waffle.io/Esri/solutions-geoprocessing-toolbox.png?label=3%20-%20Verify&title=For%20Verification)](https://waffle.io/Esri/solutions-geoprocessing-toolbox)
+
+[![Code Climate](https://codeclimate.com/github/Esri/solutions-geoprocessing-toolbox/badges/gpa.svg)](https://codeclimate.com/github/Esri/solutions-geoprocessing-toolbox)
 # solutions-geoprocessing-toolbox
 
 The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tools for use in ArcGIS Desktop. These tools provide specialized processing, workflows, and analysis for defense, intelligence, emergency management, and other solutions domains.
@@ -10,6 +15,10 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 * [Requirements](#requirements)
 * [A Tale of Two Toolboxes](#a-tale-of-two-toolboxes)
 * [Instructions](#instructions)
+	* [General Help](#general-help)
+	* [Getting Started with the tools](#getting-started-with-the-tools)
+	* [Downloading Test Data](#downloading-test-data)
+	* [Running Verification Tests](#running-verification-tests)
 * [Resources](#resources)
 * [Issues](#issues)
 * [Contributing](#contributing)
@@ -21,38 +30,43 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 * Specialized geoprocessing models and tools for general defense and intelligence analysis tasks including
   * Tools for visibility and range analysis
   * Tools for analyzing the battlefield environment
-  * Tools for data management and coordinates
+  * Tools for data management and coordinates 
 
 * The [**capability**](./capability/README.md) folder contains:
+  * ERG (Emergency Resources Guide) Tools
   * Helicopter Landing Zone Tools
   * Point Of Origin Tools
-  * ERG (Emergency Resources Guide) Tools
-  
+
 * The [**data_management**](./data_management/README.md) folder contains:
   * Adjust Sample Data Dates Tools
-  * Import and Conversion Tools (formerly Position Analysis Tools)
-  * Publishable Task Tools
-  * Build Elevation Mosaic Tools
+  * Build Elevation Mosaic Tools - **To be deprecated**, replaced by Elevation Tools
+  * CADRG ECRG Tools
+  * CIB Tools
+  * Elevation Tools
   * Geonames Tools
-  * Imagery Basemap Tools
+  * Imagery Basemap Tools - **To be deprecated**, replaced by CIB Tools
+  * Import and Conversion Tools - formerly Position Analysis Tools
+  * LiDAR Elevation Tools
   * Network Data Preparation Tools
-  * Scanned Map Basemap Tools
-  * Topographic Basemap Tools
   * Patrol Data Capture Tools
-  
+  * Publishable Task Tools
+  * Scanned Map Basemap Tools - **To be deprecated**, replaced by CADRG ECRG Tools
+  * Topographic Basemap Tools - **To be deprecated**, replaced by Elevation Tools
+
 * The [**operational_graphics**](./operational_graphics/README.md) folder contains:
   * Clearing Operations Tools
   * Range Card Tools
   
 * The [**patterns**](./patterns/README.md) folder contains:
-  * Incident Analysis Tools
-  * Landsat Tools
   * Change Detection Tools
+  * Incident Analysis Tools
+  * Landsat Pre Processing Tools
   * Movement Analysis Tools
-  
+
 * The [**suitability**](./suitability/README.md) folder contains:
-  * Military Aspects of Terrain Tools
   * Maritime Decision Aid Tools
+  * Military Aspects of Terrain Tools
+  * Military Aspects of Weather Tools
   * Path Slope Tools
 
 * The [**visibility**](./visibility/README.md) folder contains:
@@ -62,7 +76,7 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 
 ## Requirements
 
-* ArcGIS Desktop 10.3 or ArcGIS Pro 1.0
+* ArcGIS Desktop 10.3+ or ArcGIS Pro 1.0+
     * Check [Releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases) for tools for previous versions of ArcGIS Desktop
 * Apache Ant - used to download and extract dependent data and run test drivers
 * Java Runtime Environment (JRE) or Developer Kit (JDK) (required by Ant)
@@ -77,7 +91,7 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 
 ## A Tale of Two Toolboxes
 
-The solutions-geoprocessing-toolbox repo is now supporting toolboxes for both ArcMap/ArcCatalog/ArcGlobe/ArcScene and also ArcGIS Pro. Toolboxes that are modified in ArcGIS Pro are not
+The solutions-geoprocessing-toolbox repo is now supporting toolboxes for both ArcMap/ArcCatalog/ArcGlobe/ArcScene (collectively called ArcGIS for Desktop) and also ArcGIS Pro. Toolboxes that are modified in ArcGIS Pro are not
 backwards compatible with other ArcGIS Desktop applications (ArcMap), so most toolboxes are duplicated for one or the other. The naming of these toolboxes is as follows:
 
 * Toolboxes that are for ArcGIS Desktop 10.3 will include *_10.3* after the toolbox name. For example: **Visibility and Range Tools_10.3.tbx**
@@ -94,13 +108,15 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 ### General Help
 [New to Github? Get started here.](http://htmlpreview.github.com/?https://github.com/Esri/esri.github.com/blob/master/help/esri-getting-to-know-github.html)
 
+[Downloading Test Data](#downloading-test-data) and [Running Verification Tests](#running-verification-tests) are only available through the GitHub repository, and are not available from other download versions of the repository.
+
 ### Getting Started with the tools
 
 * Download the Github repository
     * If repository was downloaded as a zip, extract the zip file
     * Make note of this directory, the steps below assume it will be called "solutions-geoprocessing-toolbox"
 
-### Downloading Data Dependencies/Test Data
+### Downloading Test Data
 
 * Install and configure Apache Ant
     * Download Ant from the [Apache Ant Project](http://ant.apache.org/bindownload.cgi) and unzip to a location on your machine, for example 'c:\apache-ant-1.9.2'.
@@ -145,7 +161,7 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 
 ## Contributing
 
-Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
+Esri welcomes contributions from anyone and everyone through GitHub. Please see our [guidelines for contributing](https://github.com/esri/contributing).
 
 
 ### Fork and Clone the Repo

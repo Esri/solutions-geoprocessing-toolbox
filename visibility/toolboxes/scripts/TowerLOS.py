@@ -22,6 +22,9 @@
 # Description:
 # Shows the areas visible and invisible to one or more observer points.
 # ---------------------------------------------------------------------------
+# history:
+# 4/23/2015 - mf - Updates for Extent properties
+# ==================================================
 
 # Import arcpy module
 import os, sys, traceback, math, decimal
@@ -35,7 +38,7 @@ def zfactor(dataset):
     if desc.spatialReference.type != "Geographic":
         return 1.0
     extent = desc.Extent
-    extent_split = [extent.xmin,extent.ymin,extent.xmax,extent.ymax]
+    extent_split = [extent.XMin,extent.YMin,extent.XMax,extent.YMax]
 
     top = float(extent_split[3])
     bottom = float(extent_split[1])

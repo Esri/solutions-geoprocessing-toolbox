@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #------------------------------------------------------------------------------
-# Copyright 2013 Esri
+# Copyright 2015 Esri
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -32,13 +32,8 @@ featClass = arcpy.GetParameterAsText(0)
 ## ======================================================
 
 try:
-    messHeader = "==========================================================================="
-    messSubHeader = "--------------------------------------------------------"
     
-    arcpy.AddMessage(messHeader)
-    arcpy.AddMessage(" ")
     arcpy.AddMessage("Checking input feature class " + featClass + "...")
-    arcpy.AddMessage(" ")
 
     hasError = 0
     
@@ -46,13 +41,11 @@ try:
     # Get shape type and check if point
     # ======================================================
     desc = arcpy.Describe(featClass)
-
-    arcpy.AddMessage(messSubHeader)
     
-    arcpy.AddMessage("Geometry Check: Make sure input geometry is point...")
+    arcpy.AddMessage("Geometry Check: Make sure input feature class geometry is point...")
     
     if desc.shapeType.upper() <> "POINT":
-        arcpy.AddMessage("-ERROR: Input does not have geometry type of point")
+        arcpy.AddError("Error: Input feature class does not have geometry type of point")
         hasError = hasError + 1
     
     # ======================================================
@@ -60,16 +53,16 @@ try:
     # ======================================================
     fields = arcpy.ListFields(featClass)
     
-    arcpy.AddMessage(messSubHeader)
-    
-    arcpy.AddMessage("Field Check: Make sure input has correct geonames fields...")
+    arcpy.AddMessage("Field Check: Make sure input feature class has correct geonames fields...")
 
     geonameFields = ["RC", "UFI", "UNI", "LAT", "LONG", "DMS_LAT", "DMS_LONG", "MGRS", "JOG", "FC", \
                   "DSG", "PC", "CC1", "ADM1", "POP", "ELEV", "CC2", "NT", "LC", "SHORT_FORM", \
                   "GENERIC", "SORT_NAME_RO", "FULL_NAME_RO", "FULL_NAME_ND_RO", "SORT_NAME_RG", \
                   "FULL_NAME_RG", "FULL_NAME_ND_RG", "NOTE", "MODIFY_DATE", "COUNTRYCODE1", \
                   "COUNTRYNAME1", "ADM1CODE", "ADM1NAMEALL", "ADM1NAME", "ADM1CLASSALL", \
-                  "ADM1CLASS", "PLACENAME", "DSGNAME", "USER_FLD"]
+                  "ADM1CLASS", "PLACENAME", "DSGNAME", "USER_FLD", \
+                  "DISPLAY", "NAME_RANK", "NAME_LINK", "TRANSL_CD", "NM_MODIFY_DATE", \
+                  "POINT_X", "POINT_Y"]
     
     numMissing = 0
 
@@ -81,7 +74,7 @@ try:
                 break
         if found == 0:
             numMissing = numMissing + 1
-            arcpy.AddMessage("- ERROR: Input is missing field: " + geonameField)
+            arcpy.AddError("Error: Input feature class is missing field: " + geonameField)
 
     if numMissing > 0:
         hasError = hasError + 1
@@ -91,31 +84,23 @@ try:
     # Check if input has any features
     # ======================================================
     numCount = long(arcpy.GetCount_management(featClass).getOutput(0))
-
-    arcpy.AddMessage(messSubHeader)
     
-    arcpy.AddMessage("Feature Count Check: Make sure input does not have any features...")
+    arcpy.AddMessage("Feature Count Check: Make sure input feature class does not have any features...")
     
     if numCount > 0:
-        arcpy.AddMessage("- ERROR: Input has " + str(numCount) + " features.")
+        arcpy.AddError("Error: Input feature class has " + str(numCount) + " features.")
         hasError = hasError + 1
 
     # ======================================================
     # Check if input coordinate system is WGS1984
     # ======================================================
     SR = desc.spatialReference
-
-    arcpy.AddMessage(messSubHeader)
     
-    arcpy.AddMessage("Spatial Reference Check: Make sure input is 'GCS_WGS_1984'...")
+    arcpy.AddMessage("Spatial Reference Check: Make sure input feature class is 'GCS_WGS_1984'...")
 
     if SR.name.upper() <> "GCS_WGS_1984":
-        arcpy.AddMessage("- ERROR: Spatial Reference is " + SR.name)
+        arcpy.AddError("Error: Spatial Reference is " + SR.name)
         hasError = hasError + 1
-
-    arcpy.AddMessage(" ")
-    arcpy.AddMessage(messHeader)
-
 
     if hasError > 0:
         result = "FALSE"

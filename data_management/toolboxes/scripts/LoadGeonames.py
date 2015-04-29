@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #------------------------------------------------------------------------------
-# Copyright 2013 Esri
+# Copyright 2015 Esri
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -21,6 +21,7 @@ import sys, traceback
 import time
 from datetime import datetime
 from datetime import date
+from decimal import *
 
 lineCount = 0
 
@@ -32,9 +33,9 @@ geonameFilePath = arcpy.GetParameterAsText(1)
 countryCodeTable = arcpy.GetParameterAsText(2)
 admin1CodeTable = arcpy.GetParameterAsText(3)
 featureCodeTable = arcpy.GetParameterAsText(4)
-desc= arcpy.Describe(featClass)
-fieldNameList = [field.name for field in desc.Fields] 
-    
+desc = arcpy.Describe(featClass)
+fieldNameList = [field.name.upper() for field in desc.Fields] 
+
 ## ======================================================
 ## Read geoname file and insert feature
 ## ======================================================
@@ -103,17 +104,31 @@ try:
         featCodeDict[rowFeatCode.Code] = rowFeatCode.Name
         
     # ======================================================
-    # Loop through geonames file and insert features
+    # Open geonames text file
     # ======================================================
-
-    # Get list of fields in feature class   
-    fieldListFC = arcpy.ListFields(featClass)
     
     # Open geoname file
     arcpy.AddMessage("- Opening geoname file " + geonameFilePath + "...")
-
     fileGeoname = open(geonameFilePath, "r")
-
+    
+    # Get list of fields in geoname file
+    for lineGeoname in fileGeoname:
+        lineCount = lineCount + 1
+        fileFieldValueList = lineGeoname.split("\t")
+        fileFieldList = [field.rstrip('\n').upper() for field in fileFieldValueList]
+        break
+    
+    # Find any fields in geonames txt file which do not exist in the feature class
+    fieldsExtra = list(set(fileFieldList) - set(fieldNameList))
+    if len(fieldsExtra) > 0:
+        arcpy.AddWarning("Warning: The following fields exist in geonames " \
+                         "file, but do not exist in feature class; these " \
+                         "fields will not be populated: " + str(fieldsExtra))
+    
+    # ======================================================
+    # Loop through geonames file and insert features
+    # ======================================================   
+    
     # Create insert cursor
     rows = arcpy.InsertCursor(featClass)
     
@@ -124,7 +139,7 @@ try:
 
         # Reset variables
         lat = ''
-        long = ''
+        long_ = ''
         ufi = ''
         uni = ''                       
         adm1 = ''
@@ -140,177 +155,171 @@ try:
         
         # Geoname file is Tab delimited so split line by Tab
         fileFieldValueList = lineGeoname.split("\t")
-        
-        # Create list of field names from first line of file
-        if lineCount == 1:
             
-            fileFieldList = fileFieldValueList
-            
-        else:
-            
-            # Create new row
-            row = rows.newRow()
-    
-            # Populate feature class fields from text file
-            fieldIndex = 0
-            for fieldValue in fileFieldValueList:
-                
-                # Remove any trailing newline character from field name
-                #   and field value
-                fieldName = fileFieldList[fieldIndex].rstrip('\n')
-                fieldValue = fieldValue.rstrip('\n')
-                
-                if fieldValue <> '':
-                    
-                    # Format date value
-                    if fieldName.upper() == "MODIFY_DATE":
-                        fieldValue = fieldValue + " 00:00:00 AM"
-                    
-                    if fieldName.upper() == "CC1":
-                        country1List = fieldValue.split(",")
-                        countryCode1 = country1List[0]
-                        row.setValue("COUNTRYCODE1", countryCode1)
-                        
-                        # Populate country name field
-                        countryName = countryCodeDict.get(countryCode1)
-                        
-                        if countryName is None:
-                            row.setNull("COUNTRYNAME1")
-                        else:
-                            row.setValue("COUNTRYNAME1", countryName)
-                        
-                    # Extract Latitude and Longitude values to create
-                    # point geometry
-                    if fieldName.upper() == "LAT":
-                        lat = fieldValue
-                        
-                    if fieldName.upper() == "LONG":
-                        long = fieldValue
-                    
-                    if fieldName.upper() == "UFI":
-                        ufi = fieldValue
+        # Create new row
+        row = rows.newRow()
 
-                    if fieldName.upper() == "UNI":
-                        uni = fieldValue                       
-
-                    if fieldName.upper() == "ADM1":
-                        adm1 = fieldValue
-                    
-                    if fieldName.upper() == "FULL_NAME_ND_RO":
-                        placeName = fieldValue
-                    
-                    if fieldName.upper() == "DSG":
-                        featDSGCode = fieldValue
-                    
-                    if fieldName.upper() == "MGRS":
-                        mgrs = fieldValue
-                            
-                    
-                        
-                    # Populate geodatabase field with text file value 
-                    try:
-                        
-                        if fieldName in fieldNameList:
-                          
-                            row.setValue(fieldName, fieldValue)
-                    except:
-                        
-                        arcpy.AddWarning("exception setting field name: " + fieldName)
-                     
-                else:
-                    row.setNull(fieldName)
-                    
-                fieldIndex = fieldIndex + 1
+        # Populate feature class fields from text file
+        fieldIndex = 0
+        for fieldValue in fileFieldValueList:
             
-            # Set CountryCode/First-order Administrative Class field value
-            if countryCode1 <> '' and adm1 <> '':
-                row.setValue("ADM1CODE", countryCode1 + adm1)
+            # Remove any trailing newline character from field name
+            #   and field value
+            fieldName = fileFieldList[fieldIndex].rstrip('\n')
+            fieldValue = fieldValue.rstrip('\n')
+            
+            if fieldValue <> '':
                 
-                # Populate primary admin field value
-                adm1NameAll = admin1CodeDict.get(countryCode1 + adm1)
+                # Format date value
+                if fieldName.upper() in ["MODIFY_DATE", "NM_MODIFY_DATE"]:
+                    fieldValue = fieldValue + " 00:00:00 AM"
                 
-                if adm1NameAll is None:
-                    row.setNull("ADM1NAMEALL")
-                else:
-                    row.setValue("ADM1NAMEALL", adm1NameAll)
+                if fieldName.upper() == "CC1":
+                    country1List = fieldValue.split(",")
+                    countryCode1 = country1List[0]
+                    row.setValue("COUNTRYCODE1", countryCode1)
                     
-                    ## Populate ADM1NAME field with first name in list
-                    #
-                    # Extract first element:
-                    # some admin name have multiple "versions" for
-                    # example BE11 is
-                    # "Brussels-Capital Region [conventional] /
-                    # Brussels Hoofdstedelijk [Dutch] /
-                    # Bruxelles-Capitale [French]"
-                    #
-                    # Extract first value minus "/", "[", "]" and
-                    # contents within brackets
-                    adm1Name = adm1NameAll.split("/")[0].split("[")[0].strip()
-                    row.setValue("ADM1NAME", adm1Name)
+                    # Populate country name field
+                    countryName = countryCodeDict.get(countryCode1)
                     
-                    userValue = "Principal Admin Division: " + adm1Name
-                    
-                    ## Populate Admin Division Class field (ADM1CLASS)
-                    adm1ClassAll = admin1ClassDict.get(countryCode1 + adm1)
-                    
-                    if adm1ClassAll is None:
-                        row.setNull("ADM1CLASSALL")
-                        row.setNull("ADM1CLASS")
+                    if countryName is None:
+                        row.setNull("COUNTRYNAME1")
                     else:
-                        row.setValue("ADM1CLASSALL", adm1ClassAll)
-                        
-                        # 'Assemble' the Admin1 Class value
-                        i = adm1ClassAll.find("(")
-                        if i > -1:
-                            # Extract characters before "("
-                            adm1Class = adm1ClassAll[:i].strip()
-                            # Extract characters after ")"
-                            adm1Type =  adm1ClassAll[i:].strip()
-                        else:
-                            adm1Class = adm1ClassAll
-                            adm1Type = ''
-                        
-                        adm1Class = adm1Class.split("/")[0].split("[")[0].strip()
-                        adm1Class = adm1Class + " " + adm1Type
-                        # Remove trailing space that exists if adm1Type does
-                        # not have a value
-                        adm1Class = adm1Class.strip()
-                        
-                        row.setValue("ADM1CLASS", adm1Class)
-                        
-                        userValue = userValue + " [" + adm1Class + "]"
-                        
-                        row.setValue("USER_FLD", userValue)
-                        
-            # Set Feature Designation Name field value
-            if featDSGCode <> '':
+                        row.setValue("COUNTRYNAME1", countryName)
+                    
+                # Extract Latitude and Longitude values to create
+                # point geometry
+                if fieldName.upper() == "LAT":
+                    lat = float(fieldValue)
+                    
+                if fieldName.upper() == "LONG":
+                    long_ = float(fieldValue)
                 
-                featDSGName = featCodeDict.get(featDSGCode)
-                
-                if featDSGName is None:
-                    row.setNull("DSGNAME")
-                else:
-                    row.setValue("DSGNAME", featDSGName)
-            
+                if fieldName.upper() == "UFI":
+                    ufi = fieldValue
 
-            # Populate Place name field using the reading order non-diatrictic
-            row.setValue("PLACENAME", placeName)
+                if fieldName.upper() == "UNI":
+                    uni = fieldValue                       
+
+                if fieldName.upper() == "ADM1":
+                    adm1 = fieldValue
+                
+                if fieldName.upper() == "FULL_NAME_ND_RO":
+                    placeName = fieldValue
+                
+                if fieldName.upper() == "DSG":
+                    featDSGCode = fieldValue
+                
+                if fieldName.upper() == "MGRS":
+                    mgrs = fieldValue
+                    
+                # Populate geodatabase field with text file value 
+                try:
+                    if fieldName.upper() not in ["LAT", "LONG"]:
+                        if fieldName in fieldNameList:
+                            row.setValue(fieldName, fieldValue)
+                        
+                except:
+                    arcpy.AddWarning("Warning: exception setting field: " \
+                            + fieldName + " to value " + fieldValue + \
+                            " (Input geoname file row number: " \
+                            + str(lineCount) + ")")
+                 
+            else:
+                if fieldName in fieldNameList:
+                    row.setNull(fieldName)
+                
+            fieldIndex = fieldIndex + 1
+        
+        # Set CountryCode/First-order Administrative Class field value
+        if countryCode1 <> '' and adm1 <> '':
+            row.setValue("ADM1CODE", countryCode1 + adm1)
             
-            # Set lat/long values on point object
-            pntObj.Y = lat
-            pntObj.X = long
+            # Populate primary admin field value
+            adm1NameAll = admin1CodeDict.get(countryCode1 + adm1)
             
-            # Populate geometry
-            row.Shape = pntObj
+            if adm1NameAll is None:
+                row.setNull("ADM1NAMEALL")
+            else:
+                row.setValue("ADM1NAMEALL", adm1NameAll)
+                
+                ## Populate ADM1NAME field with first name in list
+                #
+                # Extract first element:
+                # some admin name have multiple "versions" for
+                # example BE11 is
+                # "Brussels-Capital Region [conventional] /
+                # Brussels Hoofdstedelijk [Dutch] /
+                # Bruxelles-Capitale [French]"
+                #
+                # Extract first value minus "/", "[", "]" and
+                # contents within brackets
+                adm1Name = adm1NameAll.split("/")[0].split("[")[0].strip()
+                row.setValue("ADM1NAME", adm1Name)
+                
+                userValue = "Principal Admin Division: " + adm1Name
+                
+                ## Populate Admin Division Class field (ADM1CLASS)
+                adm1ClassAll = admin1ClassDict.get(countryCode1 + adm1)
+                
+                if adm1ClassAll is None:
+                    row.setNull("ADM1CLASSALL")
+                    row.setNull("ADM1CLASS")
+                else:
+                    row.setValue("ADM1CLASSALL", adm1ClassAll)
+                    
+                    # 'Assemble' the Admin1 Class value
+                    i = adm1ClassAll.find("(")
+                    if i > -1:
+                        # Extract characters before "("
+                        adm1Class = adm1ClassAll[:i].strip()
+                        # Extract characters after ")"
+                        adm1Type =  adm1ClassAll[i:].strip()
+                    else:
+                        adm1Class = adm1ClassAll
+                        adm1Type = ''
+                    
+                    adm1Class = adm1Class.split("/")[0].split("[")[0].strip()
+                    adm1Class = adm1Class + " " + adm1Type
+                    # Remove trailing space that exists if adm1Type does
+                    # not have a value
+                    adm1Class = adm1Class.strip()
+                    
+                    row.setValue("ADM1CLASS", adm1Class)
+                    
+                    userValue = userValue + " [" + adm1Class + "]"
+                    
+                    row.setValue("USER_FLD", userValue)
+                    
+        # Set Feature Designation Name field value
+        if featDSGCode <> '':
             
-            # Insert feature
-            try:
-                rows.insertRow(row)
-            except:
-                arcpy.AddWarning("Error inserting row: " + str(lineCount))
-            # Print progress
-            if lineCount % reportNum == 0:
-                arcpy.AddMessage("\tCreating feature number: " + str(lineCount))
+            featDSGName = featCodeDict.get(featDSGCode)
+            
+            if featDSGName is None:
+                row.setNull("DSGNAME")
+            else:
+                row.setValue("DSGNAME", featDSGName)
+        
+
+        # Populate Place name field using the reading order non-diatrictic
+        row.setValue("PLACENAME", placeName)
+        
+        # Set lat/long values on point object
+        pntObj.Y = lat
+        pntObj.X = long_
+        
+        # Populate geometry
+        row.Shape = pntObj
+        
+        # Insert feature
+        try:
+            rows.insertRow(row)
+        except:
+            arcpy.AddWarning("Error inserting row: " + str(lineCount))
+        # Print progress
+        if lineCount % reportNum == 0:
+            arcpy.AddMessage("\tCreating feature number: " + str(lineCount))
         
     # Close met file 
     fileGeoname.close()
