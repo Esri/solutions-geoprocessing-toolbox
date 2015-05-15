@@ -7,8 +7,6 @@ Find patterns and trends through statistical and visual analysis.
 ## Sections
 
 * [Incident Analysis Tools](#incident-analysis-tools)
-* [Landsat Tools](#landsat-tools)
-* [Change Detection Tools](#change-detection-tools)
 * [Movement Analysis Tools](#movement-analysis-tools)
 * [Issues](#issues)
 * [Contributing](#contributing)
@@ -28,32 +26,6 @@ These tools help you discover spatial patterns and trends in significant activit
 
 These tools are part of the [Incident Analysis Template](http://www.arcgis.com/home/item.html?id=fd6e2c3272c14826b9781e93580dacfe)
 
-## Landsat Tools
-These tools help to pre-process Landsat 5 and 7 data to prepare it for Change Detection. The toolbox includes:
-
-* DN to Reflectance
-* Landsat 7 Gap Filler
-* LTK Cloud Detector
-* ACCA Cloud Detector 
-
-The toolset is based upon the ArcGISScriptTools by Jerrod Lessel: https://github.com/jerrod-lessel/ArcgisScriptTools
-
-## Change Detection Tools
-
-These tools help you to identify change in your image. There are a number of tools within the toolbox:
-
-* Classification Accuracy
-* Dark Object Subtraction
-* IMAD Analysis
-* PseudoInvariantFactor
-
-The IR-MAD script is based on the below references: 
-
-1. Nielsen, A. A. (2007) The Regularized Iteratively Reweighted MAD Method for Change Detection in Multi- and Hyperspectral Data. IEEE Transactions on Image Processing. Vol. 16 (2) pp. 463-478
-
-2. Canty, M. J. (2008) Automatic Radiometric Normalization of Multitemporal Satellite Imagery with the Iteratively Re-weighted MAD transformation. Remote Sensing of the Environment. Vol. 112 (3) pp. 1025-1036
-
-3.  Canty, M. J. (2014) Image Analysis, Classification and Change Detection in Remote Sensing: with algorithms for ENVI/IDL and Python. Third Edition. CRC Press. 576 Pages.
 
 ## Movement Analysis Tools
 
