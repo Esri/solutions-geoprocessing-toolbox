@@ -26,9 +26,9 @@ inputTDSFeatureDataset = arcpy.GetParameterAsText(0)
 inputMAOTWorkspace = arcpy.GetParameterAsText(1)
 
 # LOCALS ========================================================
-FEATURE_CLASSES_TO_MERGE = ["AgricultureSrf", "SettlementSrf",
-                            "CultureSrf", "PhysiographySrf",
-                            "RecreationSrf", "VegetationSrf"]
+FEATURECLASSES_TO_MERGE = ["AgricultureSrf", "SettlementSrf",
+                           "CultureSrf", "PhysiographySrf",
+                           "RecreationSrf", "VegetationSrf"]
 DEBUG = True
 
 
@@ -55,40 +55,32 @@ def FeatureClassesFromWorkspace(inputTDSFeatureDataset):
 def main():
     ''' main '''
     try:
-        newList = []
-        qualifierString = ""
-        fqClassesToMerge = []
-
         arcpy.AddMessage("Getting database qualifier string ...")
         qualifierString = GetQualifierName(inputTDSFeatureDataset)
-        if DEBUG == True: arcpy.AddMessage("qualifier string: " + qualifierString)
+        if DEBUG is True: arcpy.AddMessage("qualifier string: " + qualifierString)
 
-        for i in FEATURE_CLASSES_TO_MERGE:
-            fqClassesToMerge.append(str(qualifierString + i))
-        if DEBUG == True: arcpy.AddMessage("fqClassesToMerge: " + str(fqClassesToMerge))
+        fqClassesToMerge = [str(qualifierString + i) for i in FEATURECLASSES_TO_MERGE]
+        if DEBUG is True: arcpy.AddMessage("fqClassesToMerge: " + str(fqClassesToMerge))
 
         workspace = os.path.dirname(inputTDSFeatureDataset)
         tdsFeatureClasses = FeatureClassesFromWorkspace(inputTDSFeatureDataset)
-        if DEBUG == True: arcpy.AddMessage("tdsFeatureClasses: " + str(tdsFeatureClasses))
+        if DEBUG is True: arcpy.AddMessage("tdsFeatureClasses: " + str(tdsFeatureClasses))
 
         # now go through the list of all of them and see which names
         # match our target list, if so, add them to a new list
-
         arcpy.AddMessage("Building list of input features ...")
-        for fc in tdsFeatureClasses:
-            if fc in fqClassesToMerge:
-                newList.append(str(os.path.join(workspace,
-                                                os.path.basename(inputTDSFeatureDataset),
-                                                fc)))
-        if DEBUG == True: arcpy.AddMessage("newList: " + str(newList))
+        newList = [str(os.path.join(workspace, os.path.basename(inputTDSFeatureDataset), fc))\
+                   for fc in tdsFeatureClasses if fc in fqClassesToMerge]
+        if DEBUG is True: arcpy.AddMessage("newList: " + str(newList))
 
         # output feature class name
         target = os.path.join(inputMAOTWorkspace, "CombinedVegetationCoverage")
-        if DEBUG == True: arcpy.AddMessage("target: " + str(target))
+        if DEBUG is True: arcpy.AddMessage("target: " + str(target))
 
         # merge all FCs into the target FC
         arcpy.AddMessage("Merging features to output (this may take some time)...")
         arcpy.Merge_management(newList, target)
+
         # set output
         arcpy.AddMessage("Setting output ...")
         arcpy.SetParameter(2, target)
