@@ -6,10 +6,15 @@
 #   indirect fire given three or more known impact points.
 # ---------------------------------------------------------------------------
 # 2/6/2015 - mf - Update for user-selected coordinate system, and arcpy.mp for ArcGIS Pro 1.0, and output features
-#
+# 7/1/2015 - ps - Update for data_time suffix for the Group Layer result.
+# 7/2/2015 - ps - Added Transparency for "Point of Origin Results" group layer polygons.
+# 7/2/2015 - ps - Added checks for layerSymLocation for post "Share as Template", or restored "Share Project Package"
+# 7/3 THIS RAN SUCCESSFULLY WITH THE MOD's mentioned.  Clean GDB's for scratch and results seem to be required if run multiple times.
+# Have not added the renamining of Grouped layer with date_time suffix,
+# Have not changed true curves to polygons
 
 # ======================Import arcpy module=================================
-import os, sys, traceback, math, decimal
+import os, sys, traceback, math, decimal, time
 import arcpy
 from arcpy import env
 
@@ -34,10 +39,15 @@ outputImpactRangeFeatures = [] # Feature Class - multiple
 outputCoordinateSystem = arcpy.GetParameter(13) # Coordinate System
 outputCoordinateSystemAsText = arcpy.GetParameterAsText(13) # String
 
+# Will use a time stamp on the grouped layer for keeping track of multiple runs; prefix should distinguish Feature Classes?
+timestr = time.strftime("%Y%m%d_%H%M")
+
+
 delete_me = []
-DEBUG = False
+#DEBUG = False
+DEBUG = True
 desktopVersion = ["10.2.2","10.3"]
-proVersion = ["1.0"]
+proVersion = ["1.0", "1.1"]
 
 
 
@@ -89,7 +99,8 @@ try:
         where = modelField + " = " + selectedModel
         fields = minRangeField + "," + maxRangeField
         cursor = arcpy.SearchCursor(weaponTable, where, None,fields)
-        record = cursor.next()
+        #record = cursor.next()
+        record = next(cursor) # Python 3 method
         minRange =  record.getValue(minRangeField)
         maxRange =  record.getValue(maxRangeField)
         if DEBUG == True:
@@ -149,12 +160,96 @@ try:
     # model loop ends here, on to next model
     
     # now for symbology...
-    layerSymLocation = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'layers'))
+    if DEBUG == True: arcpy.AddMessage("Possible locations - examine some paths for locations of layer .lyrx files")
+    if DEBUG == True: arcpy.AddMessage("layerSymLocation1 : " + os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+    if DEBUG == True: arcpy.AddMessage("layerSymLocation2 : " + os.path.join(os.path.dirname(__file__)))
+    if DEBUG == True: arcpy.AddMessage("layerSymLocation3 : " + os.path.abspath(os.path.join(os.path.dirname(__file__))))
+    if DEBUG == True: arcpy.AddMessage("layerSymLocation4 : " + os.path.abspath(os.path.join(os.path.dirname(__file__), 'commondata', 'userdata')))
+          
+    # now for symbology, check to see if this where layers might be located due to "Share as Project Template", or "Export Project Package"...
+
+    # 1. Layers in folder parallel to folder with script - standard as developed -  (i.e. /project_loc/scripts and /project_loc/layers)
+    if os.path.isdir(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'layers'))) and  \
+       os.path.isfile(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'layers', 'Impact_Point_Centers.lyrx'))):
+        layerSymLocation = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'layers'))
+    #
+    # 2. Layers restored from Share "Project Template" - in folder at same level as script /project_loc/pointoforigindetection.py and /project_loc/layers)
+    elif os.path.isdir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'layers'))) and \
+         os.path.isfile(os.path.abspath(os.path.join(os.path.dirname(__file__), 'layers', 'Impact_Point_Centers.lyrx'))):
+        layerSymLocation = os.path.abspath(os.path.join(os.path.dirname(__file__), 'layers'))
+    #
+    # 3. Layers in root level of project at same level as script (i.e /project_loc/pointoforigindetection.py and /project_loc/PointOfOrigin.lyrx)
+    elif os.path.isdir(os.path.abspath(os.path.join(os.path.dirname(__file__), ))) and \
+         os.path.isfile(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Impact_Point_Centers.lyrx'))):
+        layerSymLocation = os.path.abspath(os.path.join(os.path.dirname(__file__),''))
+    #
+    # 4. commondata\userdata
+    # Layers restored from Share as "New Project Package"  - location (i.e /project_loc/pointoforigindetection.py and /project_loc/commondata/userdata/PointOfOrigin.lyrx)
+    elif os.path.isdir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'commondata', 'userdata'))) and \
+         os.path.isfile(os.path.abspath(os.path.join(os.path.dirname(__file__), 'commondata', 'userdata', 'Impact_Point_Centers.lyrx'))):
+        layerSymLocation = os.path.abspath(os.path.join(os.path.dirname(__file__), 'commondata', 'userdata'))
+    #
+    # else it can't find layers
+    else:
+        arcpy.AddWarning("Cannot find location of required layer files (.lyrx), cannot continue")
+    #
+    if DEBUG == True: arcpy.AddMessage("Using layerSymLocation: " + str(layerSymLocation))
     gisVersion = arcpy.GetInstallInfo()["Version"]
     if DEBUG == True: arcpy.AddMessage(r"gisVersion: " + str(gisVersion))
     if gisVersion in desktopVersion: #This is ArcGIS Desktkop 10.3 or 10.2.2
         mxd = None
         try:    # what if we are running this from ArcCatalog with no MXD?
+            mxd = arcpy.mapping.MapDocument('CURRENT')
+        except:  # if so, then just skip this part...
+            arcpy.AddWarning("Tool is not run in ArcMap, skipping symbolization scheme.")
+        else:   # otherwise lets add the stuff to our current data frame in our map.
+            df = arcpy.mapping.ListDataFrames(mxd)[0]
+            
+            # make group layer and add it to the map
+            groupLayerPath = os.path.join(layerSymLocation,"New Group Layer.lyr")
+            initialGroupLayer = arcpy.mapping.Layer(groupLayerPath)
+            initialGroupLayer.name = "Point Of Origin Results"
+            arcpy.mapping.AddLayer(df,initialGroupLayer)
+            del initialGroupLayer
+            
+            # get a reference to the group layer in the map
+            topGroupLayer = arcpy.mapping.ListLayers(mxd,"Point Of Origin Results",df)[0]
+            
+            # add the impact points
+            impactPointLayer = arcpy.mapping.Layer(outputImpactPointFeatures)
+            impactPointLayer.name = "Impact points"
+            arcpy.ApplySymbologyFromLayer_management(impactPointLayer, os.path.join(layerSymLocation, "Impact Point Centers.lyr"))
+            arcpy.mapping.AddLayerToGroup(df,topGroupLayer, impactPointLayer,"TOP")
+            
+            # for all items in the combinedPooDict
+            for model in modelOriginsDict:
+                
+                # make a group layer for each model
+                initialGroupLayer = arcpy.mapping.Layer(groupLayerPath)
+                initialGroupLayer.name = model
+                arcpy.mapping.AddLayerToGroup(df,topGroupLayer,initialGroupLayer,"BOTTOM")
+                modelGroupLayer = arcpy.mapping.ListLayers(mxd,model,df)[0]
+                del initialGroupLayer
+                
+                # get range and POO data from this model
+                modelData = modelOriginsDict[model]
+            
+                # make layer for combined area and add to model layer
+                combinedDict = modelData[1]
+                combinedAreaLayer = arcpy.mapping.Layer(combinedDict["combined"]) #combined
+                combinedAreaLayer.name = model + " Point Of Origin"
+                arcpy.ApplySymbologyFromLayer_management(combinedAreaLayer, os.path.join(layerSymLocation, "PointOfOrigin.lyr"))
+                arcpy.mapping.AddLayerToGroup(df,modelGroupLayer,combinedAreaLayer,"BOTTOM")
+                
+                # make Range group layer
+                initialGroupLayer = arcpy.mapping.Layer(groupLayerPath)
+                rangeLayerName = model + " Ranges by Impact OID"
+                initialGroupLayer.name = rangeLayerName
+                arcpy.mapping.AddLayerToGroup(df,modelGroupLayer,initialGroupLayer,"BOTTOM")
+                rangeGroupLayer = arcpy.mapping.ListLayers(mxd,rangeLayerName,df)[0]
+                del initialGroupLayer
+                
+           ##        try:    # what if we are running this from ArcCatalog with no MXD?
             mxd = arcpy.mapping.MapDocument('CURRENT')
         except:  # if so, then just skip this part...
             arcpy.AddWarning("Tool is not run in ArcMap, skipping symbolization scheme.")
@@ -214,9 +309,18 @@ try:
             
             del df
         del mxd
+     # Add the individual ranges to the range group layer
+                modelRanges = modelData[0]['ranges'] #ranges
+                for r in modelRanges:
+                    rangeToAdd = arcpy.mapping.Layer(r)
+                    arcpy.ApplySymbologyFromLayer_management(rangeToAdd, os.path.join(layerSymLocation, "ImpactRange.lyr"))
+                    arcpy.mapping.AddLayerToGroup(df,rangeGroupLayer,rangeToAdd,"BOTTOM")
+            
+            del df
+        del mxd
     
     # if Pro:
-    elif gisVersion in proVersion: #This Is  ArcGIS Pro  1.0
+    elif gisVersion in proVersion: #This Is  ArcGIS Pro  1.1
         arcpy.AddMessage("Working in ArcGIS Pro " + str(gisVersion))
         aprx = arcpy.mp.ArcGISProject(r"current")
         m = aprx.listMaps()[0]
@@ -224,12 +328,21 @@ try:
         # make top group layer
         arcpy.AddMessage("Adding Top Group Layer...")
         groupLayerPath = os.path.join(layerSymLocation,"New_Group_Layer.lyrx")
+
         initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
         initialGroupLayer.name = "Point Of Origin Results"
         m.addLayer(initialGroupLayer,"AUTO_ARRANGE")
         topGroupLayer  = m.listLayers("Point Of Origin Results")[0]
+        
+               
+        # Try to Add timestr to initialGroupLayer - has been hanging when using this, but not until "Adding Impact Points..." ?
+        #igl_timestr = "Point Of Origin Results_" + timestr
+        #initialGroupLayer.name = igl_timestr
+        #m.addLayer(initialGroupLayer,"AUTO_ARRANGE")
+        #topGroupLayer = m.listLayers(igl_timestr)[0]
+              
         initialGroupLayer = None
-        #del initialGroupayer # this line hangs tool dialog.
+        #del initialGroupLayer # this line hangs tool dialog.(this line is not used, but appears there is a typo "initialGroupayer" in original code?)
         
         ## add the impact points
         arcpy.AddMessage("Adding Impact Points ...")
@@ -246,10 +359,18 @@ try:
         #if DEBUG == True: arcpy.AddMessage("impactPointLayer5")
         
         ipName = "Impact points"
+        
         if DEBUG == True: arcpy.AddMessage("arcpy.MakeFeatureLayer(...)")
         results = arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,ipName).getOutput(0)
+
+        #  Applying symbology to result points before adding to Group works better than after adding to group
+        if DEBUG == True: arcpy.AddMessage("ApplySymbologyFromLayer")
+        arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy doesn't apply the symbology
+
+
         if DEBUG == True: arcpy.AddMessage("m.addLayerToGroup(...)")
         m.addLayerToGroup(topGroupLayer,results,"TOP")
+
         if DEBUG == True: arcpy.AddMessage("ApplySymbologyFromLayer")
         arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy doesn't apply the symbology
         
@@ -288,6 +409,11 @@ try:
                 rangeToAdd.dataSource = r
                 rangeToAdd.name = os.path.basename(r)
                 m.addLayerToGroup(rangeGroupLayer,rangeToAdd,"BOTTOM")
+
+            # Set Transparency of result Group Layers to "50"
+            if modelGroupLayer.supports("TRANSPARENCY"):
+                modelGroupLayer.transparency = 50
+                
         del aprx, m
         
     else:
