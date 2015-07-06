@@ -249,48 +249,7 @@ try:
                 rangeGroupLayer = arcpy.mapping.ListLayers(mxd,rangeLayerName,df)[0]
                 del initialGroupLayer
                 
-           ##        try:    # what if we are running this from ArcCatalog with no MXD?
-            mxd = arcpy.mapping.MapDocument('CURRENT')
-        except:  # if so, then just skip this part...
-            arcpy.AddWarning("Tool is not run in ArcMap, skipping symbolization scheme.")
-        else:   # otherwise lets add the stuff to our current data frame in our map.
-            df = arcpy.mapping.ListDataFrames(mxd)[0]
-            
-            # make group layer and add it to the map
-            groupLayerPath = os.path.join(layerSymLocation,"New Group Layer.lyr")
-            initialGroupLayer = arcpy.mapping.Layer(groupLayerPath)
-            initialGroupLayer.name = "Point Of Origin Results"
-            arcpy.mapping.AddLayer(df,initialGroupLayer)
-            del initialGroupLayer
-            
-            # get a reference to the group layer in the map
-            topGroupLayer = arcpy.mapping.ListLayers(mxd,"Point Of Origin Results",df)[0]
-            
-            # add the impact points
-            impactPointLayer = arcpy.mapping.Layer(outputImpactPointFeatures)
-            impactPointLayer.name = "Impact points"
-            arcpy.ApplySymbologyFromLayer_management(impactPointLayer, os.path.join(layerSymLocation, "Impact Point Centers.lyr"))
-            arcpy.mapping.AddLayerToGroup(df,topGroupLayer, impactPointLayer,"TOP")
-            
-            # for all items in the combinedPooDict
-            for model in modelOriginsDict:
-                
-                # make a group layer for each model
-                initialGroupLayer = arcpy.mapping.Layer(groupLayerPath)
-                initialGroupLayer.name = model
-                arcpy.mapping.AddLayerToGroup(df,topGroupLayer,initialGroupLayer,"BOTTOM")
-                modelGroupLayer = arcpy.mapping.ListLayers(mxd,model,df)[0]
-                del initialGroupLayer
-                
-                # get range and POO data from this model
-                modelData = modelOriginsDict[model]
-            
-                # make layer for combined area and add to model layer
-                combinedDict = modelData[1]
-                combinedAreaLayer = arcpy.mapping.Layer(combinedDict["combined"]) #combined
-                combinedAreaLayer.name = model + " Point Of Origin"
-                arcpy.ApplySymbologyFromLayer_management(combinedAreaLayer, os.path.join(layerSymLocation, "PointOfOrigin.lyr"))
-                arcpy.mapping.AddLayerToGroup(df,modelGroupLayer,combinedAreaLayer,"BOTTOM")
+
                 
                 # make Range group layer
                 initialGroupLayer = arcpy.mapping.Layer(groupLayerPath)
@@ -309,16 +268,7 @@ try:
             
             del df
         del mxd
-     # Add the individual ranges to the range group layer
-                modelRanges = modelData[0]['ranges'] #ranges
-                for r in modelRanges:
-                    rangeToAdd = arcpy.mapping.Layer(r)
-                    arcpy.ApplySymbologyFromLayer_management(rangeToAdd, os.path.join(layerSymLocation, "ImpactRange.lyr"))
-                    arcpy.mapping.AddLayerToGroup(df,rangeGroupLayer,rangeToAdd,"BOTTOM")
-            
-            del df
-        del mxd
-    
+         
     # if Pro:
     elif gisVersion in proVersion: #This Is  ArcGIS Pro  1.1
         arcpy.AddMessage("Working in ArcGIS Pro " + str(gisVersion))
