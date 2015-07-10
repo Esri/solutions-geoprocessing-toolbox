@@ -9,13 +9,16 @@
 # 7/1/2015 - ps - Update for data_time suffix for the Group Layer result.
 # 7/2/2015 - ps - Added Transparency for "Point of Origin Results" group layer polygons.
 # 7/2/2015 - ps - Added checks for layerSymLocation for post "Share as Template", or restored "Share Project Package"
-# 7/3 THIS RAN SUCCESSFULLY WITH THE MOD's mentioned.  Clean GDB's for scratch and results seem to be required if run multiple times.
+# 7/3/2015 THIS RAN SUCCESSFULLY WITH THE MOD's mentioned.  Clean GDB's for scratch and results seem to be required if run multiple times.
+# 7/6/2015 Added logic to check for Desktop, or Pro 1.0 in order to call cursor() properly for respective version.
+# 7/8/2015 Review "locals", delete more locals.
+# ---------------------------------------------------------------------------
 # Have not added the renamining of Grouped layer with date_time suffix,
 # Have not changed true curves to polygons
 
 # ======================Import arcpy module=================================
 import os, sys, traceback, math, decimal, time
-import arcpy
+#import arcpy
 from arcpy import env
 
 # ======================ARGUMENTS & LOCALS ===============================
@@ -49,7 +52,32 @@ DEBUG = True
 desktopVersion = ["10.2.2","10.3"]
 proVersion = ["1.0", "1.1"]
 
+#------------------------------------------------------------------------------
+# check which variables are still set...cleanup variables...
+def CheckVariables(inDict):
+    
+    if DEBUG == True:
+        func_mydict = inDict
+        myList = []
+        mydict = dict(locals()) # would like to sort this using OrderedDict
 
+
+        # sorted list keys,values - method/function
+        dictlist = []
+        for keys,values in func_mydict.items():
+            temp = [keys,values]
+            dictlist.append(temp)
+        dictlist.sort()
+        for listItem in dictlist:
+            arcpy.AddMessage(str(listItem))
+            print(listItem)
+            
+    return
+#------------------------------------------------------------------------------
+if DEBUG == True:
+    arcpy.AddMessage("Check locals at begining ")
+    mydict = dict(locals())
+    CheckVariables(mydict)
 
 try:       
     # For the model and all outputs remove special characters and replace spaces with underscores    
@@ -65,7 +93,7 @@ try:
     if scratch == None:
         scratch = 'in_memory'
         env.scratchWorkspace = 'in_memory'
-    if DEBUG == True: arcpy.AddMessage("scratch: " + str(scratch))
+    
     
     if outputCoordinateSystemAsText == '':
         outputCoordinateSystem = arcpy.Describe(inFeature).spatialReference
@@ -99,8 +127,11 @@ try:
         where = modelField + " = " + selectedModel
         fields = minRangeField + "," + maxRangeField
         cursor = arcpy.SearchCursor(weaponTable, where, None,fields)
-        #record = cursor.next()
-        record = next(cursor) # Python 3 method
+        gisVersion = arcpy.GetInstallInfo()["Version"]
+        if gisVersion in desktopVersion or gisVersion == "1.0":
+            record = cursor.next() # this is method for Pro 1.0.2
+        else:
+            record = next(cursor) # Python 3 method - but only works in Pro 1.1
         minRange =  record.getValue(minRangeField)
         maxRange =  record.getValue(maxRangeField)
         if DEBUG == True:
@@ -270,7 +301,7 @@ try:
         del mxd
          
     # if Pro:
-    elif gisVersion in proVersion: #This Is  ArcGIS Pro  1.1
+    elif gisVersion in proVersion: #This Is  ArcGIS Pro  1.0.2 or 1.1
         arcpy.AddMessage("Working in ArcGIS Pro " + str(gisVersion))
         aprx = arcpy.mp.ArcGISProject(r"current")
         m = aprx.listMaps()[0]
@@ -282,7 +313,7 @@ try:
         initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
         initialGroupLayer.name = "Point Of Origin Results"
         m.addLayer(initialGroupLayer,"AUTO_ARRANGE")
-        topGroupLayer  = m.listLayers("Point Of Origin Results")[0]
+        topGroupLayer = m.listLayers("Point Of Origin Results")[0]
         
                
         # Try to Add timestr to initialGroupLayer - has been hanging when using this, but not until "Adding Impact Points..." ?
@@ -309,8 +340,13 @@ try:
         #if DEBUG == True: arcpy.AddMessage("impactPointLayer5")
         
         ipName = "Impact points"
+
+        if DEBUG == True:
+            arcpy.AddMessage("Check locals() at before MakeFeatureLayer ")
+            mydict = dict(locals())
+            CheckVariables(mydict)
+        if DEBUG == True: arcpy.AddMessage("arcpy.MakeFeatureLayer(...) ** Hang's here **")
         
-        if DEBUG == True: arcpy.AddMessage("arcpy.MakeFeatureLayer(...)")
         results = arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,ipName).getOutput(0)
 
         #  Applying symbology to result points before adding to Group works better than after adding to group
@@ -321,8 +357,8 @@ try:
         if DEBUG == True: arcpy.AddMessage("m.addLayerToGroup(...)")
         m.addLayerToGroup(topGroupLayer,results,"TOP")
 
-        if DEBUG == True: arcpy.AddMessage("ApplySymbologyFromLayer")
-        arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy doesn't apply the symbology
+##        if DEBUG == True: arcpy.AddMessage("ApplySymbologyFromLayer")
+##        arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy doesn't apply the symbology
         
         # for all items in the combinedPooDict 
         for model in modelOriginsDict:
@@ -366,6 +402,7 @@ try:
                 
         del aprx, m
         
+        
     else:
         arcpy.AddWarning(r"...Could not determine version.\n   Looking for ArcMap " + str(desktopVersion) + ", or ArcGIS Pro " + str(proVersion) + ".\n   Found " + str(gisVersion))
 
@@ -400,9 +437,22 @@ except:
     print(msgs)
 
 finally:
+          
+    
     # cleanup intermediate datasets
     if DEBUG == True: arcpy.AddMessage("Removing intermediate datasets...")
     for i in delete_me:
         if DEBUG == True: arcpy.AddMessage("Removing: " + str(i))
         arcpy.Delete_management(i)
 
+    
+    # delete some local variables
+    del results, initialGroupLayer, combinedDict, modelGroupLayer
+    del ipName, outputImpactPointFeatures, outputImpactFeatures, outputPointsOfOriginFeatures
+
+    # check which variables are still set...cleanup variables...
+    if DEBUG == True:
+        arcpy.AddMessage("Check locals at end script run ")
+        mydict = dict(locals())
+        CheckVariables(mydict)
+##eof
