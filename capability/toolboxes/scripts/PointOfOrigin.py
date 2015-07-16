@@ -51,8 +51,8 @@ timestr = time.strftime("%Y%m%d_%H%M")
 
 
 delete_me = []
-#DEBUG = False
-DEBUG = True
+DEBUG = False
+#DEBUG = True
 desktopVersion = ["10.2.2","10.3"]
 proVersion = ["1.0", "1.1"]
 
@@ -80,7 +80,7 @@ def CheckVariables(inDict):
             
     return
 #------------------------------------------------------------------------------
-if DEBUG == "XTrue":
+if DEBUG == "True":
     arcpy.AddMessage("Check locals at begining ")
     mydict = dict(locals())
     CheckVariables(mydict)
