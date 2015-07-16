@@ -12,13 +12,16 @@
 # 7/3/2015 THIS RAN SUCCESSFULLY WITH THE MOD's mentioned.  Clean GDB's for scratch and results seem to be required if run multiple times.
 # 7/6/2015 Added logic to check for Desktop, or Pro 1.0 in order to call cursor() properly for respective version.
 # 7/8/2015 Review "locals", delete more locals.
+# 7/9/2015 Modified  script to include function CheckVariables() which displays "locals()" when DEBUG is turned on.
+# 7/13/2015 - Added logic to hold Group Layer Result with a time string appended to the Group Layer name.
+# 7/14/2015 - Noticed that issue with hang at MakeFeatureLayer_management is related to Pro's Indexing and/or the Windows process ArcGISCleanup.exe
+# 7/16/2015 - Added option to uncheck True Curve, results in densified polygon which can be projected on the fly more readily that True Curve
 # ---------------------------------------------------------------------------
-# Have not added the renamining of Grouped layer with date_time suffix,
-# Have not changed true curves to polygons
-
+# Have NOT changed overall structure of script to use functions
+#
 # ======================Import arcpy module=================================
 import os, sys, traceback, math, decimal, time
-#import arcpy
+import arcpy
 from arcpy import env
 
 # ======================ARGUMENTS & LOCALS ===============================
@@ -41,6 +44,7 @@ outputImpactRangeFeatures = [] # Feature Class - multiple
 
 outputCoordinateSystem = arcpy.GetParameter(13) # Coordinate System
 outputCoordinateSystemAsText = arcpy.GetParameterAsText(13) # String
+outputUseTrueCurve = arcpy.GetParameterAsText(14) # boolean string (true or false)
 
 # Will use a time stamp on the grouped layer for keeping track of multiple runs; prefix should distinguish Feature Classes?
 timestr = time.strftime("%Y%m%d_%H%M")
@@ -70,11 +74,13 @@ def CheckVariables(inDict):
         dictlist.sort()
         for listItem in dictlist:
             arcpy.AddMessage(str(listItem))
+            
             print(listItem)
+        arcpy.AddMessage(" ********************************************** ")
             
     return
 #------------------------------------------------------------------------------
-if DEBUG == True:
+if DEBUG == "XTrue":
     arcpy.AddMessage("Check locals at begining ")
     mydict = dict(locals())
     CheckVariables(mydict)
@@ -128,10 +134,12 @@ try:
         fields = minRangeField + "," + maxRangeField
         cursor = arcpy.SearchCursor(weaponTable, where, None,fields)
         gisVersion = arcpy.GetInstallInfo()["Version"]
-        if gisVersion in desktopVersion or gisVersion == "1.0":
-            record = cursor.next() # this is method for Pro 1.0.2
+        gisBuild = arcpy.GetInstallInfo()["BuildNumber"]
+        
+        if gisVersion in desktopVersion or gisVersion == "1.0" or gisBuild == "3068":
+            record = cursor.next() # this is method for Pro 1.0.2, or public  beta 1.1 build 3068
         else:
-            record = next(cursor) # Python 3 method - but only works in Pro 1.1
+            record = next(cursor) # Python 3 method - but only works in Pro 1.1 later builds.
         minRange =  record.getValue(minRangeField)
         maxRange =  record.getValue(maxRangeField)
         if DEBUG == True:
@@ -140,7 +148,8 @@ try:
             
         del cursor, record
 
-        # combine buffers of all impact points
+        # combine buffers of all impact points -
+        # Consider not using True Curves, or Densifying/Generalizing Buffers into non-True Curve Polygons for Project-on-the-Fly 
         impactPointBuffersList = []
         inFields = ["OID@","SHAPE@"]
         rows = arcpy.da.SearchCursor(outputImpactPointFeatures,inFields)
@@ -149,15 +158,30 @@ try:
             feat = row[1]
             arcpy.AddMessage("Buffering Impact Point OID " + str(oid) + " for " + selectedModel)
             
-            # buffer the max distance from point
+            # buffer the max distance from point - check if True Curves are not wanted 
             impactMaxBuffer = os.path.join(env.scratchWorkspace,"Impact_Max_" + str(oid) + "_" + scrubbedModel)            
-            arcpy.Buffer_analysis(feat,impactMaxBuffer,maxRange)
-            delete_me.append(impactMaxBuffer)
-            
+            if outputUseTrueCurve == "true":
+                if DEBUG == True: arcpy.AddMessage("Using True Curve" )
+                arcpy.Buffer_analysis(feat,impactMaxBuffer,maxRange)
+                delete_me.append(impactMaxBuffer)
+            if outputUseTrueCurve == "false":
+                if DEBUG == True: arcpy.AddMessage("Densifying True Curve to regular polygon" )
+                arcpy.Buffer_analysis(feat,impactMaxBuffer,maxRange)
+                arcpy.Densify_edit(impactMaxBuffer, "ANGLE","", "", "0.75")
+                delete_me.append(impactMaxBuffer)
+                
             # buffer the min distance from point
             impactMinBuffer = os.path.join(env.scratchWorkspace,"Impact_Min_" + str(oid) + "_" + scrubbedModel)
-            arcpy.Buffer_analysis(feat,impactMinBuffer,minRange)
-            delete_me.append(impactMinBuffer)
+            if outputUseTrueCurve == "true":
+                if DEBUG == True: arcpy.AddMessage("Using True Curve" )
+                arcpy.Buffer_analysis(feat,impactMinBuffer,minRange)
+                delete_me.append(impactMinBuffer)
+            if outputUseTrueCurve == "false":
+                if DEBUG == True: arcpy.AddMessage("Densifying True Curve to regular polygon" )
+                arcpy.Buffer_analysis(feat,impactMinBuffer,minRange)
+                arcpy.Densify_edit(impactMinBuffer, "ANGLE","", "", "0.75")
+                delete_me.append(impactMinBuffer)
+                
             
             # Find the area within the model weapon areas min and max ranges
             impactPointClassName = scrubbedImpactBufferOutPrefix + "_" + str(oid) + "_" + scrubbedModel
@@ -310,17 +334,18 @@ try:
         arcpy.AddMessage("Adding Top Group Layer...")
         groupLayerPath = os.path.join(layerSymLocation,"New_Group_Layer.lyrx")
 
-        initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
-        initialGroupLayer.name = "Point Of Origin Results"
-        m.addLayer(initialGroupLayer,"AUTO_ARRANGE")
-        topGroupLayer = m.listLayers("Point Of Origin Results")[0]
+##        initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
+##        initialGroupLayer.name = "Point Of Origin Results"
+##        m.addLayer(initialGroupLayer,"AUTO_ARRANGE")
+##        topGroupLayer = m.listLayers("Point Of Origin Results")[0]
         
                
-        # Try to Add timestr to initialGroupLayer - has been hanging when using this, but not until "Adding Impact Points..." ?
-        #igl_timestr = "Point Of Origin Results_" + timestr
-        #initialGroupLayer.name = igl_timestr
-        #m.addLayer(initialGroupLayer,"AUTO_ARRANGE")
-        #topGroupLayer = m.listLayers(igl_timestr)[0]
+        # Add date/timestring to initialGroupLayer - older build were hanging when using this, at point of "Adding Impact Points..." ?
+        initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
+        initialGroupLayer_timestr = "Point Of Origin Results_" + timestr
+        initialGroupLayer.name = initialGroupLayer_timestr
+        m.addLayer(initialGroupLayer,"AUTO_ARRANGE")
+        topGroupLayer = m.listLayers(initialGroupLayer_timestr)[0]
               
         initialGroupLayer = None
         #del initialGroupLayer # this line hangs tool dialog.(this line is not used, but appears there is a typo "initialGroupayer" in original code?)
@@ -339,23 +364,56 @@ try:
         #m.addLayerToGroup(topGroupLayer,impactPointLayer,"TOP")
         #if DEBUG == True: arcpy.AddMessage("impactPointLayer5")
         
-        ipName = "Impact points"
-
+        ipName = "Impact points" + "_" + timestr
+        #ipNameX = "Impact pointsX"
+        
         if DEBUG == True:
-            arcpy.AddMessage("Check locals() at before MakeFeatureLayer ")
+            arcpy.AddMessage("Check locals() before MakeFeatureLayer ")
             mydict = dict(locals())
             CheckVariables(mydict)
         if DEBUG == True: arcpy.AddMessage("arcpy.MakeFeatureLayer(...) ** Hang's here **")
-        
-        results = arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,ipName).getOutput(0)
 
+        # ---> issue with: results = arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,ipName).getOutput(0) <---
+        try:           
+            if arcpy.Exists(outputImpactPointFeatures): # This describe is attempt to verify outputImpactPointFeatures is valid
+                # Create a Describe object from the feature class - put this in DEBUG when all is stable.
+                desc = arcpy.Describe(outputImpactPointFeatures)
+
+                if DEBUG == True:
+                    # Print some feature class properties of outputImpactPointFeatures
+                    #
+                    arcpy.AddMessage("Feature Type:  " + desc.featureType)
+                    arcpy.AddMessage("Shape Type :   " + desc.shapeType)
+                    arcpy.AddMessage("Spatial Index: " + str(desc.hasSpatialIndex))
+                    arcpy.AddMessage("shapeFieldName:     " + desc.shapeFieldName)
+                    arcpy.AddMessage("ShapeType:     " + desc.shapeType)
+                    
+                if DEBUG == True: arcpy.AddMessage("Current outputImpactPointFeatures exist, proceeding with MakeFeatureLayer_management")			
+                results = arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,ipName).getOutput(0)
+            else:
+                arcpy.AddMessage("Error: " + outputImpactPointFeatures + " does not exist")
+        except Exception:
+            e = sys.exc_info()[1]
+            arcpy.AddError(e.args[0])
+    
+        
+# ['results', <arcpy._mp.Layer object at 0x0000000063221DA0>] - this is a layer object, cannot check .status or -> ErrorInfo: 'Layer' object has no attribute 'status'
+# tried sleeping until "result" status has succeeded... http://pro.arcgis.com/en/pro-app/arcpy/classes/result.htm -
+# tried change "results" to "result".
+        
         #  Applying symbology to result points before adding to Group works better than after adding to group
+
         if DEBUG == True: arcpy.AddMessage("ApplySymbologyFromLayer")
-        arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy doesn't apply the symbology
+        arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy does not always work prior to adding apply the symbology
+        #arcpy.ApplySymbologyFromLayer_management(ipName,impactPointLayerFilePath) # for some reason this guy does work prior to adding apply the symbology
+
+        ## following did not work, seems to want the "results" Layer Object.
+        ##arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,impactPointLayerFilePath) # for some reason this guy doesn't apply the symbology
 
 
         if DEBUG == True: arcpy.AddMessage("m.addLayerToGroup(...)")
         m.addLayerToGroup(topGroupLayer,results,"TOP")
+        #m.addLayerToGroup(topGroupLayer,ipName,"TOP")
 
 ##        if DEBUG == True: arcpy.AddMessage("ApplySymbologyFromLayer")
 ##        arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy doesn't apply the symbology
@@ -447,8 +505,8 @@ finally:
 
     
     # delete some local variables
-    del results, initialGroupLayer, combinedDict, modelGroupLayer
-    del ipName, outputImpactPointFeatures, outputImpactFeatures, outputPointsOfOriginFeatures
+    #del results, initialGroupLayer, combinedDict, modelGroupLayer
+    #del ipName, outputImpactPointFeatures, outputImpactFeatures, outputPointsOfOriginFeatures
 
     # check which variables are still set...cleanup variables...
     if DEBUG == True:
@@ -456,3 +514,4 @@ finally:
         mydict = dict(locals())
         CheckVariables(mydict)
 ##eof
+
