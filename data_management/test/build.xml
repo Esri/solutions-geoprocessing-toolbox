@@ -12,6 +12,11 @@
   </target>
   
   <!-- Adjust Sample Data Dates Tools -->
+  <target name="test_adjust_sample_dates">
+    <echo message="Running: test_adjust_sample_dates" />
+    <ant dir="./test_adjust_sample_dates" target="run_all_tests" />
+    <echo message="Done Test: test_adjust_sample_dates" />
+  </target>
   
   <target name="test_publishable_tasks">
     <echo message="Running: test_publishable_tasks" />
