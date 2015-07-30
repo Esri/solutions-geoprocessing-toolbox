@@ -43,7 +43,6 @@ def main():
         inModelField = 'Model'
         inMinRangeField = 'Minimum_range'
         inMaxRangeField = 'Maximum_range'
-        
         inputWeaponsAsString = ("'M120/121 120-mm American Mortar';'M224 60-mm American Mortar';'M252 81-mm American Mortar'")
         print("inputWeaponsAsString: " + str(inputWeaponsAsString))
         inputWeaponsAsList = inputWeaponsAsString.split(";")
@@ -52,7 +51,6 @@ def main():
         outImpactPrefix = r"imp"
         outPooPrefix = r"poo"
         outRangePrefix = r"rng"
-
         # WGS_1984_UTM_Zone_10N using factoryCode
         sr = arcpy.SpatialReference(32610)
 
