@@ -33,7 +33,7 @@ class LicenseError(Exception):
 
 def main():
     ''' main test method '''
-    try:
+    try:        
         arcpy.ImportToolbox(TestUtilities.toolbox)
         arcpy.env.overwriteOutput = True
 
@@ -44,7 +44,7 @@ def main():
         inMinRangeField = 'Minimum_range'
         inMaxRangeField = 'Maximum_range'
         
-        inputWeaponsAsString = ("'M120/121 120-mm American Mortar';'M224 60-mm American Mortar';'M252 81-mm American Mortar'"
+        inputWeaponsAsString = ("'M120/121 120-mm American Mortar';'M224 60-mm American Mortar';'M252 81-mm American Mortar'")
         print("inputWeaponsAsString: " + str(inputWeaponsAsString))
         inputWeaponsAsList = inputWeaponsAsString.split(";")
         print("inputWeaponsAsList: " + str(inputWeaponsAsList))
