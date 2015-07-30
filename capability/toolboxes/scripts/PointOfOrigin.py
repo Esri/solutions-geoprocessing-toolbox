@@ -36,7 +36,7 @@ outputCoordinateSystemAsText = arcpy.GetParameterAsText(13) # String
 
 delete_me = []
 DEBUG = False
-desktopVersion = ["10.2.2","10.3"]
+desktopVersion = ["10.2.2","10.3","10.3.1"]
 proVersion = ["1.0"]
 
 
