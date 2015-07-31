@@ -52,7 +52,7 @@
   </target>
   
   <target name="get_data_management_data">
-    <!-- Adjust Sample Data Dates Tools Test Data -->
+    <!-- Adjust Sample Data Dates Tools Test Data ... DATA NOT NEEDED FOR THIS TEST -->
     
     <!-- Position Analysis Tools Test Data: 130f52ac95a040cb80717d99db100409 -->
     <echo message="Downloading Position Analysis Tools test data." />
@@ -177,7 +177,16 @@
   </target>
   
   <target name="get_visibility_data">
-    <!-- Sun Position Analysis Tools Test Data -->
+    
+    <!-- Sun Position Analysis Tools Test Data: bf6a04b4c9a3447b91e9c0b4074ca1e4 -->
+    <echo message="Downloading Sun Position Analysis Tools test data" />
+    <get src="http://www.arcgis.com/sharing/content/items/bf6a04b4c9a3447b91e9c0b4074ca1e4/data"
+         dest="${dir.zipdir}/test_sun_position.gdb.zip"
+         verbose="true"
+         usetimestamp="true" />
+    <echo message="Unzipping Sun Position Analysis Tools test dat" />
+    <unzip src="${dir.zipdir}/test_sun_position.gdb.zip"
+           dest="${dir.visibilitydatadir}/geodatabases" />
     
     <!-- Visibility And Range Tools Test Data: 62d971c064e043f48aee2fff9c701042 -->
     <echo message="Downloading Visibility And Range Tools test data" />
