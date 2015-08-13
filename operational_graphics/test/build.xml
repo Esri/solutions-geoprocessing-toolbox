@@ -15,4 +15,9 @@
     <echo message="Done Test: test_range_cards" />
   </target>
 
+  <target name="test_clearing_operations">
+    <echo message="Running: test_clearing_operations" />
+    <ant dir="./test_clearing_operations" target="run_all_tests" />
+    <echo message="Done Test: test_clearing_operations" />
+  </target>
 </project>
