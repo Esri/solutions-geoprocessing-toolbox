@@ -12,51 +12,58 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #------------------------------------------------------------------------------
-# TestCanvasAreaGRG.py
-# Description: Test Canvas Area GRG tool in the Clearing Operations Tools_10.3.tbx.
+# Name: TestPointTargetGRG.py
+# Description: Test Point Target GRG tool in the Clearing Operations Tools_10.3.tbx.
 # Requirements: ArcGIS Desktop Standard
-# ----------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 
 import arcpy
+import os
 import sys
 import traceback
 import TestUtilities
-import os
+
 
 try:
-    arcpy.AddMessage("Starting Test: TestCanvasAreaGRG.")
+
+    arcpy.AddMessage("Starting Test: TestPointTargetGRG.")
     
     arcpy.ImportToolbox(TestUtilities.toolbox, "ClearingOperations")
     arcpy.env.overwriteOutput = True
-    inputCellWidth = 40
-    inputCellHeight = 40
+    
+    # Inputs
+    inputTargetPoint = os.path.join(TestUtilities.inputGDB, "CenterPoint")
+    inputHorizontalCells = 10
+    inputVerticalCells = 10
+    inputCellWidth = 100
+    inputCellHeight = 100
     inputCellUnits = "Meters"
-    inputCanvasAreaPath = os.path.join(TestUtilities.inputGDB, "AO")
-    inputLabelingStartPosition = "Lower-Left"
-    inputLabelingStyle = "Alpha-Numeric"
-    outputFeatureClass = os.path.join(TestUtilities.scratchGDB, "testOutput")
+    inputLabelStartPosition = "Upper-Left"
+    inputLabelStyle = "Alpha-Numeric"
+    outputFeatureClass = os.path.join(TestUtilities.scratchGDB, "PointTargetGRGOutput")
+    
+    arcpy.PointTargetGRG_ClearingOperations(inputTargetPoint, inputHorizontalCells, inputVerticalCells, inputCellWidth, inputCellHeight, inputCellUnits, "#", inputLabelStartPosition, inputLabelStyle, outputFeatureClass)
 
-    #CanvasAreaGRG_ClearingOperations (Canvas_Area, Cell_Width, Cell_Height, Cell_Units, {Draw_Cell}, Labeling_Start_Position, Labeling_Style, Output_Name) 
-    arcpy.CanvasAreaGRG_ClearingOperations(inputCanvasAreaPath, inputCellWidth, inputCellHeight, inputCellUnits, "#", inputLabelingStartPosition, inputLabelingStyle, outputFeatureClass)
-    countOutputFeatures = int(arcpy.GetCount_management(outputFeatureClass).getOutput(0))
-    print("Output Feature count: " + str(countOutputFeatures))
-    if (countOutputFeatures != 294):
+    # Verify the results    
+    outputFeatureCount = int(arcpy.GetCount_management(outputFeatureClass).getOutput(0))
+    print("Output Feature count: " + str(outputCount))
+    
+    if(outputCount != 100):
         print("Invalid output feature count.")
         raise Exception("Test Failed")
     else:
         print("Test Passed")
-
-
+        
+                
 except arcpy.ExecuteError: 
-    # Get the arcpy error messages 
+    # Get the tool error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
-    print(msgs)
-    
+
     # return a system error code
     sys.exit(-1)
-
-except:
+        
+except Exception as e:
     # Get the traceback object
     tb = sys.exc_info()[2]
     tbinfo = traceback.format_tb(tb)[0]
@@ -69,9 +76,7 @@ except:
     arcpy.AddError(pymsg)
     arcpy.AddError(msgs)
 
-    # Print Python error messages for use in Python / Python Window
-    print(pymsg + "\n")
-    print(msgs)
-    
-    # return a system error code  
+    # return a system error code
     sys.exit(-1)
+        
+   
