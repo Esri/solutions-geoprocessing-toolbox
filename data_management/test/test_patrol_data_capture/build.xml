@@ -17,8 +17,8 @@
   <property name="pythonpath" value="${dir.arcpy}\DLLs;${dir.arcpy}\lib;${dir.arcpy}\lib\plat-win;${dir.arcpy}\lib\lib-tk;${dir.arcpy};${dir.arcpy}\lib\site-packages;${dir.arcgisdesktop}\bin;${dir.arcgisdesktop}\arcpy"/>
 
   <target name="run_all_tests" 
-    depends="set_all_variables,test_config,test_gpx2layer,test_remove_duplicates,test_distiguish_tracks,
-    test_rejoin_track_parts,test_despike_gps, test_import_patrol_rpt">
+    depends="set_all_variables, test_config, test_gpx2layer, test_remove_duplicates, test_distiguish_tracks,
+    test_rejoin_track_parts, test_despike_gps, test_append_tracks_to_db, test_import_patrol_rpt">
     <echo message="All Tests Complete" />
   </target>
 
@@ -79,8 +79,14 @@
   </target>
 
   <!-- TODO: Append Tracks to DB -->
+    <target name="test_append_tracks_to_db" depends="set_all_variables">
+    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
+      <env key="PYTHONPATH" path="${pythonpath}"/>
+      <arg line="-u"/>
+      <arg line="${dir.src}/TestAppendTrackstoDB.py"/>
+    </exec>
+  </target>
   
-  <!-- TODO: Import Patrol Rpt -->
   <target name="test_import_patrol_rpt" depends="set_all_variables">
     <exec executable="${dir.arcpy}/python.exe" failonerror="true">
       <env key="PYTHONPATH" path="${pythonpath}"/>
