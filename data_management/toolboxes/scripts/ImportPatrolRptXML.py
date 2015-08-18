@@ -174,7 +174,20 @@ if __name__ == "__main__":
 
 	except Exception as err: 
 		import traceback
-		arcpy.AddError(traceback.format_exception_only(type(err), err)[0].rstrip())
+		# Get the traceback object
+		tb = sys.exc_info()[2]
+		tbinfo = traceback.format_tb(tb)[0]
+
+		# Concatenate information together concerning the error into a message string
+		pymsg = "PYTHON ERRORS:\nTraceback info:\n" + tbinfo + "\nError Info:\n" + str(sys.exc_info()[1])
+		msgs = "ArcPy ERRORS:\n" + arcpy.GetMessages() + "\n"
+
+		# Return python error messages for use in script tool or Python Window
+		arcpy.AddError(pymsg)
+		arcpy.AddError(msgs)
+
+		# return a system error code
+		sys.exit(-1)
 
 	finally:
 		if rows:
