@@ -42,16 +42,16 @@ def labelFeatures(layer, field):
         layer.showLabels = True
         arcpy.RefreshActiveView()
 
-def findLayerByName(layerName, gisVersion):
-    #UPDATE
-    if gisVersion == "1.0": #Pro:
-          for layer in maplist.listLayers():
+def findLayerByName(layerName):
+    try: # ArcGIS Pro
+        from arcpy import mp
+        for layer in maplist.listLayers():
             if layer.name == layerName:
                 arcpy.AddMessage("Found matching layer [" + layer.name + "]")
                 return layer
             else:
                 arcpy.AddMessage("Incorrect layer: [" + layer.name + "]")
-    else:
+    except ImportError: # ArcMap
         for layer in arcpy.mapping.ListLayers(mxd):
             if layer.name == layerName:
                 arcpy.AddMessage("Found matching layer [" + layer.name + "]")
@@ -72,8 +72,6 @@ try:
     arcpy.AddMessage("Shape type: " + str(areaGeom))
     if (descArea.shapeType != "Polygon"):
         raise Exception("ERROR: The area to number must be a polygon.")
-
-    gisVersion = arcpy.GetInstallInfo()["Version"]
 
     mxd, df, aprx, mp = None, None, None, None
     try: # ArcGIS Pro
@@ -149,7 +147,7 @@ try:
         targetLayerName = os.path.basename(outputFeatureClass)
 
     # Get and label the output feature
-    layer = findLayerByName(targetLayerName, gisVersion)
+    layer = findLayerByName(targetLayerName)
     if(layer):
         labelFeatures(layer, numberingField)
 
