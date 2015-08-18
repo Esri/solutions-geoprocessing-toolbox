@@ -76,14 +76,14 @@ try:
     gisVersion = arcpy.GetInstallInfo()["Version"]
 
     mxd, df, aprx, mp = None, None, None, None
-    if gisVersion == "1.0": #Pro:
+    try: # ArcGIS Pro
         from arcpy import mp
         aprx = arcpy.mp.ArcGISProject("CURRENT")
         maplist = aprx.listMaps()[0]
         for lyr in maplist.listLayers():
             if lyr.name == pointFeatureName:
                 layerExists = True
-    else:
+    except ImportError: # ArcMap
         from arcpy import mapping
         mxd = arcpy.mapping.MapDocument('CURRENT')
         for lyr in arcpy.mapping.ListLayers(mxd):
@@ -153,5 +153,5 @@ try:
     if(layer):
         labelFeatures(layer, numberingField)
 
-except Exception, ex:
+except (Exception) as ex:
     arcpy.AddError(ex)
