@@ -40,6 +40,12 @@
     <ant dir="./test_build_elevation" target="run_all_tests" />
     <echo message="Done Test: test_build_elevation" />
   </target>
+  
+  <target name="test_elevation_tools">
+    <echo message="Running: test_elevation_tools" />
+    <ant dir="./test_elevation_tools" target="run_all_tests" />
+    <echo message="Done Test: test_elevation_tools" />
+  </target>
 
   <target name="test_network_data_prep">
     <echo message="Running: test_network_data_prep" />
