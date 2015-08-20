@@ -23,42 +23,37 @@ import traceback
 import TestUtilities
 import os
 
-class LicenseError(Exception):
-    pass
 
 try:
 
     print("Setting environment...")
-    arcpy.ImportToolbox(TestUtilities.toolbox,"elev")
+    arcpy.ImportToolbox(TestUtilities.toolbox,"cadrg")
     arcpy.env.overwriteOutput = True
 
-    #Set tool param variables
+    # Set tool param variables
     print("Setting inputs...")
     targetGeodatabase = TestUtilities.scratchGDB
-    rastypeDTED = "DTED"
-    targetMosaicName = "DigitalTerrainModel"
-    # TODO: need to define for GCS_WGS_1984
+    targetMosaicName = "cadrgMD"
     coordinateSystem = arcpy.SpatialReference(4326)
-    inputElevationFolderPath = os.path.join(TestUtilities.elevSourcePath)
-
+    dataPath = TestUtilities.cadrgSourcePath
+    dataFilter = "*.*"
     #Testing Create Derived Elevation Mosaic
-    arcpy.AddMessage("Starting Test: Create Source Elevation Mosaic")
-    #createSourceMD_elev (workspace, md_name, spref, rastertype, datapath)
-    arcpy.createSourceMD_elev(targetGeodatabase, targetMosaicName, coordinateSystem, rastypeDTED, inputElevationFolderPath)
+    arcpy.AddMessage("Starting Test: CADRB/ECRG Mosaic")
+    # cadrgecrg_cadrg (workspace, md_name, spref, {datapath}, {datafilter}, {useoview}, {ovscale}, {psValue}) 
+    arcpy.cadrgecrg_cadrg(targetGeodatabase, targetMosaicName, coordinateSystem, dataPath, dataFilter)
 
-    #Verify Results
+    # #Verify Results
     print("Verifying results...")
-    countDTMFootprints = int(arcpy.GetCount_management(os.path.join(targetGeodatabase, targetMosaicName)).getOutput(0))
-    print "DTM Footprint count: " + str(countDTMFootprints)
+    countFootprints = int(arcpy.GetCount_management(os.path.join(targetGeodatabase, targetMosaicName)).getOutput(0))
+    print "Footprint count: " + str(countFootprints)
 
-    if (countDTMFootprints < 1):
-        print("Less than one footprint! (" + str(countDTMFootprints) + ")")
+    if (countFootprints < 2):
+        print("ERROR: Less than two footprints! (found " + str(countFootprints) + ")")
         raise Exception("Test Failed")
     else:
         print("Test Passed")
+        arcpy.Delete_mangement(os.path.join(targetGeodatabase,targetMosaicName))
 
-except LicenseError:
-    print("Spatial Analyst license is unavailable")
 
 except arcpy.ExecuteError: 
     # Get the arcpy error messages 
@@ -88,7 +83,4 @@ except:
     # return a system error code  
     sys.exit(-1)
 
-finally:
-    if arcpy.CheckExtension("Spatial") == "Available":
-        arcpy.CheckInExtension("Spatial")
         
