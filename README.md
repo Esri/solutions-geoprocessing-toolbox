@@ -165,7 +165,7 @@ Esri welcomes contributions from anyone and everyone through GitHub. Please see 
 ### Fork and Clone the Repo
 Start contributing to the solutions-geoprocessing-toolbox repo by making a fork and cloning it to your local machine.
 
-* Fork the **dev** branch from the repo on github.com with ![fork button](ForkButtonIcon.png)
+* Fork the repo in github.com with ![fork button](ForkButtonIcon.png)
 * Clone your remote onto your local system ![clone button](CloneInDesktopButtonIcon.png)
 * Get the *mdcs-py* submodule:
 	* `> git submodule init`
@@ -189,7 +189,7 @@ check that an *upstream* is registered:
 The solutions-geoprocessing-toolbox repo changes often, so make sure you are getting the latest updates often.
 
 * `> git fetch upstream`
-* `> git merge upstream/dev`
+* `> git merge upstream/master`
 *
 
 ### Share Your Mods
