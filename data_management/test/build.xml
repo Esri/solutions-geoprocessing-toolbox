@@ -47,6 +47,12 @@
     <ant dir="./test_CADRG_ECRG" target="run_all_tests" />
     <echo message="Done Test: test_CADRG_ECRG" />
   </target>
+
+  <target name="test_CIB">
+    <echo message="Running: test_CIB" />
+    <ant dir="./test_CIB" target="run_all_tests" />
+    <echo message="Done Test: test_CIB" />
+  </target>
   
   <target name="test_elevation_tools">
     <echo message="Running: test_elevation_tools" />

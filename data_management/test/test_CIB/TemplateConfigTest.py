@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright 2015 Esri
+# Copyright 2013 Esri
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,54 +12,64 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #------------------------------------------------------------------------------
-# TestCreateSourceElevationMosaic.py
-# Description: Test Create Source Elevation Mosaic
+# TemplateConfigTest.py
+# Description: Common objects/methods used by test scripts
 # Requirements: ArcGIS Desktop Standard
 # ----------------------------------------------------------------------------
 
 import arcpy
+import os
 import sys
 import traceback
-import TestUtilities
-import os
 
+import TestUtilities
 
 try:
+    print("Testing ArcPy")
+    arcpy.AddMessage("ArcPy works")
 
-    print("Setting environment...")
-    arcpy.ImportToolbox(TestUtilities.toolbox, "cadrg")
-    arcpy.env.overwriteOutput = True
+    # WORKAROUND: delete scratch db (having problems with scratch read-only "scheme lock" errors
+    # print "Deleting Scratch Workspace (Workaround)"
+    # TestUtilities.deleteScratch()
 
-    # Set tool param variables
-    print("Setting inputs...")
-    targetGeodatabase = TestUtilities.scratchGDB
-    targetMosaicName = "cadrgMD"
-    coordinateSystem = arcpy.SpatialReference(4326)
-    dataPath = TestUtilities.cadrgSourcePath
-    dataFilter = "*.*"
-    #Testing CADRG/ECRG tool
-    arcpy.AddMessage("Starting Test: CADRB/ECRG Mosaic")
-    # cadrgecrg_cadrg (workspace, md_name, spref, {datapath}, {datafilter}, {useoview}, {ovscale}, {psValue})
-    arcpy.cadrgecrg_cadrg(targetGeodatabase, targetMosaicName, coordinateSystem, dataPath, dataFilter)
+    print("Testing Necessary Paths")
 
-    # #Verify Results
-    print("Verifying results...")
-    countFootprints = int(arcpy.GetCount_management(os.path.join(targetGeodatabase, targetMosaicName)).getOutput(0))
-    print("Footprint count: " + str(countFootprints))
+    print("Running from: " + str(TestUtilities.currentPath))
 
-    if (countFootprints < 3):
-        print("ERROR: Less than 3 footprints! (found " + str(countFootprints) + ")")
-        raise Exception("Test Failed")
-    else:
-        print("Test Passed")
-        if arcpy.Exists(os.path.join(targetGeodatabase, targetMosaicName)):
-            arcpy.Delete_management(os.path.join(targetGeodatabase, targetMosaicName))
+    paths2Check = []
+    paths2Check.extend([TestUtilities.geodatabasePath, TestUtilities.scratchPath, TestUtilities.toolboxesPath, TestUtilities.cibSourcePath])
 
+    for path2check in paths2Check:
+        if os.path.exists(path2check):
+            print("Valid Path: " + path2check)
+        else:
+            print("ERROR: Necessary Path not found: " + path2check )
+            raise Exception('Bad Path')
+
+    # WORKAROUND
+    # print "Creating New Scratch Workspace (Workaround)"
+    # TestUtilities.createScratch()
+
+    print("Testing Necessary Geo Objects")
+
+    objects2Check = []
+    objects2Check.extend([TestUtilities.toolbox, TestUtilities.scratchGDB])
+    for object2Check in objects2Check :
+        desc = arcpy.Describe(object2Check)
+        if desc == None:
+            print("--> Invalid Object: " + str(object2Check))
+            arcpy.AddError("Bad Input")
+            raise Exception('Bad Input')
+        else:
+            print("Valid Object: " + desc.Name )
+
+    print("Test Successful")
 
 except arcpy.ExecuteError:
     # Get the arcpy error messages
     msgs = arcpy.GetMessages()
     arcpy.AddError(msgs)
+    print(msgs)
 
     # return a system error code
     sys.exit(-1)
@@ -83,5 +93,4 @@ except:
 
     # return a system error code
     sys.exit(-1)
-
-        
+    

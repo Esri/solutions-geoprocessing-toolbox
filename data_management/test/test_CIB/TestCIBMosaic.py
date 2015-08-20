@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #------------------------------------------------------------------------------
-# TestCreateSourceElevationMosaic.py
-# Description: Test Create Source Elevation Mosaic
+# TestCIBMosaic.py
+# Description: Test CIB mosaic tool
 # Requirements: ArcGIS Desktop Standard
 # ----------------------------------------------------------------------------
 
@@ -27,28 +27,27 @@ import os
 try:
 
     print("Setting environment...")
-    arcpy.ImportToolbox(TestUtilities.toolbox, "cadrg")
+    arcpy.ImportToolbox(TestUtilities.toolbox, "cib")
     arcpy.env.overwriteOutput = True
 
     # Set tool param variables
     print("Setting inputs...")
     targetGeodatabase = TestUtilities.scratchGDB
-    targetMosaicName = "cadrgMD"
+    targetMosaicName = "cibMD"
     coordinateSystem = arcpy.SpatialReference(4326)
-    dataPath = TestUtilities.cadrgSourcePath
-    dataFilter = "*.*"
-    #Testing CADRG/ECRG tool
-    arcpy.AddMessage("Starting Test: CADRB/ECRG Mosaic")
-    # cadrgecrg_cadrg (workspace, md_name, spref, {datapath}, {datafilter}, {useoview}, {ovscale}, {psValue})
-    arcpy.cadrgecrg_cadrg(targetGeodatabase, targetMosaicName, coordinateSystem, dataPath, dataFilter)
+    dataPath = TestUtilities.cibSourcePath
+
+    arcpy.AddMessage("Starting Test: CIB Mosaic")
+    # createCIBMD_cib (workspace, md_name, spref, datapath)
+    arcpy.createCIBMD_cib(targetGeodatabase, targetMosaicName, coordinateSystem, dataPath)
 
     # #Verify Results
     print("Verifying results...")
     countFootprints = int(arcpy.GetCount_management(os.path.join(targetGeodatabase, targetMosaicName)).getOutput(0))
     print("Footprint count: " + str(countFootprints))
 
-    if (countFootprints < 3):
-        print("ERROR: Less than 3 footprints! (found " + str(countFootprints) + ")")
+    if (countFootprints < 1):
+        print("ERROR: Fewer footprints found than expected! (found " + str(countFootprints) + ")")
         raise Exception("Test Failed")
     else:
         print("Test Passed")
