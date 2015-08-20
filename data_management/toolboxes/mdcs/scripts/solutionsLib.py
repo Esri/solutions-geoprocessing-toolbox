@@ -14,7 +14,7 @@
 #------------------------------------------------------------------------------
 # Name: SolutionsLib.py
 # Description: To map MDCS command codes to GP Tool functions.
-# Version: 20140417
+# Version: 20150422
 # Requirements: ArcGIS 10.1 SP1
 # Author: Esri Imagery Workflows team
 #------------------------------------------------------------------------------
@@ -50,6 +50,46 @@ class Solutions(Base.Base):
 
     def getAvailableCommands(self):
         return self.commands
+
+
+    def __invokeDynamicFnCallback(self, args, fn_name = None):
+        if (fn_name == None):
+            return args
+        fn = fn_name.lower()
+        if (fn == 'arcpy.exportmosaicdatasetitems_management'):
+            try:
+                CONST_OUTPUT_FOLDER_INDX = 1
+                get_output_folder = args[CONST_OUTPUT_FOLDER_INDX] # let's create the output folder before invoking the function call.
+                os.makedirs(get_output_folder)
+            except:
+                pass    # pass onto default error handler.
+        elif(fn == 'arcpy.stageservice_server'):
+            try:
+                CONST_OUT_SRV_INDX = 1
+                if (os.path.exists(args[CONST_OUT_SRV_INDX])):
+                    os.remove(args[CONST_OUT_SRV_INDX])
+            except:
+                pass
+        return args
+
+    def __invokeDynamicFn(self, args, processKey, fn_name, index):
+        try:
+            varnames = eval('%s.__code__.co_varnames' % (fn_name))
+            varcount = eval('%s.__code__.co_argcount' % (fn_name))
+            varnames = varnames[:varcount]
+            for i in range(len(args), len(varnames)):
+                args.append(self.getProcessInfoValue(processKey, varnames[i].lower(), index))
+            for i in range(0, len(varnames)):
+                if (args[i] == '#'):    # the default marker (#) as returned by (getProcessInfoValue) gets replaced with (None)
+                    args[i] = None
+            setExportMosaicDatasetGeometry = Base.DynaInvoke(fn_name, args, self.__invokeDynamicFnCallback, self.m_log.Message)
+            if (setExportMosaicDatasetGeometry.init() == False):
+                return False
+            return setExportMosaicDatasetGeometry.invoke()
+        except:
+            self.log(arcpy.GetMessages(), self.m_log.const_critical_text)
+            return False
+
 
     #mapping commands to functions
     def executeCommand(self, com, index = 0):
@@ -282,65 +322,146 @@ class Solutions(Base.Base):
                 return False
 
         elif(com == 'BF'):
-          try:
-                self.m_log.Message("\tRecomputing footprint for the mosaic dataset : " + self.m_base.m_mdName, self.m_log.const_general_text)
-                fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
+                try:
+                    self.m_log.Message("\tRecomputing footprint for the mosaic dataset: " + self.m_base.m_mdName, self.m_log.const_general_text)
+                    fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
 
-                processKey = 'buildfootprint'
+                    processKey = 'buildfootprint'
 
-                isQuery = False
-                query = self.getProcessInfoValue(processKey, 'where_clause', index)
-                if (len(query) > 0 and
-                    query != '#'):
-                        isQuery = True
+                    isQuery = False
+                    query = self.getProcessInfoValue(processKey, 'where_clause', index)
+                    if (len(query) > 0 and
+                        query != '#'):
+                            isQuery = True
 
-                expression = "OBJECTID >%s" % (str(self.m_base.m_last_AT_ObjectID))
-                if (isQuery == True):
-                    expression += ' AND %s' % (query)
+                    expression = "OBJECTID >%s" % (str(self.m_base.m_last_AT_ObjectID))
+                    if (isQuery == True):
+                        expression += ' AND %s' % (query)
 
-                arcpy.BuildFootprints_management(
-                fullPath,
-                expression,
-                self.getProcessInfoValue(processKey, 'reset_footprint', index),
-                self.getProcessInfoValue(processKey, 'min_data_value', index),
-                self.getProcessInfoValue(processKey, 'max_data_value', index),
-                self.getProcessInfoValue(processKey, 'approx_num_vertices', index),
-                self.getProcessInfoValue(processKey, 'shrink_distance', index),
-                self.getProcessInfoValue(processKey, 'maintain_edges', index),
-                self.getProcessInfoValue(processKey, 'skip_derived_images', index),
-                self.getProcessInfoValue(processKey, 'update_boundary', index),
-                self.getProcessInfoValue(processKey, 'request_size', index),
-                self.getProcessInfoValue(processKey, 'min_region_size', index),
-                self.getProcessInfoValue(processKey, 'simplification_method', index)
-                )
+                    args = []
+                    args.append(fullPath)
+                    args.append(expression)
+                    args.append(self.getProcessInfoValue(processKey, 'reset_footprint', index))
+                    args.append(self.getProcessInfoValue(processKey, 'min_data_value', index))
+                    args.append(self.getProcessInfoValue(processKey, 'max_data_value', index))
+                    args.append(self.getProcessInfoValue(processKey, 'approx_num_vertices', index))
+                    args.append(self.getProcessInfoValue(processKey, 'shrink_distance', index))
+                    args.append(self.getProcessInfoValue(processKey, 'maintain_edges', index))
+                    args.append(self.getProcessInfoValue(processKey, 'skip_derived_images', index))
+                    args.append(self.getProcessInfoValue(processKey, 'update_boundary', index))
+                    args.append(self.getProcessInfoValue(processKey, 'request_size', index))
+                    args.append(self.getProcessInfoValue(processKey, 'min_region_size', index))
+                    args.append(self.getProcessInfoValue(processKey, 'simplification_method', index))
+                    args.append(self.getProcessInfoValue(processKey, 'edge_tolerance', index))
+                    args.append(self.getProcessInfoValue(processKey, 'max_sliver_size', index))
+                    args.append(self.getProcessInfoValue(processKey, 'min_thinness_ratio', index))
 
-                return True
-          except Exception as inf:
-                self.log(arcpy.GetMessages(), self.m_log.const_critical_text)
-                return False
+                    setBuitFootprints = Base.DynaInvoke('arcpy.BuildFootprints_management', args, None, self.m_log.Message)
+                    if (setBuitFootprints.init() == False):
+                        return False
+                    return setBuitFootprints.invoke()
+                except:
+                    self.log(arcpy.GetMessages(), self.m_log.const_critical_text)
+                    return False
 
         elif (com == 'BS'):
-            try:
-                self.m_log.Message("\tBuild Seamline for the mosaic dataset : " + self.m_base.m_mdName, self.m_log.const_general_text)
-                fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
-                processKey = 'buildseamlines'
-                arcpy.BuildSeamlines_management(fullPath,
-                self.getProcessInfoValue(processKey,'cell_size', index),
-                self.getProcessInfoValue(processKey,'sort_method', index),
-                self.getProcessInfoValue(processKey,'sort_order', index),
-                self.getProcessInfoValue(processKey,'order_by_attribute', index),
-                self.getProcessInfoValue(processKey,'order_by_base_value', index),
-                self.getProcessInfoValue(processKey,'view_point', index),
-                self.getProcessInfoValue(processKey,'computation_method', index),
-                self.getProcessInfoValue(processKey,'blend_width', index),
-                self.getProcessInfoValue(processKey,'blend_type', index),
-                self.getProcessInfoValue(processKey,'request_size', index),
-                self.getProcessInfoValue(processKey,'request_size_type', index)
-                )
-                return True
-            except:
-                self.log(arcpy.GetMessages(), self.m_log.const_critical_text)
-                return False
+                try:
+                    self.m_log.Message("\tBuild Seamline for the mosaic dataset: " + self.m_base.m_mdName, self.m_log.const_general_text)
+                    fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
+                    processKey = 'buildseamlines'
+                    args = []
+                    args.append(fullPath)
+                    args.append(self.getProcessInfoValue(processKey,'cell_size', index))
+                    args.append(self.getProcessInfoValue(processKey,'sort_method', index))
+                    args.append(self.getProcessInfoValue(processKey,'sort_order', index))
+                    args.append(self.getProcessInfoValue(processKey,'order_by_attribute', index))
+                    args.append(self.getProcessInfoValue(processKey,'order_by_base_value', index))
+                    args.append(self.getProcessInfoValue(processKey,'view_point', index))
+                    args.append(self.getProcessInfoValue(processKey,'computation_method', index))
+                    args.append(self.getProcessInfoValue(processKey,'blend_width', index))
+                    args.append(self.getProcessInfoValue(processKey,'blend_type', index))
+                    args.append(self.getProcessInfoValue(processKey,'request_size', index))
+                    args.append(self.getProcessInfoValue(processKey,'request_size_type', index))
+                    args.append(self.getProcessInfoValue(processKey,'blend_width_units', index))
+                    args.append(self.getProcessInfoValue(processKey,'area_of_interest', index))
+                    args.append(self.getProcessInfoValue(processKey,'where_clause', index))
+                    args.append(self.getProcessInfoValue(processKey,'update_existing', index))
+
+                    setBuitSeamlines = Base.DynaInvoke('arcpy.BuildSeamlines_management', args, None, self.m_log.Message)
+                    if (setBuitSeamlines.init() == False):
+                        return False
+                    return setBuitSeamlines.invoke()
+                except:
+                    self.log(arcpy.GetMessages(), self.m_log.const_critical_text)
+                    return False
+
+        elif (com == 'EMDG'):
+                    self.m_log.Message("\tExport mosaic dataset geometry:" + self.m_base.m_mdName, self.m_log.const_general_text)
+                    fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
+                    return self.__invokeDynamicFn(
+                    [fullPath],
+                    'exportmosaicdatasetgeometry',
+                    'arcpy.ExportMosaicDatasetGeometry_management',
+                    index
+                    )
+
+        elif (com == 'EMDI'):
+                    self.m_log.Message("\tExport mosaic dataset items:" + self.m_base.m_mdName, self.m_log.const_general_text)
+                    fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
+                    return self.__invokeDynamicFn(
+                    [fullPath],
+                    'exportmosaicdatasetitems',
+                    'arcpy.ExportMosaicDatasetItems_management',
+                    index
+                    )
+
+        elif (com == 'SMDI'):
+                    self.m_log.Message("\tSplit mosaic dataset items:" + self.m_base.m_mdName, self.m_log.const_general_text)
+                    fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
+                    return self.__invokeDynamicFn(
+                    [fullPath],
+                    'splitmosaicdatasetitems',
+                    'arcpy.MergeMosaicDatasetItems_management',
+                    index
+                    )
+
+        elif (com == 'SY'):
+                    self.m_log.Message("\tSynchronize mosaic dataset:" + self.m_base.m_mdName, self.m_log.const_general_text)
+                    fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
+                    return self.__invokeDynamicFn(
+                    [fullPath],
+                    'synchronizemosaicdataset',
+                    'arcpy.SynchronizeMosaicDataset_management',
+                    index
+                    )
+
+        elif (com == 'CSDD'):
+                    self.m_log.Message("\t{}:{}".format(self.commands[com]['desc'], self.m_base.m_mdName), self.m_log.const_general_text)
+                    fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
+                    return self.__invokeDynamicFn(
+                    [fullPath],
+                    'createimagesddraft',
+                    'arcpy.CreateImageSDDraft',
+                    index
+                    )
+
+        elif (com == 'STS'):
+                    self.m_log.Message("\t{}:{}".format(self.commands[com]['desc'], self.m_base.m_mdName), self.m_log.const_general_text)
+                    return self.__invokeDynamicFn(
+                    [],
+                    'stageservice_server',
+                    'arcpy.StageService_server',
+                    index
+                    )
+
+        elif (com == 'USD'):
+                    self.m_log.Message("\t{}".format(self.commands[com]['desc']), self.m_log.const_general_text)
+                    return self.__invokeDynamicFn(
+                    [],
+                    'uploadservicedefinition_server',
+                    'arcpy.UploadServiceDefinition_server',
+                    index
+                    )
 
         elif(com =='JF'):
                 fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
@@ -373,9 +494,7 @@ class Solutions(Base.Base):
                     self.getProcessInfoValue(processKey, 'where_clause', index),
                     self.getProcessInfoValue(processKey, 'composite_nodata_value', index)
                     )
-
                     arcpy.Delete_management(lyrName)
-
                     return True
 
                 except:
@@ -713,36 +832,6 @@ class Solutions(Base.Base):
                     self.log(arcpy.GetMessages(), self.m_log.const_critical_text)
                     return False
 
-
-        elif(com == 'SY'):
-                fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
-                processKey = 'synchronizemosaicdataset'
-                self.log("Synchronize mosaic dataset:" + fullPath, self.m_log.const_general_text)
-
-                try:
-                    arcpy.SynchronizeMosaicDataset_management(
-                    fullPath,
-                    self.getProcessInfoValue(processKey, 'where_clause', index),
-                    self.getProcessInfoValue(processKey, 'new_items', index),
-                    self.getProcessInfoValue(processKey, 'sync_only_stale', index),
-                    self.getProcessInfoValue(processKey, 'update_cellsize_ranges', index),
-                    self.getProcessInfoValue(processKey, 'update_boundary', index),
-                    self.getProcessInfoValue(processKey, 'update_overviews', index),
-                    self.getProcessInfoValue(processKey, 'build_pyramids', index),
-                    self.getProcessInfoValue(processKey, 'calculate_statistics', index),
-                    self.getProcessInfoValue(processKey, 'build_thumbnails', index),
-                    self.getProcessInfoValue(processKey, 'build_item_cache', index),
-                    self.getProcessInfoValue(processKey, 'rebuild_raster', index),
-                    self.getProcessInfoValue(processKey, 'update_fields', index),
-                    self.getProcessInfoValue(processKey, 'fields_to_update', index),
-                    self.getProcessInfoValue(processKey, 'existing_items', index),
-                    self.getProcessInfoValue(processKey, 'broken_items', index)
-                     )
-                    return True
-                except:
-                    self.log(arcpy.GetMessages(), self.m_log.const_critical_text)
-                    return False
-
         elif(com == 'SE'):
                 self.log("Set environment variables on index: %s" % (index), self.m_log.const_general_text)
 
@@ -1002,7 +1091,7 @@ class Solutions(Base.Base):
             'fnc' : executeCommand
         },
     'SY' :
-        {   'desc' : 'Rebuilds or updates each raster item in the mosaic dataset.',
+        {   'desc' : 'Synchronize mosaic dataset.',
             'fnc' : executeCommand
         },
     'SE' :
@@ -1019,6 +1108,30 @@ class Solutions(Base.Base):
         },
     'STP' :
         {   'desc' : 'Share Package.',
+            'fnc' : executeCommand
+        },
+    'EMDG' :
+        {   'desc' : 'Export mosaic dataset geometry.',
+            'fnc' : executeCommand
+        },
+    'EMDI' :
+        {   'desc' : 'Export mosaic dataset items.',
+            'fnc' : executeCommand
+        },
+    'SMDI' :
+        {   'desc' : 'Split mosaic dataset items.',
+            'fnc' : executeCommand
+        },
+    'CSDD' :
+        {   'desc' : 'Create an image service definition draft file.',
+            'fnc' : executeCommand
+        },
+    'STS' :
+        {   'desc' : 'Stages a service definition.',
+            'fnc' : executeCommand
+        },
+    'USD' :
+        {   'desc' : 'Uploads and publishes a service definition to a specified server.',
             'fnc' : executeCommand
         }
     }

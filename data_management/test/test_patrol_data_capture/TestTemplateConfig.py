@@ -26,32 +26,33 @@ import TestUtilities
 try:
     print "Testing ArcPy"
     arcpy.AddMessage("ArcPy works")
-    
+
     if not arcpy.Exists(TestUtilities.scratchGDB):
         TestUtilities.createScratch()
-    
+
     # Add all datasets that will be needed by the unit tests here
     print("Checking that all necessary objects exist.")
-      
     print("Testing Necessary Paths")
-    
+
     print("Running from: " + str(TestUtilities.currentPath))
-           
+
     paths2Check = []
     paths2Check.extend([TestUtilities.geodatabasePath, TestUtilities.scratchPath, TestUtilities.toolboxesPath])
-    
+
     for path2check in paths2Check :
         if os.path.exists(path2check) :
             print("Valid Path: " + path2check)
-        else :     
+        else :
             print("ERROR: Necessary Path not found: " + path2check )
             raise Exception('Bad Path')
-    
+
     print("Testing Necessary Geo Objects")
-    
+
     objects2Check = []
-    objects2Check.extend([TestUtilities.toolbox, TestUtilities.inputGDB, TestUtilities.outputGDB, \
-                          TestUtilities.gpxFile, TestUtilities.defaultGDB]) 
+    objects2Check.extend([TestUtilities.toolbox, TestUtilities.inputGDB, TestUtilities.outputGDB,
+                          TestUtilities.gpxFile, TestUtilities.defaultGDB,
+                          TestUtilities.patrolReportTable, TestUtilities.enemySightingsTable])
+
     for object2Check in objects2Check :
         desc = arcpy.Describe(object2Check)
         if desc == None :
@@ -60,15 +61,15 @@ try:
             raise Exception('Bad Input')
         else :
             print("Valid Object: " + desc.Name)
-            
+
     print("Test Successful")
-    
+
 except arcpy.ExecuteError: 
     # Get the arcpy error messages 
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
     print(msgs)
-    
+
     # return a system error code
     sys.exit(-1)
 
