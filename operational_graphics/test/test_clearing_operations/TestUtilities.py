@@ -23,6 +23,7 @@ import sys
 
 currentPath = os.path.dirname(__file__)
 geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../operational_graphics/data/geodatabases/"))
+layerPath = os.path.normpath(os.path.join(currentPath, r"../../../operational_graphics/data/layers/"))
 scratchPath = geodatabasePath
 toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../operational_graphics/toolboxes/"))
 

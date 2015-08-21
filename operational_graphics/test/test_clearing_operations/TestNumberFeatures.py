@@ -30,8 +30,8 @@ try:
     arcpy.env.overwriteOutput = True
 
     # Inputs
-    areaToNumber = os.path.join(TestUtilities.inputGDB, "AO")
-    pointFeatures = os.path.join(TestUtilities.inputGDB, "Structures")
+    areaToNumber = os.path.join(TestUtilities.layerPath, "AO.lyr")
+    pointFeatures = os.path.join(TestUtilities.layerPath, "Structures.lyr")
     numberField = "Number"
     outputFeatureClass = os.path.join(TestUtilities.scratchGDB, "NumberFeaturesOutput")
 
