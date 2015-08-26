@@ -25,7 +25,7 @@ import os
 
 try:
     arcpy.AddMessage("Starting Test: TestCanvasAreaGRG.")
-    
+
     arcpy.ImportToolbox(TestUtilities.toolbox, "ClearingOperations")
     arcpy.env.overwriteOutput = True
     inputCellWidth = 40
@@ -52,7 +52,7 @@ except arcpy.ExecuteError:
     msgs = arcpy.GetMessages() 
     arcpy.AddError(msgs) 
     print(msgs)
-    
+
     # return a system error code
     sys.exit(-1)
 
@@ -72,6 +72,6 @@ except:
     # Print Python error messages for use in Python / Python Window
     print(pymsg + "\n")
     print(msgs)
-    
+
     # return a system error code  
     sys.exit(-1)

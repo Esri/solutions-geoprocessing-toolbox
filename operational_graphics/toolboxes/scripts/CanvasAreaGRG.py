@@ -1,5 +1,6 @@
+# coding: utf-8
 #------------------------------------------------------------------------------
-# Copyright 2014 Esri
+# Copyright 2015 Esri
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -22,6 +23,12 @@
 # Creates a Gridded Reference Graphic
 #
 #
+# ==================================================
+# HISTORY:
+#
+# 8/24/2015 - mf - Needed to update script for non-ArcMap/Pro testing environment
+#
+# ==================================================
 
 import os, sys, math, traceback, inspect
 import arcpy
@@ -35,8 +42,16 @@ gridSize = arcpy.GetParameterAsText(4)
 labelStyle = arcpy.GetParameterAsText(5)
 outputFeatureClass = arcpy.GetParameterAsText(6)
 labelStartPos = arcpy.GetParameterAsText(7)
-tempOutput = "in_memory" + "\\" + "tempFishnetGrid"
+tempOutput = os.path.join("in_memory", "tempFishnetGrid")
 sysPath = sys.path[0]
+
+DEBUG = True
+# GLOBALS
+appEnvironment = None
+mxd = None
+df = None
+aprx = None
+maplist = None
 
 def RotateFeatureClass(inputFC, outputFC,
                        angle=0, pivot_point=None):
@@ -241,8 +256,8 @@ def RotateFeatureClass(inputFC, outputFC,
 
         return pivot_point
 
-
 def labelFeatures(layer, field):
+    ''' build label class for layer '''
     if layer.supports("LABELCLASSES"):
         for lblclass in layer.labelClasses:
             lblclass.showClassLabels = True
@@ -251,24 +266,29 @@ def labelFeatures(layer, field):
         arcpy.RefreshActiveView()
 
 def findLayerByName(layerName):
+    '''  '''
     #UPDATE
-    if isPro:
-          for layer in maplist.listLayers():
+    #if isPro: #Update for automated test
+    if appEnvironment == "ARCGIS_PRO":
+        for layer in maplist.listLayers():
             if layer.name == layerName:
                 arcpy.AddMessage("Found matching layer [" + layer.name + "]")
                 return layer
             else:
                 arcpy.AddMessage("Incorrect layer: [" + layer.name + "]")
-    else:
+    #else: #Update for automated test
+    elif appEnvironment == "ARCMAP":
         for layer in arcpy.mapping.ListLayers(mxd):
             if layer.name == layerName:
                 arcpy.AddMessage("Found matching layer [" + layer.name + "]")
                 return layer
             else:
                 arcpy.AddMessage("Incorrect layer: [" + layer.name + "]")
+    else:
+        arcpy.AddWarning("Non-map environment")
 
-#Converts an index into a letter, labeled like excel columns, A to Z, AA to ZZ, etc.
 def ColIdxToXlName(index):
+    ''' Converts an index into a letter, labeled like excel columns, A to Z, AA to ZZ, etc. '''
     if index < 1:
         raise ValueError("Index is too small")
     result = ""
@@ -279,160 +299,235 @@ def ColIdxToXlName(index):
         else:
             return chr(index + ord('A') - 1) + result
 
-# Calculates distance between two points
 def CalculatePointDistance(firstPoint, secondPoint):
+    ''' Calculates distance between two points '''
     return math.sqrt(math.pow((firstPoint.X - secondPoint.X),2) + math.pow((firstPoint.Y - secondPoint.Y),2))
 
-#UPDATE
-gisVersion = arcpy.GetInstallInfo()["Version"]
+def GetApplication():
+    '''Return app environment as: ARCMAP, ARCGIS_PRO, OTHER'''
+    try:
+        from arcpy import mp
+        return "ARCGIS_PRO"
+    except ImportError:
+        try:
+            from arcpy import mapping
+            mxd = arcpy.mapping.MapDocument("CURRENT")
+            return "ARCMAP"
+        except:
+            return "OTHER"
 
-mxd, df, aprx, mapList = None, None, None, None
-isPro = False
-if gisVersion == "1.0": #Pro:
-    from arcpy import mp
-    aprx = arcpy.mp.ArcGISProject("CURRENT")
-    maplist = aprx.listMaps()[0]
-    isPro = True
-else:
-    from arcpy import mapping
-    mxd = arcpy.mapping.MapDocument('CURRENT')
-    df = arcpy.mapping.ListDataFrames(mxd)[0]
-    isPro = False
+def main():
+    ''' Main tool method '''
+    try:
+        #UPDATE
+        gisVersion = arcpy.GetInstallInfo()["Version"]
+        global appEnvironment
+        appEnvironment = GetApplication()
+        if DEBUG == True: arcpy.AddMessage("App environment: " + appEnvironment)
+        global mxd
+        global df
+        global aprx
+        global mapList
+        #mxd, df, aprx, mapList = None, None, None, None
+        isPro = False
 
-# From the template extent, get the origin, y axis, and opposite corner corrdinates
-extents = str.split(str(templateExtent))
-originCoordinate = extents[0] + " " + extents[1]
-yAxisCoordinate = extents[0] + " " + extents[1]
-oppCornerCoordinate = extents[2] + " " + extents[3]
-centerPoint = str((float(extents[0]) + float(extents[2]))/2.0) + " " + str((float(extents[1]) + float(extents[3]))/2.0)
+        #if gisVersion == "1.0": #Pro: #Update for automated test
+        if appEnvironment == "ARCGIS_PRO":
+            from arcpy import mp
+            aprx = arcpy.mp.ArcGISProject("CURRENT")
+            maplist = aprx.listMaps()[0]
+            isPro = True
+        #else: #Update for automated test
+        if appEnvironment == "ARCMAP":
+            from arcpy import mapping
+            mxd = arcpy.mapping.MapDocument('CURRENT')
+            df = arcpy.mapping.ListDataFrames(mxd)[0]
+            isPro = False
 
-# If grid size is drawn on the map, use this instead of cell width and cell height
-drawn = False
-angleDrawn = 0
-workspace = arcpy.env.workspace
-if float(cellWidth) == 0 and float(cellHeight) == 0:
-    drawn = True
-    tempGridFC = os.path.join(arcpy.env.scratchWorkspace, "GridSize")
-    arcpy.CopyFeatures_management(gridSize, tempGridFC)
-    pts = None
-    with arcpy.da.SearchCursor(tempGridFC, 'SHAPE@XY', explode_to_points=True) as cursor:
-        pts = [r[0] for r in cursor][0:4]
-    arcpy.Delete_management(tempGridFC)
+        # From the template extent, get the origin, y axis, and opposite corner corrdinates
+        if DEBUG == True: arcpy.AddMessage("Getting extent info...")
+        extents = str.split(str(templateExtent))
+        originCoordinate = extents[0] + " " + extents[1]
+        yAxisCoordinate = extents[0] + " " + extents[1]
+        oppCornerCoordinate = extents[2] + " " + extents[3]
+        centerPoint = str((float(extents[0]) + float(extents[2]))/2.0) + " " + str((float(extents[1]) + float(extents[3]))/2.0)
 
-    cellWidth = math.sqrt((pts[0][0] - pts[1][0]) ** 2 + (pts[0][1] - pts[1][1]) ** 2)
-    cellHeight = math.sqrt((pts[1][0] - pts[2][0]) ** 2 + (pts[1][1] - pts[2][1]) ** 2)
-    highestPoint = None
-    nextHighestPoint = None
-    for pt in pts:
-        if highestPoint is None or pt[1] > highestPoint[1]:
-            nextHighestPoint = highestPoint
-            highestPoint = pt
-        elif nextHighestPoint is None or pt[1] > nextHighestPoint[1]:
-            nextHighestPoint = pt
+        # If grid size is drawn on the map, use this instead of cell width and cell height
+        inputExtentDrawnFromMap = False
+        angleDrawn = 0
+        workspace = arcpy.env.workspace
+        global cellWidth
+        global cellHeight
+        if float(cellWidth) == 0 and float(cellHeight) == 0:
+            if DEBUG == True: arcpy.AddMessage("Cell extent from features...")
+            inputExtentDrawnFromMap = True
+            tempGridFC = os.path.join(arcpy.env.scratchWorkspace, "GridSize")
+            arcpy.CopyFeatures_management(gridSize, tempGridFC)
+            pts = None
+            with arcpy.da.SearchCursor(tempGridFC, 'SHAPE@XY', explode_to_points=True) as cursor:
+                pts = [r[0] for r in cursor][0:4]
+            arcpy.Delete_management(tempGridFC)
 
-    topLeft = highestPoint if highestPoint[0] < nextHighestPoint[0] else nextHighestPoint
-    topRight = highestPoint if highestPoint[0] > nextHighestPoint[0] else nextHighestPoint
-    yDiff = topRight[1] - topLeft[1]
-    xDiff = topRight[0] - topLeft[0]
+            cellWidth = math.sqrt((pts[0][0] - pts[1][0]) ** 2 + (pts[0][1] - pts[1][1]) ** 2)
+            cellHeight = math.sqrt((pts[1][0] - pts[2][0]) ** 2 + (pts[1][1] - pts[2][1]) ** 2)
+            highestPoint = None
+            nextHighestPoint = None
+            for pt in pts:
+                if highestPoint is None or pt[1] > highestPoint[1]:
+                    nextHighestPoint = highestPoint
+                    highestPoint = pt
+                elif nextHighestPoint is None or pt[1] > nextHighestPoint[1]:
+                    nextHighestPoint = pt
 
-    # Calculate angle
-    hypotenuse = math.sqrt(math.pow(topLeft[0] - topRight[0], 2) + math.pow(topLeft[1] - topRight[1], 2))
-    adjacent = topRight[0] - topLeft[0]
-    numberToCos = float(adjacent)/float(hypotenuse)
-    angleInRadians = math.acos(numberToCos)
-    angleDrawn = math.degrees(angleInRadians)
-    if (topRight[1] > topLeft[1]):
-        angleDrawn = 360 - angleDrawn
-else:
-    if (cellUnits == "Feet"):
-        cellWidth = float(cellWidth) * 0.3048
-        cellHeight = float(cellHeight) * 0.3048
+            topLeft = highestPoint if highestPoint[0] < nextHighestPoint[0] else nextHighestPoint
+            topRight = highestPoint if highestPoint[0] > nextHighestPoint[0] else nextHighestPoint
+            yDiff = topRight[1] - topLeft[1]
+            xDiff = topRight[0] - topLeft[0]
 
-# Set the start position for labeling
-startPos = None
-if (labelStartPos == "Upper-Right"):
-    startPos = "UR"
-elif (labelStartPos == "Upper-Left"):
-    startPos = "UL"
-elif (labelStartPos == "Lower-Left"):
-    startPos = "LL"
-elif (labelStartPos == "Lower-Right"):
-    startPos = "LR"
+            # Calculate angle
+            hypotenuse = math.sqrt(math.pow(topLeft[0] - topRight[0], 2) + math.pow(topLeft[1] - topRight[1], 2))
+            adjacent = topRight[0] - topLeft[0]
+            numberToCos = float(adjacent)/float(hypotenuse)
+            angleInRadians = math.acos(numberToCos)
+            angleDrawn = math.degrees(angleInRadians)
+            if (topRight[1] > topLeft[1]):
+                angleDrawn = 360 - angleDrawn
+        else:
+            if DEBUG == True:
+                arcpy.AddMessage("Cell extent from (" + str(cellWidth) + "," + str(cellHeight) + ")")
+            if (cellUnits == "Feet"):
+                cellWidth = float(cellWidth) * 0.3048
+                cellHeight = float(cellHeight) * 0.3048
 
-# Import the custom toolbox with the fishnet tool in it, and run this. This had to be added to a model,
-# because of a bug, which will now allow you to pass variables to the Create Fishnet tool.
-#UPDATE
-toolboxPath = os.path.dirname(sysPath) + "\\Clearing Operations Tools.tbx"
-arcpy.ImportToolbox(toolboxPath)
-arcpy.AddMessage("Creating Fishnet Grid")
-arcpy.Fishnet_ClearingOperations(tempOutput, originCoordinate, yAxisCoordinate, str(cellWidth), str(cellHeight), 0, 0, oppCornerCoordinate, "NO_LABELS", templateExtent, "POLYGON")
+        # Set the start position for labeling
+        startPos = None
+        if (labelStartPos == "Upper-Right"):
+            startPos = "UR"
+        elif (labelStartPos == "Upper-Left"):
+            startPos = "UL"
+        elif (labelStartPos == "Lower-Left"):
+            startPos = "LL"
+        elif (labelStartPos == "Lower-Right"):
+            startPos = "LR"
 
-# Sort the grid upper left to lower right, and delete the in memory one
-arcpy.AddMessage("Sorting the grid for labeling")
-tempSort = "tempSort"
-arcpy.Sort_management(tempOutput, tempSort, [["Shape", "ASCENDING"]], startPos)
-arcpy.Delete_management("in_memory")
+        # Import the custom toolbox with the fishnet tool in it, and run this. This had to be added to a model.
+        # because of a bug, which will now allow you to pass variables to the Create Fishnet tool.
+        #UPDATE
+        toolboxPath = None
+        if appEnvironment == "ARCGIS_PRO":
+            toolboxPath = os.path.join(os.path.dirname(sysPath), "Clearing Operations Tools.tbx")
+        else:
+            toolboxPath = os.path.join(os.path.dirname(sysPath), "Clearing Operations Tools_10.3.tbx")
 
-# Add a field which will be used to add the grid labels
-arcpy.AddMessage("Adding field for labeling the grid")
-gridField = "Grid"
-arcpy.AddField_management(tempSort, gridField, "TEXT")
+        arcpy.ImportToolbox(toolboxPath)
+        arcpy.AddMessage("Creating Fishnet Grid...")
+        arcpy.Fishnet_ClearingOperations(tempOutput, originCoordinate, yAxisCoordinate, str(cellWidth), str(cellHeight), 0, 0, oppCornerCoordinate, "NO_LABELS", templateExtent, "POLYGON")
 
-# Number the fields
-arcpy.AddMessage("Numbering the grids")
-letterIndex = 1
-secondLetterIndex = 1
-letter = 'A'
-secondLetter = 'A'
-number = 1
-lastY = -9999
-cursor = arcpy.UpdateCursor(tempSort)
-for row in cursor:
-    yPoint = row.getValue("SHAPE").firstPoint.Y
-    if (lastY != yPoint) and (lastY != -9999):
-        letterIndex += 1
-        letter = ColIdxToXlName(letterIndex)
-        if (labelStyle != "Numeric"):
-            number = 1
-        secondLetter = 'A'
+        # Sort the grid upper left to lower right, and delete the in memory one
+        arcpy.AddMessage("Sorting the grid for labeling")
+        tempSort = os.path.join("in_memory","tempSort")
+        arcpy.Sort_management(tempOutput, tempSort, [["Shape", "ASCENDING"]], startPos)
+        #arcpy.Delete_management("in_memory") # Not sure why we are deleteing in_memory
+
+        # Add a field which will be used to add the grid labels
+        arcpy.AddMessage("Adding field for labeling the grid")
+        gridField = "Grid"
+        arcpy.AddField_management(tempSort, gridField, "TEXT")
+
+        # Number the fields
+        arcpy.AddMessage("Numbering the grids")
+        letterIndex = 1
         secondLetterIndex = 1
-    lastY = yPoint
+        letter = 'A'
+        secondLetter = 'A'
+        number = 1
+        lastY = -9999
+        #TODO: update to use DA cursor
+        cursor = arcpy.UpdateCursor(tempSort)
+        for row in cursor:
+            yPoint = row.getValue("SHAPE").firstPoint.Y
+            if (lastY != yPoint) and (lastY != -9999):
+                letterIndex += 1
+                letter = ColIdxToXlName(letterIndex)
+                if (labelStyle != "Numeric"):
+                    number = 1
+                secondLetter = 'A'
+                secondLetterIndex = 1
+            lastY = yPoint
 
-    if (labelStyle == "Alpha-Numeric"):
-        row.setValue(gridField, str(letter) + str(number))
-    elif (labelStyle == "Alpha-Alpha"):
-        row.setValue(gridField, str(letter) + str(secondLetter))
-    elif (labelStyle == "Numeric"):
-        row.setValue(gridField, str(number))
+            if (labelStyle == "Alpha-Numeric"):
+                row.setValue(gridField, str(letter) + str(number))
+            elif (labelStyle == "Alpha-Alpha"):
+                row.setValue(gridField, str(letter) + str(secondLetter))
+            elif (labelStyle == "Numeric"):
+                row.setValue(gridField, str(number))
 
-    cursor.updateRow(row)
-    number += 1
-    secondLetterIndex += 1
-    secondLetter = ColIdxToXlName(secondLetterIndex)
+            cursor.updateRow(row)
+            number += 1
+            secondLetterIndex += 1
+            secondLetter = ColIdxToXlName(secondLetterIndex)
+        del row
+        del cursor
 
-# Rotate the shape, if needed.
-if (drawn):
-    arcpy.AddMessage("Rotating the feature")
-    RotateFeatureClass(tempSort, outputFeatureClass, angleDrawn, centerPoint)
-else:
-    arcpy.CopyFeatures_management(tempSort, outputFeatureClass)
-arcpy.Delete_management(tempSort)
+        # Rotate the shape, if needed.
+        if (inputExtentDrawnFromMap):
+            arcpy.AddMessage("Rotating the feature")
+            RotateFeatureClass(tempSort, outputFeatureClass, angleDrawn, centerPoint)
+        else:
+            arcpy.CopyFeatures_management(tempSort, outputFeatureClass)
+        arcpy.Delete_management(tempSort)
 
-# Get and label the output feature
-#TODO: Update once applying symbology in Pro is fixed.
-#UPDATE
-if isPro == False:
-    layerToAdd = arcpy.mapping.Layer(outputFeatureClass)
-    arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
+        # Get and label the output feature
+        #TODO: Update once applying symbology in Pro is fixed.
+        #UPDATE
+        targetLayerName = os.path.basename(outputFeatureClass)
+        if appEnvironment == "ARCGIS_PRO":
+            #TODO: figure out how to add to the current map in Pro
+            layer = findLayerByName(targetLayerName)
+            if(layer):
+                labelFeatures(layer, gridField)
+        elif appEnvironment == "ARCMAP":
+            layerToAdd = arcpy.mapping.Layer(outputFeatureClass)
+            arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
+            targetLayerName = os.path.basename(outputFeatureClass)
+            layer = findLayerByName(targetLayerName)
+            if(layer):
+                arcpy.AddMessage("Labeling grids")
+                labelFeatures(layer, gridField)
+        else:
+            arcpy.AddMessage("Non-map environment, skipping labeling...")
 
-    targetLayerName = os.path.basename(outputFeatureClass)
-    layer = findLayerByName(targetLayerName)
+        # Set tool output
+        arcpy.SetParameter(6, outputFeatureClass)
 
-    if(layer):
-        arcpy.AddMessage("Labeling grids")
-        labelFeatures(layer, gridField)
+        ### Apply symbology to the GRG layer
+        ###UPDATE
+        ###symbologyPath = os.path.dirname(workspace) + "\\Layers\GRG.lyr"
+        ###arcpy.ApplySymbologyFromLayer_management(layer, symbologyPath)
 
-### Apply symbology to the GRG layer
-###UPDATE
-###symbologyPath = os.path.dirname(workspace) + "\\Layers\GRG.lyr"
-###arcpy.ApplySymbologyFromLayer_management(layer, symbologyPath)
+    except arcpy.ExecuteError: 
+        # Get the tool error messages
+        msgs = arcpy.GetMessages()
+        arcpy.AddError(msgs)
+        print(msgs)
+
+    except:
+        # Get the traceback object
+        tb = sys.exc_info()[2]
+        tbinfo = traceback.format_tb(tb)[0]
+
+        # Concatenate information together concerning the error into a message string
+        pymsg = "PYTHON ERRORS:\nTraceback info:\n" + tbinfo + "\nError Info:\n" + str(sys.exc_info()[1])
+        msgs = "ArcPy ERRORS:\n" + arcpy.GetMessages() + "\n"
+
+        # Return python error messages for use in script tool or Python Window
+        arcpy.AddError(pymsg)
+        arcpy.AddError(msgs)
+    
+        # Print Python error messages for use in Python / Python Window
+        print(pymsg + "\n")
+        print(msgs)
+
+# MAIN =============================================
+if __name__ == "__main__":
+    main()

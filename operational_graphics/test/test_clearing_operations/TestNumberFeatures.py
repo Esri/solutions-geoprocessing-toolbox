@@ -25,28 +25,31 @@ import os
 
 try:
     arcpy.AddMessage("Starting Test: TestNumberFeatures.")
-    
+
     arcpy.ImportToolbox(TestUtilities.toolbox, "ClearingOperations")
     arcpy.env.overwriteOutput = True
 
     # Inputs
-    areaToNumber = os.path.join(TestUtilities.layerPath, "AO.lyr")
-    pointFeatures = os.path.join(TestUtilities.layerPath, "Structures.lyr")
+    # areaToNumber = os.path.join(TestUtilities.layerPath, "AO.lyr")
+    areaToNumber = os.path.join(TestUtilities.inputGDB, "AO")
+    # pointFeatures = os.path.join(TestUtilities.layerPath, "Structures.lyr")
+    pointFeatures = os.path.join(TestUtilities.inputGDB, "Structures")
+
     numberField = "Number"
     outputFeatureClass = os.path.join(TestUtilities.scratchGDB, "NumberFeaturesOutput")
 
     arcpy.NumberFeatures_ClearingOperations(areaToNumber, pointFeatures, numberField, outputFeatureClass)
-    
-    # Results  
+
+    # Results
     outputCount = int(arcpy.GetCount_management(outputFeatureClass).getOutput(0))
     print("Output Feature count: " + str(outputCount))
-    
+
     if(outputCount != 90):
         print("Invalid output feature count.")
         raise Exception("Test Failed")
     else:
         print("Test Passed")
-        
+
 except arcpy.ExecuteError:
     # Get the arcpy error messages
     msgs = arcpy.GetMessages()
@@ -55,7 +58,7 @@ except arcpy.ExecuteError:
 
     # return a system error code
     sys.exit(-1)
-    
+
 except:
     # Get the traceback object
     tb = sys.exc_info()[2]
