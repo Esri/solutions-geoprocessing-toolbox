@@ -553,6 +553,7 @@ def main():
         #symbologyPath = os.path.dirname(workspace) + "\\Layers\GRG.lyr"
         #arcpy.ApplySymbologyFromLayer_management(layer, symbologyPath)
 
+        # Set tool output
         arcpy.SetParameter(8, outputFeatureClass)
 
     except arcpy.ExecuteError:
