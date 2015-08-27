@@ -51,7 +51,7 @@ appEnvironment = None
 mxd = None
 df = None
 aprx = None
-maplist = None
+mapList = None
 
 def RotateFeatureClass(inputFC, outputFC,
                        angle=0, pivot_point=None):
@@ -257,20 +257,31 @@ def RotateFeatureClass(inputFC, outputFC,
         return pivot_point
 
 def labelFeatures(layer, field):
-    ''' build label class for layer '''
-    if layer.supports("LABELCLASSES"):
-        for lblclass in layer.labelClasses:
-            lblclass.showClassLabels = True
-            lblclass.expression = " [" + str(field) + "]"
-        layer.showLabels = True
-        arcpy.RefreshActiveView()
+    ''' set up labeling for layer '''
+    if appEnvironment == "ARCGIS_PRO":
+        if layer.supports("SHOWLABELS"):
+            for lblclass in layer.listLabelClasses():
+                lblclass.visible = True
+                lblclass.expression = " [" + str(field) + "]"
+            layer.showLabels = True
+    elif appEnvironment == "ARCMAP":
+        if layer.supports("LABELCLASSES"):
+            for lblclass in layer.labelClasses:
+                lblclass.showClassLabels = True
+                lblclass.expression = " [" + str(field) + "]"
+            layer.showLabels = True
+            arcpy.RefreshActiveView()
+    else:
+        pass # if returns "OTHER"
 
 def findLayerByName(layerName):
     '''  '''
+    global mapList
+    global mxd
     #UPDATE
     #if isPro: #Update for automated test
     if appEnvironment == "ARCGIS_PRO":
-        for layer in maplist.listLayers():
+        for layer in mapList.listLayers():
             if layer.name == layerName:
                 arcpy.AddMessage("Found matching layer [" + layer.name + "]")
                 return layer
@@ -335,7 +346,7 @@ def main():
         if appEnvironment == "ARCGIS_PRO":
             from arcpy import mp
             aprx = arcpy.mp.ArcGISProject("CURRENT")
-            maplist = aprx.listMaps()[0]
+            mapList = aprx.listMaps()[0]
             isPro = True
         #else: #Update for automated test
         if appEnvironment == "ARCMAP":
@@ -482,7 +493,8 @@ def main():
         #UPDATE
         targetLayerName = os.path.basename(outputFeatureClass)
         if appEnvironment == "ARCGIS_PRO":
-            #TODO: figure out how to add to the current map in Pro
+            results = arcpy.MakeFeatureLayer_management(outputFeatureClass, targetLayerName).getOutput(0)
+            mapList.addLayer(results, "AUTO_ARRANGE")
             layer = findLayerByName(targetLayerName)
             if(layer):
                 labelFeatures(layer, gridField)

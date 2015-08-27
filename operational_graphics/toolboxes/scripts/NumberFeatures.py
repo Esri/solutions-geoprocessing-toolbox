@@ -46,12 +46,22 @@ appEnvironment = None
 mxd, df, aprx, mp, mapList = None, None, None, None, None
 
 def labelFeatures(layer, field):
-    if layer.supports("LABELCLASSES"):
-        for lblclass in layer.labelClasses:
-            lblclass.showClassLabels = True
-            lblclass.expression = " [" + str(field) + "]"
-        layer.showLabels = True
-        arcpy.RefreshActiveView()
+    ''' set up labeling for layer '''
+    if appEnvironment == "ARCGIS_PRO":
+        if layer.supports("SHOWLABELS"):
+            for lblclass in layer.listLabelClasses():
+                lblclass.visible = True
+                lblclass.expression = " [" + str(field) + "]"
+            layer.showLabels = True
+    elif appEnvironment == "ARCMAP":
+        if layer.supports("LABELCLASSES"):
+            for lblclass in layer.labelClasses:
+                lblclass.showClassLabels = True
+                lblclass.expression = " [" + str(field) + "]"
+            layer.showLabels = True
+            arcpy.RefreshActiveView()
+    else:
+        pass # if returns "OTHER"
 
 def findLayerByName(layerName):
     #UPDATE
@@ -59,7 +69,7 @@ def findLayerByName(layerName):
     #if gisVersion == "1.0": #Pro:
         if DEBUG == True:
             arcpy.AddMessage("Pro labeling for " + layerName + "...")
-        for layer in maplist.listLayers():
+        for layer in mapList.listLayers():
             if layer.name == layerName:
                 arcpy.AddMessage("Found matching layer [" + layer.name + "]")
                 return layer
@@ -123,8 +133,8 @@ def main():
         if appEnvironment == "ARCGIS_PRO":
             from arcpy import mp
             aprx = arcpy.mp.ArcGISProject("CURRENT")
-            maplist = aprx.listMaps()[0]
-            for lyr in maplist.listLayers():
+            mapList = aprx.listMaps()[0]
+            for lyr in mapList.listLayers():
                 if lyr.name == pointFeatureName:
                     layerExists = True
         #else:
@@ -205,13 +215,12 @@ def main():
 
         # Get and label the output feature
         if appEnvironment == "ARCGIS_PRO":
-            #TODO: figure out how to add to the current map in Pro
-            arcpy.AddMessage("Labeling output features (" + str(targetLayerName) + ")...")
+            results = arcpy.MakeFeatureLayer_management(outputFeatureClass, targetLayerName).getOutput(0)
+            mapList.addLayer(results, "AUTO_ARRANGE")
             layer = findLayerByName(targetLayerName)
             if(layer):
                 labelFeatures(layer, numberingField)
         elif appEnvironment == "ARCMAP":
-            #TODO: figure out how to add the to the map in ArcMap
             arcpy.AddMessage("Adding features to map (" + str(targetLayerName) + ")...")
             arcpy.MakeFeatureLayer_management(outputFeatureClass, targetLayerName)
             layer = arcpy.mapping.Layer(targetLayerName)

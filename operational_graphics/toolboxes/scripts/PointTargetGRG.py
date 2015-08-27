@@ -55,15 +55,26 @@ df, aprx = None, None
 
 def labelFeatures(layer, field):
     ''' set up labeling for layer '''
-    if layer.supports("LABELCLASSES"):
-        for lblclass in layer.labelClasses:
-            lblclass.showClassLabels = True
-            lblclass.expression = " [" + str(field) + "]"
-        layer.showLabels = True
-        arcpy.RefreshActiveView()
+    if appEnvironment == "ARCGIS_PRO":
+        if layer.supports("SHOWLABELS"):
+            for lblclass in layer.listLabelClasses():
+                lblclass.visible = True
+                lblclass.expression = " [" + str(field) + "]"
+            layer.showLabels = True
+    elif appEnvironment == "ARCMAP":
+        if layer.supports("LABELCLASSES"):
+            for lblclass in layer.labelClasses:
+                lblclass.showClassLabels = True
+                lblclass.expression = " [" + str(field) + "]"
+            layer.showLabels = True
+            arcpy.RefreshActiveView()
+    else:
+        pass # if returns "OTHER"
 
 def findLayerByName(layerName):
     ''' find layer in app '''
+    global mapList
+    global mxd
     #UPDATE
     # if isPro:
     if appEnvironment == "ARCGIS_PRO":
@@ -323,7 +334,7 @@ def main():
         if DEBUG == True: arcpy.AddMessage("App environment: " + appEnvironment)
 
         global aprx
-        global maplist
+        global mapList
         global mxd
         global df
 
@@ -529,15 +540,12 @@ def main():
         #UPDATE
         targetLayerName = os.path.basename(outputFeatureClass)
         if appEnvironment == "ARCGIS_PRO":
-            #TODO: figure out how to add features to the current map in Pro
-            #Currently this fails on 'mapList.addLayer' with no useful error message
-            #arcpy.MakeFeatureLayer_management(outputFeatureClass, targetLayerName)
-            #mapList.addLayer(targetLayerName, "AUTO_ARRANGE")
-            #layer = findLayerByName(targetLayerName)
-            #if (layer):
-            #    arcpy.AddMessage("Labeling grids")
-            #    labelFeatures(layer, gridField)
-            arcpy.AddWarning("Cannot label output in Pro at this time.")
+            results = arcpy.MakeFeatureLayer_management(outputFeatureClass, targetLayerName).getOutput(0)
+            mapList.addLayer(results, "AUTO_ARRANGE")
+            layer = findLayerByName(targetLayerName)
+            if (layer):
+                arcpy.AddMessage("Labeling grids")
+                labelFeatures(layer, gridField)
         elif appEnvironment == "ARCMAP":
             layerToAdd = arcpy.mapping.Layer(outputFeatureClass)
             arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
