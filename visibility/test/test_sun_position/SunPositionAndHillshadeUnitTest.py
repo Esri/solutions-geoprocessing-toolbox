@@ -1,5 +1,6 @@
 
 import unittest
+import logging
 import arcpy
 from arcpy.sa import *
 import sys
@@ -8,17 +9,17 @@ import datetime
 import os
 import TemplateConfigTest
 import TestUtilities
-
-class ValueDifferenceError(Exception):
-    ''' throws errors if compared rasters are different '''
-    def __init__(self, message):
-        self.message = message
+                
                 
 class SunPositionAndHillshadeUnitTest(unittest.TestCase):
     def setUp(self):
         # set-up code
         arcpy.AddMessage("Setting up SunPositionAndHillshadeUnitTest.")
         self.checkPaths()
+        logging.basicConfig(filename='test.log',level=logging.DEBUG)
+        logging.debug('This message should go to the log file')
+        logging.info('So should this')
+        logging.warning('And this, too')
         
     # def tearDown(self):
         # # tear-down code
@@ -63,18 +64,23 @@ class SunPositionAndHillshadeUnitTest(unittest.TestCase):
             rasSTD = float(arcpy.GetRasterProperties_management(diff,"STD").getOutput(0))
             rasUnique = int(arcpy.GetRasterProperties_management(diff,"UNIQUEVALUECOUNT").getOutput(0))
 
-            if (rasMaximum == float(0)) and (rasMinimum == float(0)) and (rasUnique == int(1)):
-                print("No differences between tool output and expected results.")
-                print("Test Passed")
-            else:
-                msg = "ERROR IN TOOL RESULTS: \n"\
-                    + "Difference between tool output and expected results found:\n"\
-                    + "Difference Minimum: " + str(rasMinimum) + "\n"\
-                    + "Difference Maximum: " + str(rasMaximum) + "\n"\
-                    + "Difference Mean: " + str(rasMean) + "\n"\
-                    + "Difference Std. Deviation: " + str(rasSTD) + "\n"\
-                    + "Difference Number of Unique Values: " + str(rasUnique) + "\n"
-                raise ValueDifferenceError(msg)
+            self.assertEqual(rasMaximum, float(0))
+            self.assertEqual(rasMinimum, float(0))
+            self.assertEqual(rasUnique, int(1))
+            print("Test Passed")
+            
+            # if (rasMaximum == float(0)) and (rasMinimum == float(0)) and (rasUnique == int(1)):
+                # print("No differences between tool output and expected results.")
+                # print("Test Passed")
+            # else:
+                # msg = "ERROR IN TOOL RESULTS: \n"\
+                    # + "Difference between tool output and expected results found:\n"\
+                    # + "Difference Minimum: " + str(rasMinimum) + "\n"\
+                    # + "Difference Maximum: " + str(rasMaximum) + "\n"\
+                    # + "Difference Mean: " + str(rasMean) + "\n"\
+                    # + "Difference Std. Deviation: " + str(rasSTD) + "\n"\
+                    # + "Difference Number of Unique Values: " + str(rasUnique) + "\n"
+                # raise ValueDifferenceError(msg)
         
         except arcpy.ExecuteError:
             # Get the arcpy error messages
