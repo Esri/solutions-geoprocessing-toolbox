@@ -27,8 +27,9 @@ scratchPath = geodatabasePath
 toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../suitability/toolboxes/"))                
 
 inputGDB  = os.path.join(geodatabasePath, "test_maot_input.gdb")
-#inputElevationURL = r"http://afmcloud.esri.com/arcgis/services/Environment/DigitalTerrainModel/ImageServer"
-inputElevationURL = r"http://afmcloud.esri.com/arcgis/rest/services/Environment/DigitalTerrainModel/ImageServer"
+inputElevationURL = r"http://afmcloud.esri.com/arcgis/services/Environment/D_DigitalTerrainModel/ImageServer"
+#inputElevationURL = r"http://afmcloud.esri.com/arcgis/rest/services/Environment/DigitalTerrainModel/ImageServer"
+
 #outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
 #defaultGDB = os.path.join(geodatabasePath, "default.gdb")
 scratchGDB = os.path.join(scratchPath, "scratch.gdb")
