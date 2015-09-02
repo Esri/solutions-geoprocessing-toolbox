@@ -37,7 +37,7 @@ try:
     print("Running from: " + str(TestUtilities.currentPath))
 
     paths2Check = []
-    paths2Check.extend([TestUtilities.geodatabasePath, TestUtilities.scratchPath, TestUtilities.toolboxesPath, TestUtilities.cibSourcePath])
+    paths2Check.extend([TestUtilities.geodatabasePath, TestUtilities.scratchPath, TestUtilities.toolboxesPath, TestUtilities.lasSourcePath])
 
     for path2check in paths2Check:
         if os.path.exists(path2check):
