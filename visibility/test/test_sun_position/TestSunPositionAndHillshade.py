@@ -23,15 +23,30 @@ import sys
 import traceback
 import TestUtilities
 import os
-import datetime
+import time
+import logging
+import unittest
 
 import SunPositionAndHillshadeUnitTest
 
 try:
-    # Call Unit Test code
-    sunPosTestCase = SunPositionAndHillshadeUnitTest.SunPositionAndHillshadeUnitTest('test_sun_position_analysis')
-    sunPosTestCase.run()
+    logging.basicConfig(filename='test.log',level=logging.DEBUG)
     
+    # get current local time
+    localtime = time.asctime(time.localtime(time.time()))
+    
+    # one way to run the test - outputs to console only (that I know of)
+    # suite = unittest.TestLoader().loadTestsFromTestCase(SunPositionAndHillshadeUnitTest.SunPositionAndHillshadeUnitTest)
+    # unittest.TextTestRunner(verbosity=2).run(suite)
+    
+    # Call Unit Test code - output to log
+    logging.info(localtime)
+    sunPosTestCase = SunPositionAndHillshadeUnitTest.SunPositionAndHillshadeUnitTest('test_sun_position_analysis')
+    result = unittest.TestResult()
+    sunPosTestCase.run(result)
+    
+    logging.info("Test success: {0}".format(str(result.wasSuccessful())))
+    logging.info(result.failures)
 
 except:
     # Get the traceback object

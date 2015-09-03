@@ -16,10 +16,10 @@ class SunPositionAndHillshadeUnitTest(unittest.TestCase):
         # set-up code
         arcpy.AddMessage("Setting up SunPositionAndHillshadeUnitTest.")
         self.checkPaths()
-        logging.basicConfig(filename='test.log',level=logging.DEBUG)
-        logging.debug('This message should go to the log file')
-        logging.info('So should this')
-        logging.warning('And this, too')
+        # logging.basicConfig(filename='test.log',level=logging.DEBUG)
+        # logging.debug('This message should go to the log file')
+        # logging.info('So should this')
+        # logging.warning('And this, too')
         
     # def tearDown(self):
         # # tear-down code
@@ -67,7 +67,6 @@ class SunPositionAndHillshadeUnitTest(unittest.TestCase):
             self.assertEqual(rasMaximum, float(0))
             self.assertEqual(rasMinimum, float(0))
             self.assertEqual(rasUnique, int(1))
-            print("Test Passed")
             
             # if (rasMaximum == float(0)) and (rasMinimum == float(0)) and (rasUnique == int(1)):
                 # print("No differences between tool output and expected results.")
@@ -89,10 +88,6 @@ class SunPositionAndHillshadeUnitTest(unittest.TestCase):
             print(msgs)
 
             # return a system error code
-            sys.exit(-1)
-
-        except ValueDifferenceError as e:
-            print(e.message)
             sys.exit(-1)
 
         except:
