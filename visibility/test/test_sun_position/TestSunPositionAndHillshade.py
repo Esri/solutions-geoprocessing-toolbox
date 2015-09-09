@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # TestSunPositionAndHillshade.py
 # Description: Test Sun Position Analysis Tools
 # Requirements: ArcGIS Desktop Standard
@@ -27,10 +27,14 @@ import time
 import logging
 import unittest
 
+import UnitTestUtilities
 import SunPositionAndHillshadeUnitTest
 
 try:
-    logging.basicConfig(format='%(levelname)s: %(asctime)s %(message)s', filename='test.log', level=logging.DEBUG)
+    #logFile=os.path.join(TestUtilities.toolboxesPath, 'SunLog.log')
+    logFile = "header.log"
+    logging.basicConfig(format='%(levelname)s: %(asctime)s %(message)s', filename=logFile, level=logging.DEBUG)
+    UnitTestUtilities.setUpLogFileHeader()
     
     # one way to run the test - outputs to console only (that I know of)
     # suite = unittest.TestLoader().loadTestsFromTestCase(SunPositionAndHillshadeUnitTest.SunPositionAndHillshadeUnitTest)

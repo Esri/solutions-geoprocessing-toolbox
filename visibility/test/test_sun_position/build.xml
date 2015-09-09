@@ -13,14 +13,6 @@
     depends="set_all_variables, test_sun_position">
     <echo message="All Tests Complete" />
   </target>
-
- <!--  <target name="test_config" depends="set_all_variables">
-    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
-      <env key="PYTHONPATH" path="${pythonpath}"/>
-      <arg line="-u"/>
-      <arg line="${dir.src}/TemplateConfigTest.py"/>
-    </exec>
-  </target> -->
   
   <target name="test_sun_position" depends="set_all_variables">
     <exec executable="${dir.arcpy}/python.exe" failonerror="true">
