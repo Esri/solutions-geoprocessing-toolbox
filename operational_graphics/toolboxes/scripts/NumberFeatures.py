@@ -34,6 +34,7 @@ import os, sys, math, traceback
 import arcpy
 from arcpy import env
 from arcpy import sa
+import Utilities
 
 # Read in the Parameters
 areaToNumber = arcpy.GetParameterAsText(0)
@@ -88,20 +89,6 @@ def findLayerByName(layerName):
     else:
         arcpy.AddMessage("Non-map environment, no layers to find...")
 
-def GetApplication():
-    '''Return app environment as ARCMAP, ARCGIS_PRO, OTHER'''
-    try:
-        from arcpy import mp
-        return "ARCGIS_PRO"
-    except ImportError:
-        try:
-            from arcpy import mapping
-            mxd = arcpy.mapping.MapDocument("CURRENT")
-            return "ARCMAP"
-        except:
-            return "OTHER"
-
-
 def main():
     ''' main '''
     #UPDATE
@@ -120,7 +107,7 @@ def main():
 
         gisVersion = arcpy.GetInstallInfo()["Version"]
         global appEnvironment
-        appEnvironment = GetApplication()
+        appEnvironment = Utilities.GetApplication()
         if DEBUG == True: arcpy.AddMessage("App environment: " + appEnvironment)
 
         global mxd
