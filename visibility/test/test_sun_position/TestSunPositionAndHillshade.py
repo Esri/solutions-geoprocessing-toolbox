@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # TestSunPositionAndHillshade.py
 # Description: Test Sun Position Analysis Tools
 # Requirements: ArcGIS Desktop Standard
@@ -23,15 +23,29 @@ import sys
 import traceback
 import TestUtilities
 import os
-import datetime
+import time
+import logging
+import unittest
 
+import UnitTestUtilities
 import SunPositionAndHillshadeUnitTest
 
 try:
-    # Call Unit Test code
-    sunPosTestCase = SunPositionAndHillshadeUnitTest.SunPositionAndHillshadeUnitTest('test_sun_position_analysis')
-    sunPosTestCase.run()
+    #logFile=os.path.join(TestUtilities.toolboxesPath, 'SunLog.log')
+    logFile = "header.log"
+    logging.basicConfig(format='%(levelname)s: %(asctime)s %(message)s', filename=logFile, level=logging.DEBUG)
+    UnitTestUtilities.setUpLogFileHeader()
     
+    # one way to run the test - outputs to console only (that I know of)
+    # suite = unittest.TestLoader().loadTestsFromTestCase(SunPositionAndHillshadeUnitTest.SunPositionAndHillshadeUnitTest)
+    # unittest.TextTestRunner(verbosity=2).run(suite)
+    
+    # Call Unit Test code - output to log
+    sunPosTestCase = SunPositionAndHillshadeUnitTest.SunPositionAndHillshadeUnitTest('test_sun_position_analysis')
+    result = unittest.TestResult()
+    sunPosTestCase.run(result)
+    
+    logging.info("Test success: {0}".format(str(result.wasSuccessful())))
 
 except:
     # Get the traceback object
