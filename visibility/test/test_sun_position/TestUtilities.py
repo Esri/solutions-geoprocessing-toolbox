@@ -23,6 +23,7 @@ import sys
 
 currentPath = os.path.dirname(__file__)
 geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../visibility/data/geodatabases/"))
+logPath = os.path.normpath(os.path.join(currentPath, r"../../../visibility/data/logs"))
 
 scratchPath = geodatabasePath
 
@@ -38,16 +39,16 @@ defaultGDB = scratchGDB
 
 toolbox = os.path.join(toolboxesPath, "Sun Position Analysis Tools_10.3.tbx")
 
-def createScratch() :
-    try :
+def createScratch():
+    try:
         arcpy.CreateFileGDB_management(scratchPath, "scratch")
     except:
         print("scratch.gdb already exists")
 
     return
 
-def deleteScratch() :
-    try :
+def deleteScratch():
+    try:
         arcpy.Delete_management(scratchGDB)
     except:    
         print("scratch.gdb delete failed")

@@ -31,10 +31,10 @@ import UnitTestUtilities
 import SunPositionAndHillshadeUnitTest
 
 try:
-    #logFile=os.path.join(TestUtilities.toolboxesPath, 'SunLog.log')
-    logFile = "header.log"
-    logging.basicConfig(format='%(levelname)s: %(asctime)s %(message)s', filename=logFile, level=logging.DEBUG)
-    UnitTestUtilities.setUpLogFileHeader()
+
+    # logger = logging.getLogger("Visibility.SunPosition")
+    logger = UnitTestUtilities.initializeLogger("Visibility.SunPosition")
+    UnitTestUtilities.setUpLogFileHeader(logger)
     
     # one way to run the test - outputs to console only (that I know of)
     # suite = unittest.TestLoader().loadTestsFromTestCase(SunPositionAndHillshadeUnitTest.SunPositionAndHillshadeUnitTest)
@@ -45,7 +45,7 @@ try:
     result = unittest.TestResult()
     sunPosTestCase.run(result)
     
-    logging.info("Test success: {0}".format(str(result.wasSuccessful())))
+    logger.info("Test success: {0}".format(str(result.wasSuccessful())))
 
 except:
     # Get the traceback object
