@@ -18,6 +18,7 @@
 
 import os
 import sys
+import datetime
 
 commandStr = r"ant -f run_all_tests.xml"
 
