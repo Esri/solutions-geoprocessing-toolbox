@@ -35,7 +35,7 @@ from arcpy import sa
 # NOTE: min/max VR numbers estimated from FM 5-33/MIL-P-89305A
 #FACC_veg_tab = {"AL020":["Built-Up Area",0.0,0.0],
 #                "BH070":["Brush",0.60,0.70],
-#                "BH077":["Hummock",0.0,0.0], 
+#                "BH077":["Hummock",0.0,0.0],
 #                "BH090":["Land subject to inundation",0.30,0.60],
 #                "BH095":["Marsh/Swamp",0.10,0.80],
 #                "BH135":["Rice Field",0.30,0.60],
@@ -149,17 +149,17 @@ try:
     #runSIF = False
     # if arcpy.Exists(inputContours) == True:
     #    runSIF = True
-    
+
     runVegetation = False
     #if inputVegetation != types.NoneType and arcpy.Exists(inputVegetation) == True: #UPDATE
     if inputVegetation != None and arcpy.Exists(inputVegetation) == True:
         runVegetation = True
-    
+
     runSoils = False
     #if inputSoils != types.NoneType and  arcpy.Exists(inputSoils) == True: UPDATE
     if inputSoils != None and  arcpy.Exists(inputSoils) == True:
         runSoils = True
-    
+
     runRoughness = False
     #if inputSurfaceRoughness != types.NoneType and  arcpy.Exists(inputSurfaceRoughness) == True: #UPDATE
     if inputSurfaceRoughness != None and  arcpy.Exists(inputSurfaceRoughness) == True:
@@ -191,9 +191,9 @@ try:
     descAOI = arcpy.Describe(inputAOI)
     env.outputCoordinateSystem = commonSpatialReference
     extAOI = descAOI.Extent
-    
-    
-    # get rows/columns/height/width of AOI 
+
+
+    # get rows/columns/height/width of AOI
     numRows, numCols = 1,1
     height = extAOI.height / 10000
     if ((height - math.trunc(height)) >= 0.5):
@@ -218,10 +218,10 @@ try:
     if debug == True: arcpy.AddMessage("intersect fishnet & AOI: " + str(time.strftime("%m/%d/%Y  %H:%M:%S", time.localtime())))
     arcpy.Intersect_analysis([inputAOI,prefishnet],fishnet)
     deleteme.append(fishnet)
-    
-    numTiles = int(arcpy.GetCount_management(fishnet).getOutput(0)) 
+
+    numTiles = int(arcpy.GetCount_management(fishnet).getOutput(0))
     arcpy.AddMessage("AOI has " + str(numTiles) + " 10km square tiles.")
-    
+
     fishnetBoundary = os.path.join("in_memory","fishnetBoundary")
     if debug == True: arcpy.AddMessage("fishnet boundary: " + str(time.strftime("%m/%d/%Y  %H:%M:%S", time.localtime())))
     arcpy.Dissolve_management(fishnet,fishnetBoundary)
@@ -232,7 +232,7 @@ try:
     env.mask = fishnetBoundary
     #arcpy.MakeImageServerLayer_management(inputSlope,"SlopeLayer")
     arcpy.MakeRasterLayer_management(inputSlope,"SlopeLayer")
-    
+
     if runVegetation == True:
         arcpy.AddMessage("Clipping soils to fishnet and joining parameter table...")
         vegetation = os.path.join("in_memory","vegetation")
@@ -240,7 +240,7 @@ try:
         arcpy.Clip_analysis(inputVegetation,fishnetBoundary,vegetation)
         intersectionList.append(vegetation)
         deleteme.append(vegetation)
-        arpcy.JoinField_management(vegetation,"f_code",fishnetBoundary,"f_code")
+        arcpy.JoinField_management(vegetation,"f_code",inputVegetationConversionTable,"f_code")
 
     if runSoils == True:
         # Clip to AOI
@@ -252,7 +252,7 @@ try:
         # Join soils table
         arcpy.JoinField_management(clipSoils,"soilcode",inputSoilsTable,"soilcode")
         intersectionList.append(clipSoils)
-        
+
     if runRoughness == True:
         # Clip to AOI
         arcpy.AddMessage("Clipping roughness to fishnet and joining parameter table...")
@@ -282,7 +282,7 @@ try:
     clean = sa.BoundaryClean(reclassSlope,"NO_SORT","TWO_WAY")
     clean.save(boundaryClean)
     deleteme.append(boundaryClean)
-    
+
     # Convert reclassified slope ranges to polygon features
     slopePoly = os.path.join(scratch,"slopePoly")
     if debug == True: arcpy.AddMessage(str(time.strftime("RasterToPolygon: %m/%d/%Y  %H:%M:%S", time.localtime())))
@@ -299,10 +299,10 @@ try:
     # f1 = (max off road slope - ground slope)/(max on road slope / max road speed kph)
     if debug == True: arcpy.AddMessage(str(time.strftime("Calculate F1: %m/%d/%Y  %H:%M:%S", time.localtime())))
     block = "slopeMedians = {1:1.5,2:6.5,3:15.0,4:25.0,5:37.5,6:45.0}\ndef CalcF1(slope_cat):\n   f1 = float((" + str(vehicleParams[5]) + " - slopeMedians[slope_cat]) / (" + str(vehicleParams[4]) + " / " + str(vehicleParams[3]) + "))\n   return f1"
-    arcpy.CalculateField_management(slopePoly,"f1",expression,"PYTHON_9.3",block)    
+    arcpy.CalculateField_management(slopePoly,"f1",expression,"PYTHON_9.3",block)
     deleteme.append(slopePoly)
     intersectionList.append(slopePoly)
-    
+
     tileList = [] # this guys keeps track of the tile outputs we need to merge later
     tileNum = 1 # number of tiles
     fishnetRows = arcpy.da.SearchCursor(fishnet,["OID@","SHAPE@"])
@@ -314,7 +314,7 @@ try:
         if debug == True: arcpy.AddMessage("Start tile " + str(tileNum) + " : " + str(time.strftime("%m/%d/%Y  %H:%M:%S", time.localtime())))
         # get the OID of the fishnet tile feature. we'll use this as the tile id number
         tileOID = tile[0]
-        
+
         # create a clipping polygon from the tile shape
         tileClip = os.path.join(scratch,"tileClip")
         arcpy.CreateFeatureclass_management(os.path.dirname(tileClip),os.path.basename(tileClip),"POLYGON","#","#","#",env.outputCoordinateSystem)
@@ -324,7 +324,7 @@ try:
         rs = arcpy.da.InsertCursor(tileClip,["SHAPE@"])
         rs.insertRow([tile[1]])
         del rs
-        
+
         # clip Slope to the tile
         arcpy.AddMessage(str(tileNum) + "     Clipping slope categories to tile boundary...")
         slopeClip = os.path.join(scratch,"slopeClip")
@@ -332,12 +332,12 @@ try:
         if debug == True: arcpy.AddMessage(str(tileNum) + "     slopeClip has " + str(arcpy.GetCount_management(slopeClip).getOutput(0)) + " slope categories.")
         deleteme.append(slopeClip)
         slopeClipOIDFieldName = arcpy.Describe(slopeClip).OIDFieldName
-    
+
         arcpy.AddMessage(str(tileNum) + "     Building random OID list...")
         # get the max OID in the slope polygon FCs
         max_OID = 0
         OID_SlopeCat_list = {}
-        
+
         rows = arcpy.da.SearchCursor(slopeClip,["OID@","SlopeCat"])
         for row in rows:
             i = row[0] # OID
@@ -350,11 +350,11 @@ try:
             else:
                 lst = []
                 lst.append(int(i))
-                OID_SlopeCat_list[j] = lst    
+                OID_SlopeCat_list[j] = lst
             max_OID = max(max_OID,i) # what is the max OID to this point
         del rows
         OID_list = {}
-        
+
         for currentSlopeCat in OID_SlopeCat_list: # lets loop through each of the slope categories
             currentList = OID_SlopeCat_list[currentSlopeCat]
             newList = []
@@ -362,18 +362,18 @@ try:
                 for x in range(0,10):
                     choice = random.choice(currentList)
                     newList.append(choice)
-                    currentList.remove(choice) 
+                    currentList.remove(choice)
             else:
                 newList = currentList
             OID_list[currentSlopeCat] = sorted(newList)
-        
+
         # take values of OID dictionary put into a single sorted list
         sort_OIDs = []
         for i in OID_list:
             for j in OID_list[i]:
                 sort_OIDs.append(j)
         sorted(sort_OIDs)
-        
+
         # build where clause to export polys with selected OIDs
         expression = ""
         for i in sort_OIDs:
@@ -381,18 +381,18 @@ try:
                 expression = slopeClipOIDFieldName + " = " + str(i)
             else:
                 expression = expression + " or " + slopeClipOIDFieldName + " = " + str(i)
-        
+
         arcpy.AddMessage(str(tileNum) + "     Copying random polys from slope categories...")
          # copy the random polys to a new feature class
         randomPoly = os.path.join(scratch,"randomPoly")
         arcpy.FeatureClassToFeatureClass_conversion(slopeClip,os.path.dirname(randomPoly),os.path.basename(randomPoly),expression)
         deleteme.append(randomPoly)
-        
+
         # generate points within 'selected' polygons -- ARCINFO ONLY!!!!!
         randomPoint = os.path.join(scratch,"randomPoint")
         arcpy.FeatureToPoint_management(randomPoly,randomPoint,"INSIDE")
         deleteme.append(randomPoint)
-        
+
         # generate diagonals for each point
         arcpy.AddMessage(str(tileNum) + "     Building diagonals...")
         diagonals = os.path.join(scratch,"diagonals")
@@ -413,7 +413,7 @@ try:
             insert.insertRow([diagLine,rndPtOID])
         del insert
         del rows
-    
+
         # Intersect diagonals with contours
         intersects = os.path.join(scratch,"intersects")
         arcpy.AddMessage(str(tileNum) + "     Intersecting diagonals with contours...")
@@ -429,10 +429,10 @@ try:
         arcpy.AddMessage(str(tileNum) + "     Identity slope categories and intersections...")
         arcpy.Identity_analysis(intersectSingle,slopeClip,pointIdentity,"ALL")
         deleteme.append(pointIdentity)
-        
+
         # Get intercept statistics from intersect points
         arcpy.AddMessage(str(tileNum) + "     Getting intersection statistics...")
-        stats1 = os.path.join(scratch,"stats1")  
+        stats1 = os.path.join(scratch,"stats1")
         arcpy.Statistics_analysis(pointIdentity,stats1,[["ID","COUNT"]],"ID")
         deleteme.append(stats1)
         arcpy.JoinField_management(pointIdentity,"ID",stats1,"ID", "FREQUENCY; COUNT_ID")
@@ -451,16 +451,16 @@ try:
         # join intercept stats table to slope polys
         arcpy.AddIndex_management(slopeClip,"SlopeCat","SlopeIndx")
         arcpy.JoinField_management(slopeClip,"SlopeCat",stats2,"SlopeCat")
-        
+
         # copy to new
         arcpy.AddMessage(str(tileNum) + "     Identity vegetation and intersections...")
         outMobilityTile = os.path.join(scratch,"tile_" + str(tileOID))
         arcpy.CopyFeatures_management(slopeClip,outMobilityTile)
         tileList.append(outMobilityTile)
         deleteme.append(outMobilityTile)
-        
+
         # TODO: Every 10 tiles, APPEND to output 'tileMerge' (rather than MERGE them at the end)
-        
+
         if debug == True: arcpy.AddMessage("Finish tile " + str(tileNum) + " : " + str(time.strftime("%m/%d/%Y  %H:%M:%S", time.localtime())))
         arcpy.AddMessage(str(tileNum) + "     Finished with tile...")
         tileNum += 1
@@ -476,7 +476,7 @@ try:
     f1_f2 = os.path.join(scratch,"f1_f2")
     arcpy.Identity_analysis(slopePoly,tileMerge,f1_f2)
     deleteme.append(f1_f2)
-    
+
     # vegetation with f3min/f3max OPTIONAL
     # clipSoils with f4wet/f4dry OPTIONAL
     # clipRoughness with f5 OPTIONAL
@@ -493,7 +493,7 @@ try:
         twoitem = os.path.join(scratch,"twoitem")
         arcpy.Identity_analysis(intersectionList[0],intersectionList[1],twoitem)
         deleteme.append(twoitem)
-        arcpy.Identity_anlaysis(f1_f2,twoitem,outputCCM)
+        arcpy.Identity_analysis(f1_f2,twoitem,outputCCM)
     if len(intersectionList) == 3:
         arcpy.AddMessage("Identity: F1, F2 plus three.")
         if debug == True: arcpy.AddMessage(str(intersectionList))
@@ -513,22 +513,22 @@ try:
     if "f4dry" in fieldList: inputFactorList.append("f4dry")
     if "f4wet" in fieldList: inputFactorList.append("f4wet")
     if "f5" in fieldList: inputFactorList.append("f5")
-    
+
     #Calc CCM
     arcpy.AddField_management(outputCCM,"ccm","DOUBLE")
     cursorFieldList = ["OID@","ccm","f1","f2"] + inputFactorList
     ccmRows = arcpy.da.UpdateCursor(outputCCM,cursorFieldList)
     for ccmRow in ccmRows:
         ccm = 1.0
-        
+
         # Start with Vehicle/Slope Parameter F1
-        f1 = ccmRow[cursorFieldList.index("f1")] 
+        f1 = ccmRow[cursorFieldList.index("f1")]
         #if f1 == types.NoneType: #UPDATE
         if f1 == None:
             f1 = 1.0
             ccmRow[cursorFieldList.index("f1")] = f1
         ccm *= f1
-        
+
         # Next use Slope-Intercept Frequency Count F2
         f2 = ccmRow[cursorFieldList.index("f2")]
         #if f2 == types.NoneType: #UPDATE
@@ -536,7 +536,7 @@ try:
             f2 = 1.0
             ccmRow[cursorFieldList.index("f2")] = f2
         ccm *= f2
-        
+
         # If using vegetation minimum
         if "f3min" in cursorFieldList:
             f3min = ccmRow[cursorFieldList.index("f3min")]
@@ -545,7 +545,7 @@ try:
                 f3min = 1.0
                 ccmRow[cursorFieldList.index("f3min")] = f3min
             ccm *= f3min
-        
+
         # if using vegetation maximum
         if "f3max" in cursorFieldList:
             f3max = ccmRow[cursorFieldList.index("f3max")]
@@ -554,7 +554,7 @@ try:
                 f3max = 1.0
                 ccmRow[cursorFieldList.index("f3max")] = f3max
             ccm *= f3max
-        
+
         # if using dry soils
         if "f4dry" in cursorFieldList:
             f4dry = ccmRow[cursorFieldList.index("f4dry")]
@@ -563,7 +563,7 @@ try:
                 f4dry = 1.0
                 ccmRow[cursorFieldList.index("f4dry")] = f4dry
             ccm *= f4dry
-        
+
         # if using wet soils
         if "f4wet" in cursorFieldList:
             f4wet = ccmRow[cursorFieldList.index("f4wet")]
@@ -572,7 +572,7 @@ try:
                 f4wet = 1.0
                 ccmRow[cursorFieldList.index("f4wet")] = f4wet
             ccm *= f4wet
-        
+
         # if using surface roughness
         if "f5" in cursorFieldList:
             f5 = ccmRow[cursorFieldList.index("f5")]
@@ -581,12 +581,12 @@ try:
                 f5 = 1.0
                 ccmRow[cursorFieldList.index("f5")] = f5
             ccm *= f5
-            
+
         ccmRow[1] = ccm
         ccmRows.updateRow(ccmRow)
     del ccmRows
-        
-    
+
+
     ## copy temp_mobility to out_mobility and keep certain fields
     dropFields = []
     if debug == True: arcpy.AddMessage("Dropping extraneous fields:")
@@ -596,11 +596,11 @@ try:
             dropFields.append(field.name)
     if debug == True: arcpy.AddMessage(str(dropFields))
     arcpy.DeleteField_management(outputCCM,dropFields)
-    
+
     # set the output
     arcpy.SetParameter(5,outputCCM)
     if debug == True: arcpy.AddMessage("DONE: " + str(time.strftime("%m/%d/%Y  %H:%M:%S", time.localtime())))
-    
+
     # cleanup intermediate datasets
     if debug == True: arcpy.AddMessage("Removing intermediate datasets...")
     for i in deleteme:
@@ -608,17 +608,17 @@ try:
         if arcpy.Exists(i):
             arcpy.Delete_management(i)
     if debug == True: arcpy.AddMessage("Done")
-    
-    
+
+
 except arcpy.ExecuteError:
     if debug == True: arcpy.AddMessage("CRASH: " + str(time.strftime("%m/%d/%Y  %H:%M:%S", time.localtime())))
         # Get the traceback object
     tb = sys.exc_info()[2]
     tbinfo = traceback.format_tb(tb)[0]
     arcpy.AddError("Traceback: " + tbinfo)
-    # Get the tool error messages 
-    msgs = arcpy.GetMessages() 
-    arcpy.AddError(msgs) 
+    # Get the tool error messages
+    msgs = arcpy.GetMessages()
+    arcpy.AddError(msgs)
     #print msgs #UPDATE
     print(msgs)
 
@@ -641,5 +641,5 @@ except:
     print(pymsg + "\n")
     #print msgs #UPDATE
     print(msgs)
-    
-    
+
+

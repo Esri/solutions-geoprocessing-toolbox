@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright 2015 Esri
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,21 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # TestUtilities.py
 # Description: Common objects/methods used by test scripts
 # Requirements: ArcGIS Desktop Standard
 # ----------------------------------------------------------------------------
 
-import arcpy
 import os
-import sys
 
 currentPath = os.path.dirname(__file__)
 toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../capability/toolboxes/"))
-testDataPath = os.path.normpath(os.path.join(currentPath,r"../../../capability/data/geodatabases/"))
-toolDataPath = os.path.join(toolboxesPath,r"tooldata")
-layerPath  = os.path.join(toolboxesPath, "layers")
+testDataPath = os.path.normpath(os.path.join(currentPath, r"../../../capability/data/geodatabases/"))
+toolDataPath = os.path.join(toolboxesPath, r"tooldata")
+layerPath = os.path.join(toolboxesPath, "layers")
 toolDataGDB = os.path.join(toolDataPath, "PointOfOrigin.gdb")
-testDataGDB = os.path.join(testDataPath,"test_poo_tools.gdb")
+testDataGDB = os.path.join(testDataPath, "test_poo_tools.gdb")
 toolbox = os.path.join(toolboxesPath, "Point Of Origin Tools_10.3.tbx")
