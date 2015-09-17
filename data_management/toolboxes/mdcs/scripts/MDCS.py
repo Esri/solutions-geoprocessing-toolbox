@@ -14,7 +14,7 @@
 #------------------------------------------------------------------------------
 # Name: MDCS.py
 # Description: This is the main program entry point to MDCS.
-# Version: 20140417
+# Version: 20150429
 # Requirements: ArcGIS 10.1 SP1
 # Required Arguments: -i:<config_file>
 # Usage: python.exe MDCS.py -c:<Optional:command(s)> -i:<config_file>
@@ -50,7 +50,6 @@ def postAddData(gdbPath, mdName, info):
         lyrName = "Mosaiclayer" + str(randomCount)
         randomCount += 1
         expression = "OBJECTID >" + str(obvalue)
-
         try:
             arcpy.MakeMosaicLayer_management(fullPath,lyrName,expression)
         except:
@@ -58,7 +57,6 @@ def postAddData(gdbPath, mdName, info):
             log.Message(arcpy.GetMessages(), log.const_critical_text)
 
             return False
-
         try:
             fieldName = 'dataset_id'
             fieldExist = arcpy.ListFields(fullPath, fieldName)
@@ -71,7 +69,6 @@ def postAddData(gdbPath, mdName, info):
             log.Message(arcpy.GetMessages(), log.const_critical_text)
 
             return False
-
         try:
             arcpy.Delete_management(lyrName)
         except:
@@ -79,7 +76,6 @@ def postAddData(gdbPath, mdName, info):
             log.Message(arcpy.GetMessages(), log.const_critical_text)
 
             return False
-
     return True
 
 def main(argc, argv):
@@ -102,7 +98,7 @@ def main(argc, argv):
         "-artdem: Update DEM path in ART file"
         ]
 
-        print ("\nMDCS.py v5.7 [20130801]\nUsage: MDCS.py -c:<Optional:command> -i:<config_file>" \
+        print ("\nMDCS.py v5.6 [20150429]\nUsage: MDCS.py -c:<Optional:command> -i:<config_file>" \
         "\n\nFlags to override configuration values,") \
 
         for arg in user_args:

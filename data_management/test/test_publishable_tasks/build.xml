@@ -17,7 +17,7 @@
   </target>
 
   <target name="test_config" depends="set_all_variables">
-    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
+    <exec executable="${dir.arcpy}/python.exe" failonerror="false">
       <env key="PYTHONPATH" path="${pythonpath}"/>
       <arg line="-u"/>
       <arg line="${dir.src}/TemplateConfigTest.py"/>
@@ -27,7 +27,7 @@
   <!-- Visibility toolset tests -->
   
   <target name="test_fv_by_circle" depends="set_all_variables">
-    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
+    <exec executable="${dir.arcpy}/python.exe" failonerror="false">
       <env key="PYTHONPATH" path="${pythonpath}"/>
       <arg line="-u"/>
       <arg line="${dir.src}/TestFastVisibilityByCircle_SingleInput.py"/>
@@ -35,7 +35,7 @@
   </target>
   
   <target name="test_fv_by_circles" depends="set_all_variables">
-    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
+    <exec executable="${dir.arcpy}/python.exe" failonerror="false">
       <env key="PYTHONPATH" path="${pythonpath}"/>
       <arg line="-u"/>
       <arg line="${dir.src}/TestFastVisibilityByCircle_MultipleInput.py"/>
@@ -43,7 +43,7 @@
   </target>
 	
   <target name="test_fv_by_distance" depends="set_all_variables">
-    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
+    <exec executable="${dir.arcpy}/python.exe" failonerror="false">
       <env key="PYTHONPATH" path="${pythonpath}"/>
       <arg line="-u"/>
       <arg line="${dir.src}/TestFastVisibilityByDistance.py"/>
@@ -51,7 +51,7 @@
   </target>
   
   <target name="test_fv_by_line" depends="set_all_variables">
-    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
+    <exec executable="${dir.arcpy}/python.exe" failonerror="false">
       <env key="PYTHONPATH" path="${pythonpath}"/>
       <arg line="-u"/>
       <arg line="${dir.src}/TestFastVisibilityByLine.py"/>
@@ -59,7 +59,7 @@
   </target>
   
   <target name="test_fv_by_parameters" depends="set_all_variables">
-    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
+    <exec executable="${dir.arcpy}/python.exe" failonerror="false">
       <env key="PYTHONPATH" path="${pythonpath}"/>
       <arg line="-u"/>
       <arg line="${dir.src}/TestFastVisibilityByParameters.py"/>
@@ -67,7 +67,7 @@
   </target>
   
   <target name="test_fv_by_parameters_multiple" depends="set_all_variables">
-    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
+    <exec executable="${dir.arcpy}/python.exe" failonerror="false">
       <env key="PYTHONPATH" path="${pythonpath}"/>
       <arg line="-u"/>
       <arg line="${dir.src}/TestFastVisibilityByParameters_MultipleInput.py"/>
@@ -77,7 +77,7 @@
   <!-- Network toolset tests -->
 
   <target name="test_drive_time_simple" depends="set_all_variables">
-    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
+    <exec executable="${dir.arcpy}/python.exe" failonerror="false">
       <env key="PYTHONPATH" path="${pythonpath}"/>
       <arg line="-u"/>
       <arg line="${dir.src}/TestDriveTime_Simple.py"/>
@@ -87,7 +87,7 @@
   
   
   <target name="test_p2p_route_simple" depends="set_all_variables">
-    <exec executable="${dir.arcpy}/python.exe" failonerror="true">
+    <exec executable="${dir.arcpy}/python.exe" failonerror="false">
       <env key="PYTHONPATH" path="${pythonpath}"/>
       <arg line="-u"/>
       <arg line="${dir.src}/TestPoint2Point_Simple.py"/>

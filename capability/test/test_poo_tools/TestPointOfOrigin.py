@@ -33,17 +33,17 @@ class LicenseError(Exception):
 
 def main():
     ''' main test method '''
-    try:
+    try:        
         arcpy.ImportToolbox(TestUtilities.toolbox)
         arcpy.env.overwriteOutput = True
 
         # Set tool param variables
-        inputImpactPoints = os.path.join(TestUtilities.testDataGDB, "impacts")
+        inputImpactPoints = os.path.join(TestUtilities.testDataGDB, "impact_pts_monterey_UTM10N")
         inputWeaponsTable = os.path.join(TestUtilities.toolDataGDB, r"Weapons")
         inModelField = 'Model'
         inMinRangeField = 'Minimum_range'
         inMaxRangeField = 'Maximum_range'
-        inputWeaponsAsString = ("'82mm Soviet Mortar';'88mm American Mortar';'120mm American Mortar'")
+        inputWeaponsAsString = ("'M120/121 120-mm American Mortar';'M224 60-mm American Mortar';'M252 81-mm American Mortar'")
         print("inputWeaponsAsString: " + str(inputWeaponsAsString))
         inputWeaponsAsList = inputWeaponsAsString.split(";")
         print("inputWeaponsAsList: " + str(inputWeaponsAsList))
@@ -51,8 +51,8 @@ def main():
         outImpactPrefix = r"imp"
         outPooPrefix = r"poo"
         outRangePrefix = r"rng"
-        # WGS_1984_UTM_Zone_42N using factoryCode
-        sr = arcpy.SpatialReference(32642)
+        # WGS_1984_UTM_Zone_10N using factoryCode
+        sr = arcpy.SpatialReference(32610)
 
         # Testing Point Of Origin Site Detection
         arcpy.AddMessage("Starting Test: Point of Origin Site Detection")

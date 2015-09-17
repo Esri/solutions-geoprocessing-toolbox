@@ -5,13 +5,24 @@
   <!-- templatehome = solution-geoprocessing-toolbox -->
 
   <target name="run_all_tests"
-    depends="test_build_elevation,test_network_data_prep,test_imagery_tools,test_topographic_tools,
-    test_publishable_tasks,test_import_and_conversion,test_scanned_map_tools,test_patrol_data_capture,
-    test_geonames_tools">
+    depends="test_adjust_sample_dates,
+    test_publishable_tasks,
+    test_import_and_conversion,
+    test_build_elevation,
+    test_CADRG_ECRG,
+    test_elevation_tools,
+    test_network_data_prep,
+    test_geonames_tools,
+    test_topographic_tools,
+    test_patrol_data_capture">
     <echo message="Running All Tests" />
   </target>
   
-  <!-- Adjust Sample Data Dates Tools -->
+  <target name="test_adjust_sample_dates">
+    <echo message="Running: test_adjust_sample_dates" />
+    <ant dir="./test_adjust_sample_dates" target="run_all_tests" />
+    <echo message="Done Test: test_adjust_sample_dates" />
+  </target>
   
   <target name="test_publishable_tasks">
     <echo message="Running: test_publishable_tasks" />
@@ -30,6 +41,24 @@
     <ant dir="./test_build_elevation" target="run_all_tests" />
     <echo message="Done Test: test_build_elevation" />
   </target>
+  
+  <target name="test_CADRG_ECRG">
+    <echo message="Running: test_CADRG_ECRG" />
+    <ant dir="./test_CADRG_ECRG" target="run_all_tests" />
+    <echo message="Done Test: test_CADRG_ECRG" />
+  </target>
+
+  <target name="test_CIB">
+    <echo message="Running: test_CIB" />
+    <ant dir="./test_CIB" target="run_all_tests" />
+    <echo message="Done Test: test_CIB" />
+  </target>
+  
+  <target name="test_elevation_tools">
+    <echo message="Running: test_elevation_tools" />
+    <ant dir="./test_elevation_tools" target="run_all_tests" />
+    <echo message="Done Test: test_elevation_tools" />
+  </target>
 
   <target name="test_network_data_prep">
     <echo message="Running: test_network_data_prep" />
@@ -43,17 +72,19 @@
     <echo message="Done Test: test_geonames_tools" />
   </target>
   
-  <target name="test_imagery_tools">
+<!-- TEST DATA REMOVED -->
+<!--  <target name="test_imagery_tools">
     <echo message="Running: test_imagery_tools" />
     <ant dir="./test_imagery_tools" target="run_all_tests" />
     <echo message="Done Test: test_imagery_tools" />
-  </target>
+  </target>-->
   
-  <target name="test_scanned_map_tools">
+<!-- TEST DATA REMOVED -->
+<!--  <target name="test_scanned_map_tools">
     <echo message="Running: test_scanned_map_tools" />
     <ant dir="./test_scanned_map_tools" target="run_all_tests" />
     <echo message="Done Test: test_scanned_map_tools" />
-  </target>
+  </target>-->
   
   <target name="test_topographic_tools">
     <echo message="Running: test_topographic_tools" />
