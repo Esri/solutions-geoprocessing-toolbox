@@ -32,8 +32,7 @@ import SunPositionAndHillshadeUnitTest
 
 try:
 
-    # logger = logging.getLogger("Visibility.SunPosition")
-    logger = UnitTestUtilities.initializeLogger("Visibility.SunPosition")
+    logger = UnitTestUtilities.initializeLogger("Visibility")
     UnitTestUtilities.setUpLogFileHeader(logger)
     
     # one way to run the test - outputs to console only (that I know of)
@@ -46,7 +45,16 @@ try:
     sunPosTestCase.run(result)
     
     logger.info("Test success: {0}".format(str(result.wasSuccessful())))
+    
+except arcpy.ExecuteError: 
+    # Get the arcpy error messages
+    msgs = arcpy.GetMessages()
+    arcpy.AddError(msgs)
+    print(msgs)
 
+    # return a system error code
+    sys.exit(-1)
+        
 except:
     # Get the traceback object
     tb = sys.exc_info()[2]
