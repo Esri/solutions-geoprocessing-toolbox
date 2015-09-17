@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Application>
   <!-- Support for Dynamic Variable <Name>$xyz$</Name> or <Name>DefaultValue;$xyz$</Name> The variable value can be passed from the command line -->
   <Name>Name_of_Project</Name>
   <Command>DefaultCommand</Command>
-  <!-- Commands avaiable CM,CR,AR,BF,BS,BP,JF,CS,CBMD,BPS,ERF,DN,SP,IG,BB,SS,CC,BO,DO,AI,CV,CP,SE,SY -->
+  <!-- Commands avaiable CM, AR, SP, BP, CBMD, ERF, CS, BPS, BF, BS, BB, DN, SY, IG, SS, DF, DO, BO, MMDI, DMD, RRFMD, RI, AI, JF, CV, MTC, ETC, STP, SE, EMDG, EMDI, SMDI, CSDD, STS, USD -->
   <!-- Commands can be combined using the + sign and some commands can be called multiple times, refer to MDCS document for more help -->
   <ArcGISVersion>
     <!-- Defines Min Max version required. Eg due to know issue in previsous versions -->
@@ -207,7 +207,7 @@
           <compression_quality>0-100</compression_quality>
           <skip_existing>OVERWRITE;SKIP_EXISTING</skip_existing>
         </BuildPyramidsAndStatistics>
-        <!-- BPS    Build Footprints -->
+        <!-- BF  Build Footprints -->
         <!-- http://resources.arcgis.com/en/help/main/10.2/index.html#/Build_Footprints/001700000087000000/ -->
         <BuildFootprint>
           <where_clause>SQL_QUERY</where_clause>
@@ -325,37 +325,35 @@
           <generate_missing_images>GENERATE_MISSING_IMAGES;IGNORE_MISSING_IMAGES</generate_missing_images>
           <regenerate_stale_images>REGENERATE_STALE_IMAGES;IGNORE_STALE_IMAGES</regenerate_stale_images>
         </BuildOverviews>
-		<!-- MMDI     Merge Mosaic Dataset Items-->
+        <!-- MMDI     Merge Mosaic Dataset Items-->
         <!-- http://resources.arcgis.com/en/help/main/10.2/index.html#/Merge_Mosaic_Dataset_Items/00170000018r000000/ -->
-		<MergeMosaicDatasetItems>
-			<where_clause>where_clause</where_clause>
-			<block_field>filednametobeused</block_field>
-			<max_rows_per_merged_items></max_rows_per_merged_items>
-		</MergeMosaicDatasetItems>
-		
-		<!-- DMD     Delete Mosaic Dataset -->
+        <MergeMosaicDatasetItems>
+          <where_clause>where_clause</where_clause>
+          <block_field>filednametobeused</block_field>
+          <max_rows_per_merged_items></max_rows_per_merged_items>
+        </MergeMosaicDatasetItems>
+        <!-- DMD     Delete Mosaic Dataset -->
         <!-- http://resources.arcgis.com/en/help/main/10.2/index.html#/Delete_Mosaic_Dataset/00170000016s000000/ -->
-		<DeleteMosaicDataset>
-			<delete_overview_images>DELETE_OVERVIEW_IMAGES;NO_DELETE_OVERVIEW_IMAGES</delete_overview_images>
-			<delete_item_cache>DELETE_ITEM_CACHE;NO_DELETE_ITEM_CACHE</delete_item_cache>
-		</DeleteMosaicDataset>
-		
-		<!-- RRFMD     Remove Rasters from Mosaic Dataset -->
+        <DeleteMosaicDataset>
+          <delete_overview_images>DELETE_OVERVIEW_IMAGES;NO_DELETE_OVERVIEW_IMAGES</delete_overview_images>
+          <delete_item_cache>DELETE_ITEM_CACHE;NO_DELETE_ITEM_CACHE</delete_item_cache>
+        </DeleteMosaicDataset>
+        <!-- RRFMD     Remove Rasters from Mosaic Dataset -->
         <!-- http://resources.arcgis.com/en/help/main/10.2/index.html#/Remove_Rasters_From_Mosaic_Dataset/00170000008t000000/ -->
-		<RemoveRastersFromMosaicDataset>
-			<where_clause></where_clause>
-			<update_boundary></update_boundary>
-			<mark_overviews_items>UPDATE_BOUNDARY;NO_BOUNDARY</mark_overviews_items>
-			<delete_overview_images>MARK_OVERVIEW_ITEMS;NO_MARK_OVERVIEW_ITEMS</delete_overview_images>
-			<delete_item_cache>DELETE_ITEM_CACHE;NO_DELETE_ITEM_CACHE</delete_item_cache>
-			<remove_items>REMOVE_MOSAICDATASET_ITEMS;NO_REMOVE_MOSAICDATASET_ITEMS</remove_items>
-			<update_cellsize_ranges>UPDATE_CELL_SIZES;NO_CELL_SIZES</update_cellsize_ranges>
-		</RemoveRastersFromMosaicDataset>
-		<!-- RI     Remove Attribute Index -->
+        <RemoveRastersFromMosaicDataset>
+          <where_clause></where_clause>
+          <update_boundary></update_boundary>
+          <mark_overviews_items>UPDATE_BOUNDARY;NO_BOUNDARY</mark_overviews_items>
+          <delete_overview_images>MARK_OVERVIEW_ITEMS;NO_MARK_OVERVIEW_ITEMS</delete_overview_images>
+          <delete_item_cache>DELETE_ITEM_CACHE;NO_DELETE_ITEM_CACHE</delete_item_cache>
+          <remove_items>REMOVE_MOSAICDATASET_ITEMS;NO_REMOVE_MOSAICDATASET_ITEMS</remove_items>
+          <update_cellsize_ranges>UPDATE_CELL_SIZES;NO_CELL_SIZES</update_cellsize_ranges>
+        </RemoveRastersFromMosaicDataset>
+        <!-- RI     Remove Attribute Index -->
         <!-- http://resources.arcgis.com/en/help/main/10.2/index.html#/Remove_Attribute_Index/001700000061000000/ -->
-		<RemoveIndex>
-			<index_name>[index_name,...]</index_name>
-		</RemoveIndex>
+        <RemoveIndex>
+          <index_name>[index_name,...]</index_name>
+        </RemoveIndex>
         <!-- AI     Add Attribute Index -->
         <!-- http://resources.arcgis.com/en/help/main/10.2/index.html#/Add_Attribute_Index/00170000005z000000/ -->
         <AddIndex>
@@ -469,6 +467,64 @@
         <!-- CP Compact File Geodatabase -->
         <!-- This command does not have any arguments so needs only to be mentioned at command line -->
         <!--  http://resources.arcgis.com/en/help/main/10.2/index.html#/Compact/00170000000n000000/ -->
+        <!-- EMDG Exports feature classes for the footprint, boundary, seamline, or resolution levels of a mosaic dataset-->
+        <!-- http://resources.arcgis.com/en/help/main/10.2/index.html#//001700000197000000 -->
+        <ExportMosaicDatasetGeometry>
+          <out_feature_class></out_feature_class>
+          <where_clause />
+          <geometry_type />
+        </ExportMosaicDatasetGeometry>
+        <!-- EMDI Creates a copy of your processed images within a mosaic dataset to a specified folder and raster file format -->
+        <!-- http://resources.arcgis.com/en/help/main/10.2/index.html#//001700000196000000 -->
+        <ExportMosaicDatasetItems>
+          <out_folder></out_folder>
+          <where_clause />
+          <out_base_name />
+          <format />
+          <nodata_value />
+          <clip_type />
+          <template_dataset />
+          <cell_size />
+        </ExportMosaicDatasetItems>
+        <!-- SMDI Splits mosaic dataset items that were merged together using Merge Mosaic Dataset Items -->
+        <!-- http://resources.arcgis.com/en/help/main/10.2/index.html#//00170000018q000000 -->
+        <SplitMosaicDatasetItems>
+          <where_clause />
+        </SplitMosaicDatasetItems>
+        <!-- CSDD Create an image service definition draft file -->
+        <!-- http://resources.arcgis.com/en/help/main/10.2/index.html#//018v00000094000000 -->
+        <CreateImageSDDraft>
+          <out_sddraft></out_sddraft>
+          <service_name></service_name>
+          <server_type />
+          <connection_file_path />
+          <copy_data_to_server />
+          <folder_name />
+          <summary />
+          <tags />
+        </CreateImageSDDraft>
+        <!-- STS Stages a service definition -->
+        <!-- http://resources.arcgis.com/en/help/main/10.2/index.html#//00540000001r000000 -->
+        <StageService_server>
+          <in_service_definition_draft></in_service_definition_draft>
+          <out_service_definition></out_service_definition>
+        </StageService_server>
+        <!-- USD Uploads and publishes a service definition to a specified server -->
+        <!-- http://resources.arcgis.com/en/help/main/10.2/index.html#//00540000001p000000 -->
+        <UploadServiceDefinition_server>
+          <in_sd_file></in_sd_file>
+          <in_server></in_server>
+          <in_service_name />
+          <in_cluster />
+          <in_folder_type />
+          <in_folder />
+          <in_startupType />
+          <in_override />
+          <in_my_contents />
+          <in_public />
+          <in_organization />
+          <in_groups />
+        </UploadServiceDefinition_server>
       </Processes>
     </MosaicDataset>
   </Workspace>

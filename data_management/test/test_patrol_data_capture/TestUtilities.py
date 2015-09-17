@@ -24,32 +24,31 @@ import sys
 currentPath = os.path.dirname(__file__)
 geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/data/geodatabases/"))
 scratchPath = geodatabasePath
-toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/toolboxes/"))   
-gpxPath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/data/gpx/"))
-               
+toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/toolboxes/"))
+gpxPath = os.path.normpath(os.path.join(currentPath, r"../../../data_management/data/PatrolDataCapture/"))
 
-inputGDB  = os.path.join(geodatabasePath, "test_patrol_data_capture_inputs.gdb")
-#outputGDB = os.path.join(geodatabasePath, "test_outputs.gdb")
-#defaultGDB = os.path.join(geodatabasePath, "default.gdb")
-scratchGDB = os.path.join(scratchPath, "scratch.gdb")
+inputGDB = os.path.join(geodatabasePath, "test_patrol_data_capture_inputs.gdb")
+scratchGDB = os.path.join(scratchPath, "pdc_scratch.gdb")
 outputGDB = scratchGDB
 defaultGDB = scratchGDB
 gpxFile = os.path.join(gpxPath, "JBad_20100706.gpx")
-
+xmlPatrolReport = os.path.join(gpxPath, "PatrolReport017.xml")
+patrolReportTable = os.path.join(inputGDB, "PatrolReport")
+enemySightingsTable = os.path.join(inputGDB, "EnemySightings")
 toolbox = os.path.join(toolboxesPath, "Patrol Data Capture Tools_10.3.tbx")
 
-def createScratch() :
-    try :
-        arcpy.CreateFileGDB_management(scratchPath, "scratch")                                          
-    except:    
+def createScratch():
+    ''' create scratch geodatabase'''
+    try:
+        arcpy.CreateFileGDB_management(scratchPath, "pdc_scratch")
+    except:
         print("scratch.gdb already exists")
-        
     return
 
-def deleteScratch() :
-    try :   
+def deleteScratch():
+    ''' delete scratch geodatabase'''
+    try:
         arcpy.Delete_management(scratchGDB)
-    except:    
+    except:
         print("scratch.gdb delete failed")
-        
-    return    
+    return
