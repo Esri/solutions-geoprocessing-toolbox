@@ -25,7 +25,7 @@
           <rows_maximum_imagesize>4000</rows_maximum_imagesize>
           <columns_maximum_imagesize>4000</columns_maximum_imagesize>
           <allowed_compressions>LZ77;NONE;LERC</allowed_compressions>
-          <default_compression_type>LZ77</default_compression_type>
+          <default_compression_type>LERC</default_compression_type>
           <JPEG_quality>75</JPEG_quality>
 	  <resampling_type>BILINEAR</resampling_type>
 	  <LERC_Tolerance>0.01</LERC_Tolerance>
@@ -77,8 +77,8 @@
 			<bands_for_nodata_value>ALL_BANDS 0</bands_for_nodata_value>
 		</DefineMosaicDatasetNoData>
 				<CalculateStatistics>
-          <x_skip_factor>10</x_skip_factor>
-          <y_skip_factor>10</y_skip_factor>
+          <x_skip_factor>1000</x_skip_factor>
+          <y_skip_factor>1000</y_skip_factor>
           <ignore_values>#</ignore_values>
           <skip_existing>OVERWRITE</skip_existing>
           <area_of_interest>#</area_of_interest>

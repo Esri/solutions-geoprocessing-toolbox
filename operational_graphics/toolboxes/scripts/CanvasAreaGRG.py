@@ -33,6 +33,8 @@
 import os, sys, math, traceback, inspect
 import arcpy
 from arcpy import env
+import Utilities
+
 # Read in the parameters
 templateExtent = arcpy.GetParameterAsText(0)
 cellWidth = arcpy.GetParameterAsText(1)
@@ -314,26 +316,13 @@ def CalculatePointDistance(firstPoint, secondPoint):
     ''' Calculates distance between two points '''
     return math.sqrt(math.pow((firstPoint.X - secondPoint.X),2) + math.pow((firstPoint.Y - secondPoint.Y),2))
 
-def GetApplication():
-    '''Return app environment as: ARCMAP, ARCGIS_PRO, OTHER'''
-    try:
-        from arcpy import mp
-        return "ARCGIS_PRO"
-    except ImportError:
-        try:
-            from arcpy import mapping
-            mxd = arcpy.mapping.MapDocument("CURRENT")
-            return "ARCMAP"
-        except:
-            return "OTHER"
-
 def main():
     ''' Main tool method '''
     try:
         #UPDATE
         gisVersion = arcpy.GetInstallInfo()["Version"]
         global appEnvironment
-        appEnvironment = GetApplication()
+        appEnvironment = Utilities.GetApplication()
         if DEBUG == True: arcpy.AddMessage("App environment: " + appEnvironment)
         global mxd
         global df
