@@ -73,7 +73,7 @@ def checkGeoObjects():
     for object2Check in objects2Check:
         desc = arcpy.Describe(object2Check)
         if desc == None:
-            print("--> Invalid Object: " + str(object2Check)    )
+            print("--> Invalid Object: " + str(object2Check))
             arcpy.AddError("Bad Input")
             raise Exception('Bad Input')
         else:

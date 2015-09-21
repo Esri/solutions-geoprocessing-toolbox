@@ -28,7 +28,7 @@ class SunPositionAndHillshadeUnitTest(unittest.TestCase):
     # def tearDown(self):
         # # tear-down code
         # arcpy.AddMessage("Tearing down the SunPositionAndHillshadeUnitTest.")
-        
+
     def test_sun_position_analysis(self):
         try:
             arcpy.AddMessage("Testing Sun Position Analysis (unit).")

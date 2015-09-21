@@ -39,6 +39,13 @@ try:
     # suite = unittest.TestLoader().loadTestsFromTestCase(SunPositionAndHillshadeUnitTest.SunPositionAndHillshadeUnitTest)
     # unittest.TextTestRunner(verbosity=2).run(suite)
     
+    # testSuite = unittest.TestSuite()
+    # testSuite.addTest(SunPositionAndHillshadeUnitTest.SunPositionAndHillshadeUnitTest('test_sun_position_analysis'))
+    # testSuite.addTest(SunPositionAndHillshadeUnitTest.SunPositionAndHillshadeUnitTest('test_second'))
+    
+    # res = unittest.TestResult()
+    # testSuite.run(res)
+    
     # Call Unit Test code - output to log
     sunPosTestCase = SunPositionAndHillshadeUnitTest.SunPositionAndHillshadeUnitTest('test_sun_position_analysis')
     result = unittest.TestResult()
