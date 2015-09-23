@@ -39,19 +39,15 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 
 * The [**data_management**](./data_management/README.md) folder contains:
   * Adjust Sample Data Dates Tools
-  * Build Elevation Mosaic Tools - **To be deprecated**, replaced by Elevation Tools
   * CADRG ECRG Tools
   * CIB Tools
   * Elevation Tools
   * Geonames Tools
-  * Imagery Basemap Tools - **To be deprecated**, replaced by CIB Tools
   * Import and Conversion Tools - formerly Position Analysis Tools
   * LiDAR Elevation Tools
   * Network Data Preparation Tools
   * Patrol Data Capture Tools
   * Publishable Task Tools
-  * Scanned Map Basemap Tools - **To be deprecated**, replaced by CADRG ECRG Tools
-  * Topographic Basemap Tools - **To be deprecated**, replaced by Elevation Tools
 
 * The [**operational_graphics**](./operational_graphics/README.md) folder contains:
   * Clearing Operations Tools
@@ -74,7 +70,7 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 
 ## Requirements
 
-* ArcGIS Desktop 10.3+ or ArcGIS Pro 1.0+
+* ArcGIS Desktop 10.3.1+ or ArcGIS Pro 1.1+
     * Check [Releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases) for tools for previous versions of ArcGIS Desktop
 * Apache Ant - used to download and extract dependent data and run test drivers
 * Java Runtime Environment (JRE) or Developer Kit (JDK) (required by Ant)
