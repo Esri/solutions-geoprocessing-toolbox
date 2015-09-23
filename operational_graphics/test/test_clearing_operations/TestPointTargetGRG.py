@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright 2013 Esri
+# Copyright 2015 Esri
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -23,14 +23,13 @@ import sys
 import traceback
 import TestUtilities
 
-
 try:
 
     arcpy.AddMessage("Starting Test: TestPointTargetGRG.")
-    
+
     arcpy.ImportToolbox(TestUtilities.toolbox, "ClearingOperations")
     arcpy.env.overwriteOutput = True
-    
+
     # Inputs
     inputTargetPoint = os.path.join(TestUtilities.inputGDB, "CenterPoint")
     inputHorizontalCells = 10
@@ -41,28 +40,27 @@ try:
     inputLabelStartPosition = "Upper-Left"
     inputLabelStyle = "Alpha-Numeric"
     outputFeatureClass = os.path.join(TestUtilities.scratchGDB, "PointTargetGRGOutput")
-    
+
     arcpy.PointTargetGRG_ClearingOperations(inputTargetPoint, inputHorizontalCells, inputVerticalCells, inputCellWidth, inputCellHeight, inputCellUnits, "#", inputLabelStartPosition, inputLabelStyle, outputFeatureClass)
 
-    # Verify the results    
-    outputFeatureCount = int(arcpy.GetCount_management(outputFeatureClass).getOutput(0))
+    # Verify the results
+    outputCount = int(arcpy.GetCount_management(outputFeatureClass).getOutput(0))
     print("Output Feature count: " + str(outputCount))
-    
+
     if(outputCount != 100):
         print("Invalid output feature count.")
         raise Exception("Test Failed")
     else:
         print("Test Passed")
-        
-                
-except arcpy.ExecuteError: 
-    # Get the tool error messages 
-    msgs = arcpy.GetMessages() 
-    arcpy.AddError(msgs) 
+
+except arcpy.ExecuteError:
+    # Get the tool error messages
+    msgs = arcpy.GetMessages()
+    arcpy.AddError(msgs)
 
     # return a system error code
     sys.exit(-1)
-        
+
 except Exception as e:
     # Get the traceback object
     tb = sys.exc_info()[2]
@@ -78,5 +76,3 @@ except Exception as e:
 
     # return a system error code
     sys.exit(-1)
-        
-   

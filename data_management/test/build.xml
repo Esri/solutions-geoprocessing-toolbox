@@ -9,6 +9,7 @@
     test_publishable_tasks,
     test_import_and_conversion,
     test_build_elevation,
+    test_elevation_tools,
     test_network_data_prep,
     test_geonames_tools,
     test_topographic_tools,
@@ -16,7 +17,6 @@
     <echo message="Running All Tests" />
   </target>
   
-  <!-- Adjust Sample Data Dates Tools -->
   <target name="test_adjust_sample_dates">
     <echo message="Running: test_adjust_sample_dates" />
     <ant dir="./test_adjust_sample_dates" target="run_all_tests" />
@@ -39,6 +39,27 @@
     <echo message="Running: test_build_elevation" />
     <ant dir="./test_build_elevation" target="run_all_tests" />
     <echo message="Done Test: test_build_elevation" />
+  </target>
+  
+  <!--NOTE: CADRG/ECRG has not been added to run_all_tests-->
+  <target name="test_CADRG_ECRG">
+    <echo message="Running: test_CADRG_ECRG" />
+    <ant dir="./test_CADRG_ECRG" target="run_all_tests" />
+    <echo message="Done Test: test_CADRG_ECRG" />
+  </target>
+
+  <!--NOTE: CIB has not been added to run_all_tests-->
+  <target name="test_CIB">
+    <echo message="Running: test_CIB" />
+    <ant dir="./test_CIB" target="run_all_tests" />
+    <echo message="Done Test: test_CIB" />
+  </target>
+  
+  <!-- NOTE: LiDAR Elevation Tools has not been added to run_all_tests -->
+  <target name="test_LiDAR">
+    <echo message="Running: test_LiDAR" />
+    <ant dir="./test_LiDAR" target="run_all_tests" />
+    <echo message="Done Test: test_LiDAR" />
   </target>
   
   <target name="test_elevation_tools">

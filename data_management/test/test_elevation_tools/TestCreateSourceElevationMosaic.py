@@ -52,7 +52,7 @@ try:
     print "DTM Footprint count: " + str(countDTMFootprints)
 
     if (countDTMFootprints < 1):
-        print("Less than one footprint! (" + str(countDTFootprints) + ")")
+        print("Less than one footprint! (" + str(countDTMFootprints) + ")")
         raise Exception("Test Failed")
     else:
         print("Test Passed")

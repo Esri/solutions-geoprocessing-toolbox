@@ -1,3 +1,4 @@
+# coding: utf-8
 #------------------------------------------------------------------------------
 # Copyright 2014 Esri
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,10 +23,18 @@
 # Creates a Gridded Reference Graphic
 #
 #
+# ==================================================
+# HISTORY:
+#
+# 8/25/2015 - mf - Needed to update script for non-ArcMap/Pro testing environment
+#
+# ==================================================
 
 import os, sys, math, traceback
 import arcpy
 from arcpy import env
+import Utilities
+
 # Read in the parameters
 targetPointOrigin = arcpy.GetParameterAsText(0)
 numberCellsHo = arcpy.GetParameterAsText(1)
@@ -37,33 +46,56 @@ gridSize = arcpy.GetParameterAsText(6)
 labelStyle = arcpy.GetParameterAsText(7)
 outputFeatureClass = arcpy.GetParameterAsText(8)
 labelStartPos = arcpy.GetParameterAsText(9)
-tempOutput = "in_memory" + "\\" + "tempFishnetGrid"
+tempOutput = os.path.join("in_memory", "tempFishnetGrid")
 sysPath = sys.path[0]
 
+appEnvironment = None
+DEBUG = True
+mxd = None
+mapList = None
+df, aprx = None, None
+
 def labelFeatures(layer, field):
-    if layer.supports("LABELCLASSES"):
-        for lblclass in layer.labelClasses:
-            lblclass.showClassLabels = True
-            lblclass.expression = " [" + str(field) + "]"
-        layer.showLabels = True
-        arcpy.RefreshActiveView()
+    ''' set up labeling for layer '''
+    if appEnvironment == "ARCGIS_PRO":
+        if layer.supports("SHOWLABELS"):
+            for lblclass in layer.listLabelClasses():
+                lblclass.visible = True
+                lblclass.expression = " [" + str(field) + "]"
+            layer.showLabels = True
+    elif appEnvironment == "ARCMAP":
+        if layer.supports("LABELCLASSES"):
+            for lblclass in layer.labelClasses:
+                lblclass.showClassLabels = True
+                lblclass.expression = " [" + str(field) + "]"
+            layer.showLabels = True
+            arcpy.RefreshActiveView()
+    else:
+        pass # if returns "OTHER"
 
 def findLayerByName(layerName):
+    ''' find layer in app '''
+    global mapList
+    global mxd
     #UPDATE
-    if isPro:
-          for layer in maplist.listLayers():
+    # if isPro:
+    if appEnvironment == "ARCGIS_PRO":
+        for layer in mapList.listLayers():
             if layer.name == layerName:
                 arcpy.AddMessage("Found matching layer [" + layer.name + "]")
                 return layer
             else:
                 arcpy.AddMessage("Incorrect layer: [" + layer.name + "]")
-    else:
+    # else:
+    elif appEnvironment == "ARCMAP":
         for layer in arcpy.mapping.ListLayers(mxd):
             if layer.name == layerName:
                 arcpy.AddMessage("Found matching layer [" + layer.name + "]")
                 return layer
             else:
                 arcpy.AddMessage("Incorrect layer: [" + layer.name + "]")
+    else:
+        arcpy.AddMessage("Non-map application (ArcCatalog, stand-alone test, etc.")
 
 def RotateFeatureClass(inputFC, outputFC,
                        angle=0, pivot_point=None):
@@ -148,7 +180,7 @@ def RotateFeatureClass(inputFC, outputFC,
         FID = dFC.OIDFieldName
 
         # create temp feature class
-        tmpFC = arcpy.CreateScratchName("xxfc","","featureclass")
+        tmpFC = arcpy.CreateScratchName("xxfc", "", "featureclass")
         arcpy.CreateFeatureclass_management(os.path.dirname(tmpFC),
                                             os.path.basename(tmpFC),
                                             shpType)
@@ -172,12 +204,12 @@ def RotateFeatureClass(inputFC, outputFC,
             for Row in Rows:
                 shp = Row.getValue(shpField)
                 pnt = shp.getPart()
-                pnt.X, pnt.Y = RotateXY(pnt.X,pnt.Y,xcen,ycen,angle)
+                pnt.X, pnt.Y = RotateXY(pnt.X, pnt.Y, xcen, ycen, angle)
                 oRow = oRows.newRow()
                 oRow.setValue(shpField, pnt)
-                oRow.setValue(TFID,Row.getValue(FID))
+                oRow.setValue(TFID, Row. getValue(FID))
                 oRows.insertRow(oRow)
-        elif shpType in ["Polyline","Polygon"]:
+        elif shpType in ["Polyline", "Polygon"]:
             parts = arcpy.Array()
             rings = arcpy.Array()
             ring = arcpy.Array()
@@ -269,9 +301,8 @@ def RotateFeatureClass(inputFC, outputFC,
 
         return pivot_point
 
-
-#Converts an index into a letter, labeled like excel columns, A to Z, AA to ZZ, etc.
 def ColIdxToXlName(index):
+    ''' Converts an index into a letter, labeled like excel columns, A to Z, AA to ZZ, etc. '''
     if index < 1:
         raise ValueError("Index is too small")
     result = ""
@@ -282,213 +313,270 @@ def ColIdxToXlName(index):
         else:
             return chr(index + ord('A') - 1) + result
 
-#UPDATE
-gisVersion = arcpy.GetInstallInfo()["Version"]
+def main():
+    ''' main method '''
+    try:
+        #UPDATE
+        gisVersion = arcpy.GetInstallInfo()["Version"]
+        global appEnvironment
+        appEnvironment = Utilities.GetApplication()
+        if DEBUG == True: arcpy.AddMessage("App environment: " + appEnvironment)
 
-mxd, df, aprx, mapList = None, None, None, None
-isPro = False
-if gisVersion == "1.0": #Pro:
-    from arcpy import mp
-    aprx = arcpy.mp.ArcGISProject("CURRENT")
-    maplist = aprx.listMaps()[0]
-    isPro = True
-else:
-    from arcpy import mapping
-    mxd = arcpy.mapping.MapDocument('CURRENT')
-    df = arcpy.mapping.ListDataFrames(mxd)[0]
-    isPro = False
+        global aprx
+        global mapList
+        global mxd
+        global df
 
-# If grid size is drawn on the map, use this instead of cell width and cell height
-drawn = False
-angleDrawn = 0
-workspace = arcpy.env.workspace
-topLeftDrawn = 0
-if float(cellWidth) == 0 and float(cellHeight) == 0:
-    drawn = True
-    tempGridFC = os.path.join(arcpy.env.scratchWorkspace, "GridSize")
-    arcpy.CopyFeatures_management(gridSize, tempGridFC)
-    pts = None
-    with arcpy.da.SearchCursor(tempGridFC, 'SHAPE@XY', explode_to_points=True) as cursor:
-        pts = [r[0] for r in cursor][0:4]
-    arcpy.Delete_management(tempGridFC)
+        isPro = False
+        #if gisVersion == "1.0": #Pro:
+        if appEnvironment == "ARCGIS_PRO":
+            from arcpy import mp
+            aprx = arcpy.mp.ArcGISProject("CURRENT")
+            mapList = aprx.listMaps()[0]
+            isPro = True
+        #else:
+        elif appEnvironment == "ARCMAP":
+            from arcpy import mapping
+            mxd = arcpy.mapping.MapDocument('CURRENT')
+            df = arcpy.mapping.ListDataFrames(mxd)[0]
+            isPro = False
+        else:
+            if DEBUG == True: arcpy.AddMessage("Non-map application...")
 
-    # Find the highest points in the drawn rectangle, to calculate the top left and top right coordinates.
-    highestPoint = None
-    nextHighestPoint = None
-    for pt in pts:
-        if highestPoint is None or pt[1] > highestPoint[1]:
-            nextHighestPoint = highestPoint
-            highestPoint = pt
-        elif nextHighestPoint is None or pt[1] > nextHighestPoint[1]:
-            nextHighestPoint = pt
+        # If grid size is drawn on the map, use this instead of cell width and cell height
+        inputExtentDrawnFromMap = False
+        angleDrawn = 0
+        workspace = arcpy.env.workspace
+        topLeftDrawn = 0
+        global cellWidth
+        global cellHeight
+        if float(cellWidth) == 0 and float(cellHeight) == 0:
+            inputExtentDrawnFromMap = True
+            tempGridFC = os.path.join(arcpy.env.scratchWorkspace, "GridSize")
+            arcpy.CopyFeatures_management(gridSize, tempGridFC)
+            pts = None
+            with arcpy.da.SearchCursor(tempGridFC, 'SHAPE@XY', explode_to_points=True) as cursor:
+                pts = [r[0] for r in cursor][0:4]
+            arcpy.Delete_management(tempGridFC)
 
-    topLeft = highestPoint if highestPoint[0] < nextHighestPoint[0] else nextHighestPoint
-    topRight = highestPoint if highestPoint[0] > nextHighestPoint[0] else nextHighestPoint
-    topLeftDrawn = topLeft
+            # Find the highest points in the drawn rectangle, to calculate the top left and top right coordinates.
+            highestPoint = None
+            nextHighestPoint = None
+            for pt in pts:
+                if highestPoint is None or pt[1] > highestPoint[1]:
+                    nextHighestPoint = highestPoint
+                    highestPoint = pt
+                elif nextHighestPoint is None or pt[1] > nextHighestPoint[1]:
+                    nextHighestPoint = pt
 
-    # Calculate the cell height and cell width
-    cellWidth= math.sqrt((pts[0][0] - pts[1][0]) ** 2 + (pts[0][1] - pts[1][1]) ** 2)
-    cellHeight = math.sqrt((pts[1][0] - pts[2][0]) ** 2 + (pts[1][1] - pts[2][1]) ** 2)
+            topLeft = highestPoint if highestPoint[0] < nextHighestPoint[0] else nextHighestPoint
+            topRight = highestPoint if highestPoint[0] > nextHighestPoint[0] else nextHighestPoint
+            topLeftDrawn = topLeft
 
-    # Calculate angle
-    hypotenuse = math.sqrt(math.pow(topLeft[0] - topRight[0], 2) + math.pow(topLeft[1] - topRight[1], 2))
-    adjacent = topRight[0] - topLeft[0]
-    numberToCos = float(adjacent)/float(hypotenuse)
-    angleInRadians = math.acos(numberToCos)
-    angleDrawn = math.degrees(angleInRadians)
-    if (topRight[1] > topLeft[1]):
-        angleDrawn = 360 - angleDrawn
-else:
-    if (cellUnits == "Feet"):
-        cellWidth = float(cellWidth) * 0.3048
-        cellHeight = float(cellHeight) * 0.3048
+            # Calculate the cell height and cell width
+            cellWidth= math.sqrt((pts[0][0] - pts[1][0]) ** 2 + (pts[0][1] - pts[1][1]) ** 2)
+            cellHeight = math.sqrt((pts[1][0] - pts[2][0]) ** 2 + (pts[1][1] - pts[2][1]) ** 2)
 
-# Get the coordinates of the point drawn.
-rows = arcpy.SearchCursor(targetPointOrigin)
-extent = None
-for row in rows:
-    shape = row.getValue("SHAPE")
-    extent = shape.extent
-pointExtents = str.split(str(extent))
+            # Calculate angle
+            hypotenuse = math.sqrt(math.pow(topLeft[0] - topRight[0], 2) + math.pow(topLeft[1] - topRight[1], 2))
+            adjacent = topRight[0] - topLeft[0]
+            numberToCos = float(adjacent)/float(hypotenuse)
+            angleInRadians = math.acos(numberToCos)
+            angleDrawn = math.degrees(angleInRadians)
+            if (topRight[1] > topLeft[1]):
+                angleDrawn = 360 - angleDrawn
+        else:
+            if (cellUnits == "Feet"):
+                cellWidth = float(cellWidth) * 0.3048
+                cellHeight = float(cellHeight) * 0.3048
 
-# Shift the grid center point if the rows and/or columns are even.
-if (float(numberCellsHo)%2 == 0.0):
-    hoShiftAmt = float(cellHeight) / 2.0
+        # Get the coordinates of the point inputExtentDrawnFromMap.
+        rows = arcpy.SearchCursor(targetPointOrigin)
+        extent = None
+        for row in rows:
+            shape = row.getValue("SHAPE")
+            extent = shape.extent
+        pointExtents = str.split(str(extent))
 
-    # Determines shift up/down based on where box was drawn
-    if drawn == False:
-        pointExtents[1] = str(float(pointExtents[1]) - hoShiftAmt)
-    elif (float(topLeftDrawn[1]) > float(pointExtents[1])):
-        pointExtents[1] = str(float(pointExtents[1]) - hoShiftAmt)
-    else:
-        pointExtents[1] = str(float(pointExtents[1]) + hoShiftAmt)
+        # Shift the grid center point if the rows and/or columns are even.
+        if (float(numberCellsHo)%2 == 0.0):
+            hoShiftAmt = float(cellHeight) / 2.0
 
-if (float(numberCellsVert)%2 == 0.0):
-    vertShiftAmt = float(cellWidth) / 2.0
+            # Determines shift up/down based on where box was inputExtentDrawnFromMap
+            if inputExtentDrawnFromMap == False:
+                pointExtents[1] = str(float(pointExtents[1]) - hoShiftAmt)
+            elif (float(topLeftDrawn[1]) > float(pointExtents[1])):
+                pointExtents[1] = str(float(pointExtents[1]) - hoShiftAmt)
+            else:
+                pointExtents[1] = str(float(pointExtents[1]) + hoShiftAmt)
 
-    # Determines shift left/right based on where box was drawn
-    if drawn == False:
-        pointExtents[0] = str(float(pointExtents[0]) - vertShiftAmt)
-    elif (float(topLeftDrawn[0]) > float(pointExtents[0])):
-        pointExtents[0] = str(float(pointExtents[0]) - vertShiftAmt)
-    else:
-        pointExtents[0] = str(float(pointExtents[0]) + vertShiftAmt)
+        if (float(numberCellsVert)%2 == 0.0):
+            vertShiftAmt = float(cellWidth) / 2.0
 
-# From the template extent, get the origin, y axis, and opposite corner corrdinates
-rightCorner =  float(pointExtents[0]) + ((float(cellWidth) * float(numberCellsVert)) /2.0)
-leftCorner = float(pointExtents[0]) - ((float(cellWidth) * float(numberCellsVert)) /2.0)
-topCorner = float(pointExtents[1]) + ((float(cellHeight) * float(numberCellsHo)) /2.0)
-bottomCorner = float(pointExtents[1]) - ((float(cellHeight) * float(numberCellsHo)) /2.0)
-originCoordinate = str(leftCorner) + " " + str(bottomCorner)
-yAxisCoordinate = str(leftCorner) + " " + str(bottomCorner)
-oppCornerCoordinate = str(rightCorner) + " " + str(topCorner)
-fullExtent = str(leftCorner) + " " + str(bottomCorner) + " " + str(rightCorner) + " " + str(topCorner)
+            # Determines shift left/right based on where box was inputExtentDrawnFromMap
+            if inputExtentDrawnFromMap == False:
+                pointExtents[0] = str(float(pointExtents[0]) - vertShiftAmt)
+            elif (float(topLeftDrawn[0]) > float(pointExtents[0])):
+                pointExtents[0] = str(float(pointExtents[0]) - vertShiftAmt)
+            else:
+                pointExtents[0] = str(float(pointExtents[0]) + vertShiftAmt)
 
-# If grid size is drawn on the map, then calculate the rotation of the grid
-if drawn:
-    # Find the highest two points in the drawn shape
-    highestPoint = None
-    nextHighestPoint = None
-    for pt in pts:
-        if highestPoint is None or pt[1] > highestPoint[1]:
-            nextHighestPoint = highestPoint
-            highestPoint = pt
-        elif nextHighestPoint is None or pt[1] > nextHighestPoint[1]:
-            nextHighestPoint = pt
-    topLeft = highestPoint if highestPoint[0] < nextHighestPoint[0] else nextHighestPoint
-    topRight = highestPoint if highestPoint[0] > nextHighestPoint[0] else nextHighestPoint
-    yDiff = topRight[1] - topLeft[1]
-    xDiff = topRight[0] - topLeft[0]
+        # From the template extent, get the origin, y axis, and opposite corner corrdinates
+        rightCorner =  float(pointExtents[0]) + ((float(cellWidth) * float(numberCellsVert)) /2.0)
+        leftCorner = float(pointExtents[0]) - ((float(cellWidth) * float(numberCellsVert)) /2.0)
+        topCorner = float(pointExtents[1]) + ((float(cellHeight) * float(numberCellsHo)) /2.0)
+        bottomCorner = float(pointExtents[1]) - ((float(cellHeight) * float(numberCellsHo)) /2.0)
+        originCoordinate = str(leftCorner) + " " + str(bottomCorner)
+        yAxisCoordinate = str(leftCorner) + " " + str(bottomCorner)
+        oppCornerCoordinate = str(rightCorner) + " " + str(topCorner)
+        fullExtent = str(leftCorner) + " " + str(bottomCorner) + " " + str(rightCorner) + " " + str(topCorner)
 
-    # Set the Y-Axis Coordinate so that the grid rotates properly
-    extentHeight = float(topCorner) - float(bottomCorner)
+        # If grid size is drawn on the map, then calculate the rotation of the grid
+        if inputExtentDrawnFromMap:
+            # Find the highest two points in the inputExtentDrawnFromMap shape
+            highestPoint = None
+            nextHighestPoint = None
+            for pt in pts:
+                if highestPoint is None or pt[1] > highestPoint[1]:
+                    nextHighestPoint = highestPoint
+                    highestPoint = pt
+                elif nextHighestPoint is None or pt[1] > nextHighestPoint[1]:
+                    nextHighestPoint = pt
+            topLeft = highestPoint if highestPoint[0] < nextHighestPoint[0] else nextHighestPoint
+            topRight = highestPoint if highestPoint[0] > nextHighestPoint[0] else nextHighestPoint
+            yDiff = topRight[1] - topLeft[1]
+            xDiff = topRight[0] - topLeft[0]
 
-# Set the start position for labeling
-startPos = None
-if (labelStartPos == "Upper-Right"):
-    startPos = "UR"
-elif (labelStartPos == "Upper-Left"):
-    startPos = "UL"
-elif (labelStartPos == "Lower-Left"):
-    startPos = "LL"
-elif (labelStartPos == "Lower-Right"):
-    startPos = "LR"
+            # Set the Y-Axis Coordinate so that the grid rotates properly
+            extentHeight = float(topCorner) - float(bottomCorner)
 
-# Import the custom toolbox with the fishnet tool in it, and run this. This had to be added to a model,
-# because of a bug, which will now allow you to pass variables to the Create Fishnet tool.
-#UPDATE
-toolboxPath = os.path.dirname(sysPath) + "\\Clearing Operations Tools.tbx"
-arcpy.ImportToolbox(toolboxPath)
-arcpy.AddMessage("Creating Fishnet Grid")
-arcpy.Fishnet_ClearingOperations(tempOutput, originCoordinate, yAxisCoordinate, 0, 0, str(numberCellsHo), str(numberCellsVert), oppCornerCoordinate, "NO_LABELS", fullExtent, "POLYGON")
+        # Set the start position for labeling
+        startPos = None
+        if (labelStartPos == "Upper-Right"):
+            startPos = "UR"
+        elif (labelStartPos == "Upper-Left"):
+            startPos = "UL"
+        elif (labelStartPos == "Lower-Left"):
+            startPos = "LL"
+        elif (labelStartPos == "Lower-Right"):
+            startPos = "LR"
 
-# Sort the grid upper left to lower right, and delete the in memory one
-arcpy.AddMessage("Sorting the grid for labeling")
-tempSort = "tempSort"
-arcpy.Sort_management(tempOutput, tempSort, [["Shape", "ASCENDING"]], startPos)
-arcpy.Delete_management("in_memory")
+        # Import the custom toolbox with the fishnet tool in it, and run this. This had to be added to a model,
+        # because of a bug, which will now allow you to pass variables to the Create Fishnet tool.
+        #UPDATE
+        toolboxPath = None
+        if appEnvironment == "ARCGIS_PRO":
+            toolboxPath = os.path.join(os.path.dirname(sysPath), "Clearing Operations Tools.tbx")
+        else:
+            toolboxPath = os.path.join(os.path.dirname(sysPath), "Clearing Operations Tools_10.3.tbx")
 
-# Add a field which will be used to add the grid labels
-arcpy.AddMessage("Adding field for labeling the grid")
-gridField = "Grid"
-arcpy.AddField_management(tempSort, gridField, "TEXT")
+        arcpy.ImportToolbox(toolboxPath)
+        arcpy.AddMessage("Creating Fishnet Grid")
+        arcpy.Fishnet_ClearingOperations(tempOutput, originCoordinate, yAxisCoordinate, 0, 0, str(numberCellsHo), str(numberCellsVert), oppCornerCoordinate, "NO_LABELS", fullExtent, "POLYGON")
 
-# Number the fields
-arcpy.AddMessage("Numbering the grids")
-letterIndex = 1
-secondLetterIndex = 1
-letter = 'A'
-secondLetter = 'A'
-number = 1
-lastY = -9999
-cursor = arcpy.UpdateCursor(tempSort)
-for row in cursor:
-    yPoint = row.getValue("SHAPE").firstPoint.Y
-    if (lastY != yPoint) and (lastY != -9999):
-        letterIndex += 1
-        letter = ColIdxToXlName(letterIndex)
-        if (labelStyle != "Numeric"):
-            number = 1
-        secondLetter = 'A'
+        # Sort the grid upper left to lower right, and delete the in memory one
+        arcpy.AddMessage("Sorting the grid for labeling")
+        tempSort = os.path.join("in_memory", "tempSort")
+        arcpy.Sort_management(tempOutput, tempSort, [["Shape", "ASCENDING"]], startPos)
+        # arcpy.Delete_management("in_memory") #Not sure why we are trying to delete in_memory
+
+        # Add a field which will be used to add the grid labels
+        arcpy.AddMessage("Adding field for labeling the grid")
+        gridField = "Grid"
+        arcpy.AddField_management(tempSort, gridField, "TEXT")
+
+        # Number the fields
+        arcpy.AddMessage("Numbering the grids")
+        letterIndex = 1
         secondLetterIndex = 1
-    lastY = yPoint
+        letter = 'A'
+        secondLetter = 'A'
+        number = 1
+        lastY = -9999
+        cursor = arcpy.UpdateCursor(tempSort)
+        for row in cursor:
+            yPoint = row.getValue("SHAPE").firstPoint.Y
+            if (lastY != yPoint) and (lastY != -9999):
+                letterIndex += 1
+                letter = ColIdxToXlName(letterIndex)
+                if (labelStyle != "Numeric"):
+                    number = 1
+                secondLetter = 'A'
+                secondLetterIndex = 1
+            lastY = yPoint
 
-    if (labelStyle == "Alpha-Numeric"):
-        row.setValue(gridField, str(letter) + str(number))
-    elif (labelStyle == "Alpha-Alpha"):
-        row.setValue(gridField, str(letter) + str(secondLetter))
-    elif (labelStyle == "Numeric"):
-        row.setValue(gridField, str(number))
+            if (labelStyle == "Alpha-Numeric"):
+                row.setValue(gridField, str(letter) + str(number))
+            elif (labelStyle == "Alpha-Alpha"):
+                row.setValue(gridField, str(letter) + str(secondLetter))
+            elif (labelStyle == "Numeric"):
+                row.setValue(gridField, str(number))
 
-    cursor.updateRow(row)
-    number += 1
-    secondLetterIndex += 1
-    secondLetter = ColIdxToXlName(secondLetterIndex)
+            cursor.updateRow(row)
+            number += 1
+            secondLetterIndex += 1
+            secondLetter = ColIdxToXlName(secondLetterIndex)
 
-# Rotate the shape, if needed.
-if (drawn):
-    arcpy.AddMessage("Rotating the grid")
-    RotateFeatureClass(tempSort, outputFeatureClass, angleDrawn, pointExtents[0] + " " + pointExtents[1])
-else:
-    arcpy.CopyFeatures_management(tempSort, outputFeatureClass)
-arcpy.Delete_management(tempSort)
+        # Rotate the shape, if needed.
+        if (inputExtentDrawnFromMap):
+            arcpy.AddMessage("Rotating the grid")
+            RotateFeatureClass(tempSort, outputFeatureClass, angleDrawn, pointExtents[0] + " " + pointExtents[1])
+        else:
+            arcpy.CopyFeatures_management(tempSort, outputFeatureClass)
+        arcpy.Delete_management(tempSort)
+
+        # Get and label the output feature
+        #UPDATE
+        targetLayerName = os.path.basename(outputFeatureClass)
+        if appEnvironment == "ARCGIS_PRO":
+            results = arcpy.MakeFeatureLayer_management(outputFeatureClass, targetLayerName).getOutput(0)
+            mapList.addLayer(results, "AUTO_ARRANGE")
+            layer = findLayerByName(targetLayerName)
+            if (layer):
+                arcpy.AddMessage("Labeling grids")
+                labelFeatures(layer, gridField)
+        elif appEnvironment == "ARCMAP":
+            layerToAdd = arcpy.mapping.Layer(outputFeatureClass)
+            arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
+            layer = findLayerByName(targetLayerName)
+            if (layer):
+                arcpy.AddMessage("Labeling grids")
+                labelFeatures(layer, gridField)
+        else:
+            arcpy.AddMessage("Non-map environment, skipping labeling...")
+
+        # Apply symbology to the GRG layer
+        #UPDATE
+        #symbologyPath = os.path.dirname(workspace) + "\\Layers\GRG.lyr"
+        #arcpy.ApplySymbologyFromLayer_management(layer, symbologyPath)
+
+        # Set tool output
+        arcpy.SetParameter(8, outputFeatureClass)
+
+    except arcpy.ExecuteError:
+        # Get the tool error messages
+        msgs = arcpy.GetMessages()
+        arcpy.AddError(msgs)
+        print(msgs)
+
+    except:
+        # Get the traceback object
+        tb = sys.exc_info()[2]
+        tbinfo = traceback.format_tb(tb)[0]
+
+        # Concatenate information together concerning the error into a message string
+        pymsg = "PYTHON ERRORS:\nTraceback info:\n" + tbinfo + \
+                "\nError Info:\n" + str(sys.exc_info()[1])
+        msgs = "ArcPy ERRORS:\n" + arcpy.GetMessages() + "\n"
+
+        # Return python error messages for use in script tool or Python Window
+        arcpy.AddError(pymsg)
+        arcpy.AddError(msgs)
+        # Print Python error messages for use in Python / Python Window
+        print(pymsg + "\n")
+        print(msgs)
 
 
-# Get and label the output feature
-#TODO: Update once applying symbology in Pro is fixed.
-#UPDATE
-if isPro == False:
-    layerToAdd = arcpy.mapping.Layer(outputFeatureClass)
-    arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
-
-    targetLayerName = os.path.basename(outputFeatureClass)
-    layer = findLayerByName(targetLayerName)
-
-    if(layer):
-        arcpy.AddMessage("Labeling grids")
-        labelFeatures(layer, gridField)
-
-# Apply symbology to the GRG layer
-#UPDATE
-#symbologyPath = os.path.dirname(workspace) + "\\Layers\GRG.lyr"
-#arcpy.ApplySymbologyFromLayer_management(layer, symbologyPath)
+# MAIN =============================================
+if __name__ == "__main__":
+    main()
