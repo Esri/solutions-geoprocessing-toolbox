@@ -86,7 +86,7 @@
     <unzip src="${dir.zipdir}/PublishableTasksData.gdb.zip"
            dest="${dir.datamanagementdatadir}/geodatabases"/>
            
-    <!-- Build Elevation Mosaic Tools: b212e314ae00453aa5c4a0e3a8e072e6 & ALSO USES TOPOGRAPHIC BASEMAP TOOLS TEST DATA BELOW -->
+    <!-- Build Elevation Mosaic Tools: b212e314ae00453aa5c4a0e3a8e072e6-->
     <echo message="Downloading Build Elevation Mosaic test data" />
     <get src="http://www.arcgis.com/sharing/content/items/b212e314ae00453aa5c4a0e3a8e072e6/data"
           dest="${dir.zipdir}/BuildElevationMosaicToolsTestData.zip"
@@ -118,17 +118,15 @@
     <unzip src="${dir.zipdir}/NetworkPrepData.gdb.zip"
           dest="${dir.datamanagementdatadir}/geodatabases" />
     
-    <!-- Scanned Map Basemap Tools Test Data: HAS BEEN REMOVED-->
-    
     <!-- Topographic Basemap Tools Test Data: 8e682b02ca02482d8caaebae05cbdc1a -->
-    <echo message="Downloading topographic basemap data" />
+<!--    <echo message="Downloading topographic basemap data" />
     <get src="http://www.arcgis.com/sharing/content/items/8e682b02ca02482d8caaebae05cbdc1a/data"
           dest="${dir.zipdir}/Topographic.zip"
           verbose="true"
           usetimestamp="true"/>
     <echo message="Unzipping Topographic Basemap data" />
     <unzip src="${dir.zipdir}/Topographic.zip"
-          dest="${dir.datamanagementdatadir}" />  
+          dest="${dir.datamanagementdatadir}" /> --> 
     
     <!-- Patrol Data Capture Tools Test Data: 853736d171e44a40a55e4c312bf43b66-->
     <echo message="Downloading Patrol Data Capture Tools test data" />
