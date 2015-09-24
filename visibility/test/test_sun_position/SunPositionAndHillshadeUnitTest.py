@@ -7,24 +7,28 @@ import sys
 import traceback
 import datetime
 import os
-import TemplateConfigTest
 import TestUtilities
+import UnitTestUtilities
                 
                 
 class SunPositionAndHillshadeUnitTest(unittest.TestCase):
     def setUp(self):
         # set-up code
         arcpy.AddMessage("Setting up SunPositionAndHillshadeUnitTest.")
-        self.checkPaths()
-        # logging.basicConfig(filename='test.log',level=logging.DEBUG)
-        # logging.debug('This message should go to the log file')
-        # logging.info('So should this')
-        # logging.warning('And this, too')
+        UnitTestUtilities.checkArcPy()
         
+        # WORKAROUND: delete scratch db (having problems with scratch read-only "scheme lock" errors
+        # print "Deleting Scratch Workspace (Workaround)"    
+        # TestUtilities.deleteScratch()
+        if not arcpy.Exists(TestUtilities.scratchGDB):
+            UnitTestUtilities.createScratch()
+        UnitTestUtilities.checkFilePaths()
+        UnitTestUtilities.checkGeoObjects()
+     
     # def tearDown(self):
         # # tear-down code
         # arcpy.AddMessage("Tearing down the SunPositionAndHillshadeUnitTest.")
-        
+
     def test_sun_position_analysis(self):
         try:
             arcpy.AddMessage("Testing Sun Position Analysis (unit).")
@@ -56,7 +60,7 @@ class SunPositionAndHillshadeUnitTest(unittest.TestCase):
 
             arcpy.CheckOutExtension("Spatial")
             diff = Minus(Raster(outHillshade),Raster(compareResults))
-            diff.save(os.path.join(TestUtilities. scratchGDB, "diff"))
+            diff.save(os.path.join(TestUtilities.scratchGDB, "diff"))
             arcpy.CalculateStatistics_management(diff)
             rasMinimum = float(arcpy.GetRasterProperties_management(diff,"MINIMUM").getOutput(0))
             rasMaximum = float(arcpy.GetRasterProperties_management(diff,"MAXIMUM").getOutput(0))
@@ -113,10 +117,5 @@ class SunPositionAndHillshadeUnitTest(unittest.TestCase):
             
         finally:
             arcpy.CheckInExtension("Spatial")
-        
-    #### set-up utility methods
-    def checkPaths(self):
-        # functionality from TemplateConfigTest
-        TemplateConfigTest.checkInputPaths()
         
         

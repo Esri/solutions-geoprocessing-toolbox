@@ -31,22 +31,37 @@ import UnitTestUtilities
 import SunPositionAndHillshadeUnitTest
 
 try:
-    #logFile=os.path.join(TestUtilities.toolboxesPath, 'SunLog.log')
-    logFile = "header.log"
-    logging.basicConfig(format='%(levelname)s: %(asctime)s %(message)s', filename=logFile, level=logging.DEBUG)
-    UnitTestUtilities.setUpLogFileHeader()
+
+    logger = UnitTestUtilities.initializeLogger("Visibility")
+    UnitTestUtilities.setUpLogFileHeader(logger)
     
     # one way to run the test - outputs to console only (that I know of)
     # suite = unittest.TestLoader().loadTestsFromTestCase(SunPositionAndHillshadeUnitTest.SunPositionAndHillshadeUnitTest)
     # unittest.TextTestRunner(verbosity=2).run(suite)
+    
+    # testSuite = unittest.TestSuite()
+    # testSuite.addTest(SunPositionAndHillshadeUnitTest.SunPositionAndHillshadeUnitTest('test_sun_position_analysis'))
+    # testSuite.addTest(SunPositionAndHillshadeUnitTest.SunPositionAndHillshadeUnitTest('test_second'))
+    
+    # res = unittest.TestResult()
+    # testSuite.run(res)
     
     # Call Unit Test code - output to log
     sunPosTestCase = SunPositionAndHillshadeUnitTest.SunPositionAndHillshadeUnitTest('test_sun_position_analysis')
     result = unittest.TestResult()
     sunPosTestCase.run(result)
     
-    logging.info("Test success: {0}".format(str(result.wasSuccessful())))
+    logger.info("Test success: {0}".format(str(result.wasSuccessful())))
+    
+except arcpy.ExecuteError: 
+    # Get the arcpy error messages
+    msgs = arcpy.GetMessages()
+    arcpy.AddError(msgs)
+    print(msgs)
 
+    # return a system error code
+    sys.exit(-1)
+        
 except:
     # Get the traceback object
     tb = sys.exc_info()[2]
