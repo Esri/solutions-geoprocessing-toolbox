@@ -63,15 +63,6 @@ class HLZTouchdownPointsUnitTest(unittest.TestCase):
             #TODO: write a test
             arcpy.AddMessage("Testing MinimumBoundingFishnet (unit)...")
             pass
-                except arcpy.ExecuteError:
-            # Get the arcpy error messages
-            msgs = arcpy.GetMessages()
-            #TODO: need to add 'msgs' to logger
-            arcpy.AddError(msgs)
-            print(msgs)
-
-            # return a system error code
-            sys.exit(-1)
 
         except arcpy.ExecuteError:
             # Get the arcpy error messages
@@ -115,15 +106,6 @@ class HLZTouchdownPointsUnitTest(unittest.TestCase):
             #TODO: write a test
             arcpy.AddMessage("Testing Choose Field Value Script Tool (unit)...")
             pass
-                except arcpy.ExecuteError:
-            # Get the arcpy error messages
-            msgs = arcpy.GetMessages()
-            #TODO: need to add 'msgs' to logger
-            arcpy.AddError(msgs)
-            print(msgs)
-
-            # return a system error code
-            sys.exit(-1)
 
         except arcpy.ExecuteError:
             # Get the arcpy error messages
