@@ -224,7 +224,7 @@ class HLZTouchdownPointsDesktop(unittest.TestCase):
             outputCircles = "#"
 
             # Testing
-            arcpy.AddMessage("Running tool (HLZ Touchdown Points) ...")
+            print("Running tool (HLZ Touchdown Points) ...")
             arcpy.HLZTouchdownPoints_tdpoints(inputAirframeTable,
                                               inputAirframeString,
                                               inputSuitableAreas,
