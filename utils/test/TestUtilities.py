@@ -31,6 +31,8 @@ scratchPath = os.path.normpath(os.path.join(currentPath, r"../../visibility/data
 
 toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../visibility/toolboxes/"))
 
+##############
+
 inputGDB  = os.path.join(geodatabasePath, "test_sun_position.gdb")
 inputArea = os.path.join(inputGDB,"inputArea")
 inputSurface = os.path.join(inputGDB,"Jbad_SRTM_USGS_EROS")

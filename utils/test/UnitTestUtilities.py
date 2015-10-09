@@ -39,6 +39,7 @@ def checkArcPy():
     print("Testing ArcPy")
     arcpy.AddMessage("ArcPy works")
     
+#TODO: parameterize
 def createScratch():
     try:
         print("Creating scratch geodatabase...")
@@ -55,7 +56,8 @@ def deleteScratch():
     except:
         print("scratch.gdb delete failed")     
     return
-    
+
+# TODO: parameterize    
 def checkFilePaths():
     paths2Check = []
     paths2Check.extend([TestUtilities.geodatabasePath, TestUtilities.scratchPath, TestUtilities.toolboxesPath])
@@ -66,7 +68,8 @@ def checkFilePaths():
         else:
             print("ERROR: Necessary Path not found: " + path2check)
             raise Exception('Bad Path')
-            
+
+# TODO: parameterized list            
 def checkGeoObjects():
     objects2Check = []
     objects2Check.extend([TestUtilities.toolbox, TestUtilities.inputGDB, TestUtilities.outputGDB, TestUtilities.defaultGDB, TestUtilities.inputArea, TestUtilities.inputSurface, TestUtilities.compareResults]) 

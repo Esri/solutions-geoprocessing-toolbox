@@ -20,31 +20,30 @@ import sys
 import datetime
 import logging
 import unittest
+import TestUtilities
 import UnitTestUtilities
-import SunPositionAndHillshadeTestCase
-#from visibility.test.test_sun_position import SunPositionAndHillshadeTestCase
 
     
 def main():
-    print("Writing log header information...")
     logger = UnitTestUtilities.initializeLogger("Base")
     UnitTestUtilities.setUpLogFileHeader(logger)
-    print("Finished with log header.")
     runTestSuite()
     
 def addVisibilityTests(suite):
-    suite.addTest(SunPositionAndHillshadeTestCase.SunPositionAndHillshadeTestCase('test_sun_position_analysis'))
+    suite.addTest(SunPositionAndHillshadeTestCase('test_sun_position_analysis'))
     return suite
     
 def runTestSuite():
     testSuite = unittest.TestSuite()
     result = unittest.TestResult()
     addVisibilityTests(testSuite)
-    
-    #testSuite.addTest(SunPositionAndHillshadeTestCase.SunPositionAndHillshadeTestCase('test_sun_position_analysis'))
     testSuite.run(result)
     print("Test success: {0}".format(str(result.wasSuccessful())))
     
 # MAIN =============================================
 if __name__ == "__main__":
+    sunPosPath = os.path.normpath(os.path.join(TestUtilities.currentPath, r"../../visibility/test/test_sun_position/"))
+    if sunPosPath not in sys.path:
+        sys.path.insert(0, sunPosPath)
+    from SunPositionAndHillshadeTestCase import SunPositionAndHillshadeTestCase
     main()
