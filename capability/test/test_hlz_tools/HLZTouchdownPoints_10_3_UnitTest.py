@@ -43,15 +43,12 @@ import sys
 import traceback
 import datetime
 import os
-import TestUtilities
-import UnitTestUtilities
+import UnitTestCase
 
-class HLZTouchdownPointsDesktop(unittest.TestCase):
+class HLZTouchdownPointsDesktop(UnitTestCase.UnitTestCase):
 
     def setUp(self):
         ''' set-up code '''
-        # Make sure we can get to ArcPy
-        UnitTestUtilities.checkArcPy()
 
         # Set up paths
         self.testDataFolderPath = r"../../../capability/data/geodatabases/"
