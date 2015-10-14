@@ -1,4 +1,3 @@
-# coding: utf-8
 #------------------------------------------------------------------------------
 # Copyright 2015 Esri
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,20 +12,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #------------------------------------------------------------------------------
-# TestRuner.py
+# TestRunner.py
 #------------------------------------------------------------------------------
 
 import os
 import sys
 import datetime
+import logging
+import unittest
+import TestUtilities
+import UnitTestUtilities
 
-commandStr = r"ant -f run_all_tests.xml"
-
+    
 def main():
-	print("Start...(" + str(datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p")) + ")")
-	os.system(commandStr)
-	print("Done. (" + str(datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p")) + ")")
-
+    logger = UnitTestUtilities.initializeLogger("Base")
+    UnitTestUtilities.setUpLogFileHeader(logger)
+    runTestSuite()
+    
+def addVisibilityTests(suite):
+    suite.addTest(SunPositionAndHillshadeTestCase('test_sun_position_analysis'))
+    return suite
+    
+def runTestSuite():
+    testSuite = unittest.TestSuite()
+    result = unittest.TestResult()
+    addVisibilityTests(testSuite)
+    testSuite.run(result)
+    print("Test success: {0}".format(str(result.wasSuccessful())))
+    
 # MAIN =============================================
 if __name__ == "__main__":
+    sunPosPath = os.path.normpath(os.path.join(TestUtilities.currentPath, r"../../visibility/test/test_sun_position/"))
+    if sunPosPath not in sys.path:
+        sys.path.insert(0, sunPosPath)
+    from SunPositionAndHillshadeTestCase import SunPositionAndHillshadeTestCase
     main()
