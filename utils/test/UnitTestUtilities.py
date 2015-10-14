@@ -33,44 +33,39 @@ def setUpLogFileHeader(log):
     log.info("Python Version {0}".format(sys.version))
     d = arcpy.GetInstallInfo()
     log.info("{0} Version {1}, installed on {2}.".format(d['ProductName'], d['Version'], d['InstallDate']))
-    log.info("-----------------------------------------")
+    log.info("----------------------------------------")
     
 def checkArcPy():
     print("Testing ArcPy")
     arcpy.AddMessage("ArcPy works")
     
-def createScratch():
+def createScratch(scratchPath):
     try:
-        arcpy.CreateFileGDB_management(TestUtilities.scratchPath, "scratch")
+        print("Creating scratch geodatabase...")
+        arcpy.CreateFileGDB_management(scratchPath, "scratch.gdb")
         print("Created scratch gdb.")
     except:
         print("scratch.gdb already exists")
     return
 
-def deleteScratch():
+def deleteScratch(scratchPath):
     try:
-        arcpy.Delete_management(TestUtilities.scratchGDB)
+        arcpy.Delete_management(scratchPath)
         print("Deleted scratch gdb.")
     except:
         print("scratch.gdb delete failed")     
     return
-    
-def checkFilePaths():
-    paths2Check = []
-    paths2Check.extend([TestUtilities.geodatabasePath, TestUtilities.scratchPath, TestUtilities.toolboxesPath])
-
-    for path2check in paths2Check:
+  
+def checkFilePaths(paths):   
+    for path2check in paths:
         if os.path.exists(path2check):
             print("Valid Path: " + path2check)
         else:
             print("ERROR: Necessary Path not found: " + path2check)
             raise Exception('Bad Path')
-            
-def checkGeoObjects():
-    objects2Check = []
-    objects2Check.extend([TestUtilities.toolbox, TestUtilities.inputGDB, TestUtilities.outputGDB, TestUtilities.defaultGDB, TestUtilities.inputArea, TestUtilities.inputSurface, TestUtilities.compareResults]) 
-        
-    for object2Check in objects2Check:
+
+def checkGeoObjects(objects):       
+    for object2Check in objects:
         desc = arcpy.Describe(object2Check)
         if desc == None:
             print("--> Invalid Object: " + str(object2Check))
