@@ -26,29 +26,12 @@ import UnitTestUtilities
 import UnitTestCase               
                 
 class SunPositionAndHillshadeTestCase(UnitTestCase.UnitTestCase):
-    # def setUp(self):
-        # # set-up code
-        # arcpy.AddMessage("Setting up SunPositionAndHillshadeUnitTest.")
-        # UnitTestUtilities.checkArcPy()
         
-        # # WORKAROUND: delete scratch db (having problems with scratch read-only "scheme lock" errors
-        # # print "Deleting Scratch Workspace (Workaround)"    
-        # # TestUtilities.deleteScratch()
-        # if not arcpy.Exists(TestUtilities.scratchGDB):
-            # UnitTestUtilities.createScratch()
-        # UnitTestUtilities.checkFilePaths()
-        # UnitTestUtilities.checkGeoObjects()
-     
-    # def tearDown(self):
-        # # tear-down code
-        # arcpy.AddMessage("Tearing down the SunPositionAndHillshadeUnitTest.")
-
     def test_sun_position_analysis(self):
         try:
             arcpy.AddMessage("Testing Sun Position Analysis (unit).")
-            # move TestSunPositionAndHillshade code in here
             print("Importing toolbox... ")
-            arcpy.ImportToolbox(TestUtilities.toolbox, "sunpos")
+            arcpy.ImportToolbox(TestUtilities.sunPosToolbox, "sunpos")
             arcpy.env.overwriteOutput = True
 
             # Inputs
@@ -61,20 +44,19 @@ class SunPositionAndHillshadeTestCase(UnitTestCase.UnitTestCase):
             print("Set date...")
             utcAfghanistan = r'(UTC+4:30) Afghanistan'
             print("Set UTCAfg...")
-            outHillshade = os.path.join(TestUtilities.outputGDB, "outputHS")
+            outHillshade = os.path.join(TestUtilities.vis_ScratchPath, "outputHS")
             print("Set output hillshade...")
 
             # Testing
             arcpy.AddMessage("Running tool (Sun Position and Hillshade)")
-            arcpy.SunPositionAnalysis_sunpos(TestUtilities.inputArea, TestUtilities.inputSurface, dtCompare, utcAfghanistan, outHillshade)
+            arcpy.SunPositionAnalysis_sunpos(TestUtilities.vis_inputArea, TestUtilities.vis_inputSurface, dtCompare, utcAfghanistan, outHillshade)
 
-            print("Comparing expected values with tool results from " + str(dtCompare)\
-                + " in " + str(utcAfghanistan))
-            compareResults = TestUtilities.compareResults
+            print("Comparing expected values with tool results from " + str(dtCompare) + " in " + str(utcAfghanistan))
+            compareResults = TestUtilities.vis_compareResults
 
             arcpy.CheckOutExtension("Spatial")
             diff = Minus(Raster(outHillshade),Raster(compareResults))
-            diff.save(os.path.join(TestUtilities.scratchGDB, "diff"))
+            diff.save(os.path.join(TestUtilities.vis_ScratchPath, "diff"))
             arcpy.CalculateStatistics_management(diff)
             rasMinimum = float(arcpy.GetRasterProperties_management(diff,"MINIMUM").getOutput(0))
             rasMaximum = float(arcpy.GetRasterProperties_management(diff,"MAXIMUM").getOutput(0))

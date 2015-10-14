@@ -16,22 +16,19 @@
 import sys
 import arcpy
 import unittest
+import TestUtilities
 import UnitTestUtilities
 
 class UnitTestCase(unittest.TestCase):
     def setUp(self):
         try:
             UnitTestUtilities.checkArcPy()
-            UnitTestUtilities.createScratch()
+            paths = [TestUtilities.vis_GeodatabasePath, TestUtilities.vis_ToolboxesPath]
+            UnitTestUtilities.checkFilePaths(paths)
+            geoObjects = [TestUtilities.sunPosToolbox, TestUtilities.vis_inputGDB, TestUtilities.vis_inputArea, TestUtilities.vis_inputSurface, TestUtilities.vis_compareResults]
+            UnitTestUtilities.checkGeoObjects(geoObjects)
+            UnitTestUtilities.createScratch(TestUtilities.vis_ScratchPath)
             
-            # WORKAROUND: delete scratch db (having problems with scratch read-only "scheme lock" errors
-            # print "Deleting Scratch Workspace (Workaround)"    
-            # TestUtilities.deleteScratch()
-            # if not arcpy.Exists(TestUtilities.scratchGDB):
-                # print("Creating scratch geodatabase...")
-                # UnitTestUtilities.createScratch()
-            UnitTestUtilities.checkFilePaths()
-            UnitTestUtilities.checkGeoObjects()
             
         except arcpy.ExecuteError: 
             # Get the arcpy error messages

@@ -22,23 +22,16 @@ import os
 import sys
 
 currentPath = os.path.dirname(__file__)
-geodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../visibility/data/geodatabases/"))
-
 logPath = os.path.normpath(os.path.join(currentPath, r"../log/"))
 
+#### Visibility ####
+vis_GeodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../visibility/data/geodatabases/"))
+vis_ScratchPath = os.path.normpath(os.path.join(currentPath, r"../../visibility/data/geodatabases"))
+vis_ToolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../visibility/toolboxes/"))
 
-scratchPath = os.path.normpath(os.path.join(currentPath, r"../../visibility/data/geodatabases/"))
+vis_inputGDB  = os.path.join(vis_GeodatabasePath, "test_sun_position.gdb")
+vis_inputArea = os.path.join(vis_inputGDB,"inputArea")
+vis_inputSurface = os.path.join(vis_inputGDB,"Jbad_SRTM_USGS_EROS")
+vis_compareResults = os.path.join(vis_inputGDB,"compareResults")
 
-toolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../visibility/toolboxes/"))
-
-##############
-
-inputGDB  = os.path.join(geodatabasePath, "test_sun_position.gdb")
-inputArea = os.path.join(inputGDB,"inputArea")
-inputSurface = os.path.join(inputGDB,"Jbad_SRTM_USGS_EROS")
-compareResults = os.path.join(inputGDB,"compareResults")
-scratchGDB = os.path.join(scratchPath, "scratch.gdb")
-outputGDB = scratchGDB
-defaultGDB = scratchGDB
-
-toolbox = os.path.join(toolboxesPath, "Sun Position Analysis Tools_10.3.tbx")
+sunPosToolbox = os.path.join(vis_ToolboxesPath, "Sun Position Analysis Tools_10.3.tbx")
