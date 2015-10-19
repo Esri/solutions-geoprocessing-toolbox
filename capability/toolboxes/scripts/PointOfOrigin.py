@@ -55,7 +55,7 @@ timestr = time.strftime("%Y%m%d_%H%M")
 
 delete_me = []
 DEBUG = False
-#DEBUG = True
+DEBUG = True
 
 app_found = 'NOT_SET'
 toolbox10xSuffix = "_10.3"
@@ -304,8 +304,9 @@ try:
             df = arcpy.mapping.ListDataFrames(mxd)[0]
             isPro = False
 
-    except:  # if "OTHER" , then just skip this part...
-            arcpy.AddWarning("Tool is not run in ArcMap, skipping symbolization scheme.")
+    #except:  # if "OTHER" , then just skip this part...
+            if appEnvironment == 'OTHER':
+                arcpy.AddWarning("Tool is not run in ArcMap, skipping symbolization scheme.")
 
             # make group layer and add it to the map
 
@@ -372,141 +373,141 @@ try:
 
     # if Pro:
     #if gisVersion == "1.0": #Pro: #Update for automated test
-    if appEnvironment == "ARCGIS_PRO":
-        from arcpy import mp
-        aprx = arcpy.mp.ArcGISProject("CURRENT")
-        mapList = aprx.listMaps()[0]
-        isPro = True
+        if appEnvironment == "ARCGIS_PRO":
+            from arcpy import mp
+            aprx = arcpy.mp.ArcGISProject("CURRENT")
+            mapList = aprx.listMaps()[0]
+            isPro = True
 
-        # make top group layer
-        arcpy.AddMessage("Adding Top Group Layer...")
-        groupLayerPath = os.path.join(layerSymLocation,"New_Group_Layer.lyrx")
-        arcpy.AddMessage("Added Top Group Layer...")
+            # make top group layer
+            arcpy.AddMessage("Adding Top Group Layer...")
+            groupLayerPath = os.path.join(layerSymLocation,"New_Group_Layer.lyrx")
+            arcpy.AddMessage("Added Top Group Layer...")
 
-        # Add date/timestring to initialGroupLayer - older build were hanging when using this, at point of "Adding Impact Points..." ?
-        if DEBUG == True: arcpy.AddMessage("Using time string on mapList.addlayer...")
-        initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
-        initialGroupLayer_timestr = "Point Of Origin Results_" + timestr
-        initialGroupLayer.name = initialGroupLayer_timestr
-        mapList.addLayer(initialGroupLayer,"AUTO_ARRANGE")
-        if DEBUG == True: arcpy.AddMessage(" mapList.addlayer succeeded...")
-        topGroupLayer = mapList.listLayers(initialGroupLayer_timestr)[0]
-
-        initialGroupLayer = None
-        #del initialGroupLayer # this line hangs tool dialog.  (pks - this line is not used, but appears there is a typo "initialGroupayer" in original code?)
-
-        ## add the impact points
-        arcpy.AddMessage("Adding Impact Points ...")
-        #if DEBUG == True: arcpy.AddMessage("impactPointLayer1")
-        impactPointLayerFilePath = os.path.join(layerSymLocation,"Impact_Point_Centers.lyrx")
-        #if DEBUG == True: arcpy.AddMessage("impactPointLayer1a")
-        #impactPointLayer = arcpy.mp.LayerFile(impactPointLayerFilePath).listLayers()[0] # this line hangs tool dialog...
-        #if DEBUG == True: arcpy.AddMessage("impactPointLayer2")
-        #impactPointLayer.dataSource = outputImpactPointFeatures
-        #if DEBUG == True: arcpy.AddMessage("impactPointLayer3")
-        #impactPointLayer.name = "Impact points"
-        #if DEBUG == True: arcpy.AddMessage("impactPointLayer4")
-        #mapList.addLayerToGroup(topGroupLayer,impactPointLayer,"TOP")
-        #if DEBUG == True: arcpy.AddMessage("impactPointLayer5")
-
-        ipName = "Impact points" + "_" + timestr
-
-        if DEBUG == True:
-            arcpy.AddMessage("Check locals() before MakeFeatureLayer ")
-            mydict = dict(locals())
-            CheckVariables(mydict)
-        if DEBUG == True: arcpy.AddMessage("arcpy.MakeFeatureLayer(...) ** Hang's here **" )
-
-        # ---> issue with: results = arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,ipName).getOutput(0) <---
-        try:
-            if arcpy.Exists(outputImpactPointFeatures): # This describe is attempt to verify outputImpactPointFeatures is valid
-                # Create a Describe object from the feature class - put this in DEBUG when all is stable.
-                desc = arcpy.Describe(outputImpactPointFeatures)
-
-                if DEBUG == True:
-                    # Print some feature class properties of outputImpactPointFeatures
-                    #
-                    arcpy.AddMessage("Feature Type:  " + desc.featureType)
-                    arcpy.AddMessage("Shape Type :   " + desc.shapeType)
-                    arcpy.AddMessage("Spatial Index: " + str(desc.hasSpatialIndex))
-                    arcpy.AddMessage("shapeFieldName:     " + desc.shapeFieldName)
-                    arcpy.AddMessage("ShapeType:     " + desc.shapeType)
-
-                if DEBUG == True: arcpy.AddMessage("Current outputImpactPointFeatures exist, proceeding with MakeFeatureLayer_management")
-                results = arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,ipName, None, None).getOutput(0)
-                #results = arcpy.management.MakeFeatureLayer("imp_2000", "Impact Points_2015_1645", None, None, "OID OID VISIBLE NONE;Shape Shape VISIBLE NONE;POINT_X POINT_X VISIBLE NONE;POINT_Y POINT_Y VISIBLE NONE;MGRS_2 MGRS_2 VISIBLE NONE;MGRS MGRS VISIBLE NONE")
-            else:
-                arcpy.AddMessage("Error: " + outputImpactPointFeatures + " does not exist")
-        except Exception:
-            e = sys.exc_info()[1]
-            arcpy.AddError(e.args[0])
-
-
-# ['results', <arcpy._mp.Layer object at 0x0000000063221DA0>] - this is a layer object, cannot check .status or -> ErrorInfo: 'Layer' object has no attribute 'status'
-# tried sleeping until "result" status has succeeded... http://pro.arcgis.com/en/pro-app/arcpy/classes/result.htm -
-# tried change "results" to "result".
-
-        #  Applying symbology to result points before adding to Group works better than after adding to group
-
-        if DEBUG == True: arcpy.AddMessage("ApplySymbologyFromLayer")
-        arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy does not always work prior to adding apply the symbology
-        #arcpy.ApplySymbologyFromLayer_management(ipName,impactPointLayerFilePath) # for some reason this guy does work prior to adding apply the symbology
-
-        ## following did not work, seems to want the "results" Layer Object.
-        ##arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,impactPointLayerFilePath) # for some reason this guy doesn't apply the symbology
-
-
-        if DEBUG == True: arcpy.AddMessage("mapList.addLayerToGroup(...)")
-        mapList.addLayerToGroup(topGroupLayer,results,"TOP")
-        #mapList.addLayerToGroup(topGroupLayer,ipName,"TOP")
-
-##        if DEBUG == True: arcpy.AddMessage("ApplySymbologyFromLayer")
-##        arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy doesn't apply the symbology
-
-        # for all items in the combinedPooDict
-        for model in modelOriginsDict:
-            arcpy.AddMessage("Adding model: " + str(model))
-
-            # make a group layer for each model
+            # Add date/timestring to initialGroupLayer - older build were hanging when using this, at point of "Adding Impact Points..." ?
+            if DEBUG == True: arcpy.AddMessage("Using time string on mapList.addlayer...")
             initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
-            initialGroupLayer.name = model
-            mapList.addLayerToGroup(topGroupLayer,initialGroupLayer,"BOTTOM")
-            modelGroupLayer = mapList.listLayers(model)[0]
+            initialGroupLayer_timestr = "Point Of Origin Results_" + timestr
+            initialGroupLayer.name = initialGroupLayer_timestr
+            mapList.addLayer(initialGroupLayer,"AUTO_ARRANGE")
+            if DEBUG == True: arcpy.AddMessage(" mapList.addlayer succeeded...")
+            topGroupLayer = mapList.listLayers(initialGroupLayer_timestr)[0]
+
             initialGroupLayer = None
+            #del initialGroupLayer # this line hangs tool dialog.  (pks - this line is not used, but appears there is a typo "initialGroupayer" in original code?)
 
-            # get range and POO data from this model
-            modelData = modelOriginsDict[model]
+            ## add the impact points
+            arcpy.AddMessage("Adding Impact Points ...")
+            #if DEBUG == True: arcpy.AddMessage("impactPointLayer1")
+            impactPointLayerFilePath = os.path.join(layerSymLocation,"Impact_Point_Centers.lyrx")
+            #if DEBUG == True: arcpy.AddMessage("impactPointLayer1a")
+            #impactPointLayer = arcpy.mp.LayerFile(impactPointLayerFilePath).listLayers()[0] # this line hangs tool dialog...
+            #if DEBUG == True: arcpy.AddMessage("impactPointLayer2")
+            #impactPointLayer.dataSource = outputImpactPointFeatures
+            #if DEBUG == True: arcpy.AddMessage("impactPointLayer3")
+            #impactPointLayer.name = "Impact points"
+            #if DEBUG == True: arcpy.AddMessage("impactPointLayer4")
+            #mapList.addLayerToGroup(topGroupLayer,impactPointLayer,"TOP")
+            #if DEBUG == True: arcpy.AddMessage("impactPointLayer5")
 
-            # make layer for combined area and add to model layer
-            combinedDict = modelData[1]
-            combinedAreaLayer = arcpy.mp.LayerFile(os.path.join(layerSymLocation, "PointOfOrigin.lyrx")).listLayers()[0]
-            combinedAreaLayer.dataSource = combinedDict["combined"]
-            combinedAreaLayer.name = model + " Point Of Origin"
-            mapList.addLayerToGroup(modelGroupLayer,combinedAreaLayer,"BOTTOM")
+            ipName = "Impact points" + "_" + timestr
 
-            initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
-            rangeLayerName = model + " Ranges by Impact OID"
-            initialGroupLayer.name = rangeLayerName
-            mapList.addLayerToGroup(modelGroupLayer,initialGroupLayer,"BOTTOM")
-            rangeGroupLayer = mapList.listLayers(rangeLayerName)[0]
-            initialGroupLayer = None
+            if DEBUG == True:
+                arcpy.AddMessage("Check locals() before MakeFeatureLayer ")
+                mydict = dict(locals())
+                CheckVariables(mydict)
+            if DEBUG == True: arcpy.AddMessage("arcpy.MakeFeatureLayer(...) ** Hang's here **" )
 
-            # Add the individual ranges to the range group layer
-            modelRanges = modelData[0]['ranges']
-            for r in modelRanges:
-                rangeToAdd = arcpy.mp.LayerFile(os.path.join(layerSymLocation, "ImpactRange.lyrx")).listLayers()[0]
-                rangeToAdd.dataSource = r
-                rangeToAdd.name = os.path.basename(r)
-                mapList.addLayerToGroup(rangeGroupLayer,rangeToAdd,"BOTTOM")
+            # ---> issue with: results = arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,ipName).getOutput(0) <---
+            try:
+                if arcpy.Exists(outputImpactPointFeatures): # This describe is attempt to verify outputImpactPointFeatures is valid
+                    # Create a Describe object from the feature class - put this in DEBUG when all is stable.
+                    desc = arcpy.Describe(outputImpactPointFeatures)
 
-            # Set Transparency of result Group Layers to "50"
-            if modelGroupLayer.supports("TRANSPARENCY"):
-                modelGroupLayer.transparency = 50
+                    if DEBUG == True:
+                        # Print some feature class properties of outputImpactPointFeatures
+                        #
+                        arcpy.AddMessage("Feature Type:  " + desc.featureType)
+                        arcpy.AddMessage("Shape Type :   " + desc.shapeType)
+                        arcpy.AddMessage("Spatial Index: " + str(desc.hasSpatialIndex))
+                        arcpy.AddMessage("shapeFieldName:     " + desc.shapeFieldName)
+                        arcpy.AddMessage("ShapeType:     " + desc.shapeType)
 
-        del aprx, mapList
+                    if DEBUG == True: arcpy.AddMessage("Current outputImpactPointFeatures exist, proceeding with MakeFeatureLayer_management")
+                    results = arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,ipName, None, None).getOutput(0)
+                    #results = arcpy.management.MakeFeatureLayer("imp_2000", "Impact Points_2015_1645", None, None, "OID OID VISIBLE NONE;Shape Shape VISIBLE NONE;POINT_X POINT_X VISIBLE NONE;POINT_Y POINT_Y VISIBLE NONE;MGRS_2 MGRS_2 VISIBLE NONE;MGRS MGRS VISIBLE NONE")
+                else:
+                    arcpy.AddMessage("Error: " + outputImpactPointFeatures + " does not exist")
+            except Exception:
+                e = sys.exc_info()[1]
+                arcpy.AddError(e.args[0])
 
-    else:
-        arcpy.AddWarning(r"...Could not determine version.\n   Looking for ArcMap " + str(desktopVersion) + ", or ArcGIS Pro " + str(proVersion) + ".\n   Found " + str(gisVersion))
+
+    # ['results', <arcpy._mp.Layer object at 0x0000000063221DA0>] - this is a layer object, cannot check .status or -> ErrorInfo: 'Layer' object has no attribute 'status'
+    # tried sleeping until "result" status has succeeded... http://pro.arcgis.com/en/pro-app/arcpy/classes/result.htm -
+    # tried change "results" to "result".
+
+            #  Applying symbology to result points before adding to Group works better than after adding to group
+
+            if DEBUG == True: arcpy.AddMessage("ApplySymbologyFromLayer")
+            arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy does not always work prior to adding apply the symbology
+            #arcpy.ApplySymbologyFromLayer_management(ipName,impactPointLayerFilePath) # for some reason this guy does work prior to adding apply the symbology
+
+            ## following did not work, seems to want the "results" Layer Object.
+            ##arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,impactPointLayerFilePath) # for some reason this guy doesn't apply the symbology
+
+
+            if DEBUG == True: arcpy.AddMessage("mapList.addLayerToGroup(...)")
+            mapList.addLayerToGroup(topGroupLayer,results,"TOP")
+            #mapList.addLayerToGroup(topGroupLayer,ipName,"TOP")
+
+    ##        if DEBUG == True: arcpy.AddMessage("ApplySymbologyFromLayer")
+    ##        arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy doesn't apply the symbology
+
+            # for all items in the combinedPooDict
+            for model in modelOriginsDict:
+                arcpy.AddMessage("Adding model: " + str(model))
+
+                # make a group layer for each model
+                initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
+                initialGroupLayer.name = model
+                mapList.addLayerToGroup(topGroupLayer,initialGroupLayer,"BOTTOM")
+                modelGroupLayer = mapList.listLayers(model)[0]
+                initialGroupLayer = None
+
+                # get range and POO data from this model
+                modelData = modelOriginsDict[model]
+
+                # make layer for combined area and add to model layer
+                combinedDict = modelData[1]
+                combinedAreaLayer = arcpy.mp.LayerFile(os.path.join(layerSymLocation, "PointOfOrigin.lyrx")).listLayers()[0]
+                combinedAreaLayer.dataSource = combinedDict["combined"]
+                combinedAreaLayer.name = model + " Point Of Origin"
+                mapList.addLayerToGroup(modelGroupLayer,combinedAreaLayer,"BOTTOM")
+
+                initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
+                rangeLayerName = model + " Ranges by Impact OID"
+                initialGroupLayer.name = rangeLayerName
+                mapList.addLayerToGroup(modelGroupLayer,initialGroupLayer,"BOTTOM")
+                rangeGroupLayer = mapList.listLayers(rangeLayerName)[0]
+                initialGroupLayer = None
+
+                # Add the individual ranges to the range group layer
+                modelRanges = modelData[0]['ranges']
+                for r in modelRanges:
+                    rangeToAdd = arcpy.mp.LayerFile(os.path.join(layerSymLocation, "ImpactRange.lyrx")).listLayers()[0]
+                    rangeToAdd.dataSource = r
+                    rangeToAdd.name = os.path.basename(r)
+                    mapList.addLayerToGroup(rangeGroupLayer,rangeToAdd,"BOTTOM")
+
+                # Set Transparency of result Group Layers to "50"
+                if modelGroupLayer.supports("TRANSPARENCY"):
+                    modelGroupLayer.transparency = 50
+
+            del aprx, mapList
+
+    except:
+        arcpy.AddWarning(r"...Could not determine version.\n   Looking for ArcMap " + ", or ArcGIS Pro " + str(proVersion) + ".\n   Found " + str(gisVersion))
 
     # Set tool output
     if DEBUG == True: arcpy.AddMessage("Setting output parameters...")
