@@ -55,7 +55,7 @@ timestr = time.strftime("%Y%m%d_%H%M")
 
 delete_me = []
 DEBUG = False
-DEBUG = True
+#DEBUG = True
 
 app_found = 'NOT_SET'
 toolbox10xSuffix = "_10.3"
@@ -435,34 +435,23 @@ try:
 
                     if DEBUG == True: arcpy.AddMessage("Current outputImpactPointFeatures exist, proceeding with MakeFeatureLayer_management")
                     results = arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,ipName, None, None).getOutput(0)
-                    #results = arcpy.management.MakeFeatureLayer("imp_2000", "Impact Points_2015_1645", None, None, "OID OID VISIBLE NONE;Shape Shape VISIBLE NONE;POINT_X POINT_X VISIBLE NONE;POINT_Y POINT_Y VISIBLE NONE;MGRS_2 MGRS_2 VISIBLE NONE;MGRS MGRS VISIBLE NONE")
+                    if DEBUG == True: arcpy.AddMessage("After MakeFeatureLayer_management")
+                    
                 else:
                     arcpy.AddMessage("Error: " + outputImpactPointFeatures + " does not exist")
             except Exception:
                 e = sys.exc_info()[1]
                 arcpy.AddError(e.args[0])
 
-
-    # ['results', <arcpy._mp.Layer object at 0x0000000063221DA0>] - this is a layer object, cannot check .status or -> ErrorInfo: 'Layer' object has no attribute 'status'
-    # tried sleeping until "result" status has succeeded... http://pro.arcgis.com/en/pro-app/arcpy/classes/result.htm -
-    # tried change "results" to "result".
-
             #  Applying symbology to result points before adding to Group works better than after adding to group
 
             if DEBUG == True: arcpy.AddMessage("ApplySymbologyFromLayer")
             arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy does not always work prior to adding apply the symbology
-            #arcpy.ApplySymbologyFromLayer_management(ipName,impactPointLayerFilePath) # for some reason this guy does work prior to adding apply the symbology
-
-            ## following did not work, seems to want the "results" Layer Object.
-            ##arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,impactPointLayerFilePath) # for some reason this guy doesn't apply the symbology
-
-
+            
+            
             if DEBUG == True: arcpy.AddMessage("mapList.addLayerToGroup(...)")
             mapList.addLayerToGroup(topGroupLayer,results,"TOP")
-            #mapList.addLayerToGroup(topGroupLayer,ipName,"TOP")
 
-    ##        if DEBUG == True: arcpy.AddMessage("ApplySymbologyFromLayer")
-    ##        arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy doesn't apply the symbology
 
             # for all items in the combinedPooDict
             for model in modelOriginsDict:
@@ -507,7 +496,7 @@ try:
             del aprx, mapList
 
     except:
-        arcpy.AddWarning(r"...Could not determine version.\n   Looking for ArcMap " + ", or ArcGIS Pro " + str(proVersion) + ".\n   Found " + str(gisVersion))
+        arcpy.AddWarning(r"...Could not determine version.\n   Looking for ARCMAP or ARCGIS_PRO" )
 
     # Set tool output
     if DEBUG == True: arcpy.AddMessage("Setting output parameters...")
