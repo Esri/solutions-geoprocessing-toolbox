@@ -71,11 +71,11 @@ class HLZTouchdownPointsDesktop(UnitTestCase.UnitTestCase):
 
             # Setup the test inputs
             self.inputAirframeTable = os.path.join(self.testDataGeodatabase, r"Aircraft_Specifications")
-            self.inputSuitableAreas = os.path.join(self.testDataGeodatabase) #TODO: need input suitable areas within slope data area
-            self.inputSlope = os.path.join(self.testDataGeodatabase) #TODO: need slope data, preferably in Monterey, CA, USA
+            self.inputSuitableAreas = os.path.join(self.testDataGeodatabase, r"HLZSelectionArea")
+            self.inputSlope = os.path.join(self.testDataGeodatabase, r"SRTMPctSlope")
             self.outputGeodatabase = os.path.join(self.scratchGDB)
-            self.outputCenterpoints = "centerPoints"
-            self.outputCircles = "tdCircles"
+            self.outputCenterpoints = os.path.join(self.outputGeodatabase, r"centerPoints")
+            self.outputCircles = os.path.join(self.outputGeodatabase, r"tdCircles")
 
             UnitTestUtilities.checkGeoObjects([self.testDataGeodatabase,
                                                self.toolbox,
@@ -97,7 +97,6 @@ class HLZTouchdownPointsDesktop(UnitTestCase.UnitTestCase):
             print(pymsg + "\n")
             print(msgs)
 
-
     def tearDown(self):
         ''' clean up after tests'''
         UnitTestUtilities.deleteScratch(self.scratchGDB)
@@ -105,11 +104,13 @@ class HLZTouchdownPointsDesktop(UnitTestCase.UnitTestCase):
     def test_MinimumBoundingFishnet(self):
         ''' Test the supporting script tool '''
         try:
-            #TODO: write a test
+            #TODO: Finish writing a test
             print("test_MinimumBoundingFishnet")
             outputFishnet = os.path.join(self.scratchGDB, "outputFishnet")
 
             arcpy.MinimumBoundingFishnet_tdPoints(self.inputSuitableAreas, outputFishnet)
+            countOutputFishnet = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, outputFishnet)).getOutput(0)
+            self.assertEqual(countOutputFishnet, float(1))
 
         except arcpy.ExecuteError:
             # Get the arcpy error messages
