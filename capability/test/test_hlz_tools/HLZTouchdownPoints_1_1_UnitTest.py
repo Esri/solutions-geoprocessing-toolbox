@@ -15,9 +15,9 @@
 # -----------------------------------------------------------------------------
 
 # ==================================================
-# HLZTouchdownPoints_10_3_UnitTest.py
+# HLZTouchdownPoints_1_1_UnitTest.py
 # --------------------------------------------------
-# requirments: ArcGIS 10.3.1 and Python 2.7
+# requirments: ArcGIS Pro 1.1 and Python 3.4
 # author: ArcGIS Solutions
 # company: Esri
 # ==================================================
@@ -31,6 +31,7 @@
 # * test_HLZ_Touchdown_Points_002
 #
 # ==================================================
+#TODO: update history
 # history:
 # 9/24/2015 - 10/19/2015 - MF - original test writeup
 # ==================================================
@@ -46,7 +47,7 @@ import TestUtilities
 import UnitTestUtilities
 import UnitTestCase
 
-class HLZTouchdownPointsDesktop(UnitTestCase.UnitTestCase):
+class HLZTouchdownPointsPro(UnitTestCase.UnitTestCase):
     ''' Test all tools and methods related to the HLZ Touchdown Points tool
     in the Helicopter Landing Zones toolbox'''
 
@@ -56,7 +57,7 @@ class HLZTouchdownPointsDesktop(UnitTestCase.UnitTestCase):
         try:
             # Set up paths
             self.testDataFolderPath = r"../../../capability/data/geodatabases/"
-            tbxFolderPath = r"../../../capability/toolboxes/Helicopter Landing Zone Tools_10.3.tbx"
+            tbxFolderPath = r"../../../capability/toolboxes/Helicopter Landing Zone Tools.tbx"
             UnitTestUtilities.checkFilePaths([self.testDataFolderPath, tbxFolderPath])
 
             #TODO: Where is the test data? Does the test data exist?
@@ -71,16 +72,17 @@ class HLZTouchdownPointsDesktop(UnitTestCase.UnitTestCase):
 
             # Setup the test inputs
             self.inputAirframeTable = os.path.join(self.testDataGeodatabase, r"Aircraft_Specifications")
-            self.inputSuitableAreas = os.path.join(self.testDataGeodatabase) #TODO: need input suitable areas within slope data area
-            self.inputSlope = os.path.join(self.testDataGeodatabase) #TODO: need slope data, preferably in Monterey, CA, USA
+            self.inputSuitableAreas = os.path.join(self.testDataGeodatabase, r"HLZSelectionArea")
+            self.inputSlope = os.path.join(self.testDataGeodatabase, r"SRTMPctSlope")
             self.outputGeodatabase = os.path.join(self.scratchGDB)
-            self.outputCenterpoints = "centerPoints"
-            self.outputCircles = "tdCircles"
+            self.outputCenterpoints = os.path.join(self.outputGeodatabase, r"centerPoints")
+            self.outputCircles = os.path.join(self.outputGeodatabase, r"tdCircles")
 
             UnitTestUtilities.checkGeoObjects([self.testDataGeodatabase,
                                                self.toolbox,
                                                self.inputAirframeTable,
-                                               self.inputSuitableAreas])
+                                               self.inputSuitableAreas,
+                                               self.inputSlope])
         except:
             # Get the traceback object
             tb = sys.exc_info()[2]
@@ -255,11 +257,9 @@ class HLZTouchdownPointsDesktop(UnitTestCase.UnitTestCase):
             countCenterPoints = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, self.outputCenterpoints)).getOutput(0)
             # count output circles
             countOutputCircles = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, self.outputCircles)).getOutput(0)
-
+            #TODO: make sure center points fall within circles
             self.assertEqual(countCenterPoints, float(934))
             self.assertEqual(countOutputCircles, float(934))
-
-            #TODO: make sure center points fall within circles
 
         except arcpy.ExecuteError:
             # Get the arcpy error messages
