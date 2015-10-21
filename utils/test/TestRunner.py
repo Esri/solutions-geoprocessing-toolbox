@@ -31,6 +31,7 @@ def main():
 
 def addVisibilityTests(suite):
     suite.addTest(SunPositionAndHillshadeTestCase('test_sun_position_analysis'))
+    suite.addTest(FindLocalPeaksTestCase('test_local_peaks'))
     return suite
 
 def runTestSuite():
@@ -45,5 +46,7 @@ if __name__ == "__main__":
     sunPosPath = os.path.normpath(os.path.join(TestUtilities.currentPath, r"../../visibility/test/test_sun_position/"))
     if sunPosPath not in sys.path:
         sys.path.insert(0, sunPosPath)
+    sys.path.insert(0, TestUtilities.vis_ScriptsPath)
     from SunPositionAndHillshadeTestCase import SunPositionAndHillshadeTestCase
+    from FindLocalPeaksTestCase import FindLocalPeaksTestCase
     main()
