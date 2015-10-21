@@ -15,11 +15,10 @@
 # -----------------------------------------------------------------------------
 
 # ==================================================
-# ClusterAnalysisTestCase.py
+# IncidentAnalysisTestSuitePro.py
 # --------------------------------------------------
-# requirments: ArcGIS X.X, Python 2.7 or Python 3.4
+# requirments: ArcGIS Pro 1.2, Python 3.4
 # author: ArcGIS Solutions
-# contact: ArcGISTeam<Solution>@esri.com
 # company: Esri
 # ==================================================
 # description: <Description>
@@ -29,6 +28,10 @@
 # ==================================================
 
 import unittest
-import UnitTestCase
-import UnitTestUtilities
-import TestUtilities
+import ClusterAnalysisTestCase
+import CountIncidentsByLOCTestCase
+import FindPercentChangeTestCase
+import HotSpotsByAreaTestCase
+import IncidentDensityTestCase
+import IncidentHotSpotsTestCase
+import IncidentTableToPointTestCase

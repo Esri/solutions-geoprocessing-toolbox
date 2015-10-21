@@ -15,20 +15,19 @@
 # -----------------------------------------------------------------------------
 
 # ==================================================
-# ClusterAnalysisTestCase.py
+# HelicopterLandingZonesTestSuitePro.py
 # --------------------------------------------------
-# requirments: ArcGIS X.X, Python 2.7 or Python 3.4
+# requirments: ArcGIS 1.X, Python 3.4
 # author: ArcGIS Solutions
 # contact: ArcGISTeam<Solution>@esri.com
 # company: Esri
 # ==================================================
-# description: <Description>
+# description: This test suite runs the HLZ tools in ArcGIS Pro
+# using the 1.x version of the toolbox.
 # ==================================================
 # history:
 # <date> - <initals> - <modifications>
 # ==================================================
 
 import unittest
-import UnitTestCase
-import UnitTestUtilities
-import TestUtilities
+import HLZTouchdownPointsTestCase

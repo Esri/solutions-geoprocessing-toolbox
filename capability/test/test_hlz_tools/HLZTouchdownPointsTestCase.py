@@ -1,40 +1,42 @@
 # coding: utf-8
-# -----------------------------------------------------------------------------
-# Copyright 2015 Esri
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# -----------------------------------------------------------------------------
+'''
+-----------------------------------------------------------------------------
+Copyright 2015 Esri
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-# ==================================================
-# HLZTouchdownPoints_1_1_UnitTest.py
-# --------------------------------------------------
-# requirments: ArcGIS Pro 1.1 and Python 3.4
-# author: ArcGIS Solutions
-# company: Esri
-# ==================================================
-# Description: Unit test for the HLZ Touchdown Points tool and also the supporing tools:
-# Choose Field Value Script Tool, and MinimumBoundingFishnet.
-#
-# Includes the following tests:
-# * test_MinimumBoundingFishnet
-# * test_Choose_Field_Value_Script_Tool
-# * test_HLZ_Touchdown_Points_001
-# * test_HLZ_Touchdown_Points_002
-#
-# ==================================================
-#TODO: update history
-# history:
-# 9/24/2015 - 10/19/2015 - MF - original test writeup
-# ==================================================
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-----------------------------------------------------------------------------
+
+==================================================
+HLZTouchdownPointsTestCase.py
+--------------------------------------------------
+requirements:
+author: ArcGIS Solutions
+company: Esri
+==================================================
+Description: Unit test for the HLZ Touchdown Points tool and also the supporing tools:
+Choose Field Value Script Tool, and MinimumBoundingFishnet.
+
+Includes the following tests:
+* test_MinimumBoundingFishnet
+* test_Choose_Field_Value_Script_Tool
+* test_HLZ_Touchdown_Points_001
+* test_HLZ_Touchdown_Points_002
+
+==================================================
+history:
+9/24/2015 - 10/19/2015 - MF - original test writeup
+10/21/2015 - MF - removed 10.x/1.x split between test cases
+==================================================
+'''
 
 import logging
 import arcpy
@@ -47,17 +49,16 @@ import TestUtilities
 import UnitTestUtilities
 import UnitTestCase
 
-class HLZTouchdownPointsPro(UnitTestCase.UnitTestCase):
+class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
     ''' Test all tools and methods related to the HLZ Touchdown Points tool
     in the Helicopter Landing Zones toolbox'''
 
-    def setUp(self):
+    def setUp(self, tbxFolderPath):
         ''' set-up code '''
 
         try:
             # Set up paths
             self.testDataFolderPath = r"../../../capability/data/geodatabases/"
-            tbxFolderPath = r"../../../capability/toolboxes/Helicopter Landing Zone Tools.tbx"
             UnitTestUtilities.checkFilePaths([self.testDataFolderPath, tbxFolderPath])
 
             #TODO: Where is the test data? Does the test data exist?
@@ -81,8 +82,7 @@ class HLZTouchdownPointsPro(UnitTestCase.UnitTestCase):
             UnitTestUtilities.checkGeoObjects([self.testDataGeodatabase,
                                                self.toolbox,
                                                self.inputAirframeTable,
-                                               self.inputSuitableAreas,
-                                               self.inputSlope])
+                                               self.inputSuitableAreas])
         except:
             # Get the traceback object
             tb = sys.exc_info()[2]
@@ -99,7 +99,6 @@ class HLZTouchdownPointsPro(UnitTestCase.UnitTestCase):
             print(pymsg + "\n")
             print(msgs)
 
-
     def tearDown(self):
         ''' clean up after tests'''
         UnitTestUtilities.deleteScratch(self.scratchGDB)
@@ -107,11 +106,13 @@ class HLZTouchdownPointsPro(UnitTestCase.UnitTestCase):
     def test_MinimumBoundingFishnet(self):
         ''' Test the supporting script tool '''
         try:
-            #TODO: write a test
+            #TODO: Finish writing a test
             print("test_MinimumBoundingFishnet")
             outputFishnet = os.path.join(self.scratchGDB, "outputFishnet")
 
             arcpy.MinimumBoundingFishnet_tdPoints(self.inputSuitableAreas, outputFishnet)
+            countOutputFishnet = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, outputFishnet)).getOutput(0)
+            self.assertEqual(countOutputFishnet, float(1))
 
         except arcpy.ExecuteError:
             # Get the arcpy error messages
@@ -257,9 +258,11 @@ class HLZTouchdownPointsPro(UnitTestCase.UnitTestCase):
             countCenterPoints = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, self.outputCenterpoints)).getOutput(0)
             # count output circles
             countOutputCircles = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, self.outputCircles)).getOutput(0)
-            #TODO: make sure center points fall within circles
+
             self.assertEqual(countCenterPoints, float(934))
             self.assertEqual(countOutputCircles, float(934))
+
+            #TODO: make sure center points fall within circles
 
         except arcpy.ExecuteError:
             # Get the arcpy error messages
