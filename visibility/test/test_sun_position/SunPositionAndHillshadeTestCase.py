@@ -26,6 +26,17 @@ import UnitTestUtilities
 import UnitTestCase               
                 
 class SunPositionAndHillshadeTestCase(UnitTestCase.UnitTestCase):
+    
+    inputGDB = os.path.join(TestUtilities.vis_GeodatabasePath, "test_sun_position.gdb")
+    inputArea = os.path.join(inputGDB, "inputArea")
+    inputSurface = os.path.join(inputGDB, "Jbad_SRTM_USGS_EROS")
+    compareResults = os.path.join(inputGDB, "compareResults")
+    
+    def setUp(self):
+        UnitTestCase.UnitTestCase.setUp(self)
+        testObjects = [TestUtilities.sunPosToolbox, self.inputGDB, self.inputArea, self.inputSurface, self.compareResults]
+        UnitTestUtilities.checkGeoObjects(testObjects)
+        UnitTestUtilities.createScratch(TestUtilities.vis_ScratchPath)
         
     def test_sun_position_analysis(self):
         try:
@@ -49,10 +60,11 @@ class SunPositionAndHillshadeTestCase(UnitTestCase.UnitTestCase):
 
             # Testing
             arcpy.AddMessage("Running tool (Sun Position and Hillshade)")
-            arcpy.SunPositionAnalysis_sunpos(TestUtilities.vis_inputArea, TestUtilities.vis_inputSurface, dtCompare, utcAfghanistan, outHillshade)
-
+            # arcpy.SunPositionAnalysis_sunpos(TestUtilities.vis_inputArea, TestUtilities.vis_inputSurface, dtCompare, utcAfghanistan, outHillshade)
+            arcpy.SunPositionAnalysis_sunpos(self.inputArea, self.inputSurface, dtCompare, utcAfghanistan, outHillshade)
+            
             print("Comparing expected values with tool results from " + str(dtCompare) + " in " + str(utcAfghanistan))
-            compareResults = TestUtilities.vis_compareResults
+            compareResults = self.compareResults
 
             arcpy.CheckOutExtension("Spatial")
             diff = Minus(Raster(outHillshade),Raster(compareResults))
@@ -82,34 +94,36 @@ class SunPositionAndHillshadeTestCase(UnitTestCase.UnitTestCase):
                 # raise ValueDifferenceError(msg)
         
         except arcpy.ExecuteError:
-            # Get the arcpy error messages
-            msgs = arcpy.GetMessages()
-            arcpy.AddError(msgs)
-            print(msgs)
+            UnitTestUtilities.handleArcPyError()
+            # # Get the arcpy error messages
+            # msgs = arcpy.GetMessages()
+            # arcpy.AddError(msgs)
+            # print(msgs)
 
-            # return a system error code
-            sys.exit(-1)
+            # # return a system error code
+            # sys.exit(-1)
 
         except:
-            # Get the traceback object
-            tb = sys.exc_info()[2]
-            tbinfo = traceback.format_tb(tb)[0]
+            UnitTestUtilities.handleGeneralError()
+            # # Get the traceback object
+            # tb = sys.exc_info()[2]
+            # tbinfo = traceback.format_tb(tb)[0]
 
-            # Concatenate information together concerning the error into a message string
-            pymsg = "PYTHON ERRORS:\nTraceback info:\n" + tbinfo + "\nError Info:\n"\
-                + str(sys.exc_info()[1])
-            msgs = "ArcPy ERRORS:\n" + arcpy.GetMessages() + "\n"
+            # # Concatenate information together concerning the error into a message string
+            # pymsg = "PYTHON ERRORS:\nTraceback info:\n" + tbinfo + "\nError Info:\n"\
+                # + str(sys.exc_info()[1])
+            # msgs = "ArcPy ERRORS:\n" + arcpy.GetMessages() + "\n"
 
-            # Return python error messages for use in script tool or Python Window
-            arcpy.AddError(pymsg)
-            arcpy.AddError(msgs)
+            # # Return python error messages for use in script tool or Python Window
+            # arcpy.AddError(pymsg)
+            # arcpy.AddError(msgs)
 
-            # Print Python error messages for use in Python / Python Window
-            print(pymsg + "\n")
-            print(msgs)
+            # # Print Python error messages for use in Python / Python Window
+            # print(pymsg + "\n")
+            # print(msgs)
 
-            # return a system error code
-            sys.exit(-1)
+            # # return a system error code
+            # sys.exit(-1)
             
         finally:
             arcpy.CheckInExtension("Spatial")
