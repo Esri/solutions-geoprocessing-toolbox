@@ -23,7 +23,6 @@ import unittest
 import TestUtilities
 import UnitTestUtilities
 
-
 def main():
     logger = UnitTestUtilities.initializeLogger("Base")
     UnitTestUtilities.setUpLogFileHeader(logger)

@@ -53,6 +53,8 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
     ''' Test all tools and methods related to the HLZ Touchdown Points tool
     in the Helicopter Landing Zones toolbox'''
 
+    scratchGDB = None
+
     def setUp(self, tbxFolderPath):
         ''' set-up code '''
 
