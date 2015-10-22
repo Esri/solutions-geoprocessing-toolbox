@@ -24,7 +24,4 @@ class UnitTestCase(unittest.TestCase):
         UnitTestUtilities.checkArcPy()
         visibility_Paths = [TestUtilities.vis_GeodatabasePath, TestUtilities.vis_ToolboxesPath, TestUtilities.sunPosToolbox, TestUtilities.visandRangeToolbox]
         UnitTestUtilities.checkFilePaths(visibility_Paths)
-            # geoObjects = [TestUtilities.sunPosToolbox, TestUtilities.vis_inputGDB, TestUtilities.vis_inputArea, TestUtilities.vis_inputSurface, TestUtilities.vis_compareResults]
-            # UnitTestUtilities.checkGeoObjects(geoObjects)
-            # UnitTestUtilities.createScratch(TestUtilities.vis_ScratchPath)
   
