@@ -54,13 +54,16 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
     in the Helicopter Landing Zones toolbox'''
 
     scratchGDB = None
+    tbxProFolderPath = r"../../../capability/toolboxes/Helicopter Landing Zone Tools.tbx"
+    tbxDesktopFolderPath = r"../../../capability/toolboxes/Helicopter Landing Zone Tools_10.3.tbx"
 
-    def setUp(self, tbxFolderPath):
+    def setUp(self, platform):
         ''' set-up code '''
 
         try:
             # Set up paths
             self.testDataFolderPath = r"../../../capability/data/geodatabases/"
+
             UnitTestUtilities.checkFilePaths([self.testDataFolderPath, tbxFolderPath])
 
             #TODO: Where is the test data? Does the test data exist?
@@ -71,8 +74,8 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
                 self.scratchGDB = UnitTestUtilities.createScratch(testDataFolderPath)
 
             # Set up the toolbox
-            self.toolbox = arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
 
+            
             # Setup the test inputs
             self.inputAirframeTable = os.path.join(self.testDataGeodatabase, r"Aircraft_Specifications")
             self.inputSuitableAreas = os.path.join(self.testDataGeodatabase, r"HLZSelectionArea")
@@ -105,12 +108,19 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
         ''' clean up after tests'''
         UnitTestUtilities.deleteScratch(self.scratchGDB)
 
-    def test_MinimumBoundingFishnet(self):
+    def test_MinimumBoundingFishnet_Pro(self):
+        self.test_MinimumBoundingFishnet(self.tbxProFolderPath)
+
+    def test_MinimumBoundingFishnet_Desktop(self):
+        self.test_MinimumBoundingFishnet(self.tbxDesktopFolderPath)
+
+    def test_MinimumBoundingFishnet(self, tbxFolderPath):
         ''' Test the supporting script tool '''
         try:
             #TODO: Finish writing a test
             print("test_MinimumBoundingFishnet")
             outputFishnet = os.path.join(self.scratchGDB, "outputFishnet")
+            toolbox = arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
 
             arcpy.MinimumBoundingFishnet_tdPoints(self.inputSuitableAreas, outputFishnet)
             countOutputFishnet = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, outputFishnet)).getOutput(0)
@@ -137,6 +147,12 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
             # Print Python error messages for use in Python / Python Window
             print(pymsg + "\n")
             print(msgs)
+
+    def test_Choose_Field_Value_Script_Tool_Pro(self):
+        self.test_MinimumBoundingFishnet(self.tbxProFolderPath)
+
+    def test_Choose_Field_Value_Script_Tool_Desktop(self):
+        self.test_MinimumBoundingFishnet(self.tbxDesktopFolderPath)
 
     def test_Choose_Field_Value_Script_Tool(self):
         ''' test the supporting script tool '''

@@ -40,49 +40,37 @@ import UnitTestUtilities
 import HLZTouchdownPointsTestCase
 
 
-class HelicopterLandingZoneTestSuiteDesktop(unittest.TestSuite):
-    ''' Test suite for all HLZ test for Desktop '''
-    def addHLZTouchdownPoints001(self, suite):
-        ''' add the test_HLZ_Touchdown_Points_001 test to the test suite'''
+class HelicopterLandingZoneTestSuite(unittest.TestSuite):
+    ''' Test suite for all tools in the Helicopter Landing Zone Tools toolbox '''
+
+
+    def runProTests(self, suite):
+        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_Choose_Field_Value_Script_Tool_Pro'))
+        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_MinimumBoundingFishnet_Pro'))
+        return suite
+
+    def runDesktopTests(self, suite):
         suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_HLZ_Touchdown_Points_001'))
-        return suite
-
-    def addHLZTouchdownPoints002(self, suite):
-        ''' add the test_HLZ_Touchdown_Points_002 test to the test suite'''
         suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_HLZ_Touchdown_Points_002'))
+        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_Choose_Field_Value_Script_Tool_Desktop'))
+        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_MinimumBoundingFishnet_Desktop'))
         return suite
 
-    def addChooseFieldValueScriptTool(self, suite):
-        ''' add the test_Choose_Field_Value_Script_Tool test to the test suite'''
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_Choose_Field_Value_Script_Tool'))
-        return suite
-
-    def addMinimumBoundingFishnet(self, suite):
-        ''' add the test_MinimumBoundingFishnet test to the test suite'''
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_MinimumBoundingFishnet'))
-        return suite
-
-    def runHLZTestSuite(self, testSuite, logger):
+    def runHLZTestSuite(self, testSuite, platform):
         ''' run the HLZ tests in Desktop'''
         result = unittest.TestResult()
         sunPosPath = os.path.normpath(os.path.join(TestUtilities.currentPath, r"../../capability/test/test_hlz_tools/"))
         if sunPosPath not in sys.path:
             sys.path.insert(0, sunPosPath)
+            
         from HLZTouchdownPointsTestCase import HLZTouchdownPoints
-        tbxFolderPath = r"../../../capability/toolboxes/Helicopter Landing Zone Tools_10.3.tbx"
 
-        # Setup the tests
-        HLZTouchdownPoints.setUp(tbxFolderPath)
-        # Add the tests in this test suite
-        self.addHLZTouchdownPoints001(testSuite)
-        self.addHLZTouchdownPoints002(testSuite)
-        self.addChooseFieldValueScriptTool(testSuite)
-        self.addMinimumBoundingFishnet(testSuite)
-        # Cleanup after tests are run
+        if platform == "PRO":
+            self.runProTests(testSuite)
+        else:
+            self.runDesktopTests(testSuite)
 
         testSuite.run(result)
         print("Test success: {0}".format(str(result.wasSuccessful())))
-
-        HLZTouchdownPoints.tearDown()
 
         return result
