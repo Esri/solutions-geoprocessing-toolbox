@@ -23,11 +23,11 @@ import unittest
 import TestUtilities
 import UnitTestUtilities
 
-    
 def main():
     logger = UnitTestUtilities.initializeLogger("Base")
     UnitTestUtilities.setUpLogFileHeader(logger)
     runTestSuite()
+
 
 # def addPatternsTests(suite):
     # #suite.addTest(PatternToolOneTestCase('test_name'))
@@ -37,14 +37,14 @@ def addVisibilityTests(suite):
     suite.addTest(SunPositionAndHillshadeTestCase('test_sun_position_analysis'))
     suite.addTest(FindLocalPeaksTestCase('test_local_peaks'))
     return suite
-    
+
 def runTestSuite():
     testSuite = unittest.TestSuite()
     result = unittest.TestResult()
     addVisibilityTests(testSuite)
     testSuite.run(result)
     print("Test success: {0}".format(str(result.wasSuccessful())))
-    
+
 # MAIN =============================================
 if __name__ == "__main__":
     sunPosPath = os.path.normpath(os.path.join(TestUtilities.currentPath, r"../../visibility/test/test_sun_position/"))
