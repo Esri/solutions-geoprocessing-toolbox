@@ -47,6 +47,7 @@ appEnvironment = None
 mxd, df, aprx, mp, mapList = None, None, None, None, None
 
 def labelFeatures(layer, field):
+
     ''' set up labeling for layer '''
     if appEnvironment == "ARCGIS_PRO":
         if layer.supports("SHOWLABELS"):
@@ -80,6 +81,7 @@ def findLayerByName(layerName):
     #else:
     elif appEnvironment == "ARCMAP":
         if DEBUG == True: arcpy.AddMessage("Map labeling for " + layerName + "...")
+
         for layer in arcpy.mapping.ListLayers(mxd):
             if layer.name == layerName:
                 arcpy.AddMessage("Found matching layer [" + layer.name + "]")
@@ -88,6 +90,22 @@ def findLayerByName(layerName):
                 arcpy.AddMessage("Incorrect layer: [" + layer.name + "]")
     else:
         arcpy.AddMessage("Non-map environment, no layers to find...")
+
+
+def GetApplication():
+    '''Return app environment as ARCMAP, ARCGIS_PRO, OTHER'''
+    try:
+        from arcpy import mp
+        return "ARCGIS_PRO"
+    except ImportError:
+        try:
+            from arcpy import mapping
+            mxd = arcpy.mapping.MapDocument("CURRENT")
+            return "ARCMAP"
+        except:
+            return "OTHER"
+
+
 
 def main():
     ''' main '''
@@ -249,4 +267,3 @@ def main():
 # MAIN =============================================
 if __name__ == "__main__":
     main()
-    
