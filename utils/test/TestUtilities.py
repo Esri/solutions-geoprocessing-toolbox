@@ -28,10 +28,9 @@ logPath = os.path.normpath(os.path.join(currentPath, r"../log/"))
 vis_GeodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../visibility/data/geodatabases/"))
 vis_ScratchPath = os.path.normpath(os.path.join(currentPath, r"../../visibility/data/geodatabases"))
 vis_ToolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../visibility/toolboxes/"))
-
-vis_inputGDB  = os.path.join(vis_GeodatabasePath, "test_sun_position.gdb")
-vis_inputArea = os.path.join(vis_inputGDB,"inputArea")
-vis_inputSurface = os.path.join(vis_inputGDB,"Jbad_SRTM_USGS_EROS")
-vis_compareResults = os.path.join(vis_inputGDB,"compareResults")
-
+vis_ScriptsPath = os.path.join(vis_ToolboxesPath, "scripts")
 sunPosToolbox = os.path.join(vis_ToolboxesPath, "Sun Position Analysis Tools_10.3.tbx")
+visandRangeToolbox = os.path.join(vis_ToolboxesPath, "Visibility and Range Tools_10.3.tbx")
+
+
+
