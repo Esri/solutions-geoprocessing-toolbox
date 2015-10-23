@@ -24,7 +24,7 @@
 # Embedd script in Script Tool. share as project template.
 # ---------------------------------------------------------------------------
 # Known issues:
-# Check for the "no interection" cases.  Q: should any intersection be the result, or do all impact buffers have to intersect?  Might try as  raster process Euclidean distance?
+# Check for the cases where not all impact buffes intersect, currently results in empty answer.  Q: should any intersection be the result, or do all impact buffers have to intersect?  Might try as  raster process Euclidean distance?
 # ======================Import arcpy module=================================
 import os, sys, traceback, math, decimal, time
 import arcpy
@@ -50,7 +50,7 @@ outputImpactRangeFeatures = [] # Feature Class - multiple
 
 outputCoordinateSystem = arcpy.GetParameter(13) # Coordinate System
 outputCoordinateSystemAsText = arcpy.GetParameterAsText(13) # String
-outputUseTrueCurve = arcpy.GetParameterAsText(14) # boolean string (true or false)
+outputUseTrueCurve = arcpy.GetParameter(14) # boolean string (true or false)
 
 # Will use a time stamp on the grouped layer for keeping track of multiple runs; prefix should distinguish Feature Classes?
 timestr = time.strftime("%Y%m%d_%H%M")
@@ -231,12 +231,12 @@ try:
             impactMaxBuffer = os.path.join(env.scratchWorkspace,"Impact_Max_" + str(oid) + "_" + scrubbedModel)
             if DEBUG == True: arcpy.AddMessage( str(oid) + ", " + str(feat) + ", " + str(impactMaxBuffer) + ", " + str(maxRange) + ", " + str(outputUseTrueCurve ) )
 
-            if outputUseTrueCurve == "true":
+            if outputUseTrueCurve == True:
                 if DEBUG == True: arcpy.AddMessage("Using True Curve" )
                 arcpy.Buffer_analysis(feat,impactMaxBuffer,maxRange)
                 delete_me.append(impactMaxBuffer)
-            if outputUseTrueCurve == "false":
 
+            if outputUseTrueCurve == False:
                 if DEBUG == True: arcpy.AddMessage("Densifying True Curve to regular polygon" )
                 arcpy.Buffer_analysis(feat,impactMaxBuffer,maxRange)
                 arcpy.Densify_edit(impactMaxBuffer, "ANGLE","", "", "0.75")
@@ -244,16 +244,17 @@ try:
 
             # buffer the MIN distance from point
             impactMinBuffer = os.path.join(env.scratchWorkspace,"Impact_Min_" + str(oid) + "_" + scrubbedModel)
-            if outputUseTrueCurve == "true":
+
+            if outputUseTrueCurve == True:
                 if DEBUG == True: arcpy.AddMessage("Using True Curve" )
                 arcpy.Buffer_analysis(feat,impactMinBuffer,minRange)
                 delete_me.append(impactMinBuffer)
-            if outputUseTrueCurve == "false":
+
+            if outputUseTrueCurve == False:
                 if DEBUG == True: arcpy.AddMessage("Densifying True Curve to regular polygon" )
                 arcpy.Buffer_analysis(feat,impactMinBuffer,minRange)
                 arcpy.Densify_edit(impactMinBuffer, "ANGLE","", "", "0.75")
                 delete_me.append(impactMinBuffer)
-
 
             # Find the area within the model weapon areas min and max ranges
             impactPointClassName = scrubbedImpactBufferOutPrefix + "_" + str(oid) + "_" + scrubbedModel
