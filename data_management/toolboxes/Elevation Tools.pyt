@@ -194,7 +194,7 @@ class createSourceMD(object):
         args = ['rslntm', '#gprun']
         args.append(sourcePara)
         args.append(sourceMD)
-        args.append('-b:' + solutionLib_path+ "/base")
+        args.append('-b:' + solutionLib_path)
         data = '-s:'+ datapath
         args.append(data)
 
@@ -343,7 +343,7 @@ class createDerivedMD(object):
         dargs = ['rslntm', '#gprun']
         dargs.append(derivedPara)
         dargs.append(derivedMD)
-        dargs.append('-b:' + solutionLib_path + "/base")
+        dargs.append('-b:' + solutionLib_path)
         dsrsReplace = '-P:' + str(dsrs) + '$' +'sSRS'
         dargs.append(dsrsReplace)
 
