@@ -16,7 +16,7 @@ limitations under the License.
 -----------------------------------------------------------------------------
 
 ==================================================
-HelicopterLandingZoneTestSuite.py
+IncidentAnalysisToolsTestSuite.py
 --------------------------------------------------
 requirments:
 * ArcGIS Desktop 10.X+ or ArcGIS Pro 1.X+
@@ -25,41 +25,46 @@ author: ArcGIS Solutions
 company: Esri
 ==================================================
 description:
-This test suite collects all of the test cases for the
-Helicopter Landing Zone Tools toolboxes:
-* HLZTouchdownPointsTestCase.py
+This test suite collects all of the Incident Analysis Tools toolbox test cases:
+* ClusterAnalysisTestCase.py
+* CountIncidentsByLOCTestCase.py
+* FindPercentChangeTestCase.py
+* HotSpotsByAreaTestCase.py
+* IncidentDensityTestCase.py
+* IncidentHotSpotsTestCase.py
+* IncidentTableToPointTestCase.py
 
 ==================================================
 history:
-10/23/2015 - MF - initial coding started
+10/23/2015 - MF - intial coding started
 ==================================================
 '''
 
 import logging
 import unittest
-import HLZTouchdownPointsTestCase
+import ClusterAnalysisTestCase
+import CountIncidentsByLOCTestCase
+import FindPercentChangeTestCase
+import HotSpotsByAreaTestCase
+import IncidentDensityTestCase
+import IncidentHotSpotsTestCase
+import IncidentTableToPointTestCase
 
-class HelicopterLandingZoneTestSuite(unittest.TestSuite):
-    ''' Test suite for all test cases for the Helicopter Landing Zone Tools toolbox '''
+class IncidentAnalysisToolsTestSuite(unittest.TestSuite):
+    ''' Test suite for all test cases for the Incident Analysis Tools toolbox '''
 
     def runProTests(self, suite):
-        ''' Set up the HLZ tests for Pro '''
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_Choose_Field_Value_Script_Tool_Pro'))
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_MinimumBoundingFishnet_Pro'))
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_HLZ_Touchdown_Points_001_Pro'))
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_HLZ_Touchdown_Points_002_Pro'))
+        ''' Set up the Incident test for Pro'''
+        # suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_Choose_Field_Value_Script_Tool_Pro'))
         return suite
 
     def runDesktopTests(self, suite):
-        ''' Set up the HLZ tests for Desktop '''
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_Choose_Field_Value_Script_Tool_Desktop'))
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_MinimumBoundingFishnet_Desktop'))
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_HLZ_Touchdown_Points_001_Desktop'))
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_HLZ_Touchdown_Points_002_Desktop'))
+        ''' Set up the Incident tests for Desktop'''
+        # suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_Choose_Field_Value_Script_Tool_Desktop'))
         return suite
 
-    def runHLZTestSuite(self, testSuite, platform):
-        ''' run the HLZ tests as either Pro or Desktop'''
+    def runIncidentTests(self, testSuite, platform):
+        ''' run the Incident Analysis tests as either Pro or Desktop'''
         result = unittest.TestResult()
 
         if platform == "PRO":

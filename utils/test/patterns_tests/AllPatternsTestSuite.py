@@ -26,10 +26,14 @@ company: Esri
 ==================================================
 description:
 This test suite collects all of the patterns toolbox test suites:
-* <toolbox>ToolsTestSuite.py
+* IncidentAnalysisToolsTestSuite.py
 
 ==================================================
 history:
 10/23/2015 - MF - placeholder
 ==================================================
 '''
+
+import logging
+import unittest
+import IncidentAnalysisToolsTestSuite

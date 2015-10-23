@@ -54,28 +54,21 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
     in the Helicopter Landing Zones toolbox'''
 
     scratchGDB = None
-    tbxProFolderPath = r"../../../capability/toolboxes/Helicopter Landing Zone Tools.tbx"
-    tbxDesktopFolderPath = r"../../../capability/toolboxes/Helicopter Landing Zone Tools_10.3.tbx"
+    tbxProFolderPath = r"../../../../capability/toolboxes/Helicopter Landing Zone Tools.tbx"
+    tbxDesktopFolderPath = r"../../../../capability/toolboxes/Helicopter Landing Zone Tools_10.3.tbx"
+    testDataFolderPath = r"./data/geodatabases/"
 
-    def setUp(self, platform):
+    def setUp(self):
         ''' set-up code '''
-
         try:
-            # Set up paths
-            self.testDataFolderPath = r"../../../capability/data/geodatabases/"
-
             UnitTestUtilities.checkFilePaths([self.testDataFolderPath, tbxFolderPath])
 
-            #TODO: Where is the test data? Does the test data exist?
             self.testDataGeodatabase = os.path.join(self.testDataFolderPath, r"test_hlz_tools.gdb")
 
             # Check the test inputs (do they exist? or not?)
             if not arcpy.Exists(self.scratchGDB):
                 self.scratchGDB = UnitTestUtilities.createScratch(testDataFolderPath)
 
-            # Set up the toolbox
-
-            
             # Setup the test inputs
             self.inputAirframeTable = os.path.join(self.testDataGeodatabase, r"Aircraft_Specifications")
             self.inputSuitableAreas = os.path.join(self.testDataGeodatabase, r"HLZSelectionArea")
@@ -85,7 +78,6 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
             self.outputCircles = os.path.join(self.outputGeodatabase, r"tdCircles")
 
             UnitTestUtilities.checkGeoObjects([self.testDataGeodatabase,
-                                               self.toolbox,
                                                self.inputAirframeTable,
                                                self.inputSuitableAreas])
         except:
@@ -122,7 +114,7 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
             outputFishnet = os.path.join(self.scratchGDB, "outputFishnet")
             arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
 
-            arcpy.MinimumBoundingFishnet_tdPoints(self.inputSuitableAreas, outputFishnet)
+            arcpy.MinimumBoundingFishnet_tdpoints(self.inputSuitableAreas, outputFishnet)
             countOutputFishnet = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, outputFishnet)).getOutput(0)
             self.assertEqual(countOutputFishnet, float(1))
 
