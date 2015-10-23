@@ -120,7 +120,7 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
             #TODO: Finish writing a test
             print("test_MinimumBoundingFishnet")
             outputFishnet = os.path.join(self.scratchGDB, "outputFishnet")
-            toolbox = arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
+            arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
 
             arcpy.MinimumBoundingFishnet_tdPoints(self.inputSuitableAreas, outputFishnet)
             countOutputFishnet = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, outputFishnet)).getOutput(0)
@@ -154,11 +154,13 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
     def test_Choose_Field_Value_Script_Tool_Desktop(self):
         self.test_MinimumBoundingFishnet(self.tbxDesktopFolderPath)
 
-    def test_Choose_Field_Value_Script_Tool(self):
+    def test_Choose_Field_Value_Script_Tool(self, tbxFolderPath):
         ''' test the supporting script tool '''
         try:
-            #TODO: write a test
             print("test_Choose_Field_Value_Script_Tool")
+
+            arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
+
             inputField = r"Model"
             inputChoice = r"UH-60"
             result = arcpy.ChooseFieldValueScriptTool_tdpoints(self.inputAirframeTable,inputField,inputChoice)
@@ -188,13 +190,20 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
             print(pymsg + "\n")
             print(msgs)
 
-    def test_HLZ_Touchdown_Points_001(self):
+    def test_HLZ_Touchdown_Points_001_Pro(self):
+        self.test_HLZ_Touchdown_Points_001(self.tbxProFolderPath)
+
+    def test_HLZ_Touchdown_Points_001_Desktop(self):
+        self.test_HLZ_Touchdown_Points_001(self.tbxDesktopFolderPath)
+
+    def test_HLZ_Touchdown_Points_001(self, tbxFolderPath):
         ''' This is a basic test of the HLZ Touchdown tool with all of the input defined. '''
         try:
             print("test_HLZ_Touchdown_Points_001")
             # move TestSunPositionAndHillshade code in here
             print("Importing toolbox... ")
-            arcpy.ImportToolbox(TestUtilities.toolbox, "tdpoints")
+            arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
+
             arcpy.env.overwriteOutput = True
 
             # Inputs
@@ -242,13 +251,20 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
             print(pymsg + "\n")
             print(msgs)
 
-    def test_HLZ_Touchdown_Points_002(self):
+    def test_HLZ_Touchdown_Points_002_Pro(self):
+        self.test_HLZ_Touchdown_Points_002(self.tbxProFolderPath)
+
+    def test_HLZ_Touchdown_Points_002_Desktop(self):
+        self.test_HLZ_Touchdown_Points_002(self.tbxDesktopFolderPath)
+
+    def test_HLZ_Touchdown_Points_002(self, tbxFolderPath):
         ''' This test is for some of the default values in the HLZ Touchdown tool. '''
         try:
             arcpy.AddMessage("test_HLZ_Touchdown_Points_002")
             # move TestSunPositionAndHillshade code in here
             print("Importing toolbox... ")
-            arcpy.ImportToolbox(TestUtilities.toolbox, "tdpoints")
+            arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
+
             arcpy.env.overwriteOutput = True
 
             # Inputs

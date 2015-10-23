@@ -16,14 +16,19 @@ limitations under the License.
 -----------------------------------------------------------------------------
 
 ==================================================
-HelicopterLandingZoneTestSuiteDesktop.py
+HelicopterLandingZoneTestSuite.py
 --------------------------------------------------
-requirments: ArcGIS 10.X, Python 2.7
+requirments:
+* ArcGIS Desktop 10.X+ or ArcGIS Pro 1.X+
+* Python 2.7 or Python 3.4
 author: ArcGIS Solutions
 company: Esri
 ==================================================
-description: This test suite runs the HLZ tools in Desktop
-using the 10.x version of the toolbox.
+description:
+This test suite collects all of the test cases for the
+Helicopter Landing Zone Tools toolboxes:
+* HLZTouchdownPointsTestCase.py
+
 ==================================================
 history:
 <date> - <initals> - <modifications>
@@ -47,13 +52,15 @@ class HelicopterLandingZoneTestSuite(unittest.TestSuite):
     def runProTests(self, suite):
         suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_Choose_Field_Value_Script_Tool_Pro'))
         suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_MinimumBoundingFishnet_Pro'))
+        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_HLZ_Touchdown_Points_001_Pro'))
+        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_HLZ_Touchdown_Points_002_Pro'))
         return suite
 
     def runDesktopTests(self, suite):
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_HLZ_Touchdown_Points_001'))
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_HLZ_Touchdown_Points_002'))
         suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_Choose_Field_Value_Script_Tool_Desktop'))
         suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_MinimumBoundingFishnet_Desktop'))
+        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_HLZ_Touchdown_Points_001_Desktop'))
+        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_HLZ_Touchdown_Points_002_Desktop'))
         return suite
 
     def runHLZTestSuite(self, testSuite, platform):
@@ -62,7 +69,7 @@ class HelicopterLandingZoneTestSuite(unittest.TestSuite):
         sunPosPath = os.path.normpath(os.path.join(TestUtilities.currentPath, r"../../capability/test/test_hlz_tools/"))
         if sunPosPath not in sys.path:
             sys.path.insert(0, sunPosPath)
-            
+
         from HLZTouchdownPointsTestCase import HLZTouchdownPoints
 
         if platform == "PRO":
