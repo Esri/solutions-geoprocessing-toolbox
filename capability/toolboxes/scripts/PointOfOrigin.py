@@ -12,16 +12,19 @@
 # 7/6/2015 - ps Added logic to check for Desktop, or Pro 1.0 in order to call cursor() properly for respective version.
 # 7/8/2015 - ps Review "locals", delete more locals.
 # 7/9/2015 - ps Modified  script to include function CheckVariables() which displays "locals()" when DEBUG is turned on.
-# 7/13/2015 - ps Added logic to hold Group Layer Result with a time string appended to the Group Layer name.
-# 7/14/2015 - ps Noticed that issue with hang at MakeFeatureLayer_management is related to Pro's Indexing and/or the Windows process ArcGISCleanup.exe
-# 7/16/2015 - ps Added option to uncheck True Curve, results in densified polygon which can be projected on the fly more readily that True Curve
+# 7/13/2015 - ps - Added logic to hold Group Layer Result with a time string appended to the Group Layer name.
+# 7/14/2015 - ps - Noticed that issue with hang at MakeFeatureLayer_management is related to Pro's Indexing and/or the Windows process ArcGISCleanup.exe
+# 7/16/2015 - ps - Added option to uncheck True Curve, results in densified polygon which can be projected on the fly more readily that True Curve
 # Using Build 3308 (1.1.1 release)
-# 10/19/2015 - ps Restructured to use method ins Utilities.py  - try block "from arcpy import mp" in GetApplication() function.
-#
+# 10/19/2015 - ps - Restructured to use method in Utilities.py  - try block "from arcpy import mp" in GetApplication() function.
+# 10/20/2015 - ps - Fixes for Desktop part of Script that
 # ---------------------------------------------------------------------------
+# To do:
 # Have NOT changed overall structure of script to use Functions()
-#
-#
+# Embedd script in Script Tool. share as project template.
+# ---------------------------------------------------------------------------
+# Known issues:
+# Check for the "no interection" cases.  Q: should any intersection be the result, or do all impact buffers have to intersect?  Might try as  raster process Euclidean distance?
 # ======================Import arcpy module=================================
 import os, sys, traceback, math, decimal, time
 import arcpy
@@ -56,12 +59,14 @@ timestr = time.strftime("%Y%m%d_%H%M")
 delete_me = []
 DEBUG = False
 #DEBUG = True
-
-app_found = 'NOT_SET'
-toolbox10xSuffix = "_10.3"
+#------------------------------------------------------------------------------
+# NO LONGER NEEDED
+#app_found = 'NOT_SET'
+#toolbox10xSuffix = "_10.3"
 
 #desktopVersion = ["10.2.2","10.3","10.3.1"]
-proVersion = ["1.0", "1.1", "1.2"]
+#proVersion = ["1.0", "1.1", "1.2"]
+#------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
 # check which variables are still set...cleanup variables...
@@ -92,18 +97,34 @@ def CheckVariables(inDict):
 def GetApplication():
     '''Return app environment as: ARCMAP, ARCGIS_PRO, OTHER'''
 
-    global app_found
+    #global app_found
+    try:
+        app_found
+    except NameError:
+        if DEBUG == True: arcpy.AddMessage("Variable app_found not initialized, setting to NOT_SET until it is determined")
+        print("app_found not set")
+        app_found = 'NOT_SET'
+
     if app_found != 'NOT_SET':
-            return app_found
+        return app_found
 
     try:
         from arcpy import mp
     except ImportError:
         try:
             from arcpy import mapping
-            mxd = arcpy.mapping.MapDocument("CURRENT")
-            app_found = "ARCMAP"
-            return app_found
+            arcpy.AddMessage("In Desktop or python")
+            try:
+                mxd = arcpy.mapping.MapDocument("CURRENT")  # if an MXD has not been set, this would error if in ArcCatalog...
+                app_found = "ARCMAP"
+                arcpy.AddMessage("ARCMAP")
+                return app_found
+            except:
+                # doesnt really matter if its ArcCatalog or Python, neither will be able to add content to TOC if no MXD is set
+                pood_app_found = "ARCCATALOG"
+                app_found = "OTHER"
+                arcpy.AddMessage("ARCCATALOG")
+                return app_found
         except:
             app_found = "OTHER"
             return app_found
@@ -177,8 +198,11 @@ try:
         gisVersion = arcpy.GetInstallInfo()["Version"]
         gisBuild = arcpy.GetInstallInfo()["BuildNumber"]
 
-        if appEnvironment == 'ARCMAP':
-            record = cursor.next() # this is method for Pro 1.0.2,
+        # Can run this is in ArcCatalog. It will skip symbology stuff later
+        # ArcCatalog or OTHER is fine...
+        # What about Server GP Services...?
+        if appEnvironment == 'ARCMAP' or appEnvironment == 'OTHER' :
+            record = cursor.next() # this is method for Python 2 (Pro 1.0.2)..?
         else:
             if appEnvironment == 'ARCGIS_PRO':
                 record = next(cursor) # Python 3 method - but only works in Pro 1.1 later builds.
@@ -191,29 +215,34 @@ try:
 
         del cursor, record
 
-        # combine buffers of all impact points -
-        # Consider not using True Curves, or Densifying/Generalizing Buffers into non-True Curve Polygons for Project-on-the-Fly
+        # Create and combine buffers of all impact points
+        # Option to use True Curves set in Script tool, default is to not use True curves, which requires Densif_edit on Buffers into non-True Curve Polygons whice work when Project-on-the-Fly is used.
         impactPointBuffersList = []
         inFields = ["OID@","SHAPE@"]
+        #
         rows = arcpy.da.SearchCursor(outputImpactPointFeatures,inFields)
         for row in rows:
             oid = row[0]
             feat = row[1]
             arcpy.AddMessage("Buffering Impact Point OID " + str(oid) + " for " + selectedModel)
 
-            # buffer the max distance from point - check if True Curves are not wanted
+            # buffer the MAX distance from point - check if True Curves are not wanted
+
             impactMaxBuffer = os.path.join(env.scratchWorkspace,"Impact_Max_" + str(oid) + "_" + scrubbedModel)
+            if DEBUG == True: arcpy.AddMessage( str(oid) + ", " + str(feat) + ", " + str(impactMaxBuffer) + ", " + str(maxRange) + ", " + str(outputUseTrueCurve ) )
+
             if outputUseTrueCurve == "true":
                 if DEBUG == True: arcpy.AddMessage("Using True Curve" )
                 arcpy.Buffer_analysis(feat,impactMaxBuffer,maxRange)
                 delete_me.append(impactMaxBuffer)
             if outputUseTrueCurve == "false":
+
                 if DEBUG == True: arcpy.AddMessage("Densifying True Curve to regular polygon" )
                 arcpy.Buffer_analysis(feat,impactMaxBuffer,maxRange)
                 arcpy.Densify_edit(impactMaxBuffer, "ANGLE","", "", "0.75")
                 delete_me.append(impactMaxBuffer)
 
-            # buffer the min distance from point
+            # buffer the MIN distance from point
             impactMinBuffer = os.path.join(env.scratchWorkspace,"Impact_Min_" + str(oid) + "_" + scrubbedModel)
             if outputUseTrueCurve == "true":
                 if DEBUG == True: arcpy.AddMessage("Using True Curve" )
@@ -436,7 +465,7 @@ try:
                     if DEBUG == True: arcpy.AddMessage("Current outputImpactPointFeatures exist, proceeding with MakeFeatureLayer_management")
                     results = arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,ipName, None, None).getOutput(0)
                     if DEBUG == True: arcpy.AddMessage("After MakeFeatureLayer_management")
-                    
+
                 else:
                     arcpy.AddMessage("Error: " + outputImpactPointFeatures + " does not exist")
             except Exception:
@@ -447,8 +476,8 @@ try:
 
             if DEBUG == True: arcpy.AddMessage("ApplySymbologyFromLayer")
             arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy does not always work prior to adding apply the symbology
-            
-            
+
+
             if DEBUG == True: arcpy.AddMessage("mapList.addLayerToGroup(...)")
             mapList.addLayerToGroup(topGroupLayer,results,"TOP")
 
