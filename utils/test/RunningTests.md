@@ -9,10 +9,11 @@
 ###For ArcGIS Desktkop
 * ArcGIS for Desktop 10.3.1+
 
-##TestKickStart.bat
-This is the file that starts the tests.
+##Running the tests
+**TestKickStarter.bat** is a shell BAT file that starts the tests.
 
 ##Log files
+The output from running the tests are stored in the *.\utils\test\log* folder. The files are named **XXXXX.log**.
 
 ##Reporting errors as Issues
 Any errors or problems need to be reported. If they go unmentioned, then they go unfixed. All issues should be logged in the solutions-geoprocessing-repository [Issues]().
@@ -31,4 +32,4 @@ Any errors or problems need to be reported. If they go unmentioned, then they go
 
 3d) Copy of the log file
 
-4) Assign to the repository owner 
+4) Assign to the repository owner

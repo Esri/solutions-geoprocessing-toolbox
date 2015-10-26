@@ -34,7 +34,7 @@ Test cases are the collection of individual tests for a specific tool, or suppor
 
 They are named **[toolname]TestCase.py**
 
-##Data
+##Test Data
 The it is impossible to build a test without some kind of inputs. Some tests generate their own data internally (Check out the ERG tool tests as an example). But most will require some kind of output test data.
 
 Test data **must** be stored in the *./data* folder.
