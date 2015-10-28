@@ -35,57 +35,27 @@ history:
 ==================================================
 '''
 
-import logging
 import unittest
 import HLZTouchdownPointsTestCase
 
-class HelicopterLandingZoneTestSuite():
-    ''' Test suite for all test cases for the Helicopter Landing Zone Tools toolbox '''
-
-    # def runProTests(self, testSuite):
-    #     ''' Set up the HLZ tests for Pro '''
-    #     proTestList = ['test_Choose_Field_Value_Script_Tool_Pro',
-    #                    'test_MinimumBoundingFishnet_Pro',
-    #                    'test_HLZ_Touchdown_Points_001_Pro',
-    #                    'test_HLZ_Touchdown_Points_002_Pro']
-    #     for p in proTestList:
-    #         testSuite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints(p))
-    #     return testSuite
-
-    # def runDesktopTests(self, testSuite):
-    #     ''' Set up the HLZ tests for Desktop '''
-    #     desktopTestList = ['test_Choose_Field_Value_Script_Tool_Desktop',
-    #                        'test_MinimumBoundingFishnet_Desktop',
-    #                        'test_HLZ_Touchdown_Points_001_Desktop',
-    #                        'test_HLZ_Touchdown_Points_002_Desktop']
-    #     for p in desktopTestList:
-    #         testSuite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints(p))
-    #     return testSuite
-
-    def runHLZTestSuite(self, testSuite, logger, platform):
-        ''' run the HLZ tests as either Pro or Desktop'''
-        print("      HelicopterLandingZoneTestSuite.runHLZTestSuite")
-        hlzTouchDown = HLZTouchdownPointsTestCase.HLZTouchdownPoints()
-
-
-        if platform == "PRO":
-            logger.info("Helicopter Landing Zone Tools Pro tests...")
-            # testSuite.addTest(hlzTouchDown.test_Choose_Field_Value_Script_Tool_Pro(logger))
-            # testSuite.addTest(hlzTouchDown.test_MinimumBoundingFishnet_Pro(logger))
-            # testSuite.addTest(hlzTouchDown.test_HLZ_Touchdown_Points_001_Pro(logger))
-            # testSuite.addTest(hlzTouchDown.test_HLZ_Touchdown_Points_002_Pro(logger))
-            testSuite.addTest(hlzTouchDown('test_Choose_Field_Value_Script_Tool_Pro'))
-            testSuite.addTest(hlzTouchDown('test_MinimumBoundingFishnet_Pro'))
-            testSuite.addTest(hlzTouchDown('test_HLZ_Touchdown_Points_001_Pro'))
-            testSuite.addTest(hlzTouchDown('test_HLZ_Touchdown_Points_002_Pro'))
-
-        else:
-            logger.info("Helicopter Landing Zone Tools Desktop tests...")
-            #self.runDesktopTests(self, testSuite=testSuite)
-            desktopTestList = ['test_Choose_Field_Value_Script_Tool_Desktop',
-                               'test_MinimumBoundingFishnet_Desktop',
-                               'test_HLZ_Touchdown_Points_001_Desktop',
-                               'test_HLZ_Touchdown_Points_002_Desktop']
-            for p in desktopTestList:
-                testSuite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints(p))
-        return testSuite
+def getHLZTestSuite(logger, platform):
+    ''' run the HLZ tests as either Pro or Desktop'''
+    print("      HelicopterLandingZoneTestSuite.runHLZTestSuite")
+    testSuite = unittest.TestSuite()
+    if platform == "PRO":
+        logger.info("Helicopter Landing Zone Tools Pro tests...")
+        proTestList = ['test_Choose_Field_Value_Script_Tool_Pro',
+                       'test_MinimumBoundingFishnet_Pro',
+                       'test_HLZ_Touchdown_Points_001_Pro',
+                       'test_HLZ_Touchdown_Points_002_Pro']
+        for p in proTestList:
+            testSuite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints(p))
+    else:
+        logger.info("Helicopter Landing Zone Tools Desktop tests...")
+        desktopTestList = ['test_Choose_Field_Value_Script_Tool_Desktop',
+                           'test_MinimumBoundingFishnet_Desktop',
+                           'test_HLZ_Touchdown_Points_001_Desktop',
+                           'test_HLZ_Touchdown_Points_002_Desktop']
+        for p in desktopTestList:
+            testSuite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints(p))
+    return testSuite

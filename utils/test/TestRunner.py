@@ -29,7 +29,16 @@ def main():
     print("TestRunner.py - main")
     logger = UnitTestUtilities.initializeLogger("Base")
     UnitTestUtilities.setUpLogFileHeader(logger)
-    runTestSuite(logger)
+    result = runTestSuite(logger)
+    print("DONE =================================================\n")
+    print("Number of tests run: " + str(result.testsRun))
+    print("Number of errors: " + str(len(result.errors)))
+    print("ERRORS =================================================\n")
+    for i in result.errors:
+        print(i + "\n")
+    print("FAILURES ===============================================\n")
+    for i in result.failures:
+        print(i + "\n")
 
 def runTestSuite(logger):
     print("TestRunner.py - runTestSuite")
@@ -41,36 +50,39 @@ def runTestSuite(logger):
     if arcpy.GetInstallInfo()['ProductName'] == 'ArcGISPro':
         platform = "PRO"
 
-    testSuite.addTests(addCapabilitySuite(testSuite, logger, platform))
-    #addDataManagementTests(testSuite, logger, platform)
-    #addOperationalGraphicsTests(testSuite, logger, platform)
-    #addPatternsTests(testSuite, logger, platform)
-    #addSuitabilityTests(testSuite, logger, platform)
-    #addVisibilityTests(testSuite, logger, platform)
+    testSuite.addTests(addCapabilitySuite(logger, platform))
+    #addDataManagementTests(logger, platform)
+    #addOperationalGraphicsTests(logger, platform)
+    #addPatternsTests(logger, platform)
+    #addSuitabilityTests(logger, platform)
+    #addVisibilityTests(logger, platform)
 
     print("running testSuite...")
     testSuite.run(result)
     print("Test success: {0}".format(str(result.wasSuccessful())))
+    return result
 
 
-def addCapabilitySuite(testSuite, logger, platform):
+def addCapabilitySuite(logger, platform):
     ''' Add all Capability tests in the ./capability_tests folder'''
     print("TestRunner.py - addCapabilitySuite")
     sys.path.insert(0, TestUtilities.capabilityPath)
     import AllCapabilityTestSuite
-    capability = AllCapabilityTestSuite
-    tests = capability.AllCapabilityTestSuite.capabilityTestSuite(capability, testSuite, logger, platform)
-    return tests
+
+    testSuite = unittest.TestSuite()
+    testSuite.addTests(AllCapabilityTestSuite.getCapabilityTestSuites(logger, platform))
+
+    return testSuite
 
 # def addPatternsTests(suite):
     # #suite.addTest(PatternToolOneTestCase('test_name'))
     # return suite
 
-def addVisibilityTests(suite):
-    print("TestRunner.py - addVisibilityTests")
-    suite.addTest(SunPositionAndHillshadeTestCase('test_sun_position_analysis'))
-    suite.addTest(FindLocalPeaksTestCase('test_local_peaks'))
-    return suite
+# def addVisibilityTests(suite):
+#     print("TestRunner.py - addVisibilityTests")
+#     suite.addTest(SunPositionAndHillshadeTestCase('test_sun_position_analysis'))
+#     suite.addTest(FindLocalPeaksTestCase('test_local_peaks'))
+#     return suite
 
 # MAIN =============================================
 if __name__ == "__main__":
@@ -81,5 +93,4 @@ if __name__ == "__main__":
     # sys.path.insert(0, visRangePath)
     # from SunPositionAndHillshadeTestCase import SunPositionAndHillshadeTestCase
     # from FindLocalPeaksTestCase import FindLocalPeaksTestCase
-
     main()

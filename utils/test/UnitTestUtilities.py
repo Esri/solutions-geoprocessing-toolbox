@@ -88,8 +88,7 @@ def checkFilePaths(paths):
         if os.path.exists(path2check):
             print("Valid Path: " + path2check)
         else:
-            print("ERROR: Necessary Path not found: " + path2check)
-            raise Exception('Bad Path')
+            raise Exception('Bad Path: ' + str(path2check))
 
 def checkGeoObjects(objects):
     print("UnitTestUtilities - checkGeoObjects")
