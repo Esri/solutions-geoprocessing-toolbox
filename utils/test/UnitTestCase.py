@@ -1,3 +1,4 @@
+# coding: utf-8
 #------------------------------------------------------------------------------
 # Copyright 2015 Esri
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +22,7 @@ import UnitTestUtilities
 
 class UnitTestCase(unittest.TestCase):
     def setUp(self):
+        print("UnitTestCase.setUp")
         UnitTestUtilities.checkArcPy()
         visibility_Paths = [TestUtilities.vis_GeodatabasePath, TestUtilities.vis_ToolboxesPath, TestUtilities.sunPosToolbox, TestUtilities.visandRangeToolbox]
         UnitTestUtilities.checkFilePaths(visibility_Paths)

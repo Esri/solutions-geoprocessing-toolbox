@@ -39,35 +39,53 @@ import logging
 import unittest
 import HLZTouchdownPointsTestCase
 
-class HelicopterLandingZoneTestSuite(unittest.TestSuite):
+class HelicopterLandingZoneTestSuite():
     ''' Test suite for all test cases for the Helicopter Landing Zone Tools toolbox '''
 
-    def runProTests(self, suite):
-        ''' Set up the HLZ tests for Pro '''
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_Choose_Field_Value_Script_Tool_Pro'))
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_MinimumBoundingFishnet_Pro'))
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_HLZ_Touchdown_Points_001_Pro'))
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_HLZ_Touchdown_Points_002_Pro'))
-        return suite
+    # def runProTests(self, testSuite):
+    #     ''' Set up the HLZ tests for Pro '''
+    #     proTestList = ['test_Choose_Field_Value_Script_Tool_Pro',
+    #                    'test_MinimumBoundingFishnet_Pro',
+    #                    'test_HLZ_Touchdown_Points_001_Pro',
+    #                    'test_HLZ_Touchdown_Points_002_Pro']
+    #     for p in proTestList:
+    #         testSuite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints(p))
+    #     return testSuite
 
-    def runDesktopTests(self, suite):
-        ''' Set up the HLZ tests for Desktop '''
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_Choose_Field_Value_Script_Tool_Desktop'))
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_MinimumBoundingFishnet_Desktop'))
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_HLZ_Touchdown_Points_001_Desktop'))
-        suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_HLZ_Touchdown_Points_002_Desktop'))
-        return suite
+    # def runDesktopTests(self, testSuite):
+    #     ''' Set up the HLZ tests for Desktop '''
+    #     desktopTestList = ['test_Choose_Field_Value_Script_Tool_Desktop',
+    #                        'test_MinimumBoundingFishnet_Desktop',
+    #                        'test_HLZ_Touchdown_Points_001_Desktop',
+    #                        'test_HLZ_Touchdown_Points_002_Desktop']
+    #     for p in desktopTestList:
+    #         testSuite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints(p))
+    #     return testSuite
 
-    def runHLZTestSuite(self, testSuite, platform):
+    def runHLZTestSuite(self, testSuite, logger, platform):
         ''' run the HLZ tests as either Pro or Desktop'''
-        result = unittest.TestResult()
+        print("      HelicopterLandingZoneTestSuite.runHLZTestSuite")
+        hlzTouchDown = HLZTouchdownPointsTestCase.HLZTouchdownPoints()
+
 
         if platform == "PRO":
-            self.runProTests(testSuite)
+            logger.info("Helicopter Landing Zone Tools Pro tests...")
+            # testSuite.addTest(hlzTouchDown.test_Choose_Field_Value_Script_Tool_Pro(logger))
+            # testSuite.addTest(hlzTouchDown.test_MinimumBoundingFishnet_Pro(logger))
+            # testSuite.addTest(hlzTouchDown.test_HLZ_Touchdown_Points_001_Pro(logger))
+            # testSuite.addTest(hlzTouchDown.test_HLZ_Touchdown_Points_002_Pro(logger))
+            testSuite.addTest(hlzTouchDown('test_Choose_Field_Value_Script_Tool_Pro'))
+            testSuite.addTest(hlzTouchDown('test_MinimumBoundingFishnet_Pro'))
+            testSuite.addTest(hlzTouchDown('test_HLZ_Touchdown_Points_001_Pro'))
+            testSuite.addTest(hlzTouchDown('test_HLZ_Touchdown_Points_002_Pro'))
+
         else:
-            self.runDesktopTests(testSuite)
-
-        testSuite.run(result)
-        print("Test success: {0}".format(str(result.wasSuccessful())))
-
-        return result
+            logger.info("Helicopter Landing Zone Tools Desktop tests...")
+            #self.runDesktopTests(self, testSuite=testSuite)
+            desktopTestList = ['test_Choose_Field_Value_Script_Tool_Desktop',
+                               'test_MinimumBoundingFishnet_Desktop',
+                               'test_HLZ_Touchdown_Points_001_Desktop',
+                               'test_HLZ_Touchdown_Points_002_Desktop']
+            for p in desktopTestList:
+                testSuite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints(p))
+        return testSuite

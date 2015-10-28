@@ -22,7 +22,27 @@ import os
 import sys
 
 currentPath = os.path.dirname(__file__)
-logPath = os.path.normpath(os.path.join(currentPath, r"../log/"))
+repoPath = os.path.dirname(os.path.dirname(currentPath))
+
+DEBUG = True
+
+''' Log Paths '''
+logPath = os.path.normpath(os.path.join(currentPath, r"log"))
+
+''' Capability Paths'''
+capabilityPath = os.path.normpath(os.path.join(currentPath, r"capability_tests"))
+
+''' Data Management Paths '''
+dataManagementPaths = os.path.normpath(os.path.join(currentPath, r"data_management_tests"))
+
+''' Operational Graphics Paths '''
+operationalGraphicsPaths = os.path.normpath(os.path.join(currentPath, r"operational_graphics_tests"))
+
+''' Patterns Paths '''
+patternsPaths = os.path.normpath(os.path.join(currentPath, r"patterns_tests"))
+
+''' Suitability Paths '''
+suitabilityPaths = os.path.normpath(os.path.join(currentPath, r"suitability_tests"))
 
 #### Visibility ####
 vis_GeodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../visibility/data/geodatabases/"))

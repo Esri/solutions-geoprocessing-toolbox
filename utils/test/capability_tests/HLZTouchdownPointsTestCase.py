@@ -49,25 +49,35 @@ import TestUtilities
 import UnitTestUtilities
 import UnitTestCase
 
-class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
+#class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
+class HLZTouchdownPoints(unittest.TestCase):
     ''' Test all tools and methods related to the HLZ Touchdown Points tool
     in the Helicopter Landing Zones toolbox'''
 
     scratchGDB = None
-    tbxProFolderPath = r"../../../../capability/toolboxes/Helicopter Landing Zone Tools.tbx"
-    tbxDesktopFolderPath = r"../../../../capability/toolboxes/Helicopter Landing Zone Tools_10.3.tbx"
-    testDataFolderPath = r"./data/geodatabases/"
 
-    def setUp(self):
+    tbxProFolderPath = os.path.join(TestUtilities.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools.tbx")
+    tbxDesktopFolderPath = os.path.join(TestUtilities.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools_10.3.tbx")
+    testDataFolderPath = os.path.join(TestUtilities.capabilityPath, "data", "geodatabases")
+
+    inputAirframeTable = None
+    inputSuitableAreas = None
+    inputSlope = None
+    outputGeodatabase = None
+    outputCenterpoints = None
+    outputCircles = None
+
+    def setUp(self, logger):
         ''' set-up code '''
+        print("         HLZTouchdownPoints.setUp")
         try:
-            UnitTestUtilities.checkFilePaths([self.testDataFolderPath, tbxFolderPath])
+            UnitTestUtilities.checkFilePaths([self.testDataFolderPath, self.tbxProFolderPath, self.tbxDesktopFolderPath])
 
             self.testDataGeodatabase = os.path.join(self.testDataFolderPath, r"test_hlz_tools.gdb")
 
             # Check the test inputs (do they exist? or not?)
-            if not arcpy.Exists(self.scratchGDB):
-                self.scratchGDB = UnitTestUtilities.createScratch(testDataFolderPath)
+            if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
+                self.scratchGDB = UnitTestUtilities.createScratch(self.testDataFolderPath)
 
             # Setup the test inputs
             self.inputAirframeTable = os.path.join(self.testDataGeodatabase, r"Aircraft_Specifications")
@@ -78,10 +88,13 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
             self.outputCircles = os.path.join(self.outputGeodatabase, r"tdCircles")
 
             UnitTestUtilities.checkGeoObjects([self.testDataGeodatabase,
+                                               self.outputGeodatabase,
                                                self.inputAirframeTable,
-                                               self.inputSuitableAreas])
+                                               self.inputSuitableAreas,
+                                               self.inputSlope])
         except:
             # Get the traceback object
+            print("SETUP ERROR...")
             tb = sys.exc_info()[2]
             tbinfo = traceback.format_tb(tb)[0]
 
@@ -95,22 +108,29 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
             # Print Python error messages for use in Python / Python Window
             print(pymsg + "\n")
             print(msgs)
+            logger.error(pymsg)
+            logger.error(msgs)
 
-    def tearDown(self):
+    def tearDown(self, logger):
         ''' clean up after tests'''
+        print("         HLZTouchdownPoints.tearDown")
         UnitTestUtilities.deleteScratch(self.scratchGDB)
 
-    def test_MinimumBoundingFishnet_Pro(self):
-        self.test_MinimumBoundingFishnet(self.tbxProFolderPath)
+    def test_MinimumBoundingFishnet_Pro(self, logger):
+        logger.info("test_MinimumBoundingFishnet as Pro")
+        print("         HLZTouchdownPoints.test_MinimumBoundingFishnet_Pro")
+        self.test_MinimumBoundingFishnet(self.tbxProFolderPath, logger)
 
-    def test_MinimumBoundingFishnet_Desktop(self):
-        self.test_MinimumBoundingFishnet(self.tbxDesktopFolderPath)
+    def test_MinimumBoundingFishnet_Desktop(self, logger):
+        logger.info("test_MinimumBoundingFishnet as Desktop")
+        print("         HLZTouchdownPoints.test_MinimumBoundingFishnet_Desktop")
+        self.test_MinimumBoundingFishnet(self.tbxDesktopFolderPath, logger)
 
-    def test_MinimumBoundingFishnet(self, tbxFolderPath):
+    def test_MinimumBoundingFishnet(self, tbxFolderPath, logger):
         ''' Test the supporting script tool '''
+        print("         HLZTouchdownPoints.test_MiniumBoundingFishnet main")
         try:
-            #TODO: Finish writing a test
-            print("test_MinimumBoundingFishnet")
+            print("self.scratchGDB: " + str(self.scratchGDB))
             outputFishnet = os.path.join(self.scratchGDB, "outputFishnet")
             arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
 
@@ -121,8 +141,8 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
         except arcpy.ExecuteError:
             # Get the arcpy error messages
             msgs = arcpy.GetMessages()
-            #TODO: need to add 'msgs' to logger
             print(msgs)
+            logger.error(msgs)
 
         except:
             # Get the traceback object
@@ -139,32 +159,43 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
             # Print Python error messages for use in Python / Python Window
             print(pymsg + "\n")
             print(msgs)
+            logger.error(pymsg)
+            logger.error(msgs)
 
-    def test_Choose_Field_Value_Script_Tool_Pro(self):
-        self.test_MinimumBoundingFishnet(self.tbxProFolderPath)
+    def test_Choose_Field_Value_Script_Tool_Pro(self, logger):
+        print("         HLZTouchdownPoints.test_Choose_Field_Value_Script_Tool_Pro")
+        logger.info("test_Choose_Field_Value_Script_Tool as Pro")
+        self.test_Choose_Field_Value_Script_Tool(self.tbxProFolderPath, logger)
 
-    def test_Choose_Field_Value_Script_Tool_Desktop(self):
-        self.test_MinimumBoundingFishnet(self.tbxDesktopFolderPath)
+    def test_Choose_Field_Value_Script_Tool_Desktop(self, logger):
+        print("         HLZTouchdownPoints.test_Choose_Field_Values_Script_Tool_Desktop")
+        logger.info("test_Choose_Field_Value_Script_Tool as Desktop")
+        self.test_Choose_Field_Value_Script_Tool(self.tbxDesktopFolderPath, logger)
 
-    def test_Choose_Field_Value_Script_Tool(self, tbxFolderPath):
+    def test_Choose_Field_Value_Script_Tool(self, tbxFolderPath, logger):
         ''' test the supporting script tool '''
+        print("         HLZTouchdownPoints.test_Choose_Field_Value_Script_Tool main")
         try:
-            print("test_Choose_Field_Value_Script_Tool")
+            print("         HLZTouchdownPoints.test_Choose_Field_Value_Script_Tool")
+            logger.info("test_Choose_Field_Value_Script_Tool")
 
+            print("         HLZTouchdownPoints.test_Choose_Field_Value_Script_Tool...ImportToolbox...")
             arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
 
             inputField = r"Model"
             inputChoice = r"UH-60"
-            result = arcpy.ChooseFieldValueScriptTool_tdpoints(self.inputAirframeTable,inputField,inputChoice)
-
+            print("         HLZTouchdownPoints.test_Choose_Field_Value_Script_Tool...running tool...")
+            result = arcpy.ChooseFieldValueScriptTool_tdpoints(self.inputAirframeTable, inputField, inputChoice)
+            print("         HLZTouchdownPoints.test_Choose_Field_Value_Script_Tool...comparing results...")
             # compare results
-            self.assertEqual(result,inputChoice)
+            self.assertEqual(result, inputChoice)
 
         except arcpy.ExecuteError:
             # Get the arcpy error messages
             msgs = arcpy.GetMessages()
             #TODO: need to add 'msgs' to logger
             print(msgs)
+            logger.error(msgs)
 
         except:
             # Get the traceback object
@@ -181,17 +212,25 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
             # Print Python error messages for use in Python / Python Window
             print(pymsg + "\n")
             print(msgs)
+            logger.error(pymsg)
+            logger.error(msgs)
 
-    def test_HLZ_Touchdown_Points_001_Pro(self):
-        self.test_HLZ_Touchdown_Points_001(self.tbxProFolderPath)
+    def test_HLZ_Touchdown_Points_001_Pro(self, logger):
+        print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_001_Pro")
+        logger.info("test_HLZ_Touchdown_Points_001 as Pro")
+        self.test_HLZ_Touchdown_Points_001(self.tbxProFolderPath, logger)
 
-    def test_HLZ_Touchdown_Points_001_Desktop(self):
-        self.test_HLZ_Touchdown_Points_001(self.tbxDesktopFolderPath)
+    def test_HLZ_Touchdown_Points_001_Desktop(self, logger):
+        print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_001_Desktop")
+        logger.info("test_HLZ_Touchdown_Points_001 as Desktop")
+        self.test_HLZ_Touchdown_Points_001(self.tbxDesktopFolderPath, logger)
 
-    def test_HLZ_Touchdown_Points_001(self, tbxFolderPath):
+    def test_HLZ_Touchdown_Points_001(self, tbxFolderPath, logger):
         ''' This is a basic test of the HLZ Touchdown tool with all of the input defined. '''
+        print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_001")
         try:
             print("test_HLZ_Touchdown_Points_001")
+            logger.info("test_HLZ_Touchdown_Points_001")
             # move TestSunPositionAndHillshade code in here
             print("Importing toolbox... ")
             arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
@@ -226,6 +265,7 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
             msgs = arcpy.GetMessages()
             #TODO: need to add 'msgs' to logger
             print(msgs)
+            logger.error(msgs)
 
         except:
             # Get the traceback object
@@ -237,22 +277,28 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
                 + str(sys.exc_info()[1])
             msgs = "ArcPy ERRORS:\n" + arcpy.GetMessages() + "\n"
 
-            #TODO: need to add 'msgs' and 'pymsg' to logger
-
             # Print Python error messages for use in Python / Python Window
             print(pymsg + "\n")
             print(msgs)
+            logger.error(pymsg)
+            logger.error(msgs)
 
-    def test_HLZ_Touchdown_Points_002_Pro(self):
-        self.test_HLZ_Touchdown_Points_002(self.tbxProFolderPath)
+    def test_HLZ_Touchdown_Points_002_Pro(self, logger):
+        print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_002_Pro")
+        logger.info("test_HLZ_Touchdown_Points_002 as Pro")
+        self.test_HLZ_Touchdown_Points_002(self.tbxProFolderPath, logger)
 
-    def test_HLZ_Touchdown_Points_002_Desktop(self):
-        self.test_HLZ_Touchdown_Points_002(self.tbxDesktopFolderPath)
+    def test_HLZ_Touchdown_Points_002_Desktop(self, logger):
+        print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_002_Desktop")
+        logger.info("test_HLZ_Touchdown_Points_002 as Desktop")
+        self.test_HLZ_Touchdown_Points_002(self.tbxDesktopFolderPath, logger)
 
-    def test_HLZ_Touchdown_Points_002(self, tbxFolderPath):
+    def test_HLZ_Touchdown_Points_002(self, tbxFolderPath, logger):
         ''' This test is for some of the default values in the HLZ Touchdown tool. '''
+        print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_002")
         try:
-            arcpy.AddMessage("test_HLZ_Touchdown_Points_002")
+            print("test_HLZ_Touchdown_Points_002")
+            logger.info("test_HLZ_Touchdown_Points_002")
             # move TestSunPositionAndHillshade code in here
             print("Importing toolbox... ")
             arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
@@ -295,6 +341,7 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
             msgs = arcpy.GetMessages()
             #TODO: need to add 'msgs' to logger
             print(msgs)
+            logger.error(msgs)
 
         except:
             # Get the traceback object
@@ -311,3 +358,5 @@ class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
             # Print Python error messages for use in Python / Python Window
             print(pymsg + "\n")
             print(msgs)
+            logger.error(pymsg)
+            logger.error(msgs)
