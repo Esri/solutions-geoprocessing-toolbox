@@ -33,12 +33,17 @@ def main():
     print("DONE =================================================\n")
     print("Number of tests run: " + str(result.testsRun))
     print("Number of errors: " + str(len(result.errors)))
+    print("Number of failures: " + str(len(result.failures)))
     print("ERRORS =================================================\n")
     for i in result.errors:
-        print(i + "\n")
+        for j in i:
+            print(str(j))
+        print("\n")
     print("FAILURES ===============================================\n")
     for i in result.failures:
-        print(i + "\n")
+        for j in i:
+            print(str(j))
+        print("\n")
 
 def runTestSuite(logger):
     print("TestRunner.py - runTestSuite")

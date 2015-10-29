@@ -57,7 +57,7 @@ class HLZTouchdownPoints(unittest.TestCase):
 
     tbxProFolderPath = os.path.join(TestUtilities.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools.tbx")
     tbxDesktopFolderPath = os.path.join(TestUtilities.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools_10.3.tbx")
-    testDataFolderPath = os.path.join(TestUtilities.capabilityPath, "data", "geodatabases")
+    testDataFolderPath = os.path.join(TestUtilities.capabilityPath, "data")
 
     inputAirframeTable = None
     inputSuitableAreas = None
@@ -143,7 +143,9 @@ class HLZTouchdownPoints(unittest.TestCase):
     def HLZ_Touchdown_Points_001(self, tbxFolderPath):
         ''' This is a basic test of the HLZ Touchdown tool with all of the input defined. '''
         print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_001")
-        # move TestSunPositionAndHillshade code in here
+
+        arcpy.CheckOutExtension("Spatial")
+
         arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
         arcpy.env.overwriteOutput = True
         inputAirframeString = r"UH-60"
@@ -155,6 +157,7 @@ class HLZTouchdownPoints(unittest.TestCase):
                                           self.outputCenterpoints,
                                           self.outputCircles)
 
+        arcpy.CheckInExtension("Spatial")
         # count output center points
         countCenterPoints = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, self.outputCenterpoints)).getOutput(0)
         # count output circles
@@ -174,10 +177,13 @@ class HLZTouchdownPoints(unittest.TestCase):
     def HLZ_Touchdown_Points_002(self, tbxFolderPath):
         ''' This test is for some of the default values in the HLZ Touchdown tool. '''
         print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_002")
-        # move TestSunPositionAndHillshade code in here
+        if not arcpy.CheckExtension("Spatial"):
+            raise "Spatial Analyst license is not available for checkout"
+        else:
+            arcpy.CheckOutExtension("Spatial")
+            
         arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
         arcpy.env.overwriteOutput = True
-        # Inputs
 
         inputAirframeTable = "#"
         inputAirframeString = "#"
@@ -195,7 +201,7 @@ class HLZTouchdownPoints(unittest.TestCase):
                                           outputGeodatabase,
                                           outputCenterpoints,
                                           outputCircles)
-
+        arcpy.CheckInExtension("Spatial")
         countCenterPoints = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, self.outputCenterpoints)).getOutput(0)
         countOutputCircles = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, self.outputCircles)).getOutput(0)
         self.assertEqual(countCenterPoints, float(934))
