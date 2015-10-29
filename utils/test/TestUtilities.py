@@ -24,6 +24,9 @@ import sys
 currentPath = os.path.dirname(__file__)
 logPath = os.path.normpath(os.path.join(currentPath, r"../log/"))
 
+#logger is initialized in TestRunner's main()
+logger = None
+
 #### Visibility ####
 vis_GeodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../visibility/data/geodatabases/"))
 vis_ScratchPath = os.path.normpath(os.path.join(currentPath, r"../../visibility/data/geodatabases"))

@@ -22,35 +22,33 @@ import logging
 import unittest
 import TestUtilities
 import UnitTestUtilities
+from visibility_tests import SunPositionAnalysisToolsTestSuite
+
 
 def main():
-    logger = UnitTestUtilities.initializeLogger("Base")
-    UnitTestUtilities.setUpLogFileHeader(logger)
-    runTestSuite()
-
+    TestUtilities.logger = UnitTestUtilities.initializeLogger("Base")
+    UnitTestUtilities.setUpLogFileHeader(TestUtilities.logger)
+    testSuite = unittest.TestSuite()
+    sunPosSuite = SunPositionAnalysisToolsTestSuite.SunPositionAnalysisTestSuite()
+    sunPosSuite.runSunPosAnalysisTestSuite(testSuite, "Desktop")
 
 # def addPatternsTests(suite):
     # #suite.addTest(PatternToolOneTestCase('test_name'))
     # return suite
     
-def addVisibilityTests(suite):
-    suite.addTest(SunPositionAndHillshadeTestCase('test_sun_position_analysis'))
-    suite.addTest(FindLocalPeaksTestCase('test_local_peaks'))
-    return suite
+# def addVisibilityTests(suite):
+    # # TODO: call Visibility TestSuite code
+    # suite.addTest(SunPositionAndHillshadeTestCase('test_sun_position_analysis'))
+    # suite.addTest(FindLocalPeaksTestCase('test_local_peaks'))
+    # return suite
 
-def runTestSuite():
-    testSuite = unittest.TestSuite()
-    result = unittest.TestResult()
-    addVisibilityTests(testSuite)
-    testSuite.run(result)
-    print("Test success: {0}".format(str(result.wasSuccessful())))
+# def runTestSuite():
+    # testSuite = unittest.TestSuite()
+    # result = unittest.TestResult()
+    # addVisibilityTests(testSuite)
+    # testSuite.run(result)
+    # print("Test success: {0}".format(str(result.wasSuccessful())))
 
 # MAIN =============================================
 if __name__ == "__main__":
-    sunPosPath = os.path.normpath(os.path.join(TestUtilities.currentPath, r"../../visibility/test/test_sun_position/"))
-    visRangePath = os.path.normpath(os.path.join(TestUtilities.currentPath, r"../../visibility/test/test_viz_and_range/"))
-    sys.path.insert(0, sunPosPath)
-    sys.path.insert(0, visRangePath)
-    from SunPositionAndHillshadeTestCase import SunPositionAndHillshadeTestCase
-    from FindLocalPeaksTestCase import FindLocalPeaksTestCase
     main()
