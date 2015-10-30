@@ -17,16 +17,15 @@
 # Requirements: ArcGIS Desktop Standard
 # ----------------------------------------------------------------------------
 
-import arcpy
 import os
-import sys
 
+DEBUG = True # this guy is a flag for extra messaging while debugging tests
+
+''' Testing paths '''
 currentPath = os.path.dirname(__file__)
 repoPath = os.path.dirname(os.path.dirname(currentPath))
 
-DEBUG = True
-
-''' Log Paths '''
+''' Log Paths: where the log files go wild and multiply '''
 logPath = os.path.normpath(os.path.join(currentPath, r"log"))
 
 ''' Capability Paths'''
@@ -43,6 +42,9 @@ patternsPaths = os.path.normpath(os.path.join(currentPath, r"patterns_tests"))
 
 ''' Suitability Paths '''
 suitabilityPaths = os.path.normpath(os.path.join(currentPath, r"suitability_tests"))
+
+''' Visibility Paths'''
+visibilityPaths = os.path.normpath(os.path.join(currentPath, r"visibility_tests"))
 
 #### Visibility ####
 vis_GeodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../visibility/data/geodatabases/"))

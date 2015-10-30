@@ -39,14 +39,11 @@ history:
 '''
 
 import arcpy
-import sys
-import traceback
-import datetime
 import os
 import unittest
 import TestUtilities
 import UnitTestUtilities
-import UnitTestCase
+
 
 #class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
 class HLZTouchdownPoints(unittest.TestCase):
@@ -69,6 +66,7 @@ class HLZTouchdownPoints(unittest.TestCase):
     def setUp(self):
         ''' set-up code '''
         print("         HLZTouchdownPoints.setUp")
+        UnitTestUtilities.checkArcPy()
         UnitTestUtilities.checkFilePaths([self.testDataFolderPath, self.tbxProFolderPath, self.tbxDesktopFolderPath])
 
         self.testDataGeodatabase = os.path.join(self.testDataFolderPath, r"test_hlz_tools.gdb")
@@ -130,7 +128,7 @@ class HLZTouchdownPoints(unittest.TestCase):
         inputChoice = r"UH-60"
         result = arcpy.ChooseFieldValueScriptTool_tdpoints(self.inputAirframeTable, inputField, inputChoice)
         # compare results
-        self.assertEqual(result, inputChoice)
+        self.assertEqual(result.getOutput(0), inputChoice)
 
     def test_HLZ_Touchdown_Points_001_Pro(self):
         print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_001_Pro")
@@ -159,50 +157,14 @@ class HLZTouchdownPoints(unittest.TestCase):
 
         arcpy.CheckInExtension("Spatial")
         # count output center points
-        countCenterPoints = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, self.outputCenterpoints)).getOutput(0)
+
+        print("self.scratch.GDB: " + self.scratchGDB)
+        print("self.outputGeodatabase: " + self.outputGeodatabase)
+        print("self.outputCenterPoints: " + self.outputCenterpoints)
+
+        countCenterPoints = float(arcpy.GetCount_management(self.outputCenterpoints).getOutput(0))
         # count output circles
-        countOutputCircles = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, self.outputCircles)).getOutput(0)
+        countOutputCircles = float(arcpy.GetCount_management(self.outputCircles).getOutput(0))
         #TODO: make sure center points fall within circles
-        self.assertEqual(countCenterPoints, float(934))
-        self.assertEqual(countOutputCircles, float(934))
-
-    def test_HLZ_Touchdown_Points_002_Pro(self):
-        print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_002_Pro")
-        self.HLZ_Touchdown_Points_002(self.tbxProFolderPath)
-
-    def test_HLZ_Touchdown_Points_002_Desktop(self):
-        print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_002_Desktop")
-        self.HLZ_Touchdown_Points_002(self.tbxDesktopFolderPath)
-
-    def HLZ_Touchdown_Points_002(self, tbxFolderPath):
-        ''' This test is for some of the default values in the HLZ Touchdown tool. '''
-        print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_002")
-        if not arcpy.CheckExtension("Spatial"):
-            raise "Spatial Analyst license is not available for checkout"
-        else:
-            arcpy.CheckOutExtension("Spatial")
-            
-        arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
-        arcpy.env.overwriteOutput = True
-
-        inputAirframeTable = "#"
-        inputAirframeString = "#"
-        inputSuitableAreas = self.inputSuitableAreas
-        inputSlope = self.inputSlope
-        outputGeodatabase = self.outputGeodatabase
-        outputCenterpoints = "#"
-        outputCircles = "#"
-
-        # Testing
-        arcpy.HLZTouchdownPoints_tdpoints(inputAirframeTable,
-                                          inputAirframeString,
-                                          inputSuitableAreas,
-                                          inputSlope,
-                                          outputGeodatabase,
-                                          outputCenterpoints,
-                                          outputCircles)
-        arcpy.CheckInExtension("Spatial")
-        countCenterPoints = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, self.outputCenterpoints)).getOutput(0)
-        countOutputCircles = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, self.outputCircles)).getOutput(0)
-        self.assertEqual(countCenterPoints, float(934))
-        self.assertEqual(countOutputCircles, float(934))
+        self.assertEqual(countCenterPoints, float(972))
+        self.assertEqual(countOutputCircles, float(972))
