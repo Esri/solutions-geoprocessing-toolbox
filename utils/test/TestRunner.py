@@ -44,49 +44,71 @@ import arcpy
 import TestUtilities
 import UnitTestUtilities
 
-logFileFromBAT = sys.argv[1] #if we have an explicit log file name passed in
+logFileFromBAT = None
+if len(sys.argv) > 1:
+    logFileFromBAT = sys.argv[1] #if we have an explicit log file name passed in
 
 def main():
-    print("TestRunner.py - main")
+    ''' main test logic '''
+    if TestUtilities.DEBUG == True:
+        print("TestRunner.py - main")
+    else:
+        print("Debug messaging is OFF")
 
     # setup logger
-    if not logFileFromBAT == None or not logFileFromBAT == "":
+    logName = None
+    logger = None
+    if not logFileFromBAT == None:
+        logName = logFileFromBAT
         logger = UnitTestUtilities.initializeLogger(logFileFromBAT)
     else:
         logName = UnitTestUtilities.getLoggerName()
         logger = UnitTestUtilities.initializeLogger(logName)
+    print("Logging results to: " + str(logName))
     UnitTestUtilities.setUpLogFileHeader(logger)
 
     # run the tests
     result = runTestSuite(logger)
 
     # smash the result into the logger
-    resultFooter = resultsHeader(result)
-    print(resultFooter)
-    logger.info(resultFooter)
+    resultHead = resultsHeader(result)
+    print(resultHead)
+    logger.info(resultHead)
 
+    # errors - stuff that is just outright broken
     if len(result.errors) > 0:
-        print(resultsErrors)
-        for i in result.errors:
-            for j in i:
-                logger.error(j)
+        rError = resultsErrors(result)
+        print(rError)
+        logger.error(rError)
+        # logger.info("ERRORS =================================================\n\n")
+        # for i in result.errors:
+        #     for j in i:
+        #         logger.error(j)
 
+    # failures - stuff caught by asserts in the test cases
     if len(result.failures) > 0:
-        print(resultsFailures)
-        for i in result.failures:
-            for j in i:
-                logger.error(j)
+        rFail = resultsFailures(result)
+        print(rFail)
+        logger.error(rFail)
+        # logger.info("FAILURES ===============================================\n\n")
+        # for i in result.failures:
+        #     for j in i:
+        #         logger.error(j)
+
+    logger.info("END OF TEST =========================================\n")
+    print("END OF TEST =========================================\n")
+    return
 
 def resultsHeader(result):
     ''' Generic header for the results in the log file '''
-    msg = "RESULTS =================================================\n"
+    msg = "RESULTS =================================================\n\n"
     msg += "Number of tests run: " + str(result.testsRun) + "\n"
     msg += "Number of errors: " + str(len(result.errors)) + "\n"
     msg += "Number of failures: " + str(len(result.failures)) + "\n"
     return msg
 
 def resultsErrors(result):
-    ''' Error results formatting ''' 
+    ''' Error results formatting '''
     msg = "ERRORS =================================================\n\n"
     for i in result.errors:
         for j in i:
@@ -105,7 +127,7 @@ def resultsFailures(result):
 
 def runTestSuite(logger):
     ''' collect all test suites before running them '''
-    print("TestRunner.py - runTestSuite")
+    if TestUtilities.DEBUG == True: print("TestRunner.py - runTestSuite")
     testSuite = unittest.TestSuite()
     result = unittest.TestResult()
 
@@ -113,16 +135,16 @@ def runTestSuite(logger):
     platform = "DESKTOP"
     if arcpy.GetInstallInfo()['ProductName'] == 'ArcGISPro':
         platform = "PRO"
-    logger.info(platform + "=======================================")
+    logger.info(platform + " =======================================")
 
     testSuite.addTests(addCapabilitySuite(logger, platform))
     #addDataManagementTests(logger, platform)
     #addOperationalGraphicsTests(logger, platform)
     #addPatternsTests(logger, platform)
     #addSuitabilityTests(logger, platform)
-    testSuite.addTests(addVisibilityTests(logger, platform))
+    #testSuite.addTests(addVisibilityTests(logger, platform))
 
-    print("running testSuite...")
+    print("running compound test suite...")
     testSuite.run(result)
     print("Test success: {0}".format(str(result.wasSuccessful())))
     return result
@@ -130,7 +152,7 @@ def runTestSuite(logger):
 
 def addCapabilitySuite(logger, platform):
     ''' Add all Capability tests in the ./capability_tests folder'''
-    print("TestRunner.py - addCapabilitySuite")
+    if TestUtilities.DEBUG == True: print("TestRunner.py - addCapabilitySuite")
     from capability_tests import AllCapabilityTestSuite
     testSuite = unittest.TestSuite()
     testSuite.addTests(AllCapabilityTestSuite.getCapabilityTestSuites(logger, platform))

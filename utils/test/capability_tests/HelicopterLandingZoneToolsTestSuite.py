@@ -41,21 +41,29 @@ import HLZTouchdownPointsTestCase
 
 def getHLZTestSuite(logger, platform):
     ''' run the HLZ tests as either Pro or Desktop'''
+    desktopTestList = ['test_Choose_Field_Value_Script_Tool_Desktop',
+                       'test_MinimumBoundingFishnet_Desktop',
+                       'test_HLZ_Touchdown_Points_001_Desktop']
+    proTestList = ['test_Choose_Field_Value_Script_Tool_Pro',
+                   'test_MinimumBoundingFishnet_Pro',
+                   'test_HLZ_Touchdown_Points_001_Pro']
     if TestUtilities.DEBUG == True:
         print("      HelicopterLandingZoneTestSuite.runHLZTestSuite")
     testSuite = unittest.TestSuite()
     if platform == "PRO":
-        logger.info("   Helicopter Landing Zone Tools Pro tests")
-        proTestList = ['test_Choose_Field_Value_Script_Tool_Pro',
-                       'test_MinimumBoundingFishnet_Pro',
-                       'test_HLZ_Touchdown_Points_001_Pro']
-        for p in proTestList:
-            testSuite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints(p))
+        logger.info("Helicopter Landing Zone Tools Pro tests")
+        testSuite = addTestFromList(testSuite, logger, proTestList)
     else:
         logger.info("Helicopter Landing Zone Tools Desktop tests...")
-        desktopTestList = ['test_Choose_Field_Value_Script_Tool_Desktop',
-                           'test_MinimumBoundingFishnet_Desktop',
-                           'test_HLZ_Touchdown_Points_001_Desktop']
-        for p in desktopTestList:
-            testSuite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints(p))
+        testSuite = addTestFromList(testSuite, logger, desktopTestList)
+    return testSuite
+
+def addTestFromList(testSuite, logger, inputTestList):
+    ''' add tests from list'''
+    for p in inputTestList:
+        if TestUtilities.DEBUG == True:
+            print("      HelicopterLandingZoneTestSuite.addTestFromList")
+        print("adding test: " + str(p))
+        logger.info(p)
+        testSuite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints(p))
     return testSuite

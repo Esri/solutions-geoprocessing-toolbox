@@ -1,3 +1,4 @@
+@ECHO OFF
 rem ------------------------------------------------------------------------------
 rem  Copyright 2015 Esri
 rem  Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,15 +31,14 @@ rem  10/06/2015 - MF - placeholder
 rem  10/30/2015 - MF - tests running
 rem ==================================================
 
-@ECHO ON
-
 REM =====================================================
 REM If you have BOTH versions of Python installed:
-ECHO Python 2.7 Tests ===============================
-py -2.7 TestRunner.py
+
 ECHO Python 3.4 Tests ===============================
 py -3.4 TestRunner.py
-ECHO DONE ===========================================
+
+ECHO Python 2.7 Tests ===============================
+py -2.7 TestRunner.py
 
 REM =====================================================
 REM If you only have ONE version of Python installed:

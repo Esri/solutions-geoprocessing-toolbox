@@ -19,7 +19,7 @@
 
 import os
 
-DEBUG = True # this guy is a flag for extra messaging while debugging tests
+DEBUG = False # this guy is a flag for extra messaging while debugging tests
 
 ''' Testing paths '''
 currentPath = os.path.dirname(__file__)

@@ -32,25 +32,27 @@ This test suite collects all of the capability toolbox test suites:
 
 ==================================================
 history:
-10/23/2015 - MF - placeholder
+10/23/2015 - MF - original writeup
 ==================================================
 '''
 
 import unittest
 import TestUtilities
 import HelicopterLandingZoneToolsTestSuite
-#import PointOfOriginToolsTestSuite
-#import ERGToolsTestSuite
+# Getting an error on line above during run in Python 3.4:
+#   File "C:\Users\<user>\Documents\GitHub\solutions-geoprocessing-toolbox\utils\test\capability_tests\AllCapabilityTestSuite.py", line 41, in <module>
+#     import HelicopterLandingZoneToolsTestSuite
+# ImportError: No module named 'HelicopterLandingZoneToolsTestSuite'
 
+#import PointOfOriginToolsTestSuite - Doesn't Exist Yet
+#import ERGToolsTestSuite - Doesn't Exist Yet
 
 def getCapabilityTestSuites(logger, platform):
     ''' This pulls together all of the toolbox test suites in this folder '''
-
     if TestUtilities.DEBUG == True:
         print("   AllCapabilityTestSuite.capabilityTestSuite")
     logger.info("Adding Capability Tests including:")
     testSuite = unittest.TestSuite()
-
     # these come from HelicopterLandingZoneToolsTestSuite
     testSuite.addTests(HelicopterLandingZoneToolsTestSuite.getHLZTestSuite(logger, platform))
 

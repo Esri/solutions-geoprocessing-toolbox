@@ -94,7 +94,6 @@ def setUpLogFileHeader(log):
 def checkArcPy():
     ''' sanity check that ArcPy is working '''
     if TestUtilities.DEBUG == True: print("UnitTestUtilities - checkArcPy")
-    print("Testing ArcPy")
     arcpy.AddMessage("ArcPy works")
 
 def checkExists(p):
@@ -123,7 +122,7 @@ def deleteScratch(scratchPath):
     if TestUtilities.DEBUG == True: print("UnitTestUtilities - deleteScratch")
     try:
         arcpy.Delete_management(scratchPath)
-        print("Deleted scratch gdb.")
+        if TestUtilities.DEBUG == True: print("Deleted scratch gdb.")
     except:
         print("scratch.gdb delete failed")
     return
@@ -133,7 +132,7 @@ def checkFilePaths(paths):
     if TestUtilities.DEBUG == True: print("UnitTestUtilities - checkFilePaths")
     for path2check in paths:
         if os.path.exists(path2check):
-            print("Valid Path: " + path2check)
+            if TestUtilities.DEBUG == True: print("Valid Path: " + path2check)
         else:
             raise Exception('Bad Path: ' + str(path2check))
 
@@ -148,7 +147,7 @@ def checkGeoObjects(objects):
             arcpy.AddError("Bad Input")
             raise Exception('Bad Input')
         else:
-            print("Valid Object: " + desc.Name)
+            if TestUtilities.DEBUG == True: print("Valid Object: " + desc.Name)
 
 def handleArcPyError(logger):
     ''' Basic GP error handling, errors printed to console and logger '''
