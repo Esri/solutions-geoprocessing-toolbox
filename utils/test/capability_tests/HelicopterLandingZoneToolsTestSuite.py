@@ -37,7 +37,7 @@ history:
 
 import unittest
 import TestUtilities
-import HLZTouchdownPointsTestCase
+from . import HLZTouchdownPointsTestCase
 
 def getHLZTestSuite(logger, platform):
     ''' run the HLZ tests as either Pro or Desktop'''

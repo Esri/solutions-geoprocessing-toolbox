@@ -38,14 +38,16 @@ history:
 
 import unittest
 import TestUtilities
-import HelicopterLandingZoneToolsTestSuite
+
+from . import HelicopterLandingZoneToolsTestSuite
 # Getting an error on line above during run in Python 3.4:
 #   File "C:\Users\<user>\Documents\GitHub\solutions-geoprocessing-toolbox\utils\test\capability_tests\AllCapabilityTestSuite.py", line 41, in <module>
 #     import HelicopterLandingZoneToolsTestSuite
 # ImportError: No module named 'HelicopterLandingZoneToolsTestSuite'
+#FIX: instead of "import <module>" use "from . import <module>"
 
-#import PointOfOriginToolsTestSuite - Doesn't Exist Yet
-#import ERGToolsTestSuite - Doesn't Exist Yet
+#from . import PointOfOriginToolsTestSuite - Doesn't Exist Yet
+#from . import ERGToolsTestSuite - Doesn't Exist Yet
 
 def getCapabilityTestSuites(logger, platform):
     ''' This pulls together all of the toolbox test suites in this folder '''

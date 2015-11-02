@@ -95,6 +95,8 @@ def main():
         #     for j in i:
         #         logger.error(j)
 
+    #TODO: Count skipped tests?
+
     logger.info("END OF TEST =========================================\n")
     print("END OF TEST =========================================\n")
     return
@@ -144,7 +146,7 @@ def runTestSuite(logger):
     #addSuitabilityTests(logger, platform)
     #testSuite.addTests(addVisibilityTests(logger, platform))
 
-    print("running compound test suite...")
+    print("running " + str(testSuite.countTestCases()) + " tests...")
     testSuite.run(result)
     print("Test success: {0}".format(str(result.wasSuccessful())))
     return result
