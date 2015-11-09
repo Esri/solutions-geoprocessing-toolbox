@@ -26,10 +26,27 @@ company: Esri
 ==================================================
 description:
 Test Suite collects all of the test cases for the ERG Tools toolbox:
-* <tool>TestCase.py
+* ERGByPlacardTestCase.py
+* ERGByChemicalTestCase.py
 
 ==================================================
 history:
-10/23/2015 - MF - placeholder
+11/09/2015 - MF - placeholder
 ==================================================
 '''
+
+import unittest
+import TestUtilities
+from . import ERGByPlacardTestCase
+from . import ERGByChemicalTestCase
+
+def getERGTestSuite(logger, platform):
+    ''' run the HLZ tests as either Pro or Desktop'''
+
+    if TestUtilities.DEBUG == True:
+        print("      ERGTestSuite.runHLZTestSuite")
+    testSuite = unittest.TestSuite()
+    logger.info("ERG Tools tests")
+    testSuite.addTest(ERGByChemicalTestCase.ERGByChemical('test_ERGByChemical'))
+    testSuite.addTest(ERGByPlacardTestCase.ERGByPlacard('test_ERGByPlacard'))
+    return testSuite

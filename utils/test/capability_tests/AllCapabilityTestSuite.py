@@ -47,7 +47,7 @@ from . import HelicopterLandingZoneToolsTestSuite
 #FIX: instead of "import <module>" use "from . import <module>"
 
 #from . import PointOfOriginToolsTestSuite - Doesn't Exist Yet
-#from . import ERGToolsTestSuite - Doesn't Exist Yet
+from . import ERGToolsTestSuite
 
 def getCapabilityTestSuites(logger, platform):
     ''' This pulls together all of the toolbox test suites in this folder '''
@@ -60,6 +60,6 @@ def getCapabilityTestSuites(logger, platform):
 
     #TODO: these will come from PointOfOriginToolsTestSuite
 
-    #TODO: these will come from ERGToolsTestSuite
+    testSuite.addTests(ERGToolsTestSuite.getERGTestSuite(logger, platform))
 
     return testSuite
