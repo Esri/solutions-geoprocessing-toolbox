@@ -67,7 +67,9 @@ class HLZTouchdownPoints(unittest.TestCase):
         ''' set-up code '''
         if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.setUp")
         UnitTestUtilities.checkArcPy()
-        UnitTestUtilities.checkFilePaths([self.testDataFolderPath, self.tbxProFolderPath, self.tbxDesktopFolderPath])
+        UnitTestUtilities.checkFilePaths([self.testDataFolderPath,
+                                          self.tbxProFolderPath,
+                                          self.tbxDesktopFolderPath])
 
         self.testDataGeodatabase = os.path.join(self.testDataFolderPath, r"test_hlz_tools.gdb")
 
@@ -98,11 +100,15 @@ class HLZTouchdownPoints(unittest.TestCase):
 
     def test_MinimumBoundingFishnet_Pro(self):
         if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.test_MinimumBoundingFishnet_Pro")
+        # check that the tool exists:
+        #self.assertTrue(arcpy.Exists(os.path.join(self.tbxProFolderPath, r"MinimumBoundingFishnet")))
         self.MinimumBoundingFishnet(self.tbxProFolderPath)
         return
 
     def test_MinimumBoundingFishnet_Desktop(self):
         if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.test_MinimumBoundingFishnet_Desktop")
+        # check that the tool exists:
+        #self.assertTrue(arcpy.Exists(os.path.join(self.tbxDesktopFolderPath, r"MinimumBoundingFishnet")))
         self.MinimumBoundingFishnet(self.tbxDesktopFolderPath)
         return
 
@@ -114,10 +120,26 @@ class HLZTouchdownPoints(unittest.TestCase):
             print("Testing Minimum Bounding Fishnet...")
         outputFishnet = os.path.join(self.scratchGDB, "outputFishnet")
         arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
+        groupOption = r"NONE"
+        groupFields = r"#"
+        cellWidth = 75
+        cellHeight = 75
+        rows = 0
+        columns = 0
+        labelOption = r"NO_LABELS"
+        '''
+        MinimumBoundingFishnet_ (Input_Features, Output_Fishnet, Group_Option, {Group_Fields},
+                                 Cell_Width, Cell_Height, Number_of_Rows, Number_of_Columns, Labels)
 
-        arcpy.MinimumBoundingFishnet_tdpoints(self.inputSuitableAreas, outputFishnet)
+
+        Executing (MinimumBoundingFishnet): MinimumBoundingFishnet HLZSelectionArea C:\Workspace\solutions-geoprocessing-toolbox\Test_HLZ_unittest_NOV2015\TestForHLZ\TestForHLZ.gdb\HLZSelectionArea_
+        MinimumBoun NONE # 75 75 0 0 NO_LABELS
+        '''
+        arcpy.MinimumBoundingFishnet_tdpoints(self.inputSuitableAreas, outputFishnet,
+                                              groupOption, groupFields,
+                                              cellWidth, cellHeight, rows, columns, labelOption)
         countOutputFishnet = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, outputFishnet)).getOutput(0)
-        self.assertEqual(countOutputFishnet, float(1))
+        self.assertEqual(countOutputFishnet, str(1260))
         return
 
     def test_Choose_Field_Value_Script_Tool_Pro(self):

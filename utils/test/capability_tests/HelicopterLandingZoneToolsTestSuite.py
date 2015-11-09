@@ -41,12 +41,14 @@ from . import HLZTouchdownPointsTestCase
 
 def getHLZTestSuite(logger, platform):
     ''' run the HLZ tests as either Pro or Desktop'''
+
     desktopTestList = ['test_Choose_Field_Value_Script_Tool_Desktop',
                        'test_MinimumBoundingFishnet_Desktop',
                        'test_HLZ_Touchdown_Points_001_Desktop']
     proTestList = ['test_Choose_Field_Value_Script_Tool_Pro',
                    'test_MinimumBoundingFishnet_Pro',
                    'test_HLZ_Touchdown_Points_001_Pro']
+
     if TestUtilities.DEBUG == True:
         print("      HelicopterLandingZoneTestSuite.runHLZTestSuite")
     testSuite = unittest.TestSuite()

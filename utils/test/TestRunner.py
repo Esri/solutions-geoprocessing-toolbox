@@ -50,6 +50,7 @@ if len(sys.argv) > 1:
 
 def main():
     ''' main test logic '''
+    testStartDateTime = datetime.datetime.now()
     if TestUtilities.DEBUG == True:
         print("TestRunner.py - main")
     else:
@@ -66,39 +67,29 @@ def main():
         logger = UnitTestUtilities.initializeLogger(logName)
     print("Logging results to: " + str(logName))
     UnitTestUtilities.setUpLogFileHeader(logger)
-
     # run the tests
     result = runTestSuite(logger)
+    # send to log file
+    testEndDateTime = datetime.datetime.now()
+    primaryLogFile(result, logger)
+    print("END OF TEST =========================================\n")
+    return
 
-    # smash the result into the logger
+def primaryLogFile(result, logger):
+    ''' Write the log file '''
     resultHead = resultsHeader(result)
     print(resultHead)
     logger.info(resultHead)
-
-    # errors - stuff that is just outright broken
     if len(result.errors) > 0:
         rError = resultsErrors(result)
         print(rError)
         logger.error(rError)
-        # logger.info("ERRORS =================================================\n\n")
-        # for i in result.errors:
-        #     for j in i:
-        #         logger.error(j)
-
-    # failures - stuff caught by asserts in the test cases
     if len(result.failures) > 0:
         rFail = resultsFailures(result)
         print(rFail)
         logger.error(rFail)
-        # logger.info("FAILURES ===============================================\n\n")
-        # for i in result.failures:
-        #     for j in i:
-        #         logger.error(j)
-
-    #TODO: Count skipped tests?
-
     logger.info("END OF TEST =========================================\n")
-    print("END OF TEST =========================================\n")
+
     return
 
 def resultsHeader(result):
