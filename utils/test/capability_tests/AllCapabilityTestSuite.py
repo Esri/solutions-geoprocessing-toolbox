@@ -28,7 +28,7 @@ description:
 This test suite collects all of the capability toolbox test suites:
 * HelicopterLandingZoneToolsTestSuite.py
 * ERGToolsTestSuite.py
-* PointOfOriginToolsTestSuite.py
+* PointOfOriginToolsTestSuite.py - PENDING
 
 ==================================================
 history:
@@ -55,11 +55,13 @@ def getCapabilityTestSuites(logger, platform):
         print("   AllCapabilityTestSuite.capabilityTestSuite")
     logger.info("Adding Capability Tests including:")
     testSuite = unittest.TestSuite()
-    # these come from HelicopterLandingZoneToolsTestSuite
+
+    # these come from HelicopterLandingZoneToolsTestSuite.py
     testSuite.addTests(HelicopterLandingZoneToolsTestSuite.getHLZTestSuite(logger, platform))
 
     #TODO: these will come from PointOfOriginToolsTestSuite
 
+    # these come from ERGToolsTestSuite.py
     testSuite.addTests(ERGToolsTestSuite.getERGTestSuite(logger, platform))
 
     return testSuite
