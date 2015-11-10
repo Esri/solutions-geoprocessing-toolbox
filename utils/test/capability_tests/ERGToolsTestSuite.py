@@ -45,8 +45,14 @@ def getERGTestSuite(logger, platform):
 
     if TestUtilities.DEBUG == True:
         print("      ERGTestSuite.runHLZTestSuite")
+
+    placardTests = ['test_ERGByPlacard_001', 'test_ERGByPlacard_002']
+    chemicalTests = ['test_ERGByChemical_001', 'test_ERGByChemical_002']
     testSuite = unittest.TestSuite()
     logger.info("ERG Tools tests")
-    testSuite.addTest(ERGByChemicalTestCase.ERGByChemical('test_ERGByChemical'))
-    testSuite.addTest(ERGByPlacardTestCase.ERGByPlacard('test_ERGByPlacard'))
+    for t in chemicalTests:
+        testSuite.addTest(ERGByChemicalTestCase.ERGByChemical(t))
+    for t in placardTests:
+        #TODO: add message for tests being added to test suite
+        testSuite.addTest(ERGByPlacardTestCase.ERGByPlacard(t))
     return testSuite

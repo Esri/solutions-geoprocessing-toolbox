@@ -16,7 +16,7 @@ limitations under the License.
 -----------------------------------------------------------------------------
 
 ==================================================
-ERGByPlacardTestCase.py
+ERGByChemicalTestCase.py
 --------------------------------------------------
 requirements:
 author: ArcGIS Solutions
@@ -25,7 +25,8 @@ company: Esri
 Description: Unit test for the ERG By Placard
 
 Includes the following tests:
-
+* test_ERGByChemical_001
+* test_ERGByChemical_002
 
 ==================================================
 history:
@@ -38,11 +39,10 @@ import os
 import unittest
 import TestUtilities
 import UnitTestUtilities
-import ERGTestUtils
 
 
-class ERGByPlacard(unittest.TestCase):
-    ''' Test ERG By Placard tool in the ERG Tools toolbox'''
+class ERGByChemical(unittest.TestCase):
+    ''' Test ERG By Chemical tool in the ERG Tools toolbox'''
 
     scratchGDB = None
     inputPoint = None
@@ -52,13 +52,10 @@ class ERGByPlacard(unittest.TestCase):
 
     def setUp(self):
         ''' set-up code '''
-        if TestUtilities.DEBUG == True: print("         ERGByPlacard.setUp")
+        if TestUtilities.DEBUG == True: print("         ERGByChemical.setUp")
         UnitTestUtilities.checkArcPy()
         UnitTestUtilities.checkFilePaths([self.testDataFolderPath,
                                           self.tbxFolderPath])
-
-        # Import the toolbox
-        arcpy.ImportToolbox(self.tbxFolderPath, "erg")
 
         # Check the test inputs (do they exist? or not?)
         if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
@@ -67,61 +64,54 @@ class ERGByPlacard(unittest.TestCase):
         # Setup the test inputs
         self.inputPoint = ERGTestUtils.getInputPointFC()
         UnitTestUtilities.checkGeoObjects([self.inputPoint])
-
         return
 
     def tearDown(self):
         ''' clean up after tests'''
-        if TestUtilities.DEBUG == True: print("         ERGByPlacard.tearDown")
+        if TestUtilities.DEBUG == True: print("         ERGByChemical.tearDown")
         UnitTestUtilities.deleteScratch(self.scratchGDB)
         return
 
-    def test_ERGByPlacard_001(self):
-        ''' test the tool with basic inputs'''
-        if TestUtilities.DEBUG == True: print("         ERGByPlacard.test_ERGByPlacard_001")
-        inputPlacardID = 1560
+    def test_ERGByChemical_001(self):
+        ''' test the tool '''
+        if TestUtilities.DEBUG == True: print("         ERGByChemical.test_ERGByChemical_001")
+        inputMaterialType = "Allylamine"
         inputWindBearing = 10
         inputDayOrNight = "Day"
         inputLargeOrSmall = "Large"
-        countAreas, countLines = self.ERGByPlacard(inputPlacardID,
-                                                   inputWindBearing,
-                                                   inputDayOrNight,
-                                                   inputLargeOrSmall)
-
+        countAreas, countLines = self.ERGByChemical(inputMaterialType, inputWindBearing,
+                                                    inputDayOrNight, inputLargeOrSmall)
         self.assertEqual(countAreas, str(3))
         self.assertEqual(countLines, str(3))
         return
 
-    def test_ERGByPlacard_002(self):
-        ''' test the tool with basic inputs'''
-        if TestUtilities.DEBUG == True: print("         ERGByPlacard.test_ERGByPlacard_002")
-        inputPlacardID = 1560
+    def test_ERGByChemical_002(self):
+        ''' test the tool '''
+        if TestUtilities.DEBUG == True: print("         ERGByChemical.test_ERGByChemical_002")
+        inputMaterialType = "Allylamine"
         inputWindBearing = 130
         inputDayOrNight = "Night"
         inputLargeOrSmall = "Small"
-        countAreas, countLines = self.ERGByPlacard(inputPlacardID,
-                                                   inputWindBearing,
-                                                   inputDayOrNight,
-                                                   inputLargeOrSmall)
-
+        countAreas, countLines = self.ERGByChemical(inputMaterialType, inputWindBearing,
+                                                    inputDayOrNight, inputLargeOrSmall)
         self.assertEqual(countAreas, str(3))
         self.assertEqual(countLines, str(3))
         return
 
-    def ERGByPlacard(self, inputPlacardID, inputWindBearing, inputDayOrNight, inputLargeOrSmall):
-        ''' Main ERG By Placard test '''
+    def ERGByChemical(self, inputMaterialType, inputWindBearing, inputDayOrNight, inputLargeOrSmall):
+        ''' Test the supporting script tool '''
         if TestUtilities.DEBUG == True:
-            print("         ERGByPlacard.ERGByPlacard")
+            print("         ERGByChemical.test_ERGByChemical")
         else:
-            print("Testing ERG By Placard...")
+            print("Testing ERG By Chemical...")
 
         # Testing ERG By Placard
-        outputERGAreas = os.path.join(self.scratchGDB, "ERGAreasPlacard")
-        outputERGLines = os.path.join(self.scratchGDB, "ERGLinesPlacard")
-        outputERGAreas, outputERGLines = arcpy.ERGByPlacard_erg(self.inputPoint, inputPlacardID,
-                                                                inputWindBearing, inputDayOrNight,
-                                                                inputLargeOrSmall, outputERGAreas,
-                                                                outputERGLines)
+        outputERGAreas = os.path.join(self.scratchGDB, "ERGAreasChemical")
+        outputERGLines = os.path.join(self.scratchGDB, "ERGLinesChemical")
+        outputERGAreas, outputERGLines = arcpy.ERGByChemical_erg(self.inputPoint, inputMaterialType,
+                                                                 inputWindBearing, inputDayOrNight,
+                                                                 inputLargeOrSmall, outputERGAreas,
+                                                                 outputERGLines)
 
         # Verify Results
         countAreas = int(arcpy.GetCount_management(outputERGAreas).getOutput(0))
