@@ -50,7 +50,9 @@ def getERGTestSuite(logger, platform):
 
     placardTests = ['test_ERGByPlacard_001', 'test_ERGByPlacard_002']
     chemicalTests = ['test_ERGByChemical_001', 'test_ERGByChemical_002', 'test_ERGByChemical_003']
-    scriptTests = ['test_LookUpERG001', 'test_LookUpERG002', 'test_LookUpERG003']
+    scriptTests = ['test_LookUpERG001', 'test_LookUpERG002', 'test_LookUpERG003',
+                   'test_GetProjectedPoint001', 'test_GetProjectedPoint002',
+                   'test_GetProjectedPoint003', 'test_GetProjectedPoint004']
     testSuite = unittest.TestSuite()
     logger.info("ERG Tools tests")
 

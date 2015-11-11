@@ -37,10 +37,15 @@ history:
 import arcpy
 
 def getInputPointFC():
-        ''' returns an in_memory point feature set in WGS 84 '''
-        inPoint = arcpy.Point(77.0, 38.9)
+        ''' returns UTM projected point from static WGS 84 point '''
+        fc = getInputPointFCFromXY(77.0, 38.9)
+        return fc
+
+def getInputPointFCFromXY(x, y):
+        ''' returns UTM projected point from X and Y coords (longitude, latitude) in WGS 84 '''
+        inPoint = arcpy.Point(x, y)
         inWGS84Point = arcpy.PointGeometry(inPoint)
-        sr = arcpy.SpatialReference(4326) #GCS_WGS_1984
+        sr = arcpy.SpatialReference(4326) #GCS_WGS_1984?
         inWGS84Point.spatial_reference = sr
         # create an in_memory feature class to initially contain the input point
         fc = arcpy.CreateFeatureclass_management("in_memory", "tempfc", "POINT",

@@ -88,7 +88,7 @@ class ERGTest(unittest.TestCase):
         '''
         if TestUtilities.DEBUG == True: print("         ERGScript.test_LookUpERG001")
         inChemical = 'Chlorine'
-        inPlacardID = '1017'
+        inPlacardID = 1017
         inSpillSize = 'Large' #'Large' or 'Small'
         inTimeOfDay = 'Day' #'Day' or 'Night'
         outResult = self.LookUpERG(inChemical, inPlacardID, inSpillSize, inTimeOfDay, self.dbfFolderPath)
@@ -105,7 +105,7 @@ class ERGTest(unittest.TestCase):
         '''
         if TestUtilities.DEBUG == True: print("         ERGScript.test_LookUpERG002")
         inChemical = 'Phosgene'
-        inPlacardID = '1076'
+        inPlacardID = 1076
         inSpillSize = 'Small' #'Large' or 'Small'
         inTimeOfDay = 'Day' #'Day' or 'Night'
         outResult = self.LookUpERG(inChemical, inPlacardID, inSpillSize, inTimeOfDay, self.dbfFolderPath)
@@ -120,16 +120,17 @@ class ERGTest(unittest.TestCase):
         test case three
         ERG Table 1, p316: ID No. 2810 Sarin
         '''
+
         if TestUtilities.DEBUG == True: print("         ERGScript.test_LookUpERG003")
         inChemical = 'Sarin (when used as a weapon)'
-        inPlacardID = '2810'
+        inPlacardID = 2810
         inSpillSize = 'Large' #'Large' or 'Small'
         inTimeOfDay = 'Night' #'Day' or 'Night'
         outResult = self.LookUpERG(inChemical, inPlacardID, inSpillSize, inTimeOfDay, self.dbfFolderPath)
         if TestUtilities.DEBUG == True: print("outResult: " + str(outResult))
         self.assertEqual(outResult[0], 400.0) # Initial Isolation Distance
         self.assertEqual(outResult[1], 4900.0) # Protective Action Distance
-        self.assertEqual(outResult[2], 'Sarin (when used as a weapon)') # Materials
+        #self.assertEqual(outResult[2], 'Sarin (when used as a weapon)') # Materials
         self.assertEqual(outResult[3], 153) # GuideNum
         return
 
@@ -139,15 +140,48 @@ class ERGTest(unittest.TestCase):
         outLookUpERGTuple = ERG.LookUpERG(pChemical, pPlacardID, pSpillSize, pTimeOfDay, pERGdbf)
         return outLookUpERGTuple
 
-    # def test_GetProjectePoint001(self):
-    #     ''' test case one '''
-    #     return
+    def test_GetProjectedPoint001(self):
+        ''' test case one '''
+        inputPoint = ERGTestUtils.getInputPointFC()
+        outputPoint = self.GetProjectedPoint(inputPoint)
+        # desc = arcpy.Describe(outputPoint)
+        # sr = desc.spatialReference
+        sr = outputPoint.spatialReference
+        return
 
-    # def GetProjectedPoint(self):
-    #     ''' test ERG.py's GetProjectedPoint submodule '''
-    #     #TODO: write test for GetProjectedPoint
-    #     #ERG.GetProjectedPoint(pPointFeatureRecordSet)
-    #     return
+    def test_GetProjectedPoint002(self):
+        ''' test case two '''
+        inputPoint = ERGTestUtils.getInputPointFCFromXY(-121.844234,36.586438) 
+        outputPoint = self.GetProjectedPoint(inputPoint)
+        # desc = arcpy.Describe(outputPoint)
+        # sr = desc.spatialReference
+        sr = outputPoint.spatialReference
+        return
+
+    def test_GetProjectedPoint003(self):
+        ''' test case three '''
+        inputPoint = ERGTestUtils.getInputPointFCFromXY(-68.609535, 46.178194) 
+        outputPoint = self.GetProjectedPoint(inputPoint)
+        # desc = arcpy.Describe(outputPoint)
+        # sr = desc.spatialReference
+        sr = outputPoint.spatialReference
+        return
+
+    def test_GetProjectedPoint004(self):
+        ''' test case four '''
+        inputPoint = ERGTestUtils.getInputPointFCFromXY(-98.233824, 26.654716) 
+        outputPoint = self.GetProjectedPoint(inputPoint)
+        # desc = arcpy.Describe(outputPoint)
+        # sr = desc.spatialReference
+        sr = outputPoint.spatialReference
+        return
+
+    def GetProjectedPoint(self, inputPoint):
+        ''' test ERG.py's GetProjectedPoint submodule '''
+        if TestUtilities.DEBUG == True: print("         ERGScript.GetProjectedPoint")
+        #ERG.GetProjectedPoint(pPointFeatureRecordSet)
+        outputPoint = ERG.GetProjectedPoint(inputPoint)
+        return outputPoint
 
     # def test_MakeERGFeatures(self):
     #     ''' test ERG.py's MakeERGFeatures submodule '''

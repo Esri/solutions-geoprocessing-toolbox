@@ -105,7 +105,7 @@ class ERGByChemical(unittest.TestCase):
     def test_ERGByChemical_003(self):
         ''' test the tool '''
         if TestUtilities.DEBUG == True: print("         ERGByChemical.test_ERGByChemical_003")
-        inputMaterialType = "Sarin"
+        inputMaterialType = "Sarin (when used as a weapon)"
         inputWindBearing = 250
         inputDayOrNight = "Night"
         inputLargeOrSmall = "Large"
@@ -121,8 +121,6 @@ class ERGByChemical(unittest.TestCase):
             print("         ERGByChemical.test_ERGByChemical")
         else:
             print("Testing ERG By Chemical...")
-            
-        
 
         # Testing ERG By Placard
         outputERGAreas = os.path.join(self.scratchGDB, "ERGAreasChemical")
