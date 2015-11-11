@@ -147,6 +147,7 @@ class ERGTest(unittest.TestCase):
         # desc = arcpy.Describe(outputPoint)
         # sr = desc.spatialReference
         sr = outputPoint.spatialReference
+        self.assertEqual(sr.factoryCode, int(32643))
         return
 
     def test_GetProjectedPoint002(self):
@@ -156,6 +157,7 @@ class ERGTest(unittest.TestCase):
         # desc = arcpy.Describe(outputPoint)
         # sr = desc.spatialReference
         sr = outputPoint.spatialReference
+        self.assertEqual(sr.factoryCode, int(32610))
         return
 
     def test_GetProjectedPoint003(self):
@@ -165,6 +167,7 @@ class ERGTest(unittest.TestCase):
         # desc = arcpy.Describe(outputPoint)
         # sr = desc.spatialReference
         sr = outputPoint.spatialReference
+        self.assertEqual(sr.factoryCode, int(32619))
         return
 
     def test_GetProjectedPoint004(self):
@@ -174,6 +177,7 @@ class ERGTest(unittest.TestCase):
         # desc = arcpy.Describe(outputPoint)
         # sr = desc.spatialReference
         sr = outputPoint.spatialReference
+        self.assertEqual(sr.factoryCode, int(32614))
         return
 
     def GetProjectedPoint(self, inputPoint):
