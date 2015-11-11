@@ -22,10 +22,16 @@ requirements:
 author: ArcGIS Solutions
 company: Esri
 ==================================================
-Description: Unit test for the ERG By Placard
+Description: Unit test for the ERG Script that drives the ERG By Placard and ERG By Chemical
+tools.
+The tool is based on the Emergency Response Guidebook (ERG) 2012 ed.:
+http://phmsa.dot.gov/pv_obj_cache/pv_obj_id_7410989F4294AE44A2EBF6A80ADB640BCA8E4200/filename/ERG2012.pdf
+(retrieved 11/11/2015)
+References to page numbers in the tests below are from this book.
 
 Includes the following tests:
-
+* test_LookUpERG001
+* 
 
 ==================================================
 history:
@@ -35,73 +41,117 @@ history:
 
 import arcpy
 import os
+import sys
 import unittest
 import TestUtilities
 import UnitTestUtilities
+from . import ERGTestUtils
 
+#from . import ERG
+sys.path.append(os.path.relpath(r'.\..\..\capability\toolboxes\scripts'))
+#print('sys.path' + str(sys.path))
+import ERG
 
 class ERGTest(unittest.TestCase):
     ''' Test ERG source script for the ERG Tools toolbox'''
 
     scratchGDB = None
-
-    #tbxFolderPath = os.path.join(TestUtilities.repoPath, "capability", "toolboxes", "ERG Tools.pyt")
-    #testDataFolderPath = os.path.join(TestUtilities.capabilityPath, "data")
-
-    # inputAirframeTable = None
-    # inputSuitableAreas = None
-    # inputSlope = None
-    # outputGeodatabase = None
-    # outputCenterpoints = None
-    # outputCircles = None
+    scriptFolderPath = os.path.join(TestUtilities.repoPath, "capability",
+                                    "toolboxes", "scripts", "ERG.py")
+    dbfFolderPath = os.path.join(TestUtilities.repoPath, "capability",
+                                 "toolboxes", "tooldata", "ERG2012LookupTable.dbf")
+    testDataFolderPath = os.path.join(TestUtilities.capabilityPath, "data")
 
     def setUp(self):
         ''' set-up code '''
-        if TestUtilities.DEBUG == True: print("         ERGByPlacard.setUp")
+        if TestUtilities.DEBUG == True: print("         ERGScript.setUp")
         UnitTestUtilities.checkArcPy()
-        UnitTestUtilities.checkFilePaths([self.testDataFolderPath,
-                                          self.tbxFolderPath])
-
-        self.testDataGeodatabase = os.path.join(self.testDataFolderPath, r"test_hlz_tools.gdb")
+        UnitTestUtilities.checkFilePaths([self.scriptFolderPath,
+                                          self.testDataFolderPath])
 
         # Check the test inputs (do they exist? or not?)
         if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
             self.scratchGDB = UnitTestUtilities.createScratch(self.testDataFolderPath)
-
-        # Setup the test inputs
-        # self.inputAirframeTable = os.path.join(self.testDataGeodatabase, r"Aircraft_Specifications")
-        # self.inputSuitableAreas = os.path.join(self.testDataGeodatabase, r"HLZSelectionArea")
-        # self.inputSlope = os.path.join(self.testDataGeodatabase, r"SRTMPctSlope")
-        # self.outputGeodatabase = os.path.join(self.scratchGDB)
-        # self.outputCenterpoints = os.path.join(self.outputGeodatabase, r"centerPoints")
-        # self.outputCircles = os.path.join(self.outputGeodatabase, r"tdCircles")
-
-
-
-        UnitTestUtilities.checkGeoObjects([self.testDataGeodatabase,
-                                           self.outputGeodatabase,
-                                           self.inputAirframeTable,
-                                           self.inputSuitableAreas,
-                                           self.inputSlope])
+        UnitTestUtilities.checkGeoObjects([self.scratchGDB, self.dbfFolderPath])
         return
 
     def tearDown(self):
         ''' clean up after tests'''
-        if TestUtilities.DEBUG == True: print("         ERGByPlacard.tearDown")
+        if TestUtilities.DEBUG == True: print("         ERGScript.tearDown")
         UnitTestUtilities.deleteScratch(self.scratchGDB)
         return
 
-    def test_ERGByPlacard(self):
-        ''' test the tool '''
-
-        #TODO: write test for LookUpERG
-        #LookUpERG(pChemical, pPlacardID, pSpillSize, pTimeOfDay, pERGdbf)
-
-        #TODO: write test for GetProjectedPoint
-        #GetProjectedPoint(pPointFeatureRecordSet)
-
-        #TODO: write test for MakeERGFeatures
-        #MakeERGFeatures(pProjectedPointGeometry, pWindBlowingToDirection, pInitialIsolationDistance, pProtectiveActionDistance,
-        #            pMaterials, pGuideNum, pSpillSize, pTimeOfDay, pOutAreas, pOutLines, pTemplateLoc)
-
+    def test_LookUpERG001(self):
+        '''
+        test case one
+        ERG Table 1, p292: ID No. 1017 Chlorine
+        '''
+        if TestUtilities.DEBUG == True: print("         ERGScript.test_LookUpERG001")
+        inChemical = 'Chlorine'
+        inPlacardID = '1017'
+        inSpillSize = 'Large' #'Large' or 'Small'
+        inTimeOfDay = 'Day' #'Day' or 'Night'
+        outResult = self.LookUpERG(inChemical, inPlacardID, inSpillSize, inTimeOfDay, self.dbfFolderPath)
+        self.assertEqual(outResult[0], 500.0) # Initial Isolation Distance
+        self.assertEqual(outResult[1], 3000.0) # Protective Action Distance
+        self.assertEqual(outResult[2], 'Chlorine') # Materials
+        self.assertEqual(outResult[3], 124) # GuideNum
         return
+
+    def test_LookUpERG002(self):
+        '''
+        test case two
+        ERG Table 1, p293: ID No. 1076 Phosgene
+        '''
+        if TestUtilities.DEBUG == True: print("         ERGScript.test_LookUpERG002")
+        inChemical = 'Phosgene'
+        inPlacardID = '1076'
+        inSpillSize = 'Small' #'Large' or 'Small'
+        inTimeOfDay = 'Day' #'Day' or 'Night'
+        outResult = self.LookUpERG(inChemical, inPlacardID, inSpillSize, inTimeOfDay, self.dbfFolderPath)
+        self.assertEqual(outResult[0], 100.0) # Initial Isolation Distance
+        self.assertEqual(outResult[1], 600.0) # Protective Action Distance
+        self.assertEqual(outResult[2], 'Phosgene') # Materials
+        self.assertEqual(outResult[3], 125) # GuideNum
+        return
+
+    def test_LookUpERG003(self):
+        '''
+        test case three
+        ERG Table 1, p316: ID No. 2810 Sarin
+        '''
+        if TestUtilities.DEBUG == True: print("         ERGScript.test_LookUpERG003")
+        inChemical = 'Sarin (when used as a weapon)'
+        inPlacardID = '2810'
+        inSpillSize = 'Large' #'Large' or 'Small'
+        inTimeOfDay = 'Night' #'Day' or 'Night'
+        outResult = self.LookUpERG(inChemical, inPlacardID, inSpillSize, inTimeOfDay, self.dbfFolderPath)
+        if TestUtilities.DEBUG == True: print("outResult: " + str(outResult))
+        self.assertEqual(outResult[0], 400.0) # Initial Isolation Distance
+        self.assertEqual(outResult[1], 4900.0) # Protective Action Distance
+        self.assertEqual(outResult[2], 'Sarin (when used as a weapon)') # Materials
+        self.assertEqual(outResult[3], 153) # GuideNum
+        return
+
+    def LookUpERG(self, pChemical, pPlacardID, pSpillSize, pTimeOfDay, pERGdbf):
+        ''' test ERG.py's LookUpERG submodule '''
+        if TestUtilities.DEBUG == True: print("         ERGScript.LookUpERG: " + str(pChemical))
+        outLookUpERGTuple = ERG.LookUpERG(pChemical, pPlacardID, pSpillSize, pTimeOfDay, pERGdbf)
+        return outLookUpERGTuple
+
+    # def test_GetProjectePoint001(self):
+    #     ''' test case one '''
+    #     return
+
+    # def GetProjectedPoint(self):
+    #     ''' test ERG.py's GetProjectedPoint submodule '''
+    #     #TODO: write test for GetProjectedPoint
+    #     #ERG.GetProjectedPoint(pPointFeatureRecordSet)
+    #     return
+
+    # def test_MakeERGFeatures(self):
+    #     ''' test ERG.py's MakeERGFeatures submodule '''
+    #     #TODO: write test for MakeERGFeatures
+    #     #ERG.MakeERGFeatures(pProjectedPointGeometry, pWindBlowingToDirection, pInitialIsolationDistance, pProtectiveActionDistance,
+    #     #            pMaterials, pGuideNum, pSpillSize, pTimeOfDay, pOutAreas, pOutLines, pTemplateLoc)
+    #     return

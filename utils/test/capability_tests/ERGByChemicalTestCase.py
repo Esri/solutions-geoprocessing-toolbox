@@ -39,6 +39,7 @@ import os
 import unittest
 import TestUtilities
 import UnitTestUtilities
+from . import ERGTestUtils
 
 
 class ERGByChemical(unittest.TestCase):
@@ -56,6 +57,9 @@ class ERGByChemical(unittest.TestCase):
         UnitTestUtilities.checkArcPy()
         UnitTestUtilities.checkFilePaths([self.testDataFolderPath,
                                           self.tbxFolderPath])
+
+        # Import the toolbox
+        arcpy.ImportToolbox(self.tbxFolderPath, "erg")
 
         # Check the test inputs (do they exist? or not?)
         if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
@@ -81,8 +85,8 @@ class ERGByChemical(unittest.TestCase):
         inputLargeOrSmall = "Large"
         countAreas, countLines = self.ERGByChemical(inputMaterialType, inputWindBearing,
                                                     inputDayOrNight, inputLargeOrSmall)
-        self.assertEqual(countAreas, str(3))
-        self.assertEqual(countLines, str(3))
+        self.assertEqual(countAreas, int(3))
+        self.assertEqual(countLines, int(3))
         return
 
     def test_ERGByChemical_002(self):
@@ -94,8 +98,21 @@ class ERGByChemical(unittest.TestCase):
         inputLargeOrSmall = "Small"
         countAreas, countLines = self.ERGByChemical(inputMaterialType, inputWindBearing,
                                                     inputDayOrNight, inputLargeOrSmall)
-        self.assertEqual(countAreas, str(3))
-        self.assertEqual(countLines, str(3))
+        self.assertEqual(countAreas, int(3))
+        self.assertEqual(countLines, int(3))
+        return
+
+    def test_ERGByChemical_003(self):
+        ''' test the tool '''
+        if TestUtilities.DEBUG == True: print("         ERGByChemical.test_ERGByChemical_003")
+        inputMaterialType = "Sarin"
+        inputWindBearing = 250
+        inputDayOrNight = "Night"
+        inputLargeOrSmall = "Large"
+        countAreas, countLines = self.ERGByChemical(inputMaterialType, inputWindBearing,
+                                                    inputDayOrNight, inputLargeOrSmall)
+        self.assertEqual(countAreas, int(3))
+        self.assertEqual(countLines, int(3))
         return
 
     def ERGByChemical(self, inputMaterialType, inputWindBearing, inputDayOrNight, inputLargeOrSmall):
@@ -104,6 +121,8 @@ class ERGByChemical(unittest.TestCase):
             print("         ERGByChemical.test_ERGByChemical")
         else:
             print("Testing ERG By Chemical...")
+            
+        
 
         # Testing ERG By Placard
         outputERGAreas = os.path.join(self.scratchGDB, "ERGAreasChemical")

@@ -38,7 +38,7 @@ import os
 import unittest
 import TestUtilities
 import UnitTestUtilities
-import ERGTestUtils
+from . import ERGTestUtils
 
 
 class ERGByPlacard(unittest.TestCase):
@@ -88,8 +88,8 @@ class ERGByPlacard(unittest.TestCase):
                                                    inputDayOrNight,
                                                    inputLargeOrSmall)
 
-        self.assertEqual(countAreas, str(3))
-        self.assertEqual(countLines, str(3))
+        self.assertEqual(countAreas, int(3))
+        self.assertEqual(countLines, int(3))
         return
 
     def test_ERGByPlacard_002(self):
@@ -104,8 +104,8 @@ class ERGByPlacard(unittest.TestCase):
                                                    inputDayOrNight,
                                                    inputLargeOrSmall)
 
-        self.assertEqual(countAreas, str(3))
-        self.assertEqual(countLines, str(3))
+        self.assertEqual(countAreas, int(3))
+        self.assertEqual(countLines, int(3))
         return
 
     def ERGByPlacard(self, inputPlacardID, inputWindBearing, inputDayOrNight, inputLargeOrSmall):

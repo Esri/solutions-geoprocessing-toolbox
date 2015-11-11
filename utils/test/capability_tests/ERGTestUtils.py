@@ -34,8 +34,6 @@ history:
 ==================================================
 '''
 
-
-import os
 import arcpy
 
 def getInputPointFC():
