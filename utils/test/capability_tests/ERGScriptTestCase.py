@@ -64,7 +64,8 @@ class ERGTest(unittest.TestCase):
 
     def setUp(self):
         ''' set-up code '''
-        if TestUtilities.DEBUG == True: print("         ERGScript.setUp")
+        if TestUtilities.DEBUG:
+            print("         ERGScript.setUp")
         UnitTestUtilities.checkArcPy()
         UnitTestUtilities.checkFilePaths([self.scriptFolderPath,
                                           self.testDataFolderPath])
@@ -77,16 +78,24 @@ class ERGTest(unittest.TestCase):
 
     def tearDown(self):
         ''' clean up after tests'''
-        if TestUtilities.DEBUG == True: print("         ERGScript.tearDown")
+        if TestUtilities.DEBUG:
+            print("         ERGScript.tearDown")
         UnitTestUtilities.deleteScratch(self.scratchGDB)
         return
+
+    ergDict = {
+        '001': [1017, 124, 'Chlorine', 'Large', 'Day', 500.0, 3000.0],
+        '002': [1076, 125, 'Phosgene', 'Small', 'Day', 100.0, 600.0],
+        '003': [2810, 153, 'Sarin (when used as a weapon)', 'Large', 'Night', 400.0, 4900.0]
+        }
 
     def test_LookUpERG001(self):
         '''
         test case one
         ERG Table 1, p292: ID No. 1017 Chlorine
         '''
-        if TestUtilities.DEBUG == True: print("         ERGScript.test_LookUpERG001")
+        if TestUtilities.DEBUG:
+            print("         ERGScript.test_LookUpERG001")
         inChemical = 'Chlorine'
         inPlacardID = 1017
         inSpillSize = 'Large' #'Large' or 'Small'
@@ -103,7 +112,8 @@ class ERGTest(unittest.TestCase):
         test case two
         ERG Table 1, p293: ID No. 1076 Phosgene
         '''
-        if TestUtilities.DEBUG == True: print("         ERGScript.test_LookUpERG002")
+        if TestUtilities.DEBUG:
+            print("         ERGScript.test_LookUpERG002")
         inChemical = 'Phosgene'
         inPlacardID = 1076
         inSpillSize = 'Small' #'Large' or 'Small'
@@ -120,7 +130,6 @@ class ERGTest(unittest.TestCase):
         test case three
         ERG Table 1, p316: ID No. 2810 Sarin
         '''
-
         if TestUtilities.DEBUG == True: print("         ERGScript.test_LookUpERG003")
         inChemical = 'Sarin (when used as a weapon)'
         inPlacardID = 2810
@@ -136,7 +145,8 @@ class ERGTest(unittest.TestCase):
 
     def LookUpERG(self, pChemical, pPlacardID, pSpillSize, pTimeOfDay, pERGdbf):
         ''' test ERG.py's LookUpERG submodule '''
-        if TestUtilities.DEBUG == True: print("         ERGScript.LookUpERG: " + str(pChemical))
+        if TestUtilities.DEBUG:
+            print("         ERGScript.LookUpERG: " + str(pChemical))
         outLookUpERGTuple = ERG.LookUpERG(pChemical, pPlacardID, pSpillSize, pTimeOfDay, pERGdbf)
         return outLookUpERGTuple
 
