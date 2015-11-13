@@ -62,15 +62,19 @@ def initializeLogger(name):
     ''' get and return named logger '''
     if TestUtilities.DEBUG == True:
         print("UnitTestUtilities - initializeLogger")
-    if not os.path.exists(TestUtilities.logPath):
+
+    # Check if the path to the log files exists, and create if not
+    if not os.path.exists(os.path.dirname(TestUtilities.logPath)):
         os.makedirs(os.path.dirname(TestUtilities.logPath))
 
+    # get a unique log file name
     if name == None or name == "":
         #logFile = os.path.join(TestUtilities.logPath, 'test.log')
         logFile = getLoggerName()
     else:
         logFile = os.path.join(TestUtilities.logPath, name)
 
+    # if the log file does NOT exist, create it
     if not os.path.exists(logFile):
         fd = open(logFile, 'w')
         fd.close()
