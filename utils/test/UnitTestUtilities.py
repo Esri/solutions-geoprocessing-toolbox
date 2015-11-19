@@ -54,9 +54,38 @@ def getLoggerName():
     #logFilePath = os.path.join(TestUtilities.logPath, name)
     return name
 
+def getCurrentDateTimeForLogFile():
+    ''' Get current date/time string as: YYYY-MM-DD_HH-MM-SS '''
+    return datetime.datetime.now().strftime("%Y-%B-%d_%H-%M-%S")
+
+def getCurrentDateTime():
+    ''' Get current date/time string as: DD/MM/YYYY HH:MM:SS '''
+    return datetime.datetime.now().strftime("%d/%B/%Y %H:%M:%S")
+
 def nameFromDate(seq):
-    ''' use NOW to make a file name'''
-    return 'SGT_' + str(datetime.datetime.now().strftime("%Y-%B-%d_%H-%M-%S")) + '_seq' + str(seq) + '.log'
+    ''' Make log file name'''
+    return 'SGT_' + str(getCurrentDateTimeForLogFile()) + '_seq' + str(seq) + '.log'
+
+def makeFileFromPath(filePath):
+    ''' make a file object from a path to that
+    file if it doesn't already exist '''
+    if not checkExists(filePath):
+        try:
+            fd = open(filePath, 'a')
+            fd.close()
+        except:
+            print("Can't make file for some reason.")
+    return filePath
+
+def makeFolderFromPath(folderPath):
+    ''' make a folder(s) from a path if it doesn't
+    already exist '''
+    if not checkExists(folderPath):
+        try:
+            os.makedirs(folderPath)
+        except:
+            print("Can't make the folder for some reason.")
+    return folderPath
 
 def initializeLogger(name):
     ''' get and return named logger '''
@@ -64,22 +93,19 @@ def initializeLogger(name):
         print("UnitTestUtilities - initializeLogger")
 
     # Check if the path to the log files exists, and create if not
-    if not os.path.exists(os.path.dirname(TestUtilities.logPath)):
-        os.makedirs(os.path.dirname(TestUtilities.logPath))
+    if not os.path.exists(TestUtilities.logPath):
+        dummy = makeFolderFromPath(TestUtilities.logPath)
 
-    # get a unique log file name
+    # get a unique log file name if we don't have a name already
     if name == None or name == "":
-        #logFile = os.path.join(TestUtilities.logPath, 'test.log')
-        logFile = getLoggerName()
-    else:
-        logFile = os.path.join(TestUtilities.logPath, name)
+        name = getLoggerName()
+
+    logFile = os.path.join(TestUtilities.logPath, name)
 
     # if the log file does NOT exist, create it
     if not os.path.exists(logFile):
-        fd = open(logFile, 'w')
-        fd.close()
+        logFile = makeFileFromPath(logFile)
 
-    #TODO: Check if log file path exists, if not, create it
     logging.basicConfig(format='%(levelname)s: %(asctime)s %(message)s', filename=logFile, level=logging.DEBUG)
     logger = logging.getLogger(name)
     return logger
@@ -161,7 +187,6 @@ def handleArcPyError(logger):
     arcpy.AddError(msgs)
     print(msgs)
     logger.error(msgs)
-
 
 def handleGeneralError(logger):
     ''' Basic error handler, errors printed to console and logger '''

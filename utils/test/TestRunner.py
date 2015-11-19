@@ -73,6 +73,8 @@ def main():
     testEndDateTime = datetime.datetime.now()
     primaryLogFile(result, logger)
     print("END OF TEST =========================================\n")
+
+    del logger
     return
 
 def primaryLogFile(result, logger):

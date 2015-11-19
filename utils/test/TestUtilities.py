@@ -22,11 +22,11 @@ import os
 DEBUG = True # this guy is a flag for extra messaging while debugging tests
 
 ''' Testing paths '''
-currentPath = os.path.dirname(__file__)
+currentPath = os.path.dirname(__file__) # should go to .\solutions-geoprocessing-toolbox\utils\test
 repoPath = os.path.dirname(os.path.dirname(currentPath))
 
-''' Log Paths: where the log files go wild and multiply '''
-logPath = os.path.normpath(os.path.join(currentPath, r"log"))
+''' Log Path: the folder where the log files go wild and multiply '''
+logPath = os.path.normpath(os.path.join(currentPath, r"log")) # should go to .\solutions-geoprocessing-toolbox\utils\test\log
 
 ''' Capability Paths'''
 capabilityPath = os.path.normpath(os.path.join(currentPath, r"capability_tests"))
