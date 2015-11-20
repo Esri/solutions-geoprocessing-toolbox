@@ -38,284 +38,175 @@ history:
 ==================================================
 '''
 
-import logging
 import arcpy
-import sys
-import traceback
-import datetime
 import os
 import unittest
 import TestUtilities
 import UnitTestUtilities
-import UnitTestCase
 
-class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
+
+#class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
+class HLZTouchdownPoints(unittest.TestCase):
     ''' Test all tools and methods related to the HLZ Touchdown Points tool
     in the Helicopter Landing Zones toolbox'''
 
     scratchGDB = None
-    tbxProFolderPath = r"../../../capability/toolboxes/Helicopter Landing Zone Tools.tbx"
-    tbxDesktopFolderPath = r"../../../capability/toolboxes/Helicopter Landing Zone Tools_10.3.tbx"
 
-    def setUp(self, platform):
+    tbxProFolderPath = os.path.join(TestUtilities.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools.tbx")
+    tbxDesktopFolderPath = os.path.join(TestUtilities.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools_10.3.tbx")
+    testDataFolderPath = os.path.join(TestUtilities.capabilityPath, "data")
+
+    inputAirframeTable = None
+    inputSuitableAreas = None
+    inputSlope = None
+    outputGeodatabase = None
+    outputCenterpoints = None
+    outputCircles = None
+
+    def setUp(self):
         ''' set-up code '''
+        if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.setUp")
+        UnitTestUtilities.checkArcPy()
+        UnitTestUtilities.checkFilePaths([self.testDataFolderPath,
+                                          self.tbxProFolderPath,
+                                          self.tbxDesktopFolderPath])
 
-        try:
-            # Set up paths
-            self.testDataFolderPath = r"../../../capability/data/geodatabases/"
+        self.testDataGeodatabase = os.path.join(self.testDataFolderPath, r"test_hlz_tools.gdb")
 
-            UnitTestUtilities.checkFilePaths([self.testDataFolderPath, tbxFolderPath])
+        # Check the test inputs (do they exist? or not?)
+        if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
+            self.scratchGDB = UnitTestUtilities.createScratch(self.testDataFolderPath)
 
-            #TODO: Where is the test data? Does the test data exist?
-            self.testDataGeodatabase = os.path.join(self.testDataFolderPath, r"test_hlz_tools.gdb")
+        # Setup the test inputs
+        self.inputAirframeTable = os.path.join(self.testDataGeodatabase, r"Aircraft_Specifications")
+        self.inputSuitableAreas = os.path.join(self.testDataGeodatabase, r"HLZSelectionArea")
+        self.inputSlope = os.path.join(self.testDataGeodatabase, r"SRTMPctSlope")
+        self.outputGeodatabase = os.path.join(self.scratchGDB)
+        self.outputCenterpoints = os.path.join(self.outputGeodatabase, r"centerPoints")
+        self.outputCircles = os.path.join(self.outputGeodatabase, r"tdCircles")
 
-            # Check the test inputs (do they exist? or not?)
-            if not arcpy.Exists(self.scratchGDB):
-                self.scratchGDB = UnitTestUtilities.createScratch(testDataFolderPath)
-
-            # Set up the toolbox
-
-            
-            # Setup the test inputs
-            self.inputAirframeTable = os.path.join(self.testDataGeodatabase, r"Aircraft_Specifications")
-            self.inputSuitableAreas = os.path.join(self.testDataGeodatabase, r"HLZSelectionArea")
-            self.inputSlope = os.path.join(self.testDataGeodatabase, r"SRTMPctSlope")
-            self.outputGeodatabase = os.path.join(self.scratchGDB)
-            self.outputCenterpoints = os.path.join(self.outputGeodatabase, r"centerPoints")
-            self.outputCircles = os.path.join(self.outputGeodatabase, r"tdCircles")
-
-            UnitTestUtilities.checkGeoObjects([self.testDataGeodatabase,
-                                               self.toolbox,
-                                               self.inputAirframeTable,
-                                               self.inputSuitableAreas])
-        except:
-            # Get the traceback object
-            tb = sys.exc_info()[2]
-            tbinfo = traceback.format_tb(tb)[0]
-
-            # Concatenate information together concerning the error into a message string
-            pymsg = "PYTHON ERRORS:\nTraceback info:\n" + tbinfo + "\nError Info:\n"\
-                + str(sys.exc_info()[1])
-            msgs = "ArcPy ERRORS:\n" + arcpy.GetMessages() + "\n"
-
-            #TODO: need to add 'msgs' and 'pymsg' to logger
-
-            # Print Python error messages for use in Python / Python Window
-            print(pymsg + "\n")
-            print(msgs)
+        UnitTestUtilities.checkGeoObjects([self.testDataGeodatabase,
+                                           self.outputGeodatabase,
+                                           self.inputAirframeTable,
+                                           self.inputSuitableAreas,
+                                           self.inputSlope])
+        return
 
     def tearDown(self):
         ''' clean up after tests'''
+        if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.tearDown")
         UnitTestUtilities.deleteScratch(self.scratchGDB)
+        return
 
     def test_MinimumBoundingFishnet_Pro(self):
-        self.test_MinimumBoundingFishnet(self.tbxProFolderPath)
+        if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.test_MinimumBoundingFishnet_Pro")
+        # check that the tool exists:
+        #self.assertTrue(arcpy.Exists(os.path.join(self.tbxProFolderPath, r"MinimumBoundingFishnet")))
+        self.MinimumBoundingFishnet(self.tbxProFolderPath)
+        return
 
     def test_MinimumBoundingFishnet_Desktop(self):
-        self.test_MinimumBoundingFishnet(self.tbxDesktopFolderPath)
+        if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.test_MinimumBoundingFishnet_Desktop")
+        # check that the tool exists:
+        #self.assertTrue(arcpy.Exists(os.path.join(self.tbxDesktopFolderPath, r"MinimumBoundingFishnet")))
+        self.MinimumBoundingFishnet(self.tbxDesktopFolderPath)
+        return
 
-    def test_MinimumBoundingFishnet(self, tbxFolderPath):
+    def MinimumBoundingFishnet(self, tbxFolderPath):
         ''' Test the supporting script tool '''
-        try:
-            #TODO: Finish writing a test
-            print("test_MinimumBoundingFishnet")
-            outputFishnet = os.path.join(self.scratchGDB, "outputFishnet")
-            arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
+        if TestUtilities.DEBUG == True:
+            print("         HLZTouchdownPoints.test_MiniumBoundingFishnet main")
+        else:
+            print("Testing Minimum Bounding Fishnet...")
+        outputFishnet = os.path.join(self.scratchGDB, "outputFishnet")
+        arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
+        groupOption = r"NONE"
+        groupFields = r"#"
+        cellWidth = 75
+        cellHeight = 75
+        rows = 0
+        columns = 0
+        labelOption = r"NO_LABELS"
+        '''
+        MinimumBoundingFishnet_ (Input_Features, Output_Fishnet, Group_Option, {Group_Fields},
+                                 Cell_Width, Cell_Height, Number_of_Rows, Number_of_Columns, Labels)
 
-            arcpy.MinimumBoundingFishnet_tdPoints(self.inputSuitableAreas, outputFishnet)
-            countOutputFishnet = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, outputFishnet)).getOutput(0)
-            self.assertEqual(countOutputFishnet, float(1))
 
-        except arcpy.ExecuteError:
-            # Get the arcpy error messages
-            msgs = arcpy.GetMessages()
-            #TODO: need to add 'msgs' to logger
-            print(msgs)
-
-        except:
-            # Get the traceback object
-            tb = sys.exc_info()[2]
-            tbinfo = traceback.format_tb(tb)[0]
-
-            # Concatenate information together concerning the error into a message string
-            pymsg = "PYTHON ERRORS:\nTraceback info:\n" + tbinfo + "\nError Info:\n"\
-                + str(sys.exc_info()[1])
-            msgs = "ArcPy ERRORS:\n" + arcpy.GetMessages() + "\n"
-
-            #TODO: need to add 'msgs' and 'pymsg' to logger
-
-            # Print Python error messages for use in Python / Python Window
-            print(pymsg + "\n")
-            print(msgs)
+        Executing (MinimumBoundingFishnet): MinimumBoundingFishnet HLZSelectionArea C:\Workspace\solutions-geoprocessing-toolbox\Test_HLZ_unittest_NOV2015\TestForHLZ\TestForHLZ.gdb\HLZSelectionArea_
+        MinimumBoun NONE # 75 75 0 0 NO_LABELS
+        '''
+        arcpy.MinimumBoundingFishnet_tdpoints(self.inputSuitableAreas, outputFishnet,
+                                              groupOption, groupFields,
+                                              cellWidth, cellHeight, rows, columns, labelOption)
+        countOutputFishnet = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, outputFishnet)).getOutput(0)
+        self.assertEqual(countOutputFishnet, str(1260))
+        return
 
     def test_Choose_Field_Value_Script_Tool_Pro(self):
-        self.test_MinimumBoundingFishnet(self.tbxProFolderPath)
+        if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.test_Choose_Field_Value_Script_Tool_Pro")
+        self.Choose_Field_Value_Script_Tool(self.tbxProFolderPath)
+        return
 
     def test_Choose_Field_Value_Script_Tool_Desktop(self):
-        self.test_MinimumBoundingFishnet(self.tbxDesktopFolderPath)
+        if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.test_Choose_Field_Values_Script_Tool_Desktop")
+        self.Choose_Field_Value_Script_Tool(self.tbxDesktopFolderPath)
+        return
 
-    def test_Choose_Field_Value_Script_Tool(self, tbxFolderPath):
+    def Choose_Field_Value_Script_Tool(self, tbxFolderPath):
         ''' test the supporting script tool '''
-        try:
-            print("test_Choose_Field_Value_Script_Tool")
-
-            arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
-
-            inputField = r"Model"
-            inputChoice = r"UH-60"
-            result = arcpy.ChooseFieldValueScriptTool_tdpoints(self.inputAirframeTable,inputField,inputChoice)
-
-            # compare results
-            self.assertEqual(result,inputChoice)
-
-        except arcpy.ExecuteError:
-            # Get the arcpy error messages
-            msgs = arcpy.GetMessages()
-            #TODO: need to add 'msgs' to logger
-            print(msgs)
-
-        except:
-            # Get the traceback object
-            tb = sys.exc_info()[2]
-            tbinfo = traceback.format_tb(tb)[0]
-
-            # Concatenate information together concerning the error into a message string
-            pymsg = "PYTHON ERRORS:\nTraceback info:\n" + tbinfo + "\nError Info:\n"\
-                + str(sys.exc_info()[1])
-            msgs = "ArcPy ERRORS:\n" + arcpy.GetMessages() + "\n"
-
-            #TODO: need to add 'msgs' and 'pymsg' to logger
-
-            # Print Python error messages for use in Python / Python Window
-            print(pymsg + "\n")
-            print(msgs)
+        if TestUtilities.DEBUG == True:
+            print("         HLZTouchdownPoints.test_Choose_Field_Value_Script_Tool main")
+        else:
+            print("Testing Choose Field Value Script Tool...")
+        arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
+        inputField = r"Model"
+        inputChoice = r"UH-60"
+        result = arcpy.ChooseFieldValueScriptTool_tdpoints(self.inputAirframeTable, inputField, inputChoice)
+        # compare results
+        self.assertEqual(result.getOutput(0), inputChoice)
+        return
 
     def test_HLZ_Touchdown_Points_001_Pro(self):
-        self.test_HLZ_Touchdown_Points_001(self.tbxProFolderPath)
+        if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_001_Pro")
+        self.HLZ_Touchdown_Points_001(self.tbxProFolderPath)
+        return
 
     def test_HLZ_Touchdown_Points_001_Desktop(self):
-        self.test_HLZ_Touchdown_Points_001(self.tbxDesktopFolderPath)
+        if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_001_Desktop")
+        self.HLZ_Touchdown_Points_001(self.tbxDesktopFolderPath)
+        return
 
-    def test_HLZ_Touchdown_Points_001(self, tbxFolderPath):
+    def HLZ_Touchdown_Points_001(self, tbxFolderPath):
         ''' This is a basic test of the HLZ Touchdown tool with all of the input defined. '''
-        try:
-            print("test_HLZ_Touchdown_Points_001")
-            # move TestSunPositionAndHillshade code in here
-            print("Importing toolbox... ")
-            arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
+        if TestUtilities.DEBUG == True:
+            print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_001")
+        else:
+            print("Testing HLZ Touchdown Points 001...")
 
-            arcpy.env.overwriteOutput = True
+        arcpy.CheckOutExtension("Spatial")
 
-            # Inputs
-            print("Setting up inputs... ")
-            inputAirframeString = r"UH-60"
+        arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
+        arcpy.env.overwriteOutput = True
+        inputAirframeString = r"UH-60"
+        arcpy.HLZTouchdownPoints_tdpoints(self.inputAirframeTable,
+                                          inputAirframeString,
+                                          self.inputSuitableAreas,
+                                          self.inputSlope,
+                                          self.outputGeodatabase,
+                                          self.outputCenterpoints,
+                                          self.outputCircles)
 
-            # Testing
-            print("Running tool (HLZ Touchdown Points) ...")
-            arcpy.HLZTouchdownPoints_tdpoints(self.inputAirframeTable,
-                                              inputAirframeString,
-                                              self.inputSuitableAreas,
-                                              self.inputSlope,
-                                              self.outputGeodatabase,
-                                              self.outputCenterpoints,
-                                              self.outputCircles)
+        arcpy.CheckInExtension("Spatial")
+        # count output center points
 
-            print("Comparing expected results...")
-            # count output center points
-            countCenterPoints = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, self.outputCenterpoints)).getOutput(0)
-            # count output circles
-            countOutputCircles = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, self.outputCircles)).getOutput(0)
-            #TODO: make sure center points fall within circles
-            self.assertEqual(countCenterPoints, float(934))
-            self.assertEqual(countOutputCircles, float(934))
+        if TestUtilities.DEBUG == True: print("self.scratch.GDB: " + self.scratchGDB)
+        if TestUtilities.DEBUG == True: print("self.outputGeodatabase: " + self.outputGeodatabase)
+        if TestUtilities.DEBUG == True: print("self.outputCenterPoints: " + self.outputCenterpoints)
 
-        except arcpy.ExecuteError:
-            # Get the arcpy error messages
-            msgs = arcpy.GetMessages()
-            #TODO: need to add 'msgs' to logger
-            print(msgs)
-
-        except:
-            # Get the traceback object
-            tb = sys.exc_info()[2]
-            tbinfo = traceback.format_tb(tb)[0]
-
-            # Concatenate information together concerning the error into a message string
-            pymsg = "PYTHON ERRORS:\nTraceback info:\n" + tbinfo + "\nError Info:\n"\
-                + str(sys.exc_info()[1])
-            msgs = "ArcPy ERRORS:\n" + arcpy.GetMessages() + "\n"
-
-            #TODO: need to add 'msgs' and 'pymsg' to logger
-
-            # Print Python error messages for use in Python / Python Window
-            print(pymsg + "\n")
-            print(msgs)
-
-    def test_HLZ_Touchdown_Points_002_Pro(self):
-        self.test_HLZ_Touchdown_Points_002(self.tbxProFolderPath)
-
-    def test_HLZ_Touchdown_Points_002_Desktop(self):
-        self.test_HLZ_Touchdown_Points_002(self.tbxDesktopFolderPath)
-
-    def test_HLZ_Touchdown_Points_002(self, tbxFolderPath):
-        ''' This test is for some of the default values in the HLZ Touchdown tool. '''
-        try:
-            arcpy.AddMessage("test_HLZ_Touchdown_Points_002")
-            # move TestSunPositionAndHillshade code in here
-            print("Importing toolbox... ")
-            arcpy.ImportToolbox(tbxFolderPath, "tdpoints")
-
-            arcpy.env.overwriteOutput = True
-
-            # Inputs
-            print("Setting up inputs... ")
-            inputAirframeTable = "#"
-            inputAirframeString = "#"
-            inputSuitableAreas = self.inputSuitableAreas
-            inputSlope = self.inputSlope
-            outputGeodatabase = self.outputGeodatabase
-            outputCenterpoints = "#"
-            outputCircles = "#"
-
-            # Testing
-            print("Running tool (HLZ Touchdown Points) ...")
-            arcpy.HLZTouchdownPoints_tdpoints(inputAirframeTable,
-                                              inputAirframeString,
-                                              inputSuitableAreas,
-                                              inputSlope,
-                                              outputGeodatabase,
-                                              outputCenterpoints,
-                                              outputCircles)
-
-            print("Comparing expected results...")
-            # count output center points
-            countCenterPoints = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, self.outputCenterpoints)).getOutput(0)
-            # count output circles
-            countOutputCircles = arcpy.GetCount_management(os.path.join(self.outputGeodatabase, self.outputCircles)).getOutput(0)
-
-            self.assertEqual(countCenterPoints, float(934))
-            self.assertEqual(countOutputCircles, float(934))
-
-            #TODO: make sure center points fall within circles
-
-        except arcpy.ExecuteError:
-            # Get the arcpy error messages
-            msgs = arcpy.GetMessages()
-            #TODO: need to add 'msgs' to logger
-            print(msgs)
-
-        except:
-            # Get the traceback object
-            tb = sys.exc_info()[2]
-            tbinfo = traceback.format_tb(tb)[0]
-
-            # Concatenate information together concerning the error into a message string
-            pymsg = "PYTHON ERRORS:\nTraceback info:\n" + tbinfo + "\nError Info:\n"\
-                + str(sys.exc_info()[1])
-            msgs = "ArcPy ERRORS:\n" + arcpy.GetMessages() + "\n"
-
-            #TODO: need to add 'msgs' and 'pymsg' to logger
-
-            # Print Python error messages for use in Python / Python Window
-            print(pymsg + "\n")
-            print(msgs)
+        countCenterPoints = float(arcpy.GetCount_management(self.outputCenterpoints).getOutput(0))
+        # count output circles
+        countOutputCircles = float(arcpy.GetCount_management(self.outputCircles).getOutput(0))
+        #TODO: make sure center points fall within circles
+        self.assertEqual(countCenterPoints, float(972))
+        self.assertEqual(countOutputCircles, float(972))
+        return

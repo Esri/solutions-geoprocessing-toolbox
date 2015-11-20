@@ -17,12 +17,34 @@
 # Requirements: ArcGIS Desktop Standard
 # ----------------------------------------------------------------------------
 
-import arcpy
 import os
-import sys
 
-currentPath = os.path.dirname(__file__)
-logPath = os.path.normpath(os.path.join(currentPath, r"../log/"))
+DEBUG = True # this guy is a flag for extra messaging while debugging tests
+
+''' Testing paths '''
+currentPath = os.path.dirname(__file__) # should go to .\solutions-geoprocessing-toolbox\utils\test
+repoPath = os.path.dirname(os.path.dirname(currentPath))
+
+''' Log Path: the folder where the log files go wild and multiply '''
+logPath = os.path.normpath(os.path.join(currentPath, r"log")) # should go to .\solutions-geoprocessing-toolbox\utils\test\log
+
+''' Capability Paths'''
+capabilityPath = os.path.normpath(os.path.join(currentPath, r"capability_tests"))
+
+''' Data Management Paths '''
+dataManagementPaths = os.path.normpath(os.path.join(currentPath, r"data_management_tests"))
+
+''' Operational Graphics Paths '''
+operationalGraphicsPaths = os.path.normpath(os.path.join(currentPath, r"operational_graphics_tests"))
+
+''' Patterns Paths '''
+patternsPaths = os.path.normpath(os.path.join(currentPath, r"patterns_tests"))
+
+''' Suitability Paths '''
+suitabilityPaths = os.path.normpath(os.path.join(currentPath, r"suitability_tests"))
+
+''' Visibility Paths'''
+visibilityPaths = os.path.normpath(os.path.join(currentPath, r"visibility_tests"))
 
 #### Visibility ####
 vis_GeodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../visibility/data/geodatabases/"))

@@ -26,10 +26,49 @@ company: Esri
 ==================================================
 description:
 Test Suite collects all of the test cases for the ERG Tools toolbox:
-* <tool>TestCase.py
+* ERGByPlacardTestCase.py
+* ERGByChemicalTestCase.py
+* ERGScriptTestCase.py
 
 ==================================================
 history:
-10/23/2015 - MF - placeholder
+11/09/2015 - MF - placeholder
 ==================================================
 '''
+
+import unittest
+import TestUtilities
+from . import ERGByPlacardTestCase
+from . import ERGByChemicalTestCase
+from . import ERGScriptTestCase
+
+def getERGTestSuite(logger, platform):
+    ''' run the HLZ tests as either Pro or Desktop'''
+
+    if TestUtilities.DEBUG == True:
+        print("      ERGTestSuite.runHLZTestSuite")
+
+    placardTests = ['test_ERGByPlacard_001', 'test_ERGByPlacard_002']
+    chemicalTests = ['test_ERGByChemical_001', 'test_ERGByChemical_002', 'test_ERGByChemical_003']
+    scriptTests = ['test_LookUpERG001', 'test_LookUpERG002', 'test_LookUpERG003',
+                   'test_GetProjectedPoint001', 'test_GetProjectedPoint002',
+                   'test_GetProjectedPoint003', 'test_GetProjectedPoint004']
+    testSuite = unittest.TestSuite()
+    logger.info("ERG Tools tests")
+
+    for t in chemicalTests:
+        testSuite.addTest(ERGByChemicalTestCase.ERGByChemical(t))
+        print("adding test: " + str(t))
+        logger.info(t)
+
+    for t in placardTests:
+        testSuite.addTest(ERGByPlacardTestCase.ERGByPlacard(t))
+        print("adding test: " + str(t))
+        logger.info(t)
+
+    for t in scriptTests:
+        testSuite.addTest(ERGScriptTestCase.ERGTest(t))
+        print("adding test: " + str(t))
+        logger.info(t)
+
+    return testSuite

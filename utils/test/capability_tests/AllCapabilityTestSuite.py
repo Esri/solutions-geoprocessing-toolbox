@@ -28,27 +28,40 @@ description:
 This test suite collects all of the capability toolbox test suites:
 * HelicopterLandingZoneToolsTestSuite.py
 * ERGToolsTestSuite.py
-* PointOfOriginToolsTestSuite.py
+* PointOfOriginToolsTestSuite.py - PENDING
 
 ==================================================
 history:
-10/23/2015 - MF - placeholder
+10/23/2015 - MF - original writeup
 ==================================================
 '''
 
 import unittest
-import os
-import HelicopterLandingZoneToolsTestSuite
-import PointOfOriginToolsTestSuite
-import ERGToolsTestSuite
+import TestUtilities
 
+from . import HelicopterLandingZoneToolsTestSuite
+# Getting an error on line above during run in Python 3.4:
+#   File "C:\Users\<user>\Documents\GitHub\solutions-geoprocessing-toolbox\utils\test\capability_tests\AllCapabilityTestSuite.py", line 41, in <module>
+#     import HelicopterLandingZoneToolsTestSuite
+# ImportError: No module named 'HelicopterLandingZoneToolsTestSuite'
+#FIX: instead of "import <module>" use "from . import <module>"
 
-class AllCapabilityTestSuite(unittest.TestSuite):
-    ''' This class is a test suite collecting all of the capability toolbox test suites '''
+#from . import PointOfOriginToolsTestSuite - Doesn't Exist Yet
+from . import ERGToolsTestSuite
 
-    def runCapabilityTestSuite(self, testSuite, platform):
-        '''  '''
-        HelicopterLandingZoneToolsTestSuite.HelicopterLandingZoneTestSuite.runHLZTestSuite(testSuite, platform)
+def getCapabilityTestSuites(logger, platform):
+    ''' This pulls together all of the toolbox test suites in this folder '''
+    if TestUtilities.DEBUG == True:
+        print("   AllCapabilityTestSuite.capabilityTestSuite")
+    logger.info("Adding Capability Tests including:")
+    testSuite = unittest.TestSuite()
 
-        #TODO: Add PointOfOriginTestSuite
-        #TODO: Add ERGToolsTestSuite
+    # these come from HelicopterLandingZoneToolsTestSuite.py
+    testSuite.addTests(HelicopterLandingZoneToolsTestSuite.getHLZTestSuite(logger, platform))
+
+    #TODO: these will come from PointOfOriginToolsTestSuite
+
+    # these come from ERGToolsTestSuite.py
+    testSuite.addTests(ERGToolsTestSuite.getERGTestSuite(logger, platform))
+
+    return testSuite
