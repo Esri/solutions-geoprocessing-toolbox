@@ -46,6 +46,9 @@ suitabilityPaths = os.path.normpath(os.path.join(currentPath, r"suitability_test
 ''' Visibility Paths'''
 visibilityPaths = os.path.normpath(os.path.join(currentPath, r"visibility_tests"))
 
+#logger is initialized in TestRunner's main()
+logger = None
+
 #### Visibility ####
 vis_GeodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../visibility/data/geodatabases/"))
 vis_ScratchPath = os.path.normpath(os.path.join(currentPath, r"../../visibility/data/geodatabases"))
