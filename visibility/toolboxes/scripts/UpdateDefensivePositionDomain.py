@@ -21,6 +21,12 @@
 # Description:
 # Updates the Defensive Positions domain used in the drop down while creating weapon positions.
 # ---------------------------------------------------------------------------
+'''
+
+History ---------------------------------------------------------------------
+???? - ???? - original tool coding
+11/13/2015 - MF - added output parameter for issue #142
+'''
 
 # Import arcpy module
 import sys, traceback
@@ -38,6 +44,7 @@ try:
 
     # Process: Create a domain from an existing table
     arcpy.TableToDomain_management(domTable, codeField, descField, dWorkspace, domName, update_option=updateOption)
+    arcpy.SetParameter(3, dWorkspace)
 
 except arcpy.ExecuteError:
     # Get the tool error messages
