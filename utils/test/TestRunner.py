@@ -43,7 +43,7 @@ import unittest
 import arcpy
 import TestUtilities
 import UnitTestUtilities
-from visibility_tests import SunPositionAnalysisToolsTestSuite
+
 
 logFileFromBAT = None
 if len(sys.argv) > 1:
