@@ -31,6 +31,38 @@ Sun Position Analysis Tools toolboxes:
 
 ==================================================
 history:
-<date> - <initals> - <modifications>
+10/29/2015 - JH - wired up SunPositionAnalysisToolsTestSuite to run SunPositionAndHillshadeTestCase in Pro or Desktop
 ==================================================
 '''
+
+import os
+import unittest
+import logging
+import SunPositionAndHillshadeTestCase
+import TestUtilities
+
+class SunPositionAnalysisTestSuite(unittest.TestSuite):
+    ''' Test suite for all tools in the Sun Position Analysis Tools toolbox '''
+    
+    def runDesktopTests(self, suite):
+        suite.addTest(SunPositionAndHillshadeTestCase.SunPositionAndHillshadeTestCase('test_sun_position_analysis_desktop'))
+        return suite
+        
+    def runProTests(self, suite):
+        suite.addTest(SunPositionAndHillshadeTestCase.SunPositionAndHillshadeTestCase('test_sun_position_analysis_pro'))
+        return suite
+        
+    def runSunPosAnalysisTestSuite(self, suite, platform):
+        result = unittest.TestResult()
+        
+        if platform == "Pro":
+            TestUtilities.logger.info("Running Sun Position Analysis Test Suite for Pro...")
+            self.runProTests(suite)
+        elif platform == "Desktop":
+            TestUtilities.logger.info("Running Sun Position Analysis Test Suite for Desktop...")
+            self.runDesktopTests(suite)
+            
+        suite.run(result)
+        print("Test success: {0}".format(str(result.wasSuccessful())))
+        TestUtilities.logger.debug("Test success: {0}".format(str(result.wasSuccessful())))
+        return result
