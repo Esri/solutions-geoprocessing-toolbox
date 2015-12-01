@@ -7,14 +7,28 @@
 
 The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tools for use in ArcGIS Desktop. These tools provide specialized processing, workflows, and analysis for defense, intelligence, emergency management, and other solutions domains.
 
-![Image of the toolbox](SolutionsGeoprocessingToolboxGraphic.png)
+![Image of the toolbox](solutions-geoprocessing-toolbox-thumbnail007.png)
+
+
+###Repository Owner: [Matt](https://github.com/mfunk)
+
+* Merge Pull Requests
+* Creates Releases and Tags
+* Manages Milestones
+* Manages and Assigns Issues
+
+###Secondary: [Chris](https://github.com/csmoore)
+
+* Backup when the Owner is away
+
+Additional information is available in the repository's [Wiki](https://github.com/Esri/solutions-geoprocessing-toolbox/wiki).
 
 ## Sections
 
 * [Features](#features)
 * [Requirements](#requirements)
 * [A Tale of Two Toolboxes](#a-tale-of-two-toolboxes)
-* [Instructions](#instructions)
+* [Instructions To Get Started](#instructions-to-get-started)
 	* [General Help](#general-help)
 	* [Getting Started with the tools](#getting-started-with-the-tools)
 	* [Downloading Test Data](#downloading-test-data)
@@ -97,7 +111,7 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 * [Help for ArcGIS Pro](http://pro.arcgis.com/en/pro-app/)
 
 
-## Instructions
+## Instructions To Get Started
 
 ### General Help
 [New to Github? Get started here.](http://htmlpreview.github.com/?https://github.com/Esri/esri.github.com/blob/master/help/esri-getting-to-know-github.html)
@@ -155,8 +169,9 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 
 ## Contributing
 
-Esri welcomes contributions from anyone and everyone through GitHub. Please see our [guidelines for contributing](https://github.com/esri/contributing).
+Esri welcomes contributions from anyone and everyone through GitHub. Please see Esri's [guidelines for contributing](https://github.com/esri/contributing).
 
+When you contribute to this repository we ask that you follow the guidelines below. If you've got questions, or you get stuck, please ask the [Repository Owner](#repository-owner). We are here to help! Thanks.
 
 ### Fork and Clone the Repo
 Start contributing to the solutions-geoprocessing-toolbox repo by making a fork and cloning it to your local machine.
@@ -194,6 +209,12 @@ If you've made changes to the repo that you want to share with the community.
 * Commit your changes to your local
 * Sync local with your remote fork
 * Make a **Pull Request** from your remote fork on github.com ![New Pull Request](NewPullRequestButtonIcon.png)
+
+
+### Notes On Contributing
+* Always work in the **dev** branch, never in *master*. This helps us keep our releases clean.
+* Never merge Pull Requests. The [Repository Owner](#repository-owner) needs to test any updates to make sure the repo is stable.
+* Always log an [Issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues) for problems you find, though you should check through the existing issues to make sure it wasn't already logged. 
 
 
 ## Credits
