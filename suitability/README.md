@@ -11,7 +11,6 @@ Determine areas most suitable for both friendly and adversarial operations.
 * [Military Aspects of Weather Tools](#military-aspects-of-weather-tools)
 * [Path Slope Tools](#path-slope-tools)
 * [Issues](#issues)
-* [Contributing](#contributing)
 * [Licensing](#licensing)
 
 ## Maritime Decision Aid Tools
@@ -70,11 +69,7 @@ Path Slope Tools is a terrain analysis toolset to determine slope changes along 
 
 ## Issues
 
-Find a bug or want to request a new feature?  Please let us know by submitting an issue.
-
-## Contributing
-
-Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
+Find a bug or want to request a new feature?  Please let us know by submitting an [Issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues).
 
 ## Licensing
 
