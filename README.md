@@ -1,7 +1,6 @@
 [![Planned Issues](https://badge.waffle.io/Esri/solutions-geoprocessing-toolbox.png?label=0%20-%20backlog&title=In%20Backlog)](https://waffle.io/Esri/solutions-geoprocessing-toolbox)
 [![Issues in Progress](https://badge.waffle.io/Esri/solutions-geoprocessing-toolbox.png?label=2%20-%20In%20Progress&title=In%20Progress)](https://waffle.io/Esri/solutions-geoprocessing-toolbox)
 [![Issues waiting for Verification](https://badge.waffle.io/Esri/solutions-geoprocessing-toolbox.png?label=3%20-%20Verify&title=For%20Verification)](https://waffle.io/Esri/solutions-geoprocessing-toolbox)
-
 [![Code Climate](https://codeclimate.com/github/Esri/solutions-geoprocessing-toolbox/badges/gpa.svg)](https://codeclimate.com/github/Esri/solutions-geoprocessing-toolbox)
 # solutions-geoprocessing-toolbox
 
