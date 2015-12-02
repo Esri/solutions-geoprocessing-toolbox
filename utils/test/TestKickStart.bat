@@ -15,7 +15,7 @@ rem  limitations under the License.
 rem ------------------------------------------------------------------------------
 rem  TestKickStart.bat
 rem ------------------------------------------------------------------------------
-rem  requirments:
+rem  requirements:
 rem  * ArcGIS Desktop 10.X+ or ArcGIS Pro 1.X+
 rem  * Python 2.7 or Python 3.4
 rem  author: ArcGIS Solutions

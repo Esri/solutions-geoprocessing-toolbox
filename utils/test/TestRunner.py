@@ -16,7 +16,7 @@
 ------------------------------------------------------------------------------
  TestRunner.py
 ------------------------------------------------------------------------------
- requirments:
+ requirements:
  * ArcGIS Desktop 10.X+ or ArcGIS Pro 1.X+
  * Python 2.7 or Python 3.4
  author: ArcGIS Solutions
