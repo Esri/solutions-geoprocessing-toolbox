@@ -204,3 +204,20 @@ def handleGeneralError(logger):
     logger.error(pymsg)
     print(msgs)
     logger.error(msgs)
+    
+def geoObjectsExist(objects):
+    ''' Return true if all of the input list of geo-objects exist, false otherwise '''
+    allExist = True
+    for obj in objects:
+        if not arcpy.Exists(obj):
+            allExist = False
+    return allExist
+    
+def folderPathsExist(paths):
+    ''' Return true if all input paths exist, false otherwise '''
+    allExist = True
+    for p in paths:
+        if not os.path.exists(p):
+            allExist = False
+    return allExist
+    

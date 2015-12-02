@@ -43,6 +43,7 @@ import unittest
 import arcpy
 import TestUtilities
 import UnitTestUtilities
+import DataDownload
 
 logFileFromBAT = None
 if len(sys.argv) > 1:
@@ -67,6 +68,11 @@ def main():
         logger = UnitTestUtilities.initializeLogger(logName)
     print("Logging results to: " + str(logName))
     UnitTestUtilities.setUpLogFileHeader(logger)
+    
+    # download the data
+    didDownload = DataDownload.runDataDownload("test_sun_position.gdb", DataDownload.sunPosUrl)
+    print("Data Download ran: " + str(didDownload))
+    
     # run the tests
     result = runTestSuite(logger)
     # send to log file
@@ -119,6 +125,26 @@ def resultsFailures(result):
             msg += str(j)
         msg += "\n"
     return msg
+    
+# def runDataDownload():
+    
+    # visDataPath = DataDownload.createDataFolder(TestUtilities.visibilityPaths)
+    # sunPosPath = os.path.normpath(os.path.join(visDataPath, "test_sun_position.gdb"))
+    # objects = [sunPosPath]
+    # exists = UnitTestUtilities.folderPathsExist(objects)
+    # print("Sun Pos GDB Exists? " + str(exists))
+        
+    # if not exists:
+        # print("Save Online Data test...")
+        # sunPosZip = DataDownload.saveOnlineDataAsZip(DataDownload.sunPosUrl, "test_sun_position.gdb.zip")
+        # print("Extracting zip...")
+        # DataDownload.extractDataZip(sunPosZip, sunPosPath)
+        # print("Deleting zip...")
+        # DataDownload.deleteZip(sunPosZip)
+        # return True
+    # else:
+        # return False
+   
 
 def runTestSuite(logger):
     ''' collect all test suites before running them '''

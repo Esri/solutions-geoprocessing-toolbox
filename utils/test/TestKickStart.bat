@@ -29,7 +29,7 @@ rem ==================================================
 rem  history:
 rem  10/06/2015 - MF - placeholder
 rem  10/30/2015 - MF - tests running
-rem 11/23/2015 - JH - added paremeter for default log file name
+rem  12/01/2015 - JH - added paremeter for default log file name
 rem ==================================================
 
 REM usage: set LOG=<defaultLogFileName.log>
