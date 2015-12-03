@@ -42,7 +42,7 @@ ECHO  --------------------------------------------------------------------------
 ECHO(>> %~dp0\DataDownload.txt
 ECHO Started NAM data Transfer %Time% %Date%>> %~dp0\DataDownload.txt
 
-python.exe C:\MAOW\Scripts\NAMDownload.py
+python.exe .\NAMDownload.py
 
 timeout /t 60
 
