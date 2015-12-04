@@ -1,0 +1,90 @@
+***********
+mds package
+***********
+.. automodule:: mds
+  :members:
+  :undoc-members:
+
+mds.date_time
+=============
+.. automodule:: mds.date_time
+  :members:
+
+mds.math
+========
+.. automodule:: mds.math
+  :members:
+
+mds.ordered_set
+===============
+.. automodule:: mds.ordered_set
+  :members:
+  :special-members:
+  :undoc-members:
+
+mds.netcdf
+==========
+.. automodule:: mds.netcdf
+  :members:
+  :undoc-members:
+
+mds.netcdf.dataset
+------------------
+.. automodule:: mds.netcdf.dataset
+  :members:
+  :undoc-members:
+
+mds.netcdf.convention
+---------------------
+.. automodule:: mds.netcdf.convention
+  :members:
+  :undoc-members:
+
+mds.netcdf.convention.convention
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. automodule:: mds.netcdf.convention.convention
+  :members:
+  :undoc-members:
+
+mds.netcdf.convention.conventions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. automodule:: mds.netcdf.convention.conventions
+  :members:
+  :undoc-members:
+
+mds.netcdf.convention.cf
+~~~~~~~~~~~~~~~~~~~~~~~~
+.. automodule:: mds.netcdf.convention.cf
+  :members:
+  :undoc-members:
+
+mds.netcdf.convention.coards
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. automodule:: mds.netcdf.convention.coards
+  :members:
+  :undoc-members:
+
+mds.netcdf.convention.coordinate
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. automodule:: mds.netcdf.convention.coordinate
+  :members:
+  :undoc-members:
+
+mds.netcdf.convention.generic
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. automodule:: mds.netcdf.convention.generic
+  :members:
+  :undoc-members:
+
+mds.netcdf.tools
+================
+.. automodule:: mds.tools
+  :members:
+  :undoc-members:
+
+mds.netcdf.tools.opendap_to_netcdf
+----------------------------------
+.. automodule:: mds.tools.opendap_to_netcdf
+  :members:
+  :undoc-members:
+
