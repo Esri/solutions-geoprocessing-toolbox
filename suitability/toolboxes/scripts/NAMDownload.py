@@ -47,30 +47,42 @@ history:
 import arceditor
 import arcpy
 import os
+import sys
 import datetime
 from arcpy import env
 from datetime import datetime
 from datetime import time
+import traceback
 
-#Gets the current directory where the script is sitting so that everything else can work off relative paths.
+# Required folder paths:
 scriptsFolder = os.path.dirname(__file__) #.\solutions-geoprocessing-toolbox\suitability\toolboxes\scripts
-toolboxFolder = os.path.dirname(folder) #.\solutions-geoprocessing-toolbox\suitability\toolboxes
+toolboxFolder = os.path.dirname(scriptsFolder) #.\solutions-geoprocessing-toolbox\suitability\toolboxes
 tooldataFolder = os.path.join(toolboxFolder, "tooldata") #.\solutions-geoprocessing-toolbox\suitability\toolboxes\tooldata
-
-#Names of folders to be added to toolboxFolder
 maowOperationalWeatherGeodatabase = os.path.join(tooldataFolder, "OperationalWeather.gdb")
 maowDefaultGeodatabase = os.path.join(tooldataFolder, "MAOWdata.gdb")
 netcdfFolder = os.path.join(tooldataFolder, "NetCDFData")
-mstToolboxPath = os.path.join(scriptsFolder, "MultidimensionSupplementalTools", "Multidimension Supplemental Tools.pyt")
+mstToolboxPath = os.path.join(scriptsFolder,
+                              "MultidimensionSupplementalTools",
+                              "MultidimensionSupplementalTools",
+                              "Multidimension Supplemental Tools.pyt")
 
 #TODO: I'm thinking we need to redo this to let user decide where to clip the weather, and not hardcode it
 extent = "-126 32 -114 43"
 dimension = "time '2015-01-01 00:00:00' '2015-12-31 00:00:00'"
 Raster_Type = "NetCDF"
 stringDateNow = None
-
 env.workspace = maowDefaultGeodatabase
-print("Default workspace: " + str(env.workspace))
+
+class NAMDownloadException(Exception):
+    ''' custom exception '''
+    def __init__(self, msg):
+        ''' override init'''
+        if sys.exc_info()[2] != None:
+            msg += traceback.format_tb(sys.exc_info()[2])[0]
+        self.tb = msg
+    def __str__(self):
+        ''' override str '''
+        return repr(self.tb)
 
 def checkArcPyExists(f):
     ''' use ArcPy to check if geo-objects exist or not'''
@@ -80,47 +92,57 @@ def checkOSExists(f):
     ''' use Python's os.exists to check if something exists or not'''
     return os.path.exists(f)
 
-def urlToFile(url, variable, file):
+def removeFile(f):
+    ''' os.remove '''
+    print("Removing " + str(f))
+    if os.path.exists(f):
+        os.remove(f)
+    return
+
+def urlToFile(url, variable, dfile):
     ''' Get netcdf data from OPeNDAP URL '''
     try:
         print("Getting data from: " + str(url))
-        arcpy.OPeNDAPtoNetCDF_mds(url, variable, file, extent, dimension, "BY_VALUE")
+        arcpy.OPeNDAPtoNetCDF_mds(url, variable, dfile, extent, dimension, "BY_VALUE")
         return True
-    except:
-        return False
+    except NAMDownloadException as e:
+        print("Error in urlToFile: \n" + str(e.tb))
 
 def removeFromMosaics(data):
     ''' remove rasters from mosaic dataset '''
     base = os.path.basename(data)
     print("Removing existing mosaics from: " + str(base))
-    if base == "OperationalData":
-        arcpy.RemoveRastersFromMosaicDataset_management(data,
-                                                        "OBJECTID >=0",
-                                                        "NO_BOUNDARY",
-                                                        "NO_MARK_OVERVIEW_ITEMS",
-                                                        "NO_DELETE_OVERVIEW_IMAGES",
-                                                        "NO_DELETE_ITEM_CACHE",
-                                                        "REMOVE_MOSAICDATASET_ITEMS",
-                                                        "NO_CELL_SIZES")
-        return True
-    elif base == "OperationalWind":
-        arcpy.RemoveRastersFromMosaicDataset_management(data,
-                                                        "OBJECTID >= 0",
-                                                        "UPDATE_BOUNDARY",
-                                                        "MARK_OVERVIEW_ITEMS",
-                                                        "DELETE_OVERVIEW_IMAGES",
-                                                        "DELETE_ITEM_CACHE",
-                                                        "REMOVE_MOSAICDATASET_ITEMS",
-                                                        "UPDATE_CELL_SIZES")
-        return True
-    else:
-        return False
+    try:
+        if base == "OperationalData":
+            arcpy.RemoveRastersFromMosaicDataset_management(data,
+                                                            "OBJECTID >=0",
+                                                            "NO_BOUNDARY",
+                                                            "NO_MARK_OVERVIEW_ITEMS",
+                                                            "NO_DELETE_OVERVIEW_IMAGES",
+                                                            "NO_DELETE_ITEM_CACHE",
+                                                            "REMOVE_MOSAICDATASET_ITEMS",
+                                                            "NO_CELL_SIZES")
+            return True
+        elif base == "OperationalWind":
+            arcpy.RemoveRastersFromMosaicDataset_management(data,
+                                                            "OBJECTID >= 0",
+                                                            "UPDATE_BOUNDARY",
+                                                            "MARK_OVERVIEW_ITEMS",
+                                                            "DELETE_OVERVIEW_IMAGES",
+                                                            "DELETE_ITEM_CACHE",
+                                                            "REMOVE_MOSAICDATASET_ITEMS",
+                                                            "UPDATE_CELL_SIZES")
+            return True
+        else:
+            return False
+    except NAMDownloadException as e:
+        print("Error in removeFromMosaics: \n" + str(e.tb))
 
-def addMosaics(data, file):
+def addMosaics(data, dfile):
     ''' Add data to mosaic dataset  '''
     print("Adding new data to mosaic")
     try:
-        arcpy.AddRastersToMosaicDataset_management(data, Raster_Type, file,
+        arcpy.AddRastersToMosaicDataset_management(data, Raster_Type, dfile,
                                                    "UPDATE_CELL_SIZES", "UPDATE_BOUNDARY",
                                                    "NO_OVERVIEWS", "",
                                                    "0", "1500",
@@ -130,52 +152,69 @@ def addMosaics(data, file):
                                                    "NO_THUMBNAILS", "",
                                                    "NO_FORCE_SPATIAL_REFERENCE")
         return True
-    except "Error adding to mosaics":
-        return False
+    except NAMDownloadException as e:
+        print("Error in addMosaics: \n" + str(e.tb))
 
-def process(url, variable, file, data):
+def process(url, variable, dfile, data):
     ''' Combine processes for base and wind data '''
-    result = urlToFile(url, variable, file)
-    result = removeFromMosaics(data)
-    result = addMosaics(data, file)
-    return True
+    try:
+        if not urlToFile(url, variable, dfile):
+            raise
+        if not removeFromMosaics(data):
+            raise
+        if not addMosaics(data, dfile):
+            raise
+        return True
+    except NAMDownloadException as e:
+        print("Error in process: \n" + str(e.tb))
 
 def download(paramFN, paramDL):
     ''' main work method '''
-    print("Working on time index: " + str(paramFN))
-    #Multidimension Supplemental Tools are required!
-    arcpy.ImportToolbox(mstToolboxPath, "mds")
+    try:
+        print("Working on time index: " + str(paramFN))
+        #Multidimension Supplemental Tools are required!
+        arcpy.ImportToolbox(mstToolboxPath, "mds")
 
-    #Get present date and time
-    patternDate = '%Y%m%d'
-    if stringDateNow == None:
-        stringDateNow = datetime.utcnow().strftime(patternDate)
-    print("Using date: " + str(stringDateNow))
+        #Get present date
+        patternDate = '%Y%m%d'
+        global stringDateNow
+        if stringDateNow == None:
+            stringDateNow = datetime.utcnow().strftime(patternDate)
+        print("Target date: " + str(stringDateNow))
 
-    noaaURLBase = r"http://nomads.ncep.noaa.gov/dods/nam/nam%s/nam" + paramDL
-    noaaURL = noaaURLBase % stringDateNow
-    #filename = "nam%s1hr00z.nc" % stringDateNow
+        noaaURLBase = r"http://nomads.ncep.noaa.gov/dods/nam/nam%s/nam" + paramDL
+        noaaURL = noaaURLBase % stringDateNow
+        #filename = "nam%s1hr00z.nc" % stringDateNow
 
-    print("Building forecast data...")
-    netcdfDataFileBase = os.path.join(netcdfFolder, r"\nam%s" + paramFN + ".nc") % stringDateNow
-    forecastVariable = r"rh2m;tcdcclm;tmpsfc;hgtclb;vissfc;ugrd10m;vgrd10m;ugrdmwl;vgrdmwl;snodsfc;gustsfc;apcpsfc"
-    operationalData = os.path.join(maowOperationalWeatherGeodatabase, "OperationalData")
-    result = process(noaaURL, forecastVariable, netcdfDataFileBase, operationalData)
+        print("Building forecast data...")
+        netcdfDataFileBase = os.path.join(netcdfFolder, r"nam%s" + paramFN + ".nc") % stringDateNow
+        if checkOSExists(netcdfDataFileBase):
+            print("deleting existing " + str(netcdfDataFileBase))
+            removeFile(netcdfDataFileBase)
+        forecastVariable = r"rh2m;tcdcclm;tmpsfc;hgtclb;vissfc;ugrd10m;vgrd10m;ugrdmwl;vgrdmwl;snodsfc;gustsfc;apcpsfc"
+        operationalData = os.path.join(maowOperationalWeatherGeodatabase, "OperationalData")
+        result = process(noaaURL, forecastVariable, netcdfDataFileBase, operationalData)
 
-    print("Building wind data...")
-    netcdfWindFileBase = os.path.join(netcdfFolder, r"\nam%s" + paramFN + "Wind.nc") % stringDateNow
-    windVariable = r"ugrd10m;vgrd10m"
-    operationalWind = os.path.join(maowOperationalWeatherGeodatabase, "OperationalWind")
-    result = process(noaaURL, windVariable, netcdfWindFileBase, operationalWind)
+        print("Building wind data...")
+        netcdfWindFileBase = os.path.join(netcdfFolder, r"nam%s" + paramFN + "Wind.nc") % stringDateNow
+        if checkOSExists(netcdfWindFileBase):
+            print("deleting existing " + str(netcdfWindFileBase))
+            removeFile(netcdfWindFileBase)
+        windVariable = r"ugrd10m;vgrd10m"
+        operationalWind = os.path.join(maowOperationalWeatherGeodatabase, "OperationalWind")
+        result = process(noaaURL, windVariable, netcdfWindFileBase, operationalWind)
 
-    print("Done.")
+        print("Done.")
+
+    except NAMDownloadException as e:
+        print("Error in main: \n" + str(e.tb))
 
 # get the present time in utc.
 # set times are set around the times that the data is released by NOAA
 now_time = time(int(datetime.utcnow().strftime("%H")),
                 int(datetime.utcnow().strftime("%M")),
                 int(datetime.utcnow().strftime("%S")))
-
+print("Now time: " + str(now_time))
 if now_time >= time(2, 50, 00) and now_time < time(8, 50, 00):
     download("1hr00z", "1hr_00z")
 

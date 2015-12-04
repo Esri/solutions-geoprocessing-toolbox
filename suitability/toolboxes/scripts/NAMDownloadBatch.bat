@@ -1,3 +1,4 @@
+ECHO off
 rem -----------------------------------------------------------------------------
 rem Copyright 2015 Esri
 rem Licensed under the Apache License, Version 2.0 (the "License");
