@@ -43,7 +43,7 @@ import arcpy
 import os
 import sys
 import unittest
-import TestUtilities
+import Configuration
 import UnitTestUtilities
 from . import ERGTestUtils
 
@@ -56,15 +56,15 @@ class ERGTest(unittest.TestCase):
     ''' Test ERG source script for the ERG Tools toolbox'''
 
     scratchGDB = None
-    scriptFolderPath = os.path.join(TestUtilities.repoPath, "capability",
+    scriptFolderPath = os.path.join(Configuration.repoPath, "capability",
                                     "toolboxes", "scripts", "ERG.py")
-    dbfFolderPath = os.path.join(TestUtilities.repoPath, "capability",
+    dbfFolderPath = os.path.join(Configuration.repoPath, "capability",
                                  "toolboxes", "tooldata", "ERG2012LookupTable.dbf")
-    testDataFolderPath = os.path.join(TestUtilities.capabilityPath, "data")
+    testDataFolderPath = os.path.join(Configuration.capabilityPath, "data")
 
     def setUp(self):
         ''' set-up code '''
-        if TestUtilities.DEBUG:
+        if Configuration.DEBUG:
             print("         ERGScript.setUp")
         UnitTestUtilities.checkArcPy()
         UnitTestUtilities.checkFilePaths([self.scriptFolderPath,
@@ -78,7 +78,7 @@ class ERGTest(unittest.TestCase):
 
     def tearDown(self):
         ''' clean up after tests'''
-        if TestUtilities.DEBUG:
+        if Configuration.DEBUG:
             print("         ERGScript.tearDown")
         UnitTestUtilities.deleteScratch(self.scratchGDB)
         return
@@ -94,7 +94,7 @@ class ERGTest(unittest.TestCase):
         test case one
         ERG Table 1, p292: ID No. 1017 Chlorine
         '''
-        if TestUtilities.DEBUG:
+        if Configuration.DEBUG:
             print("         ERGScript.test_LookUpERG001")
         inChemical = 'Chlorine'
         inPlacardID = 1017
@@ -112,7 +112,7 @@ class ERGTest(unittest.TestCase):
         test case two
         ERG Table 1, p293: ID No. 1076 Phosgene
         '''
-        if TestUtilities.DEBUG:
+        if Configuration.DEBUG:
             print("         ERGScript.test_LookUpERG002")
         inChemical = 'Phosgene'
         inPlacardID = 1076
@@ -130,13 +130,13 @@ class ERGTest(unittest.TestCase):
         test case three
         ERG Table 1, p316: ID No. 2810 Sarin
         '''
-        if TestUtilities.DEBUG == True: print("         ERGScript.test_LookUpERG003")
+        if Configuration.DEBUG == True: print("         ERGScript.test_LookUpERG003")
         inChemical = 'Sarin (when used as a weapon)'
         inPlacardID = 2810
         inSpillSize = 'Large' #'Large' or 'Small'
         inTimeOfDay = 'Night' #'Day' or 'Night'
         outResult = self.LookUpERG(inChemical, inPlacardID, inSpillSize, inTimeOfDay, self.dbfFolderPath)
-        if TestUtilities.DEBUG == True: print("outResult: " + str(outResult))
+        if Configuration.DEBUG == True: print("outResult: " + str(outResult))
         self.assertEqual(outResult[0], 400.0) # Initial Isolation Distance
         self.assertEqual(outResult[1], 4900.0) # Protective Action Distance
         #self.assertEqual(outResult[2], 'Sarin (when used as a weapon)') # Materials
@@ -145,7 +145,7 @@ class ERGTest(unittest.TestCase):
 
     def LookUpERG(self, pChemical, pPlacardID, pSpillSize, pTimeOfDay, pERGdbf):
         ''' test ERG.py's LookUpERG submodule '''
-        if TestUtilities.DEBUG:
+        if Configuration.DEBUG:
             print("         ERGScript.LookUpERG: " + str(pChemical))
         outLookUpERGTuple = ERG.LookUpERG(pChemical, pPlacardID, pSpillSize, pTimeOfDay, pERGdbf)
         return outLookUpERGTuple
@@ -192,7 +192,7 @@ class ERGTest(unittest.TestCase):
 
     def GetProjectedPoint(self, inputPoint):
         ''' test ERG.py's GetProjectedPoint submodule '''
-        if TestUtilities.DEBUG == True: print("         ERGScript.GetProjectedPoint")
+        if Configuration.DEBUG == True: print("         ERGScript.GetProjectedPoint")
         #ERG.GetProjectedPoint(pPointFeatureRecordSet)
         outputPoint = ERG.GetProjectedPoint(inputPoint)
         return outputPoint

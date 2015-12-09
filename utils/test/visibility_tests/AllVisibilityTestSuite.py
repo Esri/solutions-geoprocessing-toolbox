@@ -32,6 +32,21 @@ This test suite collects all of the visibility toolbox test suites:
 
 ==================================================
 history:
-<date> - <initals> - <modifications>
+12/4/2015 - JH - original writeup
 ==================================================
 '''
+
+import unittest
+import Configuration
+from . import SunPositionAnalysisToolsTestSuite
+
+def getVisibilityTestSuites(log, platform):
+    ''' This pulls together all of the toolbox test suites in this folder '''
+    if Configuration.DEBUG == True:
+        print("   AllVisibilityTestSuite.getVisibilityTestSuites")
+    log.info("Adding Visibility Tests including: ")
+    testSuite = unittest.TestSuite()
+    
+    testSuite.addTests(SunPositionAnalysisToolsTestSuite.getSunPositionTestSuite(log, platform))
+    return testSuite
+    

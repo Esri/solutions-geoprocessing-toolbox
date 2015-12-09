@@ -31,4 +31,4 @@
 import unittest
 import UnitTestCase
 import UnitTestUtilities
-import TestUtilities
+import Configuration

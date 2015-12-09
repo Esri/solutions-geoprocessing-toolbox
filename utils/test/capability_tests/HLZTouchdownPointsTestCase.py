@@ -41,20 +41,18 @@ history:
 import arcpy
 import os
 import unittest
-import TestUtilities
+import Configuration
 import UnitTestUtilities
 
-
-#class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
 class HLZTouchdownPoints(unittest.TestCase):
     ''' Test all tools and methods related to the HLZ Touchdown Points tool
     in the Helicopter Landing Zones toolbox'''
 
     scratchGDB = None
 
-    tbxProFolderPath = os.path.join(TestUtilities.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools.tbx")
-    tbxDesktopFolderPath = os.path.join(TestUtilities.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools_10.3.tbx")
-    testDataFolderPath = os.path.join(TestUtilities.capabilityPath, "data")
+    tbxProFolderPath = os.path.join(Configuration.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools.tbx")
+    tbxDesktopFolderPath = os.path.join(Configuration.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools_10.3.tbx")
+    testDataFolderPath = os.path.join(Configuration.capabilityPath, "data")
 
     inputAirframeTable = None
     inputSuitableAreas = None
@@ -65,7 +63,7 @@ class HLZTouchdownPoints(unittest.TestCase):
 
     def setUp(self):
         ''' set-up code '''
-        if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.setUp")
+        if Configuration.DEBUG == True: print("         HLZTouchdownPoints.setUp")
         UnitTestUtilities.checkArcPy()
         UnitTestUtilities.checkFilePaths([self.testDataFolderPath,
                                           self.tbxProFolderPath,
@@ -94,19 +92,19 @@ class HLZTouchdownPoints(unittest.TestCase):
 
     def tearDown(self):
         ''' clean up after tests'''
-        if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.tearDown")
+        if Configuration.DEBUG == True: print("         HLZTouchdownPoints.tearDown")
         UnitTestUtilities.deleteScratch(self.scratchGDB)
         return
 
     def test_MinimumBoundingFishnet_Pro(self):
-        if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.test_MinimumBoundingFishnet_Pro")
+        if Configuration.DEBUG == True: print("         HLZTouchdownPoints.test_MinimumBoundingFishnet_Pro")
         # check that the tool exists:
         #self.assertTrue(arcpy.Exists(os.path.join(self.tbxProFolderPath, r"MinimumBoundingFishnet")))
         self.MinimumBoundingFishnet(self.tbxProFolderPath)
         return
 
     def test_MinimumBoundingFishnet_Desktop(self):
-        if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.test_MinimumBoundingFishnet_Desktop")
+        if Configuration.DEBUG == True: print("         HLZTouchdownPoints.test_MinimumBoundingFishnet_Desktop")
         # check that the tool exists:
         #self.assertTrue(arcpy.Exists(os.path.join(self.tbxDesktopFolderPath, r"MinimumBoundingFishnet")))
         self.MinimumBoundingFishnet(self.tbxDesktopFolderPath)
@@ -114,7 +112,7 @@ class HLZTouchdownPoints(unittest.TestCase):
 
     def MinimumBoundingFishnet(self, tbxFolderPath):
         ''' Test the supporting script tool '''
-        if TestUtilities.DEBUG == True:
+        if Configuration.DEBUG == True:
             print("         HLZTouchdownPoints.test_MiniumBoundingFishnet main")
         else:
             print("Testing Minimum Bounding Fishnet...")
@@ -143,18 +141,18 @@ class HLZTouchdownPoints(unittest.TestCase):
         return
 
     def test_Choose_Field_Value_Script_Tool_Pro(self):
-        if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.test_Choose_Field_Value_Script_Tool_Pro")
+        if Configuration.DEBUG == True: print("         HLZTouchdownPoints.test_Choose_Field_Value_Script_Tool_Pro")
         self.Choose_Field_Value_Script_Tool(self.tbxProFolderPath)
         return
 
     def test_Choose_Field_Value_Script_Tool_Desktop(self):
-        if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.test_Choose_Field_Values_Script_Tool_Desktop")
+        if Configuration.DEBUG == True: print("         HLZTouchdownPoints.test_Choose_Field_Values_Script_Tool_Desktop")
         self.Choose_Field_Value_Script_Tool(self.tbxDesktopFolderPath)
         return
 
     def Choose_Field_Value_Script_Tool(self, tbxFolderPath):
         ''' test the supporting script tool '''
-        if TestUtilities.DEBUG == True:
+        if Configuration.DEBUG == True:
             print("         HLZTouchdownPoints.test_Choose_Field_Value_Script_Tool main")
         else:
             print("Testing Choose Field Value Script Tool...")
@@ -167,18 +165,18 @@ class HLZTouchdownPoints(unittest.TestCase):
         return
 
     def test_HLZ_Touchdown_Points_001_Pro(self):
-        if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_001_Pro")
+        if Configuration.DEBUG == True: print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_001_Pro")
         self.HLZ_Touchdown_Points_001(self.tbxProFolderPath)
         return
 
     def test_HLZ_Touchdown_Points_001_Desktop(self):
-        if TestUtilities.DEBUG == True: print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_001_Desktop")
+        if Configuration.DEBUG == True: print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_001_Desktop")
         self.HLZ_Touchdown_Points_001(self.tbxDesktopFolderPath)
         return
 
     def HLZ_Touchdown_Points_001(self, tbxFolderPath):
         ''' This is a basic test of the HLZ Touchdown tool with all of the input defined. '''
-        if TestUtilities.DEBUG == True:
+        if Configuration.DEBUG == True:
             print("         HLZTouchdownPoints.test_HLZ_Touchdown_Points_001")
         else:
             print("Testing HLZ Touchdown Points 001...")
@@ -199,9 +197,9 @@ class HLZTouchdownPoints(unittest.TestCase):
         arcpy.CheckInExtension("Spatial")
         # count output center points
 
-        if TestUtilities.DEBUG == True: print("self.scratch.GDB: " + self.scratchGDB)
-        if TestUtilities.DEBUG == True: print("self.outputGeodatabase: " + self.outputGeodatabase)
-        if TestUtilities.DEBUG == True: print("self.outputCenterPoints: " + self.outputCenterpoints)
+        if Configuration.DEBUG == True: print("self.scratch.GDB: " + self.scratchGDB)
+        if Configuration.DEBUG == True: print("self.outputGeodatabase: " + self.outputGeodatabase)
+        if Configuration.DEBUG == True: print("self.outputCenterPoints: " + self.outputCenterpoints)
 
         countCenterPoints = float(arcpy.GetCount_management(self.outputCenterpoints).getOutput(0))
         # count output circles

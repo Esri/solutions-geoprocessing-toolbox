@@ -29,11 +29,10 @@ import os
 import sys
 import logging
 import zipfile
-import TestUtilities
 import UnitTestUtilities
 
 ''' ArcGIS Online URL's '''
-sunPosUrl = "http://www.arcgis.com/sharing/content/items/bf6a04b4c9a3447b91e9c0b4074ca1e4/data"
+# sunPosUrl = "http://www.arcgis.com/sharing/content/items/bf6a04b4c9a3447b91e9c0b4074ca1e4/data"
 
 ####################################
 def createDataFolder(path):
@@ -49,13 +48,11 @@ def saveOnlineDataAsZip(url, zipName):
     try:
         # Python 2
         import urllib  
-        #(zipFile, headers) = urllib.urlretrieve(url, "test_sun_position.gdb.zip")
         (zipFile, headers) = urllib.urlretrieve(url, zipName)
         return zipFile
     except:
         # Python 3
         import urllib.request
-        #(zipFile, headers) = urllib.request.urlretrieve(url, "test_sun_position.gdb.zip")
         (zipFile, headers) = urllib.request.urlretrieve(url, zipName)
         return zipFile
         
@@ -69,24 +66,23 @@ def deleteZip(tempFile):
     os.remove(tempFile)
     
     
-def runDataDownload(gdbName, url):
-    ''' Download and extract the geodatabase with specified gdbName from the given url '''
-    visDataPath = createDataFolder(TestUtilities.visibilityPaths)
-    #sunPosPath = os.path.normpath(os.path.join(visDataPath, "test_sun_position.gdb"))
-    sunPosPath = os.path.normpath(os.path.join(visDataPath, gdbName))
-    objects = [sunPosPath]
+def runDataDownload(basePath, gdbName, url):
+    ''' Download and extract the geodatabase with specified gdbName from the given url to the basePath's data folder '''
+    dataPath = createDataFolder(basePath)
+    gdbPath = os.path.normpath(os.path.join(dataPath, gdbName))
+    objects = [gdbName]
     exists = UnitTestUtilities.folderPathsExist(objects)
-    print("Sun Pos GDB Exists? " + str(exists))
+    print("GDB Exists? " + str(exists))
         
     if not exists:
         print("Save Online Data test...")
         zipName = gdbName + ".zip"
         print("Zip Name: " + zipName)
-        sunPosZip = saveOnlineDataAsZip(url, zipName)
+        zipFile = saveOnlineDataAsZip(url, zipName)
         print("Extracting zip...")
-        extractDataZip(sunPosZip, sunPosPath)
+        extractDataZip(zipFile, gdbPath)
         print("Deleting zip...")
-        deleteZip(sunPosZip)
+        deleteZip(zipFile)
         return True
     else:
         return False

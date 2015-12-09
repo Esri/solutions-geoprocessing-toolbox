@@ -41,7 +41,7 @@ import datetime
 import logging
 import unittest
 import arcpy
-import TestUtilities
+import Configuration
 import UnitTestUtilities
 import DataDownload
 
@@ -52,7 +52,7 @@ if len(sys.argv) > 1:
 def main():
     ''' main test logic '''
     testStartDateTime = datetime.datetime.now()
-    if TestUtilities.DEBUG == True:
+    if Configuration.DEBUG == True:
         print("TestRunner.py - main")
     else:
         print("Debug messaging is OFF")
@@ -70,8 +70,8 @@ def main():
     UnitTestUtilities.setUpLogFileHeader(logger)
     
     # download the data
-    didDownload = DataDownload.runDataDownload("test_sun_position.gdb", DataDownload.sunPosUrl)
-    print("Data Download ran: " + str(didDownload))
+    # didDownload = DataDownload.runDataDownload(Configuration.visibilityPaths, "test_sun_position.gdb", DataDownload.sunPosUrl)
+    # print("Downloaded data? " + str(didDownload))
     
     # run the tests
     result = runTestSuite(logger)
@@ -125,30 +125,11 @@ def resultsFailures(result):
             msg += str(j)
         msg += "\n"
     return msg
-    
-# def runDataDownload():
-    
-    # visDataPath = DataDownload.createDataFolder(TestUtilities.visibilityPaths)
-    # sunPosPath = os.path.normpath(os.path.join(visDataPath, "test_sun_position.gdb"))
-    # objects = [sunPosPath]
-    # exists = UnitTestUtilities.folderPathsExist(objects)
-    # print("Sun Pos GDB Exists? " + str(exists))
-        
-    # if not exists:
-        # print("Save Online Data test...")
-        # sunPosZip = DataDownload.saveOnlineDataAsZip(DataDownload.sunPosUrl, "test_sun_position.gdb.zip")
-        # print("Extracting zip...")
-        # DataDownload.extractDataZip(sunPosZip, sunPosPath)
-        # print("Deleting zip...")
-        # DataDownload.deleteZip(sunPosZip)
-        # return True
-    # else:
-        # return False
    
 
 def runTestSuite(logger):
     ''' collect all test suites before running them '''
-    if TestUtilities.DEBUG == True: print("TestRunner.py - runTestSuite")
+    if Configuration.DEBUG == True: print("TestRunner.py - runTestSuite")
     testSuite = unittest.TestSuite()
     result = unittest.TestResult()
 
@@ -158,6 +139,7 @@ def runTestSuite(logger):
         platform = "PRO"
     logger.info(platform + " =======================================")
 
+    testSuite.addTests(addVisibilitySuite(logger, platform))
     testSuite.addTests(addCapabilitySuite(logger, platform))
     #addDataManagementTests(logger, platform)
     #addOperationalGraphicsTests(logger, platform)
@@ -172,8 +154,8 @@ def runTestSuite(logger):
 
 
 def addCapabilitySuite(logger, platform):
-    ''' Add all Capability tests in the ./capability_tests folder'''
-    if TestUtilities.DEBUG == True: print("TestRunner.py - addCapabilitySuite")
+    ''' Add all Capability tests in the ./capability_tests folder '''
+    if Configuration.DEBUG == True: print("TestRunner.py - addCapabilitySuite")
     from capability_tests import AllCapabilityTestSuite
     testSuite = unittest.TestSuite()
     testSuite.addTests(AllCapabilityTestSuite.getCapabilityTestSuites(logger, platform))
@@ -183,14 +165,18 @@ def addCapabilitySuite(logger, platform):
     # #suite.addTest(PatternToolOneTestCase('test_name'))
     # return suite
 
-# def addVisibilityTests(suite):
-#     print("TestRunner.py - addVisibilityTests")
-#     suite.addTest(SunPositionAndHillshadeTestCase('test_sun_position_analysis'))
-#     suite.addTest(FindLocalPeaksTestCase('test_local_peaks'))
-#     return suite
+def addVisibilitySuite(logger, platform):
+    ''' Add all Visibility tests in the ./visibility_tests folder '''
+    if Configuration.DEBUG == True: print("TestRunner.py - addVisibilitySuite")
+    from visibility_tests import AllVisibilityTestSuite    
+    suite = unittest.TestSuite()
+    suite.addTests(AllVisibilityTestSuite.getVisibilityTestSuites(logger, platform))
+    # suite.addTest(SunPositionAndHillshadeTestCase('test_sun_position_analysis'))
+    # suite.addTest(FindLocalPeaksTestCase('test_local_peaks'))
+    return suite
 
 # MAIN =============================================
 if __name__ == "__main__":
-    if TestUtilities.DEBUG == True:
+    if Configuration.DEBUG == True:
         print("TestRunner.py")
     main()
