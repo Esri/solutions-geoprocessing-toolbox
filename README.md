@@ -8,20 +8,6 @@ The ArcGIS Solutions Geoprocessing Toolbox is a collection of models, scripts, a
 
 ![Image of the toolbox](solutions-geoprocessing-toolbox-thumbnail007.png)
 
-
-###Repository Owner: [Matt](https://github.com/mfunk)
-
-* Merge Pull Requests
-* Creates Releases and Tags
-* Manages Milestones
-* Manages and Assigns Issues
-
-###Secondary: [Chris](https://github.com/csmoore)
-
-* Backup when the Owner is away
-
-Additional information is available in the repository's [Wiki](https://github.com/Esri/solutions-geoprocessing-toolbox/wiki).
-
 ## Sections
 
 * [Features](#features)
@@ -152,8 +138,6 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
     * `> ant`
     * Verify “Build Succeeded”
 
- 
-
 ## Resources
 
 * Learn more about [ArcGIS Solutions](http://solutions.arcgis.com/).
@@ -165,6 +149,21 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 ## Issues
 
 * Find a bug or want to request a new feature?  Please let us know by submitting an issue.
+
+## Repository Points of Contact
+
+###Repository Owner: [Matt](https://github.com/mfunk)
+
+* Merge Pull Requests
+* Creates Releases and Tags
+* Manages Milestones
+* Manages and Assigns Issues
+
+###Secondary: [Chris](https://github.com/csmoore)
+
+* Backup when the Owner is away
+
+Additional information is available in the repository's [Wiki](https://github.com/Esri/solutions-geoprocessing-toolbox/wiki).
 
 ## Contributing
 
@@ -235,5 +234,5 @@ limitations under the License.
 A copy of the license is available in the repository's
 [license.txt](license.txt) file.
 
-[](Esri Tags: ArcGIS Defense and Intelligence Military Emergency Management National Security)
+[](Esri Tags: ArcGIS Defense and Intelligence Military Emergency Management National Security ArcGISSolutions)
 [](Esri Language: Python)
