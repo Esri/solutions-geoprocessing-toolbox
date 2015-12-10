@@ -21,25 +21,32 @@ import traceback
 import datetime
 import os
 import unittest
-import TestUtilities
+import Configuration
 import UnitTestUtilities
-import UnitTestCase               
+import DataDownload               
                 
-class SunPositionAndHillshadeTestCase(UnitTestCase.UnitTestCase):
+class SunPositionAndHillshadeTestCase(unittest.TestCase):
     
-    proToolboxPath = os.path.join(TestUtilities.vis_ToolboxesPath, "Sun Position Analysis Tools.tbx")
-    desktopToolboxPath = os.path.join(TestUtilities.vis_ToolboxesPath, "Sun Position Analysis Tools_10.3.tbx")
+    proToolboxPath = os.path.join(Configuration.vis_ToolboxesPath, "Sun Position Analysis Tools.tbx")
+    desktopToolboxPath = os.path.join(Configuration.vis_ToolboxesPath, "Sun Position Analysis Tools_10.3.tbx")
     
-    inputGDB = os.path.join(TestUtilities.vis_GeodatabasePath, "test_sun_position.gdb")
+    inputGDB = os.path.join(Configuration.vis_GeodatabasePath, "test_sun_position.gdb")
     inputArea = os.path.join(inputGDB, "inputArea")
     inputSurface = os.path.join(inputGDB, "Jbad_SRTM_USGS_EROS")
     compareResults = os.path.join(inputGDB, "compareResults")
     
+    sunPosUrl = "http://www.arcgis.com/sharing/content/items/bf6a04b4c9a3447b91e9c0b4074ca1e4/data"
+    
     def setUp(self):
-        UnitTestCase.UnitTestCase.setUp(self)
-        testObjects = [TestUtilities.sunPosToolbox, self.inputGDB, self.inputArea, self.inputSurface, self.compareResults]
+        if Configuration.DEBUG == True: print("         SunPositionAndHillshadeTestCase.setUp")
+        UnitTestUtilities.checkArcPy()
+        testObjects = [Configuration.sunPosToolbox, self.inputGDB, self.inputArea, self.inputSurface, self.compareResults]
         UnitTestUtilities.checkGeoObjects(testObjects)
-        UnitTestUtilities.createScratch(TestUtilities.vis_ScratchPath)
+        UnitTestUtilities.createScratch(Configuration.vis_ScratchPath)
+        
+        # download the data
+        didDownload = DataDownload.runDataDownload(Configuration.visibilityPaths, "test_sun_position.gdb", self.sunPosUrl)
+        print("Downloaded Sun Position data? " + str(didDownload))
     
     def test_sun_position_analysis_pro(self):
         arcpy.AddMessage("Testing Sun Position Analysis (Pro).")
@@ -52,7 +59,7 @@ class SunPositionAndHillshadeTestCase(UnitTestCase.UnitTestCase):
     def test_sun_position_analysis(self, toolboxPath):
         try:
             print("Importing toolbox... ")
-            #arcpy.ImportToolbox(TestUtilities.sunPosToolbox, "sunpos")
+            #arcpy.ImportToolbox(Configuration.sunPosToolbox, "sunpos")
             arcpy.ImportToolbox(toolboxPath)
             arcpy.env.overwriteOutput = True
 
@@ -66,22 +73,22 @@ class SunPositionAndHillshadeTestCase(UnitTestCase.UnitTestCase):
             print("Set date...")
             utcAfghanistan = r'(UTC+4:30) Afghanistan'
             print("Set UTCAfg...")
-            outHillshade = os.path.join(TestUtilities.vis_ScratchPath, "outputHS")
+            outHillshade = os.path.join(Configuration.vis_ScratchPath, "outputHS")
             print("Set output hillshade...")
 
             # Testing
             runToolMsg = "Running tool (Sun Position and Hillshade)"
             arcpy.AddMessage(runToolMsg)
-            TestUtilities.logger.info(runToolMsg)
+            Configuration.logger.info(runToolMsg)
             arcpy.SunPositionAnalysis_sunpos(self.inputArea, self.inputSurface, dtCompare, utcAfghanistan, outHillshade)
             
             compareMessage = "Comparing expected values with tool results from " + str(dtCompare) + " in " + str(utcAfghanistan)
-            TestUtilities.logger.info(compareMessage)
+            Configuration.logger.info(compareMessage)
             compareResults = self.compareResults
 
             arcpy.CheckOutExtension("Spatial")
             diff = Minus(Raster(outHillshade),Raster(compareResults))
-            diff.save(os.path.join(TestUtilities.vis_ScratchPath, "diff"))
+            diff.save(os.path.join(Configuration.vis_ScratchPath, "diff"))
             arcpy.CalculateStatistics_management(diff)
             rasMinimum = float(arcpy.GetRasterProperties_management(diff,"MINIMUM").getOutput(0))
             rasMaximum = float(arcpy.GetRasterProperties_management(diff,"MAXIMUM").getOutput(0))
@@ -107,10 +114,10 @@ class SunPositionAndHillshadeTestCase(UnitTestCase.UnitTestCase):
                 # raise ValueDifferenceError(msg)
         
         except arcpy.ExecuteError:
-            UnitTestUtilities.handleArcPyError()
+            UnitTestUtilities.handleArcPyError(Configuration.logger)
 
         except:
-            UnitTestUtilities.handleGeneralError()
+            UnitTestUtilities.handleGeneralError(Configuration.logger)
             
         finally:
             arcpy.CheckInExtension("Spatial")

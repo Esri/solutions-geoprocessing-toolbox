@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #-----------------------------------------------------------------------------
-# TestUtilities.py
+# Configuration.py
 # Description: Common objects/methods used by test scripts
 # Requirements: ArcGIS Desktop Standard
 # ----------------------------------------------------------------------------
 
 import os
 
-DEBUG = True # this guy is a flag for extra messaging while debugging tests
+DEBUG = False # this guy is a flag for extra messaging while debugging tests
 
 ''' Testing paths '''
 currentPath = os.path.dirname(__file__) # should go to .\solutions-geoprocessing-toolbox\utils\test

@@ -37,7 +37,7 @@ history:
 '''
 
 import unittest
-import TestUtilities
+import Configuration
 
 from . import HelicopterLandingZoneToolsTestSuite
 # Getting an error on line above during run in Python 3.4:
@@ -51,7 +51,7 @@ from . import ERGToolsTestSuite
 
 def getCapabilityTestSuites(logger, platform):
     ''' This pulls together all of the toolbox test suites in this folder '''
-    if TestUtilities.DEBUG == True:
+    if Configuration.DEBUG == True:
         print("   AllCapabilityTestSuite.capabilityTestSuite")
     logger.info("Adding Capability Tests including:")
     testSuite = unittest.TestSuite()
