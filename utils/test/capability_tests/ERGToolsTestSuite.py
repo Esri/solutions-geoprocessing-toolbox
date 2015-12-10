@@ -37,7 +37,7 @@ history:
 '''
 
 import unittest
-import TestUtilities
+import Configuration
 from . import ERGByPlacardTestCase
 from . import ERGByChemicalTestCase
 from . import ERGScriptTestCase
@@ -45,7 +45,7 @@ from . import ERGScriptTestCase
 def getERGTestSuite(logger, platform):
     ''' run the HLZ tests as either Pro or Desktop'''
 
-    if TestUtilities.DEBUG == True:
+    if Configuration.DEBUG == True:
         print("      ERGTestSuite.runHLZTestSuite")
 
     placardTests = ['test_ERGByPlacard_001', 'test_ERGByPlacard_002']

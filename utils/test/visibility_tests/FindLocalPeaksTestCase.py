@@ -17,22 +17,21 @@ import os
 import logging
 import arcpy
 import unittest
-import TestUtilities
-import UnitTestCase
+import Configuration
 import UnitTestUtilities
 
-class FindLocalPeaksTestCase(UnitTestCase.UnitTestCase):
+class FindLocalPeaksTestCase(unittest.TestCase):
     
-    visGDB = os.path.join(TestUtilities.vis_GeodatabasePath, "test_vis_and_range_inputs.gdb")
+    visGDB = os.path.join(Configuration.vis_GeodatabasePath, "test_vis_and_range_inputs.gdb")
     inputPolygonFC = os.path.join(visGDB, "samplePolygonArea")
     inputSurface = os.path.join(visGDB, "Jbad_SRTM_USGS_EROS")
-    outputPointsFC = os.path.join(TestUtilities.vis_ScratchPath, "LocalPeaks")
+    outputPointsFC = os.path.join(Configuration.vis_ScratchPath, "LocalPeaks")
     
     def setUp(self):
         UnitTestCase.UnitTestCase.setUp(self)
-        testObjects = [TestUtilities.visandRangeToolbox, self.visGDB, self.inputPolygonFC, self.inputSurface]
+        testObjects = [Configuration.visandRangeToolbox, self.visGDB, self.inputPolygonFC, self.inputSurface]
         UnitTestUtilities.checkGeoObjects(testObjects)
-        UnitTestUtilities.createScratch(TestUtilities.vis_ScratchPath)
+        UnitTestUtilities.createScratch(Configuration.vis_ScratchPath)
         
     def test_local_peaks(self):
         try:
@@ -43,7 +42,7 @@ class FindLocalPeaksTestCase(UnitTestCase.UnitTestCase):
                 raise Exception("LicenseError")
                 
             print("Importing Visibility and Range Toolbox...")
-            arcpy.ImportToolbox(TestUtilities.visandRangeToolbox, "VandR")
+            arcpy.ImportToolbox(Configuration.visandRangeToolbox, "VandR")
             arcpy.env.overwriteOutput = True
 
             inputFeatureCount = int(arcpy.GetCount_management(self.inputPolygonFC).getOutput(0)) 

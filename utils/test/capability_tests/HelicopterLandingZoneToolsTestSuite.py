@@ -36,7 +36,7 @@ history:
 '''
 
 import unittest
-import TestUtilities
+import Configuration
 from . import HLZTouchdownPointsTestCase
 
 def getHLZTestSuite(logger, platform):
@@ -49,7 +49,7 @@ def getHLZTestSuite(logger, platform):
                    'test_MinimumBoundingFishnet_Pro',
                    'test_HLZ_Touchdown_Points_001_Pro']
 
-    if TestUtilities.DEBUG == True:
+    if Configuration.DEBUG == True:
         print("      HelicopterLandingZoneTestSuite.runHLZTestSuite")
     testSuite = unittest.TestSuite()
     if platform == "PRO":
@@ -63,7 +63,7 @@ def getHLZTestSuite(logger, platform):
 def addTestFromList(testSuite, logger, inputTestList):
     ''' add tests from list'''
     for p in inputTestList:
-        if TestUtilities.DEBUG == True:
+        if Configuration.DEBUG == True:
             print("      HelicopterLandingZoneTestSuite.addTestFromList")
         print("adding test: " + str(p))
         logger.info(p)

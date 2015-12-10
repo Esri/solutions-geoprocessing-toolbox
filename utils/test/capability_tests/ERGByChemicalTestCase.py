@@ -37,7 +37,7 @@ history:
 import arcpy
 import os
 import unittest
-import TestUtilities
+import Configuration
 import UnitTestUtilities
 from . import ERGTestUtils
 
@@ -48,12 +48,12 @@ class ERGByChemical(unittest.TestCase):
     scratchGDB = None
     inputPoint = None
 
-    tbxFolderPath = os.path.join(TestUtilities.repoPath, "capability", "toolboxes", "ERG Tools.pyt")
-    testDataFolderPath = os.path.join(TestUtilities.capabilityPath, "data")
+    tbxFolderPath = os.path.join(Configuration.repoPath, "capability", "toolboxes", "ERG Tools.pyt")
+    testDataFolderPath = os.path.join(Configuration.capabilityPath, "data")
 
     def setUp(self):
         ''' set-up code '''
-        if TestUtilities.DEBUG == True: print("         ERGByChemical.setUp")
+        if Configuration.DEBUG == True: print("         ERGByChemical.setUp")
         UnitTestUtilities.checkArcPy()
         UnitTestUtilities.checkFilePaths([self.testDataFolderPath,
                                           self.tbxFolderPath])
@@ -72,13 +72,13 @@ class ERGByChemical(unittest.TestCase):
 
     def tearDown(self):
         ''' clean up after tests'''
-        if TestUtilities.DEBUG == True: print("         ERGByChemical.tearDown")
+        if Configuration.DEBUG == True: print("         ERGByChemical.tearDown")
         UnitTestUtilities.deleteScratch(self.scratchGDB)
         return
 
     def test_ERGByChemical_001(self):
         ''' test the tool '''
-        if TestUtilities.DEBUG == True: print("         ERGByChemical.test_ERGByChemical_001")
+        if Configuration.DEBUG == True: print("         ERGByChemical.test_ERGByChemical_001")
         inputMaterialType = "Allylamine"
         inputWindBearing = 10
         inputDayOrNight = "Day"
@@ -91,7 +91,7 @@ class ERGByChemical(unittest.TestCase):
 
     def test_ERGByChemical_002(self):
         ''' test the tool '''
-        if TestUtilities.DEBUG == True: print("         ERGByChemical.test_ERGByChemical_002")
+        if Configuration.DEBUG == True: print("         ERGByChemical.test_ERGByChemical_002")
         inputMaterialType = "Allylamine"
         inputWindBearing = 130
         inputDayOrNight = "Night"
@@ -104,7 +104,7 @@ class ERGByChemical(unittest.TestCase):
 
     def test_ERGByChemical_003(self):
         ''' test the tool '''
-        if TestUtilities.DEBUG == True: print("         ERGByChemical.test_ERGByChemical_003")
+        if Configuration.DEBUG == True: print("         ERGByChemical.test_ERGByChemical_003")
         inputMaterialType = "Sarin (when used as a weapon)"
         inputWindBearing = 250
         inputDayOrNight = "Night"
@@ -117,7 +117,7 @@ class ERGByChemical(unittest.TestCase):
 
     def ERGByChemical(self, inputMaterialType, inputWindBearing, inputDayOrNight, inputLargeOrSmall):
         ''' Test the supporting script tool '''
-        if TestUtilities.DEBUG == True:
+        if Configuration.DEBUG == True:
             print("         ERGByChemical.test_ERGByChemical")
         else:
             print("Testing ERG By Chemical...")

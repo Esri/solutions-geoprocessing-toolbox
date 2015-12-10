@@ -36,7 +36,7 @@ history:
 import arcpy
 import os
 import unittest
-import TestUtilities
+import Configuration
 import UnitTestUtilities
 from . import ERGTestUtils
 
@@ -47,12 +47,12 @@ class ERGByPlacard(unittest.TestCase):
     scratchGDB = None
     inputPoint = None
 
-    tbxFolderPath = os.path.join(TestUtilities.repoPath, "capability", "toolboxes", "ERG Tools.pyt")
-    testDataFolderPath = os.path.join(TestUtilities.capabilityPath, "data")
+    tbxFolderPath = os.path.join(Configuration.repoPath, "capability", "toolboxes", "ERG Tools.pyt")
+    testDataFolderPath = os.path.join(Configuration.capabilityPath, "data")
 
     def setUp(self):
         ''' set-up code '''
-        if TestUtilities.DEBUG == True: print("         ERGByPlacard.setUp")
+        if Configuration.DEBUG == True: print("         ERGByPlacard.setUp")
         UnitTestUtilities.checkArcPy()
         UnitTestUtilities.checkFilePaths([self.testDataFolderPath,
                                           self.tbxFolderPath])
@@ -72,13 +72,13 @@ class ERGByPlacard(unittest.TestCase):
 
     def tearDown(self):
         ''' clean up after tests'''
-        if TestUtilities.DEBUG == True: print("         ERGByPlacard.tearDown")
+        if Configuration.DEBUG == True: print("         ERGByPlacard.tearDown")
         UnitTestUtilities.deleteScratch(self.scratchGDB)
         return
 
     def test_ERGByPlacard_001(self):
         ''' test the tool with basic inputs'''
-        if TestUtilities.DEBUG == True: print("         ERGByPlacard.test_ERGByPlacard_001")
+        if Configuration.DEBUG == True: print("         ERGByPlacard.test_ERGByPlacard_001")
         inputPlacardID = 1560
         inputWindBearing = 10
         inputDayOrNight = "Day"
@@ -94,7 +94,7 @@ class ERGByPlacard(unittest.TestCase):
 
     def test_ERGByPlacard_002(self):
         ''' test the tool with basic inputs'''
-        if TestUtilities.DEBUG == True: print("         ERGByPlacard.test_ERGByPlacard_002")
+        if Configuration.DEBUG == True: print("         ERGByPlacard.test_ERGByPlacard_002")
         inputPlacardID = 1560
         inputWindBearing = 130
         inputDayOrNight = "Night"
@@ -110,7 +110,7 @@ class ERGByPlacard(unittest.TestCase):
 
     def ERGByPlacard(self, inputPlacardID, inputWindBearing, inputDayOrNight, inputLargeOrSmall):
         ''' Main ERG By Placard test '''
-        if TestUtilities.DEBUG == True:
+        if Configuration.DEBUG == True:
             print("         ERGByPlacard.ERGByPlacard")
         else:
             print("Testing ERG By Placard...")
