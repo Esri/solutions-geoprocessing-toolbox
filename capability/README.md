@@ -10,7 +10,6 @@ Capability Tools are geoprocessing tools that perform analysis and create result
 * [Helicopter Landing Zone Tools](#helicopter-landing-zone-tools)
 * [Point Of Origin Tools](#point-of-origin-tools)
 * [Issues](#issues)
-* [Contributing](#contributing)
 * [Licensing](#licensing)
 
 ## ERG Tools
@@ -25,8 +24,8 @@ Tools in toolbox:
 
 Tool for finding touchdown points within a helicopter landing zone.
 
-The Helicopter Landing Zone Tools is associated with the Helicopter Landing Zone template:
-(http://www.arcgis.com/home/item.html?id=384d223647b24bcf9d2c6fd44f90d17f)
+The Helicopter Landing Zone Tools is associated with the 
+[Helicopter Landing Zone](http://www.arcgis.com/home/item.html?id=384d223647b24bcf9d2c6fd44f90d17f) template
 
 Tools in toolbox:
 * HLZ Touchdown Points
@@ -40,11 +39,7 @@ Tools in toolbox:
 
 ## Issues
 
-Find a bug or want to request a new feature?  Please let us know by submitting an issue.
-
-## Contributing
-
-Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
+Find a bug or want to request a new feature?  Please let us know by submitting an [Issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues).
 
 ## Licensing
 

@@ -18,7 +18,6 @@ Data Management tools help to prepare, format, filter, and organize your data in
 * [Patrol Data Capture Tools](#patrol-data-capture-tools)
 * [Publishable Task Tools](#publishable-task-tools)
 * [Issues](#issues)
-* [Contributing](#contributing)
 * [Licensing](#licensing)
 
 
@@ -74,6 +73,8 @@ Tools for converting tabular information to different geometries, and generating
 * Table To Polygon
 * Table To Polyline
 
+These tools are a part of the [Import and Conversion Tools](http://solutions.arcgis.com/intelligence/templates/import-conversion/) template.
+
 ** - Range Rings has been removed from Import and Conversion as it is a duplication of the same tool in Visibility and Range Tools.
 
 ## LiDAR Elevation Tools
@@ -95,7 +96,6 @@ These tools are used to prepare road data for use in a road network dataset.
 ## Patrol Data Capture Tools
 
 Includes tools to import data that has been gathered on or after a patrol. This includes GPS data, saved in .gpx files, and Patrol Report data, saved in .xml files (as saved by an Infopath form)
-These tools are a part of the Patrol Data Capture template: http://www.arcgis.com/home/item.html?id=6238c4cdb3ca4a7ea54287241f53349f
 
 * Append Tracks to DB
 * Despike GPS Log
@@ -106,6 +106,8 @@ These tools are a part of the Patrol Data Capture template: http://www.arcgis.co
 * Recalculate Delta Times
 * Rejoin Track Parts
 * Remove Duplicate GPS Data
+
+These tools are a part of the [Patrol Data Capture](http://www.arcgis.com/home/item.html?id=6238c4cdb3ca4a7ea54287241f53349f) template.
 
 ## Publishable Task Tools
 
@@ -123,11 +125,7 @@ Publishable Tasks are a series of models that should be published as geoprocessi
 
 ## Issues
 
-Find a bug or want to request a new feature?  Please let us know by submitting an issue.
-
-## Contributing
-
-Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
+Find a bug or want to request a new feature?  Please let us know by submitting an [Issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues).
 
 ## Licensing
 
