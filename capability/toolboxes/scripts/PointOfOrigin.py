@@ -53,8 +53,6 @@ timestr = time.strftime("%Y%m%d_%H%M")
 delete_me = []
 DEBUG = False
 #DEBUG = True
-desktopVersion = ["10.2.2","10.3","10.3.1"]
-proVersion = ["1.0", "1.1"]
 
 #------------------------------------------------------------------------------
 # check which variables are still set...cleanup variables...
@@ -80,6 +78,21 @@ def CheckVariables(inDict):
             
     return
 #------------------------------------------------------------------------------
+
+def GetApplication():
+    '''Return app environment as ARCMAP, ARCGIS_PRO, OTHER'''
+    try:
+        from arcpy import mp
+        return "ARCGIS_PRO"
+    except ImportError:
+        try:
+            from arcpy import mapping
+            mxd = arcpy.mapping.MapDocument("CURRENT")
+            return "ARCMAP"
+        except:
+            return "OTHER"
+            
+
 if DEBUG == "True":
     arcpy.AddMessage("Check locals at begining ")
     mydict = dict(locals())
@@ -94,6 +107,7 @@ try:
     scrubbedImpactBufferOutPrefix = ''.join(e for e in impactBufferOutPrefix if (e.isalnum() or e == " " or e == "_"))
     scrubbedImpactBufferOutPrefix = scrubbedImpactBufferOutPrefix.replace(" ", "_")
 
+    app = GetApplication() #what client is being run
     env.overwriteOutput = True    
     scratch = env.scratchWorkspace
     if scratch == None:
@@ -133,13 +147,16 @@ try:
         where = modelField + " = " + selectedModel
         fields = minRangeField + "," + maxRangeField
         cursor = arcpy.SearchCursor(weaponTable, where, None,fields)
-        gisVersion = arcpy.GetInstallInfo()["Version"]
-        gisBuild = arcpy.GetInstallInfo()["BuildNumber"]
         
-        if gisVersion in desktopVersion or gisVersion == "1.0" or gisBuild == "3068":
+        #TODO: remove version/app specific switching here if we can
+        # gisVersion = arcpy.GetInstallInfo()["Version"]
+        # gisBuild = arcpy.GetInstallInfo()["BuildNumber"]
+        # if gisVersion in desktopVersion or gisVersion == "1.0" or gisBuild == "3068":
+        if app == "ARCGIS_PRO":
             record = cursor.next() # this is method for Pro 1.0.2, or public  beta 1.1 build 3068
         else:
             record = next(cursor) # Python 3 method - but only works in Pro 1.1 later builds.
+            
         minRange =  record.getValue(minRangeField)
         maxRange =  record.getValue(maxRangeField)
         if DEBUG == True:
@@ -249,9 +266,8 @@ try:
         arcpy.AddWarning("Cannot find location of required layer files (.lyrx), cannot continue")
     #
     if DEBUG == True: arcpy.AddMessage("Using layerSymLocation: " + str(layerSymLocation))
-    gisVersion = arcpy.GetInstallInfo()["Version"]
-    if DEBUG == True: arcpy.AddMessage(r"gisVersion: " + str(gisVersion))
-    if gisVersion in desktopVersion: #This is ArcGIS Desktkop 10.3 or 10.2.2
+
+    if app == "ARCMAP":
         mxd = None
         try:    # what if we are running this from ArcCatalog with no MXD?
             mxd = arcpy.mapping.MapDocument('CURRENT')
@@ -325,7 +341,8 @@ try:
         del mxd
          
     # if Pro:
-    elif gisVersion in proVersion: #This Is  ArcGIS Pro  1.0.2 or 1.1
+    #elif gisVersion in proVersion: #This Is  ArcGIS Pro  1.0.2 or 1.1
+    elif app == "ARCGIS_PRO":
         arcpy.AddMessage("Working in ArcGIS Pro " + str(gisVersion))
         aprx = arcpy.mp.ArcGISProject(r"current")
         m = aprx.listMaps()[0]
