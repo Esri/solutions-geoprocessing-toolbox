@@ -27,3 +27,67 @@
 # history:
 # <date> - <initals> - <modifications>
 # ==================================================
+
+import arcpy
+import os
+import unittest
+import TestUtilities
+import UnitTestUtilities
+
+
+#class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
+class CountIncidentsByLOC(unittest.TestCase):
+    ''' Test all tools and methods related to the HLZ Touchdown Points tool
+    in the Helicopter Landing Zones toolbox'''
+
+    scratchGDB = None
+
+    tbxProFolderPath = os.path.join(TestUtilities.repoPath, "patterns", "toolboxes", "Incident Analysis Tools.tbx")
+    tbxDesktopFolderPath = os.path.join(TestUtilities.repoPath, "patterns", "toolboxes", "Incident Analysis Tools_10.3.tbx")
+    testDataFolderPath = os.path.join(TestUtilities.patternsPaths, "data")
+
+    inputAirframeTable = None
+    inputSuitableAreas = None
+    inputSlope = None
+    outputGeodatabase = None
+    outputCenterpoints = None
+    outputCircles = None
+
+    def setUp(self):
+        ''' set-up code '''
+
+        UnitTestUtilities.checkArcPy()
+        UnitTestUtilities.checkFilePaths([self.testDataFolderPath,
+                                          self.tbxProFolderPath,
+                                          self.tbxDesktopFolderPath])
+
+        self.testDataGeodatabase = os.path.join(self.testDataFolderPath, r"test_hlz_tools.gdb")
+
+        # Check the test inputs (do they exist? or not?)
+        if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
+            self.scratchGDB = UnitTestUtilities.createScratch(self.testDataFolderPath)
+
+        # Setup the test inputs
+
+        UnitTestUtilities.checkGeoObjects([])
+        return
+
+    def tearDown(self):
+        ''' clean up after tests'''
+        UnitTestUtilities.deleteScratch(self.scratchGDB)
+        return
+
+
+    def test_CountIncidentsByLOC001_Pro(self):
+        ''' '''
+        self.CountIncidentsByLOC001()
+        return
+
+    def test_CountIncidentsByLOC001_Desktkop(self):
+        ''' '''
+        self.CountIncidentsByLOC001()
+        return
+
+    def CountIncidentsByLOC001(self):
+        ''' '''
+        return

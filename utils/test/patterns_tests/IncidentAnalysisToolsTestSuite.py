@@ -50,29 +50,31 @@ import IncidentDensityTestCase
 import IncidentHotSpotsTestCase
 import IncidentTableToPointTestCase
 
-class IncidentAnalysisToolsTestSuite(unittest.TestSuite):
-    ''' Test suite for all test cases for the Incident Analysis Tools toolbox '''
+def getIncidentTestSuite(logger, platform):
+    ''' run the Incident Analysis tests as either Pro or Desktop'''
+    testSuite = unittest.TestSuite()
 
-    def runProTests(self, suite):
-        ''' Set up the Incident test for Pro'''
-        # suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_Choose_Field_Value_Script_Tool_Pro'))
-        return suite
+    if platform == "PRO":
+        logger.info("Incident Analysis Tools Pro tests")
+        testSuite = addTestFromList(testSuite, logger)
 
-    def runDesktopTests(self, suite):
-        ''' Set up the Incident tests for Desktop'''
-        # suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_Choose_Field_Value_Script_Tool_Desktop'))
-        return suite
+    else:
+        logger.info("Incident Analysis Tools Desktop tests...")
+        testSuite = addTestFromList(testSuite, logger)
 
-    def runIncidentTests(self, testSuite, platform):
-        ''' run the Incident Analysis tests as either Pro or Desktop'''
-        result = unittest.TestResult()
+    return result
 
-        if platform == "PRO":
-            self.runProTests(testSuite)
-        else:
-            self.runDesktopTests(testSuite)
+def addTestFromList(testSuite, logger):
+    ''' add tests from CountIncidentsByLOCTestCase'''
 
-        testSuite.run(result)
-        print("Test success: {0}".format(str(result.wasSuccessful())))
+    proTests = []
+    desktopTests = []
 
-        return result
+    for p in inputTestList:
+
+        print("adding test: " + str(p))
+        logger.info(p)
+        #testSuite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints(p))
+        testSuite.addTest(CountIncidentsByLOCTestCase.CountIncidentsByLOC(p))
+
+    return testSuite

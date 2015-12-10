@@ -9,7 +9,6 @@ Create and visualize graphic products in support of operations.
 * [Clearing Operations Tools](#clearing-operations-tools)
 * [Range Card Tools](#range-card-tools)
 * [Issues](#issues)
-* [Contributing](#contributing)
 * [Licensing](#licensing)
 
 ## Clearing Operations Tools
@@ -22,23 +21,22 @@ Tools for building gridded reference graphics (GRG) for marking buildings and st
 * Point Target GRG
 * Radial Line Of Sight
 
+These tools are part of the [Clearing Operations](http://www.arcgis.com/home/item.html?id=b84edd236d4c48aba3f8406dd94ff13b) template.
+
 ## Range Card Tools
 
 Tools to build range cards for defensive positions.
-These tools are part of the Range Cards Template: http://www.arcgis.com/home/item.html?id=22b1015a131e48a9ba31bf785272f08e
 
 * Create Range Fan Index Features
 * Data Driven Pages Simulator (DDP-S)
  * NOTE - __The DDP-S script is a temporary workaround until the ArcGIS Pro team implements that functionality in the core software. The orignal source for this tool is [here](http://www.arcgis.com/home/item.html?id=f0ff6eb587b04ac29efb425a86f29fe2)__
 * Merge (System Tool)
 
+These tools are part of the [Range Cards](http://www.arcgis.com/home/item.html?id=22b1015a131e48a9ba31bf785272f08e)  Template.
+
 ## Issues
 
-Find a bug or want to request a new feature?  Please let us know by submitting an issue.
-
-## Contributing
-
-Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
+Find a bug or want to request a new feature?  Please let us know by submitting an [Issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues).
 
 ## Licensing
 

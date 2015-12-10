@@ -1,20 +1,19 @@
 [![Planned Issues](https://badge.waffle.io/Esri/solutions-geoprocessing-toolbox.png?label=0%20-%20backlog&title=In%20Backlog)](https://waffle.io/Esri/solutions-geoprocessing-toolbox)
 [![Issues in Progress](https://badge.waffle.io/Esri/solutions-geoprocessing-toolbox.png?label=2%20-%20In%20Progress&title=In%20Progress)](https://waffle.io/Esri/solutions-geoprocessing-toolbox)
 [![Issues waiting for Verification](https://badge.waffle.io/Esri/solutions-geoprocessing-toolbox.png?label=3%20-%20Verify&title=For%20Verification)](https://waffle.io/Esri/solutions-geoprocessing-toolbox)
-
 [![Code Climate](https://codeclimate.com/github/Esri/solutions-geoprocessing-toolbox/badges/gpa.svg)](https://codeclimate.com/github/Esri/solutions-geoprocessing-toolbox)
 # solutions-geoprocessing-toolbox
 
-The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tools for use in ArcGIS Desktop. These tools provide specialized processing, workflows, and analysis for defense, intelligence, emergency management, and other solutions domains.
+The ArcGIS Solutions Geoprocessing Toolbox is a collection of models, scripts, and tools for use in [ArcGIS for Desktop](http://www.esri.com/software/arcgis/arcgis-for-desktop) and [ArcGIS Pro](http://www.esri.com/en/software/arcgis-pro). These tools provide specialized processing, workflows, and analysis for defense, intelligence, emergency management, and other solutions domains. With these tools you can determine visibility from a specific viewpoint, create search grids, and analyze event data. They are included with many of Esri's [Solutions Templates](http://solutions.arcgis.com/), but developers can use this repository to download and contribute to the tool development process.
 
-![Image of the toolbox](SolutionsGeoprocessingToolboxGraphic.png)
+![Image of the toolbox](solutions-geoprocessing-toolbox-thumbnail007.png)
 
 ## Sections
 
 * [Features](#features)
 * [Requirements](#requirements)
 * [A Tale of Two Toolboxes](#a-tale-of-two-toolboxes)
-* [Instructions](#instructions)
+* [Instructions To Get Started](#instructions-to-get-started)
 	* [General Help](#general-help)
 	* [Getting Started with the tools](#getting-started-with-the-tools)
 	* [Downloading Test Data](#downloading-test-data)
@@ -97,7 +96,7 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 * [Help for ArcGIS Pro](http://pro.arcgis.com/en/pro-app/)
 
 
-## Instructions
+## Instructions To Get Started
 
 ### General Help
 [New to Github? Get started here.](http://htmlpreview.github.com/?https://github.com/Esri/esri.github.com/blob/master/help/esri-getting-to-know-github.html)
@@ -139,8 +138,6 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
     * `> ant`
     * Verify “Build Succeeded”
 
- 
-
 ## Resources
 
 * Learn more about [ArcGIS Solutions](http://solutions.arcgis.com/).
@@ -153,19 +150,32 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 
 * Find a bug or want to request a new feature?  Please let us know by submitting an issue.
 
+## Repository Points of Contact
+
+###Repository Owner: [Matt](https://github.com/mfunk)
+
+* Merge Pull Requests
+* Creates Releases and Tags
+* Manages Milestones
+* Manages and Assigns Issues
+
+###Secondary: [Chris](https://github.com/csmoore)
+
+* Backup when the Owner is away
+
+Additional information is available in the repository's [Wiki](https://github.com/Esri/solutions-geoprocessing-toolbox/wiki).
+
 ## Contributing
 
-Esri welcomes contributions from anyone and everyone through GitHub. Please see our [guidelines for contributing](https://github.com/esri/contributing).
+Esri welcomes contributions from anyone and everyone through GitHub. Please see Esri's [guidelines for contributing](https://github.com/esri/contributing).
 
+When you contribute to this repository we ask that you follow the guidelines below. If you've got questions, or you get stuck, please ask the [Repository Owner](#repository-owner). We are here to help! Thanks.
 
 ### Fork and Clone the Repo
 Start contributing to the solutions-geoprocessing-toolbox repo by making a fork and cloning it to your local machine.
 
 * Fork the **dev** branch from the repo on github.com with ![fork button](ForkButtonIcon.png)
 * Clone your remote onto your local system ![clone button](CloneInDesktopButtonIcon.png)
-* Get the *mdcs-py* submodule:
-	* `> git submodule init`
-	* `> git submodule update`
 
 ### Set Your Upstream
 Setting the parent repo to get changes from.
@@ -196,6 +206,12 @@ If you've made changes to the repo that you want to share with the community.
 * Make a **Pull Request** from your remote fork on github.com ![New Pull Request](NewPullRequestButtonIcon.png)
 
 
+### Notes On Contributing
+* Always work in the **dev** branch, never in *master*. This helps us keep our releases clean.
+* Never merge Pull Requests. The [Repository Owner](#repository-owner) needs to test any updates to make sure the repo is stable.
+* Always log an [Issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues) for problems you find, though you should check through the existing issues to make sure it wasn't already logged. 
+
+
 ## Credits
 Mosaic Dataset Configuration Scripts (MDCS) is an Esri repo available at [https://github.com/Esri/mdcs-py](https://github.com/Esri/mdcs-py) and [licensed](https://github.com/Esri/mdcs-py/blob/master/license.txt) under Apache License Version 2.0, January 2004.
 
@@ -218,5 +234,5 @@ limitations under the License.
 A copy of the license is available in the repository's
 [license.txt](license.txt) file.
 
-[](Esri Tags: ArcGIS Defense and Intelligence Military Emergency Management National Security)
+[](Esri Tags: ArcGIS Defense and Intelligence Military Emergency Management National Security ArcGISSolutions)
 [](Esri Language: Python)
