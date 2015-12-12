@@ -36,6 +36,7 @@ history:
 import arcpy
 import os
 import sys
+import traceback
 import platform
 import logging
 import Configuration
@@ -110,16 +111,16 @@ def initializeLogger(name):
     logger = logging.getLogger(name)
     return logger
 
-def setUpLogFileHeader(log):
+def setUpLogFileHeader():
     ''' Add a header to log file when initalized '''
     if Configuration.DEBUG == True:
         print("UnitTestUtilities - setUpLogFileHeader")
-    log.info("------------ Begin Test ------------------")
-    log.info("Platform: {0}".format(platform.platform()))
-    log.info("Python Version {0}".format(sys.version))
+    Configuration.Logger.info("------------ Begin Test ------------------")
+    Configuration.Logger.info("Platform: {0}".format(platform.platform()))
+    Configuration.Logger.info("Python Version {0}".format(sys.version))
     d = arcpy.GetInstallInfo()
-    log.info("{0} Version {1}, installed on {2}.".format(d['ProductName'], d['Version'], d['InstallDate']))
-    log.info("----------------------------------------")
+    Configuration.Logger.info("{0} Version {1}, installed on {2}.".format(d['ProductName'], d['Version'], d['InstallDate']))
+    Configuration.Logger.info("----------------------------------------")
 
 def checkArcPy():
     ''' sanity check that ArcPy is working '''
@@ -179,16 +180,16 @@ def checkGeoObjects(objects):
         else:
             if Configuration.DEBUG == True: print("Valid Object: " + desc.Name)
 
-def handleArcPyError(logger):
+def handleArcPyError():
     ''' Basic GP error handling, errors printed to console and logger '''
     if Configuration.DEBUG == True: print("UnitTestUtilities - handleArcPyError")
     # Get the arcpy error messages
     msgs = arcpy.GetMessages()
     arcpy.AddError(msgs)
     print(msgs)
-    logger.error(msgs)
+    Configuration.Logger.error(msgs)
 
-def handleGeneralError(logger):
+def handleGeneralError():
     ''' Basic error handler, errors printed to console and logger '''
     if Configuration.DEBUG == True: print("UnitTestUtilities - handleGeneralError")
     # Get the traceback object
@@ -201,9 +202,9 @@ def handleGeneralError(logger):
 
     # Print Python error messages for use in Python / Python Window
     print(pymsg + "\n")
-    logger.error(pymsg)
+    Configuration.Logger.error(pymsg)
     print(msgs)
-    logger.error(msgs)
+    Configuration.Logger.error(msgs)
     
 def geoObjectsExist(objects):
     ''' Return true if all of the input list of geo-objects exist, false otherwise '''

@@ -39,7 +39,7 @@ import unittest
 import Configuration
 from . import HLZTouchdownPointsTestCase
 
-def getHLZTestSuite(logger, platform):
+def getHLZTestSuite():
     ''' run the HLZ tests as either Pro or Desktop'''
 
     desktopTestList = ['test_Choose_Field_Value_Script_Tool_Desktop',
@@ -52,20 +52,20 @@ def getHLZTestSuite(logger, platform):
     if Configuration.DEBUG == True:
         print("      HelicopterLandingZoneTestSuite.runHLZTestSuite")
     testSuite = unittest.TestSuite()
-    if platform == "PRO":
-        logger.info("Helicopter Landing Zone Tools Pro tests")
-        testSuite = addTestFromList(testSuite, logger, proTestList)
+    if Configuration.Platform == "PRO":
+        Configuration.Logger.info("Helicopter Landing Zone Tools Pro tests")
+        testSuite = addTestFromList(testSuite, proTestList)
     else:
-        logger.info("Helicopter Landing Zone Tools Desktop tests...")
-        testSuite = addTestFromList(testSuite, logger, desktopTestList)
+        Configuration.Logger.info("Helicopter Landing Zone Tools Desktop tests...")
+        testSuite = addTestFromList(testSuite, desktopTestList)
     return testSuite
 
-def addTestFromList(testSuite, logger, inputTestList):
+def addTestFromList(testSuite, inputTestList):
     ''' add tests from list'''
     for p in inputTestList:
         if Configuration.DEBUG == True:
             print("      HelicopterLandingZoneTestSuite.addTestFromList")
         print("adding test: " + str(p))
-        logger.info(p)
+        Configuration.Logger.info(p)
         testSuite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints(p))
     return testSuite

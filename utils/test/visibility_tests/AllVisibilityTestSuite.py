@@ -40,13 +40,13 @@ import unittest
 import Configuration
 from . import SunPositionAnalysisToolsTestSuite
 
-def getVisibilityTestSuites(log, platform):
+def getVisibilityTestSuites():
     ''' This pulls together all of the toolbox test suites in this folder '''
     if Configuration.DEBUG == True:
         print("   AllVisibilityTestSuite.getVisibilityTestSuites")
-    log.info("Adding Visibility Tests including: ")
+    Configuration.Logger.info("Adding Visibility Tests including: ")
     testSuite = unittest.TestSuite()
     
-    testSuite.addTests(SunPositionAnalysisToolsTestSuite.getSunPositionTestSuite(log, platform))
+    testSuite.addTests(SunPositionAnalysisToolsTestSuite.getSunPositionTestSuite())
     return testSuite
     

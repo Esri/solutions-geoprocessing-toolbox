@@ -49,19 +49,18 @@ from . import HelicopterLandingZoneToolsTestSuite
 #from . import PointOfOriginToolsTestSuite - Doesn't Exist Yet
 from . import ERGToolsTestSuite
 
-def getCapabilityTestSuites(logger, platform):
+def getCapabilityTestSuites():
     ''' This pulls together all of the toolbox test suites in this folder '''
     if Configuration.DEBUG == True:
         print("   AllCapabilityTestSuite.capabilityTestSuite")
-    logger.info("Adding Capability Tests including:")
+    Configuration.Logger.info("Adding Capability Tests including:")
     testSuite = unittest.TestSuite()
 
     # these come from HelicopterLandingZoneToolsTestSuite.py
-    testSuite.addTests(HelicopterLandingZoneToolsTestSuite.getHLZTestSuite(logger, platform))
+    testSuite.addTests(HelicopterLandingZoneToolsTestSuite.getHLZTestSuite())
 
     #TODO: these will come from PointOfOriginToolsTestSuite
 
     # these come from ERGToolsTestSuite.py
-    testSuite.addTests(ERGToolsTestSuite.getERGTestSuite(logger, platform))
-
+    testSuite.addTests(ERGToolsTestSuite.getERGTestSuite())
     return testSuite
