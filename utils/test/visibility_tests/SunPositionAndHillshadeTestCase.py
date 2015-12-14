@@ -30,10 +30,10 @@ class SunPositionAndHillshadeTestCase(unittest.TestCase):
     proToolboxPath = os.path.join(Configuration.vis_ToolboxesPath, "Sun Position Analysis Tools.tbx")
     desktopToolboxPath = os.path.join(Configuration.vis_ToolboxesPath, "Sun Position Analysis Tools_10.3.tbx")
     
-    inputGDB = None # os.path.join(Configuration.vis_GeodatabasePath, "test_sun_position.gdb")
-    inputArea = None # os.path.join(inputGDB, "inputArea")
-    inputSurface = None # os.path.join(inputGDB, "Jbad_SRTM_USGS_EROS")
-    compareResults = None # os.path.join(inputGDB, "compareResults")
+    inputGDB = None
+    inputArea = None
+    inputSurface = None
+    compareResults = None
     
     sunPosUrl = "http://www.arcgis.com/sharing/content/items/bf6a04b4c9a3447b91e9c0b4074ca1e4/data"
     sunPosDataPath = None
@@ -44,9 +44,6 @@ class SunPositionAndHillshadeTestCase(unittest.TestCase):
         if Configuration.DEBUG == True: print("         SunPositionAndHillshadeTestCase.setUp")
         UnitTestUtilities.checkArcPy()
         UnitTestUtilities.checkFilePaths([self.proToolboxPath, self.desktopToolboxPath, Configuration.visibilityPaths])
-        # testObjects = [Configuration.sunPosToolbox, self.inputGDB, self.inputArea, self.inputSurface, self.compareResults]
-        # UnitTestUtilities.checkGeoObjects(testObjects)
-        # UnitTestUtilities.createScratch(Configuration.vis_ScratchPath)
         
         name = "test_sun_position.gdb"
         self.sunPosDataPath = DataDownload.runDataDownload(Configuration.visibilityPaths, name, self.sunPosUrl)
@@ -100,7 +97,7 @@ class SunPositionAndHillshadeTestCase(unittest.TestCase):
 
             arcpy.CheckOutExtension("Spatial")
             diff = Minus(Raster(outHillshade),Raster(compareResults))
-            diff.save(os.path.join(Configuration.vis_ScratchPath, "diff"))
+            diff.save(os.path.join(self.scratchGDB, "diff"))
             arcpy.CalculateStatistics_management(diff)
             rasMinimum = float(arcpy.GetRasterProperties_management(diff,"MINIMUM").getOutput(0))
             rasMaximum = float(arcpy.GetRasterProperties_management(diff,"MAXIMUM").getOutput(0))

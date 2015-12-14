@@ -32,10 +32,6 @@ import zipfile
 import UnitTestUtilities
 import Configuration
 
-''' ArcGIS Online URL's '''
-# sunPosUrl = "http://www.arcgis.com/sharing/content/items/bf6a04b4c9a3447b91e9c0b4074ca1e4/data"
-
-####################################
 def createDataFolder(path):
     ''' If it doesn't already exist, create a 'data' sub-directory in the path '''
     dataPath = os.path.normpath(os.path.join(path, r"data"))

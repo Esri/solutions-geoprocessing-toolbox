@@ -49,14 +49,7 @@ suitabilityPaths = os.path.normpath(os.path.join(currentPath, r"suitability_test
 
 ''' Visibility Paths'''
 visibilityPaths = os.path.normpath(os.path.join(currentPath, r"visibility_tests"))
-
-#### Visibility ####
-vis_GeodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../visibility/data/geodatabases/"))
-vis_ScratchPath = os.path.normpath(os.path.join(currentPath, r"../../visibility/data/geodatabases"))
 vis_ToolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../visibility/toolboxes/"))
-vis_ScriptsPath = os.path.join(vis_ToolboxesPath, "scripts")
-sunPosToolbox = os.path.join(vis_ToolboxesPath, "Sun Position Analysis Tools_10.3.tbx")
-visandRangeToolbox = os.path.join(vis_ToolboxesPath, "Visibility and Range Tools_10.3.tbx")
 
 
 
