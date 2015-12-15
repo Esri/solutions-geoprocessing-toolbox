@@ -30,24 +30,33 @@ class SunPositionAndHillshadeTestCase(unittest.TestCase):
     proToolboxPath = os.path.join(Configuration.vis_ToolboxesPath, "Sun Position Analysis Tools.tbx")
     desktopToolboxPath = os.path.join(Configuration.vis_ToolboxesPath, "Sun Position Analysis Tools_10.3.tbx")
     
-    inputGDB = os.path.join(Configuration.vis_GeodatabasePath, "test_sun_position.gdb")
-    inputArea = os.path.join(inputGDB, "inputArea")
-    inputSurface = os.path.join(inputGDB, "Jbad_SRTM_USGS_EROS")
-    compareResults = os.path.join(inputGDB, "compareResults")
+    inputGDB = None
+    inputArea = None
+    inputSurface = None
+    compareResults = None
     
     sunPosUrl = "http://www.arcgis.com/sharing/content/items/bf6a04b4c9a3447b91e9c0b4074ca1e4/data"
+    sunPosDataPath = None
+    sunPosGDBPath = None
+    scratchGDB = None
     
     def setUp(self):
         if Configuration.DEBUG == True: print("         SunPositionAndHillshadeTestCase.setUp")
         UnitTestUtilities.checkArcPy()
-        testObjects = [Configuration.sunPosToolbox, self.inputGDB, self.inputArea, self.inputSurface, self.compareResults]
-        UnitTestUtilities.checkGeoObjects(testObjects)
-        UnitTestUtilities.createScratch(Configuration.vis_ScratchPath)
+        UnitTestUtilities.checkFilePaths([self.proToolboxPath, self.desktopToolboxPath, Configuration.visibilityPaths])
         
-        # download the data
-        didDownload = DataDownload.runDataDownload(Configuration.visibilityPaths, "test_sun_position.gdb", self.sunPosUrl)
-        print("Downloaded Sun Position data? " + str(didDownload))
-    
+        name = "test_sun_position.gdb"
+        self.sunPosDataPath = DataDownload.runDataDownload(Configuration.visibilityPaths, name, self.sunPosUrl)
+        if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
+            self.scratchGDB = UnitTestUtilities.createScratch(self.sunPosDataPath)
+            
+        # set up inputs
+        self.sunPosGDBPath = os.path.join(self.sunPosDataPath, name)
+        self.inputArea = os.path.join(self.sunPosGDBPath, r"inputArea")
+        self.inputSurface = os.path.join(self.sunPosGDBPath, r"Jbad_SRTM_USGS_EROS")
+        self.compareResults = os.path.join(self.sunPosGDBPath, r"compareResults")
+        UnitTestUtilities.checkGeoObjects([self.inputArea, self.inputSurface, self.compareResults])
+            
     def test_sun_position_analysis_pro(self):
         arcpy.AddMessage("Testing Sun Position Analysis (Pro).")
         self.test_sun_position_analysis(self.proToolboxPath)
@@ -59,7 +68,6 @@ class SunPositionAndHillshadeTestCase(unittest.TestCase):
     def test_sun_position_analysis(self, toolboxPath):
         try:
             print("Importing toolbox... ")
-            #arcpy.ImportToolbox(Configuration.sunPosToolbox, "sunpos")
             arcpy.ImportToolbox(toolboxPath)
             arcpy.env.overwriteOutput = True
 
@@ -73,22 +81,23 @@ class SunPositionAndHillshadeTestCase(unittest.TestCase):
             print("Set date...")
             utcAfghanistan = r'(UTC+4:30) Afghanistan'
             print("Set UTCAfg...")
-            outHillshade = os.path.join(Configuration.vis_ScratchPath, "outputHS")
+            # outHillshade = os.path.join(Configuration.vis_ScratchPath, "outputHS")
+            outHillshade = os.path.join(self.scratchGDB, "outputHS")
             print("Set output hillshade...")
 
             # Testing
             runToolMsg = "Running tool (Sun Position and Hillshade)"
             arcpy.AddMessage(runToolMsg)
-            Configuration.logger.info(runToolMsg)
+            Configuration.Logger.info(runToolMsg)
             arcpy.SunPositionAnalysis_sunpos(self.inputArea, self.inputSurface, dtCompare, utcAfghanistan, outHillshade)
             
             compareMessage = "Comparing expected values with tool results from " + str(dtCompare) + " in " + str(utcAfghanistan)
-            Configuration.logger.info(compareMessage)
+            Configuration.Logger.info(compareMessage)
             compareResults = self.compareResults
 
             arcpy.CheckOutExtension("Spatial")
             diff = Minus(Raster(outHillshade),Raster(compareResults))
-            diff.save(os.path.join(Configuration.vis_ScratchPath, "diff"))
+            diff.save(os.path.join(self.scratchGDB, "diff"))
             arcpy.CalculateStatistics_management(diff)
             rasMinimum = float(arcpy.GetRasterProperties_management(diff,"MINIMUM").getOutput(0))
             rasMaximum = float(arcpy.GetRasterProperties_management(diff,"MAXIMUM").getOutput(0))
@@ -114,10 +123,10 @@ class SunPositionAndHillshadeTestCase(unittest.TestCase):
                 # raise ValueDifferenceError(msg)
         
         except arcpy.ExecuteError:
-            UnitTestUtilities.handleArcPyError(Configuration.logger)
+            UnitTestUtilities.handleArcPyError()
 
         except:
-            UnitTestUtilities.handleGeneralError(Configuration.logger)
+            UnitTestUtilities.handleGeneralError()
             
         finally:
             arcpy.CheckInExtension("Spatial")
