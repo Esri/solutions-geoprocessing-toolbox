@@ -11,7 +11,6 @@ Determine areas most suitable for both friendly and adversarial operations.
 * [Military Aspects of Weather Tools](#military-aspects-of-weather-tools)
 * [Path Slope Tools](#path-slope-tools)
 * [Issues](#issues)
-* [Contributing](#contributing)
 * [Licensing](#licensing)
 
 ## Maritime Decision Aid Tools
@@ -53,10 +52,20 @@ These tools are part of the [Military Aspects of Terrain template](http://www.ar
 
 Tools for describing and importing weather data in GRIB and NetCDF format.
 
-* Import GRIB Files
-* Import NetCDF Files
-* Inspect GRIB Folder
-* Inspect NetCDF File
+* Import CRU Data
+	* Import CRU CL2.0 To Raster
+	* Subset Raster Workspace
+* Import WMO Data
+	* Import WMO Station Data
+	* Import WMO Stations
+
+The Military Aspects of Weather also includes a set of stand alone Batch and Python scripts for handling the automatic download of NOAA forecast data. They are:
+
+* .\suitability\toolboxes\scripts\NAMDownloadBatch.bat - Can be run from a task scheduler to automate forecast downloads 
+* .\suitability\toolboxes\scripts\NAMDownload.py - called by *NAMDownloadBatch.bat*
+* .\suitability\toolboxes\scripts\DeleteOldFiles.py - Can be run from a task scheduler to remove old forecast data.
+
+**IMPORTANT**: The *NAMDownload.py* tool requires the [Multidimension Supplemental Tools](http://www.arcgis.com/home/item.html?id=9f963f362fe5417f87d44618796db938) to run. These tools have been included for your convenience and are located in .\suitability\toolboxes\scripts\MultidimensionSupplementalTools\. You must setup these tools **before** running the NAMDownload scripts. Instructions for the Multidimension Supplemental Tools are in that tool's Installation_Instructions.pdf.
 
 These tools are part of the [Military Aspects of Weather template](http://www.arcgis.com/home/item.html?id=0d49f0dac6884609b67a319e653c32d0)
 
@@ -70,11 +79,7 @@ Path Slope Tools is a terrain analysis toolset to determine slope changes along 
 
 ## Issues
 
-Find a bug or want to request a new feature?  Please let us know by submitting an issue.
-
-## Contributing
-
-Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
+Find a bug or want to request a new feature?  Please let us know by submitting an [Issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues).
 
 ## Licensing
 

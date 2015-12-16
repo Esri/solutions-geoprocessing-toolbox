@@ -1,0 +1,1019 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mds package &mdash; Multidimension Supplemental Tools .. documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '..',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Multidimension Supplemental Tools .. documentation" href="index.html" />
+    <link rel="prev" title="Multidimension Supplemental Tools" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Multidimension Supplemental Tools"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Multidimension Supplemental Tools .. documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-mds">
+<span id="mds-package"></span><h1>mds package<a class="headerlink" href="#module-mds" title="Permalink to this headline">¶</a></h1>
+<p>Package containing the implementation of the tools of the Multidimensional
+Supplemental Tools. This package contains both the high level implementation
+of the tools as well as the lower level code implementing the tools.</p>
+<div class="section" id="module-mds.date_time">
+<span id="mds-date-time"></span><h2>mds.date_time<a class="headerlink" href="#module-mds.date_time" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mds.date_time.from_iso_format">
+<tt class="descclassname">mds.date_time.</tt><tt class="descname">from_iso_format</tt><big>(</big><em>string</em><big>)</big><a class="headerlink" href="#mds.date_time.from_iso_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a string representing the date and time in ISO 8601 format,
+YYYY-MM-DDTHH:MM:SS.mmmmmm or, if microsecond is 0, YYYY-MM-DDTHH:MM:SS</p>
+<p>If utcoffset() does not return None, a 6-character string is appended,
+giving the UTC offset in (signed) hours and minutes:
+YYYY-MM-DDTHH:MM:SS.mmmmmm+HH:MM or, if microsecond is 0
+YYYY-MM-DDTHH:MM:SS+HH:MM</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mds.date_time.to_iso_format">
+<tt class="descclassname">mds.date_time.</tt><tt class="descname">to_iso_format</tt><big>(</big><em>date_time</em><big>)</big><a class="headerlink" href="#mds.date_time.to_iso_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a string representing the date and time in ISO 8601 format,
+YYYY-MM-DD HH:MM:SS.mmmmmm or, if microsecond is 0, YYYY-MM-DD HH:MM:SS</p>
+<p>If utcoffset() does not return None, a 6-character string is appended,
+giving the UTC offset in (signed) hours and minutes:
+YYYY-MM-DD HH:MM:SS.mmmmmm+HH:MM or, if microsecond is 0
+YYYY-MM-DD HH:MM:SS+HH:MM</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mds.math">
+<span id="mds-math"></span><h2>mds.math<a class="headerlink" href="#module-mds.math" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mds.math.clamp">
+<tt class="descclassname">mds.math.</tt><tt class="descname">clamp</tt><big>(</big><em>min_value</em>, <em>value</em>, <em>max_value</em><big>)</big><a class="headerlink" href="#mds.math.clamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return <em>value</em> in case <em>value</em> is in the range between <em>min_value</em> -
+<em>max_value</em> otherwise return either <em>min_value</em> or <em>max_value</em>
+depending on whether <em>value</em> is smaller or larger than the range.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mds.math.values_to_slice">
+<tt class="descclassname">mds.math.</tt><tt class="descname">values_to_slice</tt><big>(</big><em>values</em>, <em>value1</em>, <em>value2</em><big>)</big><a class="headerlink" href="#mds.math.values_to_slice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return slice indices corresponding to the location of <em>value1</em> and
+<em>value2</em> in <em>values</em>.</p>
+<p>When slicing <em>values</em> using the indices returned, it is guaranteed that
+all values between <em>value1</em> and <em>value2</em> are included, as well as
+<em>value1</em> and <em>value2</em> if they are within the the value range of
+<em>values</em>. If <em>value1</em> and/or <em>value2</em> fall outside of <em>values</em>&#8216; range,
+they are clamped to the extremes of <em>values</em>.</p>
+<p>It is assumed that the values in <em>values</em> are monotonically increasing
+or decreasing.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mds.math.start_index_of_value_in_range">
+<tt class="descclassname">mds.math.</tt><tt class="descname">start_index_of_value_in_range</tt><big>(</big><em>value</em>, <em>values</em><big>)</big><a class="headerlink" href="#mds.math.start_index_of_value_in_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return index of <em>value</em> in <em>values</em>.</p>
+<p>If <em>value</em> is not present in <em>values</em> the nearest lower or higher value
+is returned, depending on whether <em>values</em> is an increasing or decreasing
+range.</p>
+<p>The idea is that the index can be used as a start index in a slice
+specification and <em>value</em> will be included in the slice.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mds.math.end_index_of_value_in_range">
+<tt class="descclassname">mds.math.</tt><tt class="descname">end_index_of_value_in_range</tt><big>(</big><em>value</em>, <em>values</em><big>)</big><a class="headerlink" href="#mds.math.end_index_of_value_in_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return index of the value next to <em>value</em> in <em>values</em>.</p>
+<p>Whether the next value is higher or lower than <em>value</em> depends on whether
+<em>values</em> is an increasing or decreasing range.</p>
+<p>The idea is that the index can be used as an end index in a slice
+specification and <em>value</em> will be included in the slice.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mds.ordered_set">
+<span id="mds-ordered-set"></span><h2>mds.ordered_set<a class="headerlink" href="#module-mds.ordered_set" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mds.ordered_set.OrderedSet">
+<em class="property">class </em><tt class="descclassname">mds.ordered_set.</tt><tt class="descname">OrderedSet</tt><big>(</big><em>iterable=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#mds.ordered_set.OrderedSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>An ordered set is a set in which the order of the elements added to the
+set is maintained. The order of elements added multiple times is
+not changed, unless they are removed from the set first.</p>
+<dl class="method">
+<dt id="mds.ordered_set.OrderedSet.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>iterable=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#mds.ordered_set.OrderedSet.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.ordered_set.OrderedSet.__repr__">
+<tt class="descname">__repr__</tt><big>(</big><big>)</big><a class="headerlink" href="#mds.ordered_set.OrderedSet.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.ordered_set.OrderedSet.__str__">
+<tt class="descname">__str__</tt><big>(</big><big>)</big><a class="headerlink" href="#mds.ordered_set.OrderedSet.__str__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.ordered_set.OrderedSet.__contains__">
+<tt class="descname">__contains__</tt><big>(</big><em>element</em><big>)</big><a class="headerlink" href="#mds.ordered_set.OrderedSet.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>As per Container.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.ordered_set.OrderedSet.__iter__">
+<tt class="descname">__iter__</tt><big>(</big><big>)</big><a class="headerlink" href="#mds.ordered_set.OrderedSet.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>As per Iterable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.ordered_set.OrderedSet.__len__">
+<tt class="descname">__len__</tt><big>(</big><big>)</big><a class="headerlink" href="#mds.ordered_set.OrderedSet.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>As per Sized.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.ordered_set.OrderedSet.add">
+<tt class="descname">add</tt><big>(</big><em>element</em><big>)</big><a class="headerlink" href="#mds.ordered_set.OrderedSet.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>As per MutableSet.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.ordered_set.OrderedSet.discard">
+<tt class="descname">discard</tt><big>(</big><em>element</em><big>)</big><a class="headerlink" href="#mds.ordered_set.OrderedSet.discard" title="Permalink to this definition">¶</a></dt>
+<dd><p>As per MutableSet.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.ordered_set.OrderedSet.__eq__">
+<tt class="descname">__eq__</tt><big>(</big><em>other</em><big>)</big><a class="headerlink" href="#mds.ordered_set.OrderedSet.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Order of the elements is relevant. If the two sets contain the same
+elements, but they are ordered differently, then these sets don&#8217;t
+compare equal.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.ordered_set.OrderedSet.__ne__">
+<tt class="descname">__ne__</tt><big>(</big><em>other</em><big>)</big><a class="headerlink" href="#mds.ordered_set.OrderedSet.__ne__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mds.ordered_set.OrderedSet.__abstractmethods__">
+<tt class="descname">__abstractmethods__</tt><em class="property"> = frozenset([])</em><a class="headerlink" href="#mds.ordered_set.OrderedSet.__abstractmethods__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mds.ordered_set.OrderedSet.__module__">
+<tt class="descname">__module__</tt><em class="property"> = 'mds.ordered_set'</em><a class="headerlink" href="#mds.ordered_set.OrderedSet.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="mds.ordered_set.order">
+<tt class="descclassname">mds.ordered_set.</tt><tt class="descname">order</tt><big>(</big><em>set_to_order</em>, <em>ordered_set</em><big>)</big><a class="headerlink" href="#mds.ordered_set.order" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of <em>set_to_order</em> where all values are in the same order as
+in <em>ordered_set</em>.</p>
+<p><em>set_to_order</em> must be a subset of <em>ordered_set</em>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mds.netcdf">
+<span id="mds-netcdf"></span><h2>mds.netcdf<a class="headerlink" href="#module-mds.netcdf" title="Permalink to this headline">¶</a></h2>
+<p>Sub-package with code handling netcdf datasets.</p>
+<dl class="function">
+<dt id="mds.netcdf.coordinates_to_dates">
+<tt class="descclassname">mds.netcdf.</tt><tt class="descname">coordinates_to_dates</tt><big>(</big><em>coordinates</em>, <em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.coordinates_to_dates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert <em>coordinates</em> to dates (datetime.datetime instances), given the
+units and calendar attribute values of <em>variable</em>.</p>
+<p>The <em>variable</em> passed in must be the time variable. It must have a units
+attribute. If it doesn&#8217;t have a calendar attribute, &#8216;standard&#8217; is used as
+the default calendar.</p>
+<p>The <em>coordinates</em> passed in can be a single value or a list of values.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mds.netcdf.dates_to_coordinates">
+<tt class="descclassname">mds.netcdf.</tt><tt class="descname">dates_to_coordinates</tt><big>(</big><em>dates</em>, <em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.dates_to_coordinates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert <em>dates</em> (datetime.datetime instances) to coordinates, given the
+units and calendar attribute values of <em>variable</em>.</p>
+<p>The <em>variable</em> passed in must be the time variable. It must have a units
+attribute. If it doesn&#8217;t have a calendar attribute, &#8216;standard&#8217; is used as
+the default calendar.</p>
+<p>The <em>dates</em> passed in can be a single value or a list of values.</p>
+</dd></dl>
+
+<div class="section" id="module-mds.netcdf.dataset">
+<span id="mds-netcdf-dataset"></span><h3>mds.netcdf.dataset<a class="headerlink" href="#module-mds.netcdf.dataset" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="mds.netcdf.dataset.Dataset">
+<em class="property">class </em><tt class="descclassname">mds.netcdf.dataset.</tt><tt class="descname">Dataset</tt><big>(</big><em>name</em>, <em>filter_out_nd_coordinates</em>, <em>favor_convention_class=None</em><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an instance based on a <em>name</em> and an optional default
+<em>favor_convention_class</em></p>
+<dl class="docutils">
+<dt>filter_out_nd_coordinates</dt>
+<dd>See <a class="reference internal" href="#mds.netcdf.convention.select_convention" title="mds.netcdf.convention.select_convention"><tt class="xref py py-func docutils literal"><span class="pre">mds.netcdf.convention.select_convention()</span></tt></a>.</dd>
+<dt>favor_convention_class</dt>
+<dd>See <a class="reference internal" href="#mds.netcdf.convention.select_convention" title="mds.netcdf.convention.select_convention"><tt class="xref py py-func docutils literal"><span class="pre">mds.netcdf.convention.select_convention()</span></tt></a>.</dd>
+</dl>
+<p>This class is implemented using <a class="reference external" href="http://netcdf4-python.googlecode.com/svn/trunk/docs/netCDF4.Dataset-class.html">netCDF4.Dataset</a> from the
+<a class="reference external" href="https://code.google.com/p/netcdf4-python/">netcdf4-python package</a>.
+If you need functionality that isn&#8217;t available in this class&#8217; interface,
+then you can use the layered <em>dataset</em> instance:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">dimensions</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">dimensions</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="mds.netcdf.dataset.Dataset.attribute_names">
+<tt class="descname">attribute_names</tt><big>(</big><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset.attribute_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>OrderedSet of names of global attributes in the dataset.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.dataset.Dataset.attribute">
+<tt class="descname">attribute</tt><big>(</big><em>attribute_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset.attribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return attribute with name <em>attribute_name</em>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.dataset.Dataset.dimension_names">
+<tt class="descname">dimension_names</tt><big>(</big><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset.dimension_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>OrderedSet of names of dimensions in the dataset.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.dataset.Dataset.dimension">
+<tt class="descname">dimension</tt><big>(</big><em>dimension_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset.dimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return dimension with name <em>dimension_name</em>.</p>
+<p>A dimension with name <em>dimension_name</em> must be present in the dataset.</p>
+<p>The dimension returned is a <a class="reference external" href="http://netcdf4-python.googlecode.com/svn/trunk/docs/netCDF4.Dimension-class.html">netCDF4.Dimension</a>
+instance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.dataset.Dataset.variable_names">
+<tt class="descname">variable_names</tt><big>(</big><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset.variable_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>OrderedSet of names of variables in the dataset.</p>
+<p>The set includes the names of dimension variables.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.dataset.Dataset.variable">
+<tt class="descname">variable</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset.variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return variable with name <em>variable_name</em>.</p>
+<p>A variable with name <em>variable_name</em> must be present in the dataset.</p>
+<p>The variable returned is a <a class="reference external" href="http://netcdf4-python.googlecode.com/svn/trunk/docs/netCDF4.Variable-class.html">netCDF4.Variable</a>
+instance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.dataset.Dataset.data_variable_names">
+<tt class="descname">data_variable_names</tt><big>(</big><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset.data_variable_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an <a class="reference internal" href="#mds.ordered_set.OrderedSet" title="mds.ordered_set.OrderedSet"><tt class="xref py py-class docutils literal"><span class="pre">mds.ordered_set.OrderedSet</span></tt></a> with the names of the
+data variables.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.dataset.Dataset.spatial_data_variable_names">
+<tt class="descname">spatial_data_variable_names</tt><big>(</big><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset.spatial_data_variable_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an OrderedSet with the names of the spatial data variables.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.dataset.Dataset.variable_dimension_names">
+<tt class="descname">variable_dimension_names</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset.variable_dimension_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the names of <cite>variable_name</cite>&#8216;s dimensions.</p>
+<p>A variable may depend multiple times on the same dimension, so we
+return a tuple with the names instead of an OrderedSet.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.dataset.Dataset.space_dimension_names">
+<tt class="descname">space_dimension_names</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset.space_dimension_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an OrderedSet with the names of <em>variable_name</em>&#8216;s spatial
+dimensions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.dataset.Dataset.non_space_dimension_names">
+<tt class="descname">non_space_dimension_names</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset.non_space_dimension_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an OrderedSet with the names of <em>variable_name</em>&#8216;s non-spatial
+dimensions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.dataset.Dataset.is_spatial_variable">
+<tt class="descname">is_spatial_variable</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset.is_spatial_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether variable <em>variable_name</em> is spatial.</p>
+<p>A variable is considered spatial if it has two dimensions representing
+the x and y dimensions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.dataset.Dataset.compatible_data_variable_names">
+<tt class="descname">compatible_data_variable_names</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset.compatible_data_variable_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an OrderedSet with the names of data variables that are
+compatible with data variable <em>variable_name</em>.</p>
+<p>See also <a class="reference internal" href="#mds.netcdf.convention.convention.Convention.compatible_data_variable_names" title="mds.netcdf.convention.convention.Convention.compatible_data_variable_names"><tt class="xref py py-meth docutils literal"><span class="pre">convention.Convention.compatible_data_variable_names()</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.dataset.Dataset.dependent_variable_names">
+<tt class="descname">dependent_variable_names</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset.dependent_variable_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.dataset.Dataset.extent">
+<tt class="descname">extent</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset.extent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return <em>variable_names</em>&#8216;s spatial extent.</p>
+<p>The result is a list with four values: <tt class="docutils literal"><span class="pre">[x_min,</span> <span class="pre">y_min,</span> <span class="pre">x_max,</span> <span class="pre">y_max]</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.dataset.Dataset.spatial_dimension_slices">
+<tt class="descname">spatial_dimension_slices</tt><big>(</big><em>variable_name</em>, <em>extent</em><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset.spatial_dimension_slices" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.dataset.Dataset.dimension_slice">
+<tt class="descname">dimension_slice</tt><big>(</big><em>dimension_name</em>, <em>start_value</em>, <em>end_value</em>, <em>value_selection_method</em><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset.dimension_slice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.dataset.Dataset.copy">
+<tt class="descname">copy</tt><big>(</big><em>variable_names</em>, <em>output_filename</em>, <em>extent=None</em>, <em>dimension_selections=</em><span class="optional">[</span><span class="optional">]</span>, <em>value_selection_method=1</em>, <em>history_message=None</em><big>)</big><a class="headerlink" href="#mds.netcdf.dataset.Dataset.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy the variables <em>variable_names</em> from the layered dataset to a
+netCDF file named <em>output_filename</em>, honoring the spatial <em>extent</em> and
+<em>dimension_selections</em> passed in. If no spatial variable is selected,
+the value of <em>extent</em> is discarded.</p>
+<p>The <em>extent</em> passed in must be an sequence containing
+<tt class="docutils literal"><span class="pre">[x_min,</span> <span class="pre">y_min,</span> <span class="pre">x_max,</span> <span class="pre">y_max]</span></tt>. If not provided, the full extent is
+copied.</p>
+<p>The <em>dimension_selections</em> passed in must be an iterable of sequences
+containing <tt class="docutils literal"><span class="pre">[dimension_name,</span> <span class="pre">start_value,</span> <span class="pre">end_value]</span></tt>. Dimensions
+not present in <em>dimension_selections</em> will be copied in full.</p>
+<p>The interpretation of the <tt class="docutils literal"><span class="pre">start_value</span></tt> and <tt class="docutils literal"><span class="pre">end_value</span></tt> stored in
+each dimension selection depends on the value of
+<em>value_selection_method</em>. This argument must be one of the
+selection methods defined in <a class="reference internal" href="#module-mds" title="mds"><tt class="xref py py-mod docutils literal"><span class="pre">mds</span></tt></a>.</p>
+<p>The <em>history_message</em> is written to the netCDF file. The value is
+appended to the value of the global history attribute. If no value is
+passed, the history attribute, if present, is not changed.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mds.netcdf.convention">
+<span id="mds-netcdf-convention"></span><h3>mds.netcdf.convention<a class="headerlink" href="#module-mds.netcdf.convention" title="Permalink to this headline">¶</a></h3>
+<dl class="data">
+<dt id="mds.netcdf.convention.CONVENTION_CLASSES">
+<tt class="descclassname">mds.netcdf.convention.</tt><tt class="descname">CONVENTION_CLASSES</tt><em class="property"> = [&lt;class 'mds.netcdf.convention.cf.CF'&gt;, &lt;class 'mds.netcdf.convention.coards.Coards'&gt;, &lt;class 'mds.netcdf.convention.coordinate.Coordinate'&gt;]</em><a class="headerlink" href="#mds.netcdf.convention.CONVENTION_CLASSES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Classes that implement a netcdf convention.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mds.netcdf.convention.select_convention">
+<tt class="descclassname">mds.netcdf.convention.</tt><tt class="descname">select_convention</tt><big>(</big><em>dataset</em>, <em>filter_out_nd_coordinates</em>, <em>favor_class=None</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.select_convention" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Convention specialization that implements the conventions used in
+<em>dataset</em>.</p>
+<dl class="docutils">
+<dt>filter_out_nd_coordinates</dt>
+<dd>Most coordinate variables are one-dimensional. If this argument is
+True, data variables depending on more-dimensional coordinate
+variables are filtered out. A reason for this may be that your
+application doesn&#8217;t support such variables.</dd>
+<dt>favor_class</dt>
+<dd>In case <em>dataset</em> adheres to multiple supported conventions and
+<em>favor_class</em> is one of them, then it is used. Otherwise
+<tt class="xref py py-class docutils literal"><span class="pre">Conventions</span></tt> is used.</dd>
+</dl>
+<p>In case <em>dataset</em> doesn&#8217;t adhere to a supported convention,
+<tt class="xref py py-class docutils literal"><span class="pre">Generic</span></tt> is used. Supported conventions are listed in
+<a class="reference internal" href="#mds.netcdf.convention.CONVENTION_CLASSES" title="mds.netcdf.convention.CONVENTION_CLASSES"><tt class="xref py py-data docutils literal"><span class="pre">CONVENTION_CLASSES</span></tt></a>.</p>
+</dd></dl>
+
+<div class="section" id="module-mds.netcdf.convention.convention">
+<span id="mds-netcdf-convention-convention"></span><h4>mds.netcdf.convention.convention<a class="headerlink" href="#module-mds.netcdf.convention.convention" title="Permalink to this headline">¶</a></h4>
+<dl class="class">
+<dt id="mds.netcdf.convention.convention.Convention">
+<em class="property">class </em><tt class="descclassname">mds.netcdf.convention.convention.</tt><tt class="descname">Convention</tt><big>(</big><em>dataset</em>, <em>filter_out_nd_coordinates</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.convention.Convention" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="mds.netcdf.convention.convention.Convention.convention_names">
+<em class="property">static </em><tt class="descname">convention_names</tt><big>(</big><em>dataset</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.convention.Convention.convention_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="mds.netcdf.convention.convention.Convention.extent_of_variable">
+<em class="property">static </em><tt class="descname">extent_of_variable</tt><big>(</big><em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.convention.Convention.extent_of_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.convention.Convention.coordinate_variable_names">
+<tt class="descname">coordinate_variable_names</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.convention.Convention.coordinate_variable_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.convention.Convention.is_space_dimension_variable">
+<tt class="descname">is_space_dimension_variable</tt><big>(</big><em>dimension_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.convention.Convention.is_space_dimension_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.convention.Convention.space_dimension_names">
+<tt class="descname">space_dimension_names</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.convention.Convention.space_dimension_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.convention.Convention.data_variable_names">
+<tt class="descname">data_variable_names</tt><big>(</big><big>)</big><a class="headerlink" href="#mds.netcdf.convention.convention.Convention.data_variable_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.convention.Convention.spatial_data_variable_names">
+<tt class="descname">spatial_data_variable_names</tt><big>(</big><big>)</big><a class="headerlink" href="#mds.netcdf.convention.convention.Convention.spatial_data_variable_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.convention.Convention.is_spatial_variable">
+<tt class="descname">is_spatial_variable</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.convention.Convention.is_spatial_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.convention.Convention.extent">
+<tt class="descname">extent</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.convention.Convention.extent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.convention.Convention.variable_attribute_values">
+<tt class="descname">variable_attribute_values</tt><big>(</big><em>attribute_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.convention.Convention.variable_attribute_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.convention.Convention.spatial_dimension_slices">
+<tt class="descname">spatial_dimension_slices</tt><big>(</big><em>variable_name</em>, <em>extent</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.convention.Convention.spatial_dimension_slices" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.convention.Convention.compatible_data_variable_names">
+<tt class="descname">compatible_data_variable_names</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.convention.Convention.compatible_data_variable_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return OrderedSet with names of data variables that are compatible with
+data variable <em>variable_name</em>.</p>
+<p>If variable <em>variable_name</em> is a spatial data variable, compatible
+variables are those data variables that are not spatial or that are
+spatial and share the same spatial dimensions.</p>
+<p>If variable <em>variable_name</em> is not a spatial data variable, compatible
+variables are all data variables.</p>
+<p>The result includes <em>variable_name</em>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.convention.Convention.depends_on_nd_coordinate_variable">
+<tt class="descname">depends_on_nd_coordinate_variable</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.convention.Convention.depends_on_nd_coordinate_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mds.netcdf.convention.conventions">
+<span id="mds-netcdf-convention-conventions"></span><h4>mds.netcdf.convention.conventions<a class="headerlink" href="#module-mds.netcdf.convention.conventions" title="Permalink to this headline">¶</a></h4>
+<dl class="class">
+<dt id="mds.netcdf.convention.conventions.Conventions">
+<em class="property">class </em><tt class="descclassname">mds.netcdf.convention.conventions.</tt><tt class="descname">Conventions</tt><big>(</big><em>dataset</em>, <em>filter_out_nd_coordinates</em>, <em>conventions</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.conventions.Conventions" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a class that layers the conventions supported by this package
+and used by the dataset. This class will use all conventions and
+checks whether they all behave the same. This is mainly useful for
+debugging.</p>
+<dl class="method">
+<dt id="mds.netcdf.convention.conventions.Conventions.assert_equal_result_from_each_convention">
+<tt class="descname">assert_equal_result_from_each_convention</tt><big>(</big><em>result</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.conventions.Conventions.assert_equal_result_from_each_convention" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.conventions.Conventions.coordinate_variable_names">
+<tt class="descname">coordinate_variable_names</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.conventions.Conventions.coordinate_variable_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.conventions.Conventions.is_space_dimension_variable">
+<tt class="descname">is_space_dimension_variable</tt><big>(</big><em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.conventions.Conventions.is_space_dimension_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.conventions.Conventions.space_dimension_names">
+<tt class="descname">space_dimension_names</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.conventions.Conventions.space_dimension_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.conventions.Conventions.data_variable_names">
+<tt class="descname">data_variable_names</tt><big>(</big><big>)</big><a class="headerlink" href="#mds.netcdf.convention.conventions.Conventions.data_variable_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.conventions.Conventions.spatial_data_variable_names">
+<tt class="descname">spatial_data_variable_names</tt><big>(</big><big>)</big><a class="headerlink" href="#mds.netcdf.convention.conventions.Conventions.spatial_data_variable_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.conventions.Conventions.is_spatial_variable">
+<tt class="descname">is_spatial_variable</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.conventions.Conventions.is_spatial_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.conventions.Conventions.extent">
+<tt class="descname">extent</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.conventions.Conventions.extent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.conventions.Conventions.spatial_dimension_slices">
+<tt class="descname">spatial_dimension_slices</tt><big>(</big><em>variable_name</em>, <em>extent</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.conventions.Conventions.spatial_dimension_slices" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.conventions.Conventions.compatible_data_variable_names">
+<tt class="descname">compatible_data_variable_names</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.conventions.Conventions.compatible_data_variable_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.conventions.Conventions.dependent_variable_names">
+<tt class="descname">dependent_variable_names</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.conventions.Conventions.dependent_variable_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.conventions.Conventions.is_time_dimension_variable">
+<tt class="descname">is_time_dimension_variable</tt><big>(</big><em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.conventions.Conventions.is_time_dimension_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mds.netcdf.convention.cf">
+<span id="mds-netcdf-convention-cf"></span><h4>mds.netcdf.convention.cf<a class="headerlink" href="#module-mds.netcdf.convention.cf" title="Permalink to this headline">¶</a></h4>
+<dl class="function">
+<dt id="mds.netcdf.convention.cf.is_x">
+<tt class="descclassname">mds.netcdf.convention.cf.</tt><tt class="descname">is_x</tt><big>(</big><em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.cf.is_x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="mds.netcdf.convention.cf.is_y">
+<tt class="descclassname">mds.netcdf.convention.cf.</tt><tt class="descname">is_y</tt><big>(</big><em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.cf.is_y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="mds.netcdf.convention.cf.CF">
+<em class="property">class </em><tt class="descclassname">mds.netcdf.convention.cf.</tt><tt class="descname">CF</tt><big>(</big><em>dataset</em>, <em>filter_out_nd_coordinates</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.cf.CF" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class implements the <a class="reference external" href="http://cf-pcmdi.llnl.gov">Climate and Forecast Metadata Convention</a>.</p>
+<dl class="staticmethod">
+<dt id="mds.netcdf.convention.cf.CF.conforms">
+<em class="property">static </em><tt class="descname">conforms</tt><big>(</big><em>dataset</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.cf.CF.conforms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.cf.CF.is_coordinate_variable">
+<tt class="descname">is_coordinate_variable</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.cf.CF.is_coordinate_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.cf.CF.is_x_dimension_variable">
+<tt class="descname">is_x_dimension_variable</tt><big>(</big><em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.cf.CF.is_x_dimension_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.cf.CF.is_y_dimension_variable">
+<tt class="descname">is_y_dimension_variable</tt><big>(</big><em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.cf.CF.is_y_dimension_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.cf.CF.is_data_variable">
+<tt class="descname">is_data_variable</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.cf.CF.is_data_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.cf.CF.is_grid_mapping_variable">
+<tt class="descname">is_grid_mapping_variable</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.cf.CF.is_grid_mapping_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.cf.CF.dependent_variable_names">
+<tt class="descname">dependent_variable_names</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.cf.CF.dependent_variable_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mds.netcdf.convention.coards">
+<span id="mds-netcdf-convention-coards"></span><h4>mds.netcdf.convention.coards<a class="headerlink" href="#module-mds.netcdf.convention.coards" title="Permalink to this headline">¶</a></h4>
+<dl class="class">
+<dt id="mds.netcdf.convention.coards.Coards">
+<em class="property">class </em><tt class="descclassname">mds.netcdf.convention.coards.</tt><tt class="descname">Coards</tt><big>(</big><em>dataset</em>, <em>filter_out_nd_coordinates</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coards.Coards" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class implements the <a class="reference external" href="http://ferret.wrc.noaa.gov/noaa_coop/coop_cdf_profile.html">Cooperative Ocean/Atmosphere Research Data
+Service Convention</a>.</p>
+<p>By definition, coordinate variables are one-dimensional. This means that
+the <em>filter_out_nd_coordinates</em> setting is not relevant.</p>
+<dl class="staticmethod">
+<dt id="mds.netcdf.convention.coards.Coards.conforms">
+<em class="property">static </em><tt class="descname">conforms</tt><big>(</big><em>dataset</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coards.Coards.conforms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.coards.Coards.is_coordinate_variable">
+<tt class="descname">is_coordinate_variable</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coards.Coards.is_coordinate_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.coards.Coards.is_x_dimension_variable">
+<tt class="descname">is_x_dimension_variable</tt><big>(</big><em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coards.Coards.is_x_dimension_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.coards.Coards.is_y_dimension_variable">
+<tt class="descname">is_y_dimension_variable</tt><big>(</big><em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coards.Coards.is_y_dimension_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.coards.Coards.is_time_dimension_variable">
+<tt class="descname">is_time_dimension_variable</tt><big>(</big><em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coards.Coards.is_time_dimension_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.coards.Coards.is_data_variable">
+<tt class="descname">is_data_variable</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coards.Coards.is_data_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.coards.Coards.dependent_variable_names">
+<tt class="descname">dependent_variable_names</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coards.Coards.dependent_variable_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mds.netcdf.convention.coordinate">
+<span id="mds-netcdf-convention-coordinate"></span><h4>mds.netcdf.convention.coordinate<a class="headerlink" href="#module-mds.netcdf.convention.coordinate" title="Permalink to this headline">¶</a></h4>
+<dl class="class">
+<dt id="mds.netcdf.convention.coordinate.Coordinate">
+<em class="property">class </em><tt class="descclassname">mds.netcdf.convention.coordinate.</tt><tt class="descname">Coordinate</tt><big>(</big><em>dataset</em>, <em>filter_out_nd_coordinates</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coordinate.Coordinate" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class implements the <a class="reference external" href="http://www.unidata.ucar.edu/software/netcdf-java/reference/CoordinateAttributes.html">Coordinate Attribute Convention</a>.</p>
+<dl class="staticmethod">
+<dt id="mds.netcdf.convention.coordinate.Coordinate.conforms">
+<em class="property">static </em><tt class="descname">conforms</tt><big>(</big><em>dataset</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coordinate.Coordinate.conforms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.coordinate.Coordinate.coordinate_variable_names">
+<tt class="descname">coordinate_variable_names</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coordinate.Coordinate.coordinate_variable_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.coordinate.Coordinate.is_coordinate_variable">
+<tt class="descname">is_coordinate_variable</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coordinate.Coordinate.is_coordinate_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.coordinate.Coordinate.is_x_dimension_variable">
+<tt class="descname">is_x_dimension_variable</tt><big>(</big><em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coordinate.Coordinate.is_x_dimension_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.coordinate.Coordinate.is_y_dimension_variable">
+<tt class="descname">is_y_dimension_variable</tt><big>(</big><em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coordinate.Coordinate.is_y_dimension_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.coordinate.Coordinate.is_time_dimension_variable">
+<tt class="descname">is_time_dimension_variable</tt><big>(</big><em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coordinate.Coordinate.is_time_dimension_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.coordinate.Coordinate.is_data_variable">
+<tt class="descname">is_data_variable</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coordinate.Coordinate.is_data_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.coordinate.Coordinate.is_time_dimension">
+<tt class="descname">is_time_dimension</tt><big>(</big><em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coordinate.Coordinate.is_time_dimension" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.coordinate.Coordinate.is_listed_in_a_coordinate_axes_attribute">
+<tt class="descname">is_listed_in_a_coordinate_axes_attribute</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coordinate.Coordinate.is_listed_in_a_coordinate_axes_attribute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.coordinate.Coordinate.is_coordinate_axis_variable">
+<tt class="descname">is_coordinate_axis_variable</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coordinate.Coordinate.is_coordinate_axis_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.coordinate.Coordinate.is_coordinate_system_variable">
+<tt class="descname">is_coordinate_system_variable</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coordinate.Coordinate.is_coordinate_system_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.coordinate.Coordinate.is_coordinate_transform_variable">
+<tt class="descname">is_coordinate_transform_variable</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coordinate.Coordinate.is_coordinate_transform_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.coordinate.Coordinate.dependent_variable_names">
+<tt class="descname">dependent_variable_names</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.coordinate.Coordinate.dependent_variable_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mds.netcdf.convention.generic">
+<span id="mds-netcdf-convention-generic"></span><h4>mds.netcdf.convention.generic<a class="headerlink" href="#module-mds.netcdf.convention.generic" title="Permalink to this headline">¶</a></h4>
+<dl class="class">
+<dt id="mds.netcdf.convention.generic.Generic">
+<em class="property">class </em><tt class="descclassname">mds.netcdf.convention.generic.</tt><tt class="descname">Generic</tt><big>(</big><em>dataset</em>, <em>filter_out_nd_coordinates</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.generic.Generic" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class can be used in case there is no convention attribute present
+in the netcdf file, or if the convention that is mentioned is unsupported.</p>
+<p>This class implements the <a class="reference external" href="http://www.unidata.ucar.edu/software/netcdf/docs/attribute_conventions.html">generic attribute conventions</a> convention.</p>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">Merge this class with <tt class="xref py py-class docutils literal"><span class="pre">convention.Convention</span></tt> and let the
+other conventions override the default implementations.</p>
+</div>
+<dl class="staticmethod">
+<dt id="mds.netcdf.convention.generic.Generic.conforms">
+<em class="property">static </em><tt class="descname">conforms</tt><big>(</big><em>dataset</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.generic.Generic.conforms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether or not the <em>dataset</em> conforms to the convention.</p>
+<p>This function always returns True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.generic.Generic.is_coordinate_variable">
+<tt class="descname">is_coordinate_variable</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.generic.Generic.is_coordinate_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.generic.Generic.is_x_dimension_variable">
+<tt class="descname">is_x_dimension_variable</tt><big>(</big><em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.generic.Generic.is_x_dimension_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.generic.Generic.is_y_dimension_variable">
+<tt class="descname">is_y_dimension_variable</tt><big>(</big><em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.generic.Generic.is_y_dimension_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.generic.Generic.is_time_dimension_variable">
+<tt class="descname">is_time_dimension_variable</tt><big>(</big><em>variable</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.generic.Generic.is_time_dimension_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.generic.Generic.is_data_variable">
+<tt class="descname">is_data_variable</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.generic.Generic.is_data_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.netcdf.convention.generic.Generic.dependent_variable_names">
+<tt class="descname">dependent_variable_names</tt><big>(</big><em>variable_name</em><big>)</big><a class="headerlink" href="#mds.netcdf.convention.generic.Generic.dependent_variable_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+<div class="section" id="module-mds.tools">
+<span id="mds-netcdf-tools"></span><h2>mds.netcdf.tools<a class="headerlink" href="#module-mds.tools" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-mds.tools.opendap_to_netcdf">
+<span id="mds-netcdf-tools-opendap-to-netcdf"></span><h3>mds.netcdf.tools.opendap_to_netcdf<a class="headerlink" href="#module-mds.tools.opendap_to_netcdf" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF">
+<em class="property">class </em><tt class="descclassname">mds.tools.opendap_to_netcdf.</tt><tt class="descname">OPeNDAPtoNetCDF</tt><a class="headerlink" href="#mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.isLicensed">
+<tt class="descname">isLicensed</tt><big>(</big><big>)</big><a class="headerlink" href="#mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.isLicensed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.parameter_must_be_initialized">
+<em class="property">static </em><tt class="descname">parameter_must_be_initialized</tt><big>(</big><em>parameter</em>, <em>dataset_parameter</em><big>)</big><a class="headerlink" href="#mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.parameter_must_be_initialized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether <em>parameter</em> must be initialized or not.</p>
+<dl class="docutils">
+<dt>parameter</dt>
+<dd>Parameter to check.</dd>
+<dt>dataset_parameter</dt>
+<dd>Dataset parameter.</dd>
+</dl>
+<p>The <em>parameter</em> passed in must be initialized if either:</p>
+<ul class="simple">
+<li>The user asks for it (<em>parameter</em> is not altered and value is None).</li>
+<li>The <em>dataset_parameter</em> is new and <em>parameter</em> is not altered yet
+(<em>parameter</em> is not altered and <em>dataset_parameter</em> is None or has
+not been validated yet).</li>
+</ul>
+<p>When initializing <em>parameter</em>:</p>
+<ul class="simple">
+<li>Reset to empty if <em>dataset_parameter</em> is None.</li>
+<li>Reset to values if <em>dataset_parameter</em> is not None.</li>
+</ul>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.parameter_must_be_updated">
+<em class="property">static </em><tt class="descname">parameter_must_be_updated</tt><big>(</big><em>parameter</em>, <em>dataset_parameter</em><big>)</big><a class="headerlink" href="#mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.parameter_must_be_updated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether <em>parameter</em> must be updated or not.</p>
+<dl class="docutils">
+<dt>parameter</dt>
+<dd>Parameter to check.</dd>
+<dt>dataset_parameter</dt>
+<dd>Dataset parameter.</dd>
+</dl>
+<p>The <em>parameter</em> passed in must be updated if:</p>
+<ul class="simple">
+<li>The <em>dataset_parameter</em> is new and <em>parameter</em> is altered.</li>
+</ul>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.initialize_variables_list">
+<em class="property">static </em><tt class="descname">initialize_variables_list</tt><big>(</big><em>variables_parameter</em>, <em>dataset</em><big>)</big><a class="headerlink" href="#mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.initialize_variables_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize <em>variables_parameter</em>, given <em>dataset</em>.</p>
+<p>This function updates the parameter&#8217;s filter list.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.update_variables_list">
+<em class="property">static </em><tt class="descname">update_variables_list</tt><big>(</big><em>variables_parameter</em>, <em>dataset</em><big>)</big><a class="headerlink" href="#mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.update_variables_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update <em>variables_parameter</em>, given <em>dataset</em>.</p>
+<p>If the currently selected variables are all present in <em>dataset</em>, and
+only one of them is spatial, the filter is updated to only contain
+those data variables that are non-spatial or share the same spatial
+dimensions as the spatial variable currently selected. This prevents
+the user from selecting incompatible variables.</p>
+<p>In all other cases, the current list of selected variables is merged
+with the list of variables in <em>dataset</em> and used as the filter.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.variables_are_compatible">
+<em class="property">static </em><tt class="descname">variables_are_compatible</tt><big>(</big><em>variable_names</em>, <em>dataset</em><big>)</big><a class="headerlink" href="#mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.variables_are_compatible" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether <em>variable_names</em> are compatible.</p>
+<p>Variables are compatible if they share the same spatial dimensions or
+are non-spatial.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.default_output_directory_name">
+<em class="property">static </em><tt class="descname">default_output_directory_name</tt><big>(</big><big>)</big><a class="headerlink" href="#mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.default_output_directory_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the default output directory name.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.initialize_output_file">
+<em class="property">static </em><tt class="descname">initialize_output_file</tt><big>(</big><em>dataset_name</em>, <em>output_file_parameter</em><big>)</big><a class="headerlink" href="#mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.initialize_output_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.initialize_extent">
+<em class="property">static </em><tt class="descname">initialize_extent</tt><big>(</big><em>extent_parameter</em>, <em>dataset</em>, <em>variables_parameter</em><big>)</big><a class="headerlink" href="#mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.initialize_extent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.initialize_dimensions">
+<em class="property">static </em><tt class="descname">initialize_dimensions</tt><big>(</big><em>dimensions_parameter</em>, <em>dataset</em>, <em>value_selection_method</em>, <em>variables_parameter</em><big>)</big><a class="headerlink" href="#mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.initialize_dimensions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.getParameterInfo">
+<tt class="descname">getParameterInfo</tt><big>(</big><big>)</big><a class="headerlink" href="#mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.getParameterInfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.updateParameters">
+<tt class="descname">updateParameters</tt><big>(</big><em>parameters</em><big>)</big><a class="headerlink" href="#mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.updateParameters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.updateMessages">
+<tt class="descname">updateMessages</tt><big>(</big><em>parameters</em><big>)</big><a class="headerlink" href="#mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.updateMessages" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.execute">
+<tt class="descname">execute</tt><big>(</big><em>parameters</em>, <em>messages</em><big>)</big><a class="headerlink" href="#mds.tools.opendap_to_netcdf.OPeNDAPtoNetCDF.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">mds package</a><ul>
+<li><a class="reference internal" href="#module-mds.date_time">mds.date_time</a></li>
+<li><a class="reference internal" href="#module-mds.math">mds.math</a></li>
+<li><a class="reference internal" href="#module-mds.ordered_set">mds.ordered_set</a></li>
+<li><a class="reference internal" href="#module-mds.netcdf">mds.netcdf</a><ul>
+<li><a class="reference internal" href="#module-mds.netcdf.dataset">mds.netcdf.dataset</a></li>
+<li><a class="reference internal" href="#module-mds.netcdf.convention">mds.netcdf.convention</a><ul>
+<li><a class="reference internal" href="#module-mds.netcdf.convention.convention">mds.netcdf.convention.convention</a></li>
+<li><a class="reference internal" href="#module-mds.netcdf.convention.conventions">mds.netcdf.convention.conventions</a></li>
+<li><a class="reference internal" href="#module-mds.netcdf.convention.cf">mds.netcdf.convention.cf</a></li>
+<li><a class="reference internal" href="#module-mds.netcdf.convention.coards">mds.netcdf.convention.coards</a></li>
+<li><a class="reference internal" href="#module-mds.netcdf.convention.coordinate">mds.netcdf.convention.coordinate</a></li>
+<li><a class="reference internal" href="#module-mds.netcdf.convention.generic">mds.netcdf.convention.generic</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-mds.tools">mds.netcdf.tools</a><ul>
+<li><a class="reference internal" href="#module-mds.tools.opendap_to_netcdf">mds.netcdf.tools.opendap_to_netcdf</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Multidimension Supplemental Tools</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/mds.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Multidimension Supplemental Tools"
+             >previous</a> |</li>
+        <li><a href="index.html">Multidimension Supplemental Tools .. documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, ESRI.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
