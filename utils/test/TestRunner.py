@@ -52,7 +52,6 @@ if len(sys.argv) > 1:
 
 def main():
     ''' main test logic '''
-    testStartDateTime = datetime.datetime.now()
     if Configuration.DEBUG == True:
         print("TestRunner.py - main")
     else:
@@ -60,44 +59,34 @@ def main():
 
     # setup logger
     logName = None
-    logger = None
     if not logFileFromBAT == None:
         logName = logFileFromBAT
-        logger = UnitTestUtilities.initializeLogger(logFileFromBAT)
+        Configuration.Logger = UnitTestUtilities.initializeLogger(logFileFromBAT)
     else:
         logName = UnitTestUtilities.getLoggerName()
-        logger = UnitTestUtilities.initializeLogger(logName)
+        Configuration.Logger = UnitTestUtilities.initializeLogger(logName)
     print("Logging results to: " + str(logName))
-    UnitTestUtilities.setUpLogFileHeader(logger)
+    UnitTestUtilities.setUpLogFileHeader()
     
-    # download the data
-    # didDownload = DataDownload.runDataDownload(Configuration.visibilityPaths, "test_sun_position.gdb", DataDownload.sunPosUrl)
-    # print("Downloaded data? " + str(didDownload))
-    
-    # run the tests
-    result = runTestSuite(logger)
-    # send to log file
-    testEndDateTime = datetime.datetime.now()
-    primaryLogFile(result, logger)
+    result = runTestSuite()
+    logTestResults(result)
     print("END OF TEST =========================================\n")
-
-    del logger
     return
 
-def primaryLogFile(result, logger):
+def logTestResults(result):
     ''' Write the log file '''
     resultHead = resultsHeader(result)
     print(resultHead)
-    logger.info(resultHead)
+    Configuration.Logger.info(resultHead)
     if len(result.errors) > 0:
         rError = resultsErrors(result)
         print(rError)
-        logger.error(rError)
+        Configuration.Logger.error(rError)
     if len(result.failures) > 0:
         rFail = resultsFailures(result)
         print(rFail)
-        logger.error(rFail)
-    logger.info("END OF TEST =========================================\n")
+        Configuration.Logger.error(rFail)
+    Configuration.Logger.info("END OF TEST =========================================\n")
 
     return
 
@@ -128,20 +117,20 @@ def resultsFailures(result):
     return msg
    
 
-def runTestSuite(logger):
+def runTestSuite():
     ''' collect all test suites before running them '''
     if Configuration.DEBUG == True: print("TestRunner.py - runTestSuite")
     testSuite = unittest.TestSuite()
     result = unittest.TestResult()
 
     #What are we working with?
-    platform = "DESKTOP"
+    Configuration.Platform = "DESKTOP"
     if arcpy.GetInstallInfo()['ProductName'] == 'ArcGISPro':
-        platform = "PRO"
-    logger.info(platform + " =======================================")
+        Configuration.Platform = "PRO"
+    Configuration.Logger.info(Configuration.Platform + " =======================================")
 
-    testSuite.addTests(addVisibilitySuite(logger, platform))
-    testSuite.addTests(addCapabilitySuite(logger, platform))
+    testSuite.addTests(addVisibilitySuite())
+    testSuite.addTests(addCapabilitySuite())
     #addDataManagementTests(logger, platform)
     #addOperationalGraphicsTests(logger, platform)
     #addPatternsTests(logger, platform)
@@ -154,26 +143,24 @@ def runTestSuite(logger):
     return result
 
 
-def addCapabilitySuite(logger, platform):
+def addCapabilitySuite():
     ''' Add all Capability tests in the ./capability_tests folder '''
     if Configuration.DEBUG == True: print("TestRunner.py - addCapabilitySuite")
     from capability_tests import AllCapabilityTestSuite
     testSuite = unittest.TestSuite()
-    testSuite.addTests(AllCapabilityTestSuite.getCapabilityTestSuites(logger, platform))
+    testSuite.addTests(AllCapabilityTestSuite.getCapabilityTestSuites())
     return testSuite
 
 # def addPatternsTests(suite):
     # #suite.addTest(PatternToolOneTestCase('test_name'))
     # return suite
 
-def addVisibilitySuite(logger, platform):
+def addVisibilitySuite():
     ''' Add all Visibility tests in the ./visibility_tests folder '''
     if Configuration.DEBUG == True: print("TestRunner.py - addVisibilitySuite")
     from visibility_tests import AllVisibilityTestSuite    
     suite = unittest.TestSuite()
-    suite.addTests(AllVisibilityTestSuite.getVisibilityTestSuites(logger, platform))
-    # suite.addTest(SunPositionAndHillshadeTestCase('test_sun_position_analysis'))
-    # suite.addTest(FindLocalPeaksTestCase('test_local_peaks'))
+    suite.addTests(AllVisibilityTestSuite.getVisibilityTestSuites())
     return suite
 
 # MAIN =============================================

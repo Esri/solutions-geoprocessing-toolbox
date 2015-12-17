@@ -21,6 +21,10 @@ import os
 
 DEBUG = False # this guy is a flag for extra messaging while debugging tests
 
+#NOTE: Logger and Platform are initialized in TestRunner's main()
+Logger = None
+Platform = None
+
 ''' Testing paths '''
 currentPath = os.path.dirname(__file__) # should go to .\solutions-geoprocessing-toolbox\utils\test
 repoPath = os.path.dirname(os.path.dirname(currentPath))
@@ -45,17 +49,7 @@ suitabilityPaths = os.path.normpath(os.path.join(currentPath, r"suitability_test
 
 ''' Visibility Paths'''
 visibilityPaths = os.path.normpath(os.path.join(currentPath, r"visibility_tests"))
-
-#logger is initialized in TestRunner's main()
-logger = None
-
-#### Visibility ####
-vis_GeodatabasePath = os.path.normpath(os.path.join(currentPath, r"../../visibility/data/geodatabases/"))
-vis_ScratchPath = os.path.normpath(os.path.join(currentPath, r"../../visibility/data/geodatabases"))
 vis_ToolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../visibility/toolboxes/"))
-vis_ScriptsPath = os.path.join(vis_ToolboxesPath, "scripts")
-sunPosToolbox = os.path.join(vis_ToolboxesPath, "Sun Position Analysis Tools_10.3.tbx")
-visandRangeToolbox = os.path.join(vis_ToolboxesPath, "Visibility and Range Tools_10.3.tbx")
 
 
 

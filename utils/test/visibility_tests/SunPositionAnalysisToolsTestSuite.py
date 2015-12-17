@@ -43,7 +43,7 @@ import Configuration
 
 ''' Test suite for all tools in the Sun Position Analysis Tools toolbox '''
     
-def getSunPositionTestSuite(log, platform):
+def getSunPositionTestSuite():
         
     desktopTestList = ["test_sun_position_analysis_desktop"]
         
@@ -53,42 +53,20 @@ def getSunPositionTestSuite(log, platform):
         print("      SunPositionAnalysisTestSuite.getSunPositionTestSuite")
         
     suite = unittest.TestSuite()
-    if platform == "PRO":
-        log.info("Sun Position Analysis Tools Pro tests")
-        suite = addTests(suite, log, proTestList)
+    if Configuration.Platform == "PRO":
+        Configuration.Logger.info("Sun Position Analysis Tools Pro tests")
+        suite = addTests(suite, proTestList)
     else:
-        log.info("Sun Position Analysis Tools Desktop tests")
-        suite = addTests(suite, log, desktopTestList)
+        Configuration.Logger.info("Sun Position Analysis Tools Desktop tests")
+        suite = addTests(suite, desktopTestList)
     return suite
     
-def addTests(suite, logger, inputTestList):
+def addTests(suite, inputTestList):
     for test in inputTestList:
         if Configuration.DEBUG == True:
             print("      SunPositionAnalysisTestSuite.addTests")
         print("adding test: " + str(test))
-        logger.info(test)
+        Configuration.Logger.info(test)
         suite.addTest(SunPositionAndHillshadeTestCase.SunPositionAndHillshadeTestCase(test))
     return suite
-        
-    # def runDesktopTests(self, suite):
-        # suite.addTest(SunPositionAndHillshadeTestCase.SunPositionAndHillshadeTestCase('test_sun_position_analysis_desktop'))
-        # return suite
-        
-    # def runProTests(self, suite):
-        # suite.addTest(SunPositionAndHillshadeTestCase.SunPositionAndHillshadeTestCase('test_sun_position_analysis_pro'))
-        # return suite
-        
-    # def runSunPosAnalysisTestSuite(self, suite, platform):
-        # result = unittest.TestResult()
-        
-        # if platform == "Pro":
-            # Configuration.logger.info("Running Sun Position Analysis Test Suite for Pro...")
-            # self.runProTests(suite)
-        # elif platform == "Desktop":
-            # Configuration.logger.info("Running Sun Position Analysis Test Suite for Desktop...")
-            # self.runDesktopTests(suite)
-            
-        # suite.run(result)
-        # print("Test success: {0}".format(str(result.wasSuccessful())))
-        # Configuration.logger.debug("Test success: {0}".format(str(result.wasSuccessful())))
-        # return result
+    

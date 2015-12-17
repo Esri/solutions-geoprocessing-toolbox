@@ -30,11 +30,8 @@ import sys
 import logging
 import zipfile
 import UnitTestUtilities
+import Configuration
 
-''' ArcGIS Online URL's '''
-# sunPosUrl = "http://www.arcgis.com/sharing/content/items/bf6a04b4c9a3447b91e9c0b4074ca1e4/data"
-
-####################################
 def createDataFolder(path):
     ''' If it doesn't already exist, create a 'data' sub-directory in the path '''
     dataPath = os.path.normpath(os.path.join(path, r"data"))
@@ -70,20 +67,19 @@ def runDataDownload(basePath, gdbName, url):
     ''' Download and extract the geodatabase with specified gdbName from the given url to the basePath's data folder '''
     dataPath = createDataFolder(basePath)
     gdbPath = os.path.normpath(os.path.join(dataPath, gdbName))
-    objects = [gdbName]
-    exists = UnitTestUtilities.folderPathsExist(objects)
-    print("GDB Exists? " + str(exists))
+    exists = UnitTestUtilities.folderPathsExist([gdbPath])
         
     if not exists:
-        print("Save Online Data test...")
         zipName = gdbName + ".zip"
         print("Zip Name: " + zipName)
         zipFile = saveOnlineDataAsZip(url, zipName)
         print("Extracting zip...")
-        extractDataZip(zipFile, gdbPath)
+        extractDataZip(zipFile, dataPath)
         print("Deleting zip...")
         deleteZip(zipFile)
-        return True
-    else:
-        return False
+        message = "Downloaded {0} to {1}".format(gdbName, dataPath)
+        print(message)
+        Configuration.Logger.info(message)
+        
+    return dataPath
     
