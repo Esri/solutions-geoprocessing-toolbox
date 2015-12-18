@@ -10,7 +10,6 @@ Tools to determine what you can or cannot see from a location.
 * [Visibility and Range Tools](#visibility-and-range-tools)
 * [Visibility Data Prep Tools](#visibility-data-prep-tools)
 * [Issues](#issues)
-* [Contributing](#contributing)
 * [Licensing](#licensing)
 
 ## Sun Position Analysis Tools
@@ -56,11 +55,7 @@ These tools are part of the [Visibility and Range Template](http://www.arcgis.co
 
 ## Issues
 
-Find a bug or want to request a new feature?  Please let us know by submitting an issue.
-
-## Contributing
-
-Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
+Find a bug or want to request a new feature?  Please let us know by submitting an [Issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues).
 
 ## Licensing
 
