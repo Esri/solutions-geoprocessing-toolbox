@@ -34,7 +34,7 @@ rem ==================================================
 
 REM usage: set LOG=<defaultLogFileName.log>
 REM name is optional; if not specified, name will be specified for you
-set LOG=
+set LOG=clustertest.log
 
 REM =====================================================
 REM If you have BOTH versions of Python installed:

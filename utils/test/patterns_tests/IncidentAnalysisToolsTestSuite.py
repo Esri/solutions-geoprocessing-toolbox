@@ -42,37 +42,45 @@ history:
 
 import logging
 import unittest
-import ClusterAnalysisTestCase
-import CountIncidentsByLOCTestCase
-import FindPercentChangeTestCase
-import HotSpotsByAreaTestCase
-import IncidentDensityTestCase
-import IncidentHotSpotsTestCase
-import IncidentTableToPointTestCase
+from . import ClusterAnalysisTestCase
+import Configuration
+# import CountIncidentsByLOCTestCase
+# import FindPercentChangeTestCase
+# import HotSpotsByAreaTestCase
+# import IncidentDensityTestCase
+# import IncidentHotSpotsTestCase
+# import IncidentTableToPointTestCase
 
-class IncidentAnalysisToolsTestSuite(unittest.TestSuite):
-    ''' Test suite for all test cases for the Incident Analysis Tools toolbox '''
+''' Test suite for all test cases for the Incident Analysis Tools toolbox '''
 
-    def runProTests(self, suite):
-        ''' Set up the Incident test for Pro'''
-        # suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_Choose_Field_Value_Script_Tool_Pro'))
-        return suite
+def getIncidentAnalysisTestSuite():
+    ''' Run the Incident Analysis tests as either Pro or Desktop'''
+        
+    desktopTests = ['test_cluster_analysis_desktop']
+    proTests = ['test_cluster_analysis_pro']
+        
+    if Configuration.DEBUG == True:
+        print("      IncidentAnalysisToolsTestSuite.getIncidentAnalysisTestSuite")
+        
+    suite = unittest.TestSuite()
+    if Configuration.Platform == "PRO":
+        Configuration.Logger.info("Incident Analysis Tools Pro tests")
+        suite = addTestsToSuite(suite, proTests)
+    else:
+        Configuration.Logger.info("Incident Analysis Tools Desktop tests")
+        suite = addTestsToSuite(suite, desktopTests)
 
-    def runDesktopTests(self, suite):
-        ''' Set up the Incident tests for Desktop'''
-        # suite.addTest(HLZTouchdownPointsTestCase.HLZTouchdownPoints('test_Choose_Field_Value_Script_Tool_Desktop'))
-        return suite
+    return suite
 
-    def runIncidentTests(self, testSuite, platform):
-        ''' run the Incident Analysis tests as either Pro or Desktop'''
-        result = unittest.TestResult()
 
-        if platform == "PRO":
-            self.runProTests(testSuite)
-        else:
-            self.runDesktopTests(testSuite)
-
-        testSuite.run(result)
-        print("Test success: {0}".format(str(result.wasSuccessful())))
-
-        return result
+def addTestsToSuite(testSuite, inputTestList):
+    ''' Add the list of tests to the test suite '''
+    if Configuration.DEBUG == True:
+        print("      IncidentAnalysisToolsTestSuite.addTests")
+    for test in inputTestList:
+        print("adding test: " + str(test))
+        Configuration.Logger.info(test)
+        testSuite.addTest(ClusterAnalysisTestCase.ClusterAnalysisTestCase(test))
+    return testSuite
+        
+    

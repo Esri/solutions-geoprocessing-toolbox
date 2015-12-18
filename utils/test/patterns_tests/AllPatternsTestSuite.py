@@ -36,4 +36,17 @@ history:
 
 import logging
 import unittest
-import IncidentAnalysisToolsTestSuite
+import Configuration
+from . import IncidentAnalysisToolsTestSuite
+
+
+def getPatternsTestSuites():
+    ''' This pulls together all of the toolbox test suites in this folder '''
+    if Configuration.DEBUG == True:
+        print("   AllPatternsTestSuite.getPatternsTestSuites")
+    Configuration.Logger.info("Adding Patterns Tests including: ")
+    testSuite = unittest.TestSuite()
+    
+    testSuite.addTests(IncidentAnalysisToolsTestSuite.getIncidentAnalysisTestSuite())
+    return testSuite
+    

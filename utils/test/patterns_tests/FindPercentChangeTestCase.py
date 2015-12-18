@@ -19,11 +19,30 @@
 # --------------------------------------------------
 # requirments: ArcGIS X.X, Python 2.7 or Python 3.4
 # author: ArcGIS Solutions
-# contact: ArcGISTeam<Solution>@esri.com
 # company: Esri
 # ==================================================
-# description: <Description>
-# ==================================================
 # history:
-# <date> - <initals> - <modifications>
+# 12/16/2015 - JH - initial creation
 # ==================================================
+
+import unittest
+import UnitTestUtilities
+import Configuration
+
+class FindPercentChangeTestCase(unittest.TestCase):
+    ''' Test all tools and methods related to the Find Percent Change tool
+    in the Incident Analysis toolbox'''
+     
+    def setUp(self):
+        
+        
+    def tearDown(self):
+        
+        
+    def test_percent_change_pro(self):
+        
+    
+    def test_percent_change_desktop(self):
+        
+        
+    def test_percent_change(self, toolboxPath):

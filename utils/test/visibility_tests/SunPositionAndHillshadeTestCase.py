@@ -56,6 +56,11 @@ class SunPositionAndHillshadeTestCase(unittest.TestCase):
         self.inputSurface = os.path.join(self.sunPosGDBPath, r"Jbad_SRTM_USGS_EROS")
         self.compareResults = os.path.join(self.sunPosGDBPath, r"compareResults")
         UnitTestUtilities.checkGeoObjects([self.inputArea, self.inputSurface, self.compareResults])
+        
+    # def tearDown(self):
+        # if Configuration.DEBUG == True: print("         SunPositionAndHillshadeTestCase.tearDown")
+        # UnitTestUtilities.deleteScratch(self.scratchGDB)
+        # return
             
     def test_sun_position_analysis_pro(self):
         arcpy.AddMessage("Testing Sun Position Analysis (Pro).")

@@ -43,6 +43,7 @@ operationalGraphicsPaths = os.path.normpath(os.path.join(currentPath, r"operatio
 
 ''' Patterns Paths '''
 patternsPaths = os.path.normpath(os.path.join(currentPath, r"patterns_tests"))
+patterns_ToolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../patterns/toolboxes/"))
 
 ''' Suitability Paths '''
 suitabilityPaths = os.path.normpath(os.path.join(currentPath, r"suitability_tests"))

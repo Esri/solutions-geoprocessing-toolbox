@@ -62,9 +62,10 @@ def getSunPositionTestSuite():
     return suite
     
 def addTests(suite, inputTestList):
-    for test in inputTestList:
-        if Configuration.DEBUG == True:
+    ''' Add the list of tests to the test suite '''
+    if Configuration.DEBUG == True:
             print("      SunPositionAnalysisTestSuite.addTests")
+    for test in inputTestList: 
         print("adding test: " + str(test))
         Configuration.Logger.info(test)
         suite.addTest(SunPositionAndHillshadeTestCase.SunPositionAndHillshadeTestCase(test))

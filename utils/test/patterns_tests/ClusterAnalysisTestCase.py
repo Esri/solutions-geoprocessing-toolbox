@@ -19,16 +19,54 @@
 # --------------------------------------------------
 # requirments: ArcGIS X.X, Python 2.7 or Python 3.4
 # author: ArcGIS Solutions
-# contact: ArcGISTeam<Solution>@esri.com
 # company: Esri
-# ==================================================
-# description: <Description>
+#
 # ==================================================
 # history:
-# <date> - <initals> - <modifications>
+# 12/16/2015 - JH - initial creation
 # ==================================================
 
+import os
+import arcpy
 import unittest
-import UnitTestCase
 import UnitTestUtilities
 import Configuration
+
+class ClusterAnalysisTestCase(unittest.TestCase):
+    ''' Test all tools and methods related to the Cluster Analysis tool
+    in the Incident Analysis toolbox'''
+    
+    proToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools.tbx")
+    desktopToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools_10.3.tbx")
+    scratchGDB = os.path.join(Configuration.patternsPaths, "data")
+    incidentDataPath = Configuration.patternsPaths
+    
+    def setUp(self):
+        if Configuration.DEBUG == True: print("     ClusterAnalysisTestCase.setUp")
+        UnitTestUtilities.checkArcPy()
+        if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
+            self.scratchGDB = UnitTestUtilities.createScratch(self.incidentDataPath)
+        
+    def tearDown(self):
+        if Configuration.DEBUG == True: print("     ClusterAnalysisTestCase.tearDown")
+        UnitTestUtilities.deleteScratch(self.scratchGDB)
+        
+    def test_cluster_analysis_pro(self):
+        arcpy.AddMessage("Testing Cluster Analysis (Pro).")
+        self.test_cluster_analysis(self.proToolboxPath)
+    
+    def test_cluster_analysis_desktop(self):
+        arcpy.AddMessage("Testing Cluster Analysis (Desktop).")
+        self.test_cluster_analysis(self.desktopToolboxPath)
+        
+    def test_cluster_analysis(self, toolboxPath):
+        try:
+            arcpy.AddMessage("Running actual Cluster Test!!!!")
+        
+        except arcpy.ExecuteError:
+            UnitTestUtilities.handleArcPyError()
+            
+        except:
+            UnitTestUtilities.handleGeneralError()
+        
+        
