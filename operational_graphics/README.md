@@ -31,6 +31,8 @@ Tools to build range cards for defensive positions.
 * Data Driven Pages Simulator (DDP-S)
  * NOTE - __The DDP-S script is a temporary workaround until the ArcGIS Pro team implements that functionality in the core software. The orignal source for this tool is [here](http://www.arcgis.com/home/item.html?id=f0ff6eb587b04ac29efb425a86f29fe2)__
 * Merge (System Tool)
+* Range Fans From Bearing And Traversal
+* Range Fans From Bearing Limits
 
 These tools are part of the [Range Cards](http://www.arcgis.com/home/item.html?id=22b1015a131e48a9ba31bf785272f08e)  Template.
 

@@ -33,8 +33,6 @@
 import os, sys, math, traceback
 import arcpy
 from arcpy import env
-import Utilities
-
 # Read in the parameters
 targetPointOrigin = arcpy.GetParameterAsText(0)
 numberCellsHo = arcpy.GetParameterAsText(1)
@@ -313,13 +311,26 @@ def ColIdxToXlName(index):
         else:
             return chr(index + ord('A') - 1) + result
 
+def GetApplication():
+    '''Return app environment as ARCMAP, ARCGIS_PRO, OTHER'''
+    try:
+        from arcpy import mp
+        return "ARCGIS_PRO"
+    except ImportError:
+        try:
+            from arcpy import mapping
+            mxd = arcpy.mapping.MapDocument("CURRENT")
+            return "ARCMAP"
+        except:
+            return "OTHER"
+
 def main():
     ''' main method '''
     try:
         #UPDATE
         gisVersion = arcpy.GetInstallInfo()["Version"]
         global appEnvironment
-        appEnvironment = Utilities.GetApplication()
+        appEnvironment = GetApplication()
         if DEBUG == True: arcpy.AddMessage("App environment: " + appEnvironment)
 
         global aprx
