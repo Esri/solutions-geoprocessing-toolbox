@@ -83,7 +83,7 @@ Additional information is available in the repository's [Wiki](https://github.co
 
 ## Requirements
 
-* ArcGIS Desktop 10.3.1+ or ArcGIS Pro 1.1+
+* ArcGIS Desktop 10.4+ or ArcGIS Pro 1.1+
     * Check [Releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases) for tools for previous versions of ArcGIS Desktop
 * Apache Ant - used to download and extract dependent data and run test drivers
 * Java Runtime Environment (JRE) or Developer Kit (JDK) (required by Ant)
@@ -101,8 +101,8 @@ Additional information is available in the repository's [Wiki](https://github.co
 The solutions-geoprocessing-toolbox repo is now supporting toolboxes for both ArcMap/ArcCatalog/ArcGlobe/ArcScene (collectively called ArcGIS for Desktop) and also ArcGIS Pro. Toolboxes that are modified in ArcGIS Pro are not
 backwards compatible with other ArcGIS Desktop applications (ArcMap), so most toolboxes are duplicated for one or the other. The naming of these toolboxes is as follows:
 
-* Toolboxes that are for ArcGIS Desktop 10.3 will include *_10.3* after the toolbox name. For example: **Visibility and Range Tools_10.3.tbx**
-* Toolboxes with a 'unversioned' name are for ArcGIS Pro 1.0. For example: **Visibility and Range Tools.tbx**
+* Toolboxes that are for ArcGIS Desktop 10.4 will include *_10.4* after the toolbox name. For example: **Visibility and Range Tools_10.4.tbx**
+* Toolboxes with a 'unversioned' name are for ArcGIS Pro 1.1. For example: **Visibility and Range Tools.tbx**
 
 Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 only. These toolboxes will follow the above naming convention, but will not have a duplicate.
 
@@ -140,19 +140,7 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 
 ### Running Verification Tests
 
-* Configure and verify Ant as described in the previous steps
-* To run all unit tests
-    * `> cd solutions-geoprocessing-toolbox`
-    * `>  ant -f run_all_tests.xml`
-    *  Note/Warning: this will run the test drivers from each test directory and can take several hours to run
-* To run individual unit tests
-    * Open Command Prompt>
-    * Go to the folder for the area you would like to test, the example below uses the `environment` area/folder, but each area has similar tests 
-    * `> cd solutions-geoprocessing-toolbox\environment\test`
-    * `> ant`
-    * Verify “Build Succeeded”
-
- 
+**This section is under reconstruction, per issue [#371](https://github.com/Esri/solutions-geoprocessing-toolbox/issues/371)**
 
 ## Resources
 
