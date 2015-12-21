@@ -8,21 +8,16 @@ Data Management tools help to prepare, format, filter, and organize your data in
 
 * [Relationship to mdcs-py](#relationship-to-mdcs-py)
 * [Adjust Sample Data Dates Tools](#adjust-sample-data-dates-tools)
-* [Build Elevation Mosaic Tools](#build-elevation-mosaic-tools)
 * [CADRG ECRG Tools](#cadrg-ecrg-tools)
 * [CIB Tools](#cib-tools)
 * [Elevation Tools](#elevation-tools)
 * [Geonames Tools](#geonames-tools)
-* [Imagery Basemap Tools](#imagery-basemap-tools)
 * [Import and Conversion Tools](#import-and-conversion-tools)
 * [LiDAR Elevation Tools](#lidar-elevation-tools)
 * [Network Data Preparation Tools](#network-data-preparation-tools)
 * [Patrol Data Capture Tools](#patrol-data-capture-tools)
 * [Publishable Task Tools](#publishable-task-tools)
-* [Scanned Map Basemap Tools](#scanned-map-basemap-tools)
-* [Topographic Basemap Tools](#topographic-basemap-tools)
 * [Issues](#issues)
-* [Contributing](#contributing)
 * [Licensing](#licensing)
 
 
@@ -42,16 +37,6 @@ This toolbox contains a tool to adjust the date fields of the sample data includ
 * Change Sample Data Dates to Recent Dates
 
 These tools are a part of the [Incident Analysis Template](http://www.arcgis.com/home/item.html?id=384d223647b24bcf9d2c6fd44f90d17f)
-
-## Build Elevation Mosaic Tools
-
-This toolbox contains tools that take raster or LIDAR data and create surface or terrain mosaics.
-
-* Build Elevation Mosaics
-* Create Derived Elevation Mosaic
-* Create Source Elevation Mosaics
-
-**These tools will be deprecated soon, and replaced by Elevation Tools**
 
 ## CADRG ECRG Tools
 
@@ -75,17 +60,6 @@ Tools for building geonames locator.
 * Create Geonames Gazetter Locator
 * Load Geonames File
 
-## Imagery Basemap Tools
-
-Tools to assist in building an imagery basemap from standard defense raster formats.
-
-* Add CIB Rasters to Mosaic Dataset
-* Calculate Raster Visibility
-* Create CIB Mosaic Dataset
-
-
-**These tools will be deprecated soon, and replaced by CIB Tools**
-
 ## Import and Conversion Tools (formerly Position Analysis Tools)
 
 Tools for converting tabular information to different geometries, and generating coordinate location datasets.
@@ -98,6 +72,8 @@ Tools for converting tabular information to different geometries, and generating
 * Table To Point
 * Table To Polygon
 * Table To Polyline
+
+These tools are a part of the [Import and Conversion Tools](http://solutions.arcgis.com/intelligence/templates/import-conversion/) template.
 
 ** - Range Rings has been removed from Import and Conversion as it is a duplication of the same tool in Visibility and Range Tools.
 
@@ -120,7 +96,6 @@ These tools are used to prepare road data for use in a road network dataset.
 ## Patrol Data Capture Tools
 
 Includes tools to import data that has been gathered on or after a patrol. This includes GPS data, saved in .gpx files, and Patrol Report data, saved in .xml files (as saved by an Infopath form)
-These tools are a part of the Patrol Data Capture template: http://www.arcgis.com/home/item.html?id=6238c4cdb3ca4a7ea54287241f53349f
 
 * Append Tracks to DB
 * Despike GPS Log
@@ -131,6 +106,8 @@ These tools are a part of the Patrol Data Capture template: http://www.arcgis.co
 * Recalculate Delta Times
 * Rejoin Track Parts
 * Remove Duplicate GPS Data
+
+These tools are a part of the [Patrol Data Capture](http://www.arcgis.com/home/item.html?id=6238c4cdb3ca4a7ea54287241f53349f) template.
 
 ## Publishable Task Tools
 
@@ -146,41 +123,13 @@ Publishable Tasks are a series of models that should be published as geoprocessi
   * Drive Time
   * Point-to-Point Route
 
-## Scanned Map Basemap Tools
-
-Tools for building a basemap from CADRG/ECRG scanned imagery.
-These tools are part of the Scanned Maps Template: http://www.arcgis.com/home/item.html?id=7837d4e358c644a98cf47f395e61d84d
-
-* Add Miscellaneous CADRG/ECRG Rasters To Mosaic Dataset
-* Add Standard CADRG/ECRG Rasters To Mosaic Dataset
-* Calculate Raster Visibility
-* Create CADRG/ECRG Mosaic Dataset
-
-
-**These tools will be deprecated soon, and replaced by CADRG ECRG Tools**
-
-## Topographic Basemap Tools
-
-Tools to assist in building a topographic basemap from feature data in the Urban Topographic Data Store (NGA's TFDM) geodatabase schema.
-These tools are part of the Topographic Basemap Map Template: http://www.arcgis.com/home/item.html?id=a2368ba5e3ac4459851a1ac3b5891c08
-
-* Add DTED 1,2 to Elevation Mosaic Dataset
-* Create Elevation Mosaic Dataset
-
-
-**These tools will be deprecated soon, and replaced by Elevation Tools**
-
 ## Issues
 
-Find a bug or want to request a new feature?  Please let us know by submitting an issue.
-
-## Contributing
-
-Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
+Find a bug or want to request a new feature?  Please let us know by submitting an [Issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues).
 
 ## Licensing
 
-Copyright 2014 Esri
+Copyright 2015 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

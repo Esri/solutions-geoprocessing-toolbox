@@ -9,7 +9,6 @@ Find patterns and trends through statistical and visual analysis.
 * [Incident Analysis Tools](#incident-analysis-tools)
 * [Movement Analysis Tools](#movement-analysis-tools)
 * [Issues](#issues)
-* [Contributing](#contributing)
 * [Licensing](#licensing)
 
 ## Incident Analysis Tools
@@ -33,13 +32,10 @@ Tools for analyzing raw movement data to identify patterns and frequency of acti
 
 * Visitation By Day Period
 
+
 ## Issues
 
-Find a bug or want to request a new feature?  Please let us know by submitting an issue.
-
-## Contributing
-
-Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
+Find a bug or want to request a new feature?  Please let us know by submitting an [Issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues).
 
 ## Licensing
 

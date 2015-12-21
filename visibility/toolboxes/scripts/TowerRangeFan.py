@@ -28,9 +28,9 @@ from arcpy import env
 from arcpy import sa
 
 # ARGUMENTS & LOCALS ===============================
-# (0)
-# (1)
-# (2)
+# (0) ?
+# (1) ?
+# (2) ?
 defPosFeatClass = arcpy.GetParameterAsText(3)
 descField = arcpy.GetParameterAsText(4)
 input_surface = arcpy.GetParameterAsText(16)
@@ -435,6 +435,8 @@ try:
     else:
         arcpy.AddWarning("Could not determine version.\n   Looking for ArcMap " + str(desktopVersion) + ", or ArcGIS Pro " + str(proVersion) + ".\n   Found version " + str(gisVersion))
 
+    # Set output parameters
+    arcpy.SetParameter(19, outFeature)
 
 except arcpy.ExecuteError: 
     # Get the tool error messages 

@@ -26,8 +26,6 @@ from xml.dom import minidom
 import Base
 
 class CreateMD(Base.Base):
-
-
     def __init__(self, base):
 
         self.srs = ''
@@ -41,7 +39,6 @@ class CreateMD(Base.Base):
 
 
     def createGeodataBase(self):
-
         if (self.m_base.m_IsSDE == True):       # MDCS doesn't create new SDE connections and assumes .SDE connection passed on exists @ the server
             return True                         # to create new Mosaic Datasets.
 
@@ -56,18 +53,17 @@ class CreateMD(Base.Base):
 
         # create Geodatabase
         try:
-            self.log("Creating Geodatabase: "+ self.m_base.m_geoPath, self.const_general_text)
+            self.log('Creating Geodatabase: ({})'.format(self.m_base.m_geoPath), self.const_general_text)
             if not os.path.exists(self.m_base.m_geoPath):
                 arcpy.CreateFileGDB_management(self.m_base.m_workspace, self.m_base.m_gdbName)
             else:
-                self.log("\tFile geodatabase already exists!", self.const_warning_text)
+                self.log("\t000258: File geodatabase already exists!", self.const_warning_text)
             return True
         except:
             return False
 
 
     def createMD(self):
-
         self.log("Creating source mosaic datasets:", self.const_general_text)
 
         try:
@@ -85,7 +81,6 @@ class CreateMD(Base.Base):
 
 
     def init(self, config):
-
         Nodelist = self.m_base.m_doc.getElementsByTagName("MosaicDataset")
         if (Nodelist.length == 0):
             self.log("\nError: MosaicDatasets node not found! Invalid schema.", self.const_critical_text)
@@ -110,5 +105,3 @@ class CreateMD(Base.Base):
             return False
 
         return True
-
-

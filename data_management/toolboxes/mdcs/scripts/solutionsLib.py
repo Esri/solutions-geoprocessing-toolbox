@@ -14,7 +14,7 @@
 #------------------------------------------------------------------------------
 # Name: SolutionsLib.py
 # Description: To map MDCS command codes to GP Tool functions.
-# Version: 20150422
+# Version: 20151027
 # Requirements: ArcGIS 10.1 SP1
 # Author: Esri Imagery Workflows team
 #------------------------------------------------------------------------------
@@ -100,6 +100,8 @@ class Solutions(Base.Base):
             bSuccess = createMD.init(self.config)
             if (bSuccess):
                 bSuccess = createMD.createGeodataBase()
+                if (not bSuccess):
+                    return False
                 return createMD.createMD()
             return False
 
@@ -251,6 +253,113 @@ class Solutions(Base.Base):
             except:
                 self.log(arcpy.GetMessages(), self.m_log.const_critical_text)
                 return False
+
+        elif (com == 'ANCP'):
+                    self.m_log.Message("\t{}:{}".format(self.commands[com]['desc'], self.m_base.m_mdName), self.m_log.const_general_text)
+                    fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
+                    return self.__invokeDynamicFn(
+                    [fullPath],
+                    'analyzecontrolpoints',
+                    'arcpy.AnalyzeControlPoints_management',
+                    index
+                    )
+        elif (com == 'APCP'):
+                    self.m_log.Message("\t{}:{}".format(self.commands[com]['desc'], self.m_base.m_mdName), self.m_log.const_general_text)
+                    return self.__invokeDynamicFn(
+                    [],
+                    'appendcontrolpoints',
+                    'arcpy.AppendControlPoints_management ',
+                    index
+                    )
+
+        elif (com == 'ABA'):
+                    self.m_log.Message("\t{}:{}".format(self.commands[com]['desc'], self.m_base.m_mdName), self.m_log.const_general_text)
+                    fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
+                    return self.__invokeDynamicFn(
+                    [fullPath],
+                    'applyblockadjustment',
+                    'arcpy.ApplyBlockAdjustment_management',
+                    index
+                    )
+
+        elif (com == 'CBA'):
+                    self.m_log.Message("\t{}:{}".format(self.commands[com]['desc'], self.m_base.m_mdName), self.m_log.const_general_text)
+                    fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
+                    return self.__invokeDynamicFn(
+                    [fullPath],
+                    'computeblockadjustment',
+                    'arcpy.ComputeBlockAdjustment_management',
+                    index
+                    )
+
+        elif (com == 'CCP'):
+                    self.m_log.Message("\t{}:{}".format(self.commands[com]['desc'], self.m_base.m_mdName), self.m_log.const_general_text)
+                    fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
+                    return self.__invokeDynamicFn(
+                    [fullPath],
+                    'computecontrolpoints',
+                    'arcpy.ComputeControlPoints_management',
+                    index
+                    )
+
+        elif (com == 'CTP'):
+                    self.m_log.Message("\tCompute Tie Points : " + self.m_base.m_mdName, self.m_log.const_general_text)
+                    fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
+                    return self.__invokeDynamicFn(
+                    [fullPath],
+                    'computetiepoints',
+                    'arcpy.ComputeTiePoints_management',
+                    index
+                    )
+
+        elif (com == 'AMDS'):
+                    self.m_log.Message("\tAlter Mosaic Dataset Schema : " + self.m_base.m_mdName, self.m_log.const_general_text)
+                    fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
+                    return self.__invokeDynamicFn(
+                    [fullPath],
+                    'altermosaicdatasetschema',
+                    'arcpy.AlterMosaicDatasetSchema_management',
+                    index
+                    )
+
+        elif (com == 'AMD'):
+                    self.m_log.Message("\Analyze Mosaic Dataset : " + self.m_base.m_mdName, self.m_log.const_general_text)
+                    fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
+                    return self.__invokeDynamicFn(
+                    [fullPath],
+                    'analyzemosaicdataset',
+                    'arcpy.AnalyzeMosaicDataset_management',
+                    index
+                    )
+
+        elif (com == 'BMDIC'):
+                    self.m_log.Message("\Build Mosaic Dataset Item Cache : " + self.m_base.m_mdName, self.m_log.const_general_text)
+                    fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
+                    return self.__invokeDynamicFn(
+                    [fullPath],
+                    'buildmosaicdatasetitemcache',
+                    'arcpy.BuildMosaicDatasetItemCache_management',
+                    index
+                    )
+
+        elif (com == 'CDA'):
+                    self.m_log.Message("\Compute Dirty Area : " + self.m_base.m_mdName, self.m_log.const_general_text)
+                    fullPath = os.path.join(self.m_base.m_geoPath, self.m_base.m_mdName)
+                    return self.__invokeDynamicFn(
+                    [fullPath],
+                    'computedirtyarea',
+                    'arcpy.ComputeDirtyArea_management',
+                    index
+                    )
+
+        elif (com == 'GEA'):
+                    self.m_log.Message("\Generate Exclude Area : " + self.m_base.m_mdName, self.m_log.const_general_text)
+                    return self.__invokeDynamicFn(
+                    [],
+                    'generateexcludearea',
+                    'arcpy.GenerateExcludeArea_management',
+                    index
+                    )
 
         elif (com == 'CS'):
             try:
@@ -795,7 +904,6 @@ class Solutions(Base.Base):
                         isQuery = False
                         query = self.getProcessInfoValue(processKey, 'query', index, indx)
                         lyrName = 'lyr_%s' % str(self.m_base.m_last_AT_ObjectID)
-
                         if (query != '#'):
                             isQuery = True
 
@@ -804,8 +912,8 @@ class Solutions(Base.Base):
                             expression += ' AND %s' % (query)
                         try:
                             arcpy.MakeMosaicLayer_management(fullPath, lyrName, expression)
-
-                            arcpy.CalculateField_management(lyrName,
+                            lyrName_footprint = lyrName + "/Footprint"
+                            arcpy.CalculateField_management(lyrName_footprint,
                             self.getProcessInfoValue(processKey, 'fieldname', index, indx),
                             self.getProcessInfoValue(processKey, 'expression', index, indx),
                             self.getProcessInfoValue(processKey, 'expression_type', index, indx),
@@ -817,7 +925,7 @@ class Solutions(Base.Base):
                         try:
                             arcpy.Delete_management(lyrName)     # passes for unknown/uncreated layer names
                         except:
-                            log.Message(arcpy.GetMessages(), log.const_warning_text)
+                            self.log(arcpy.GetMessages(), self.m_log.const_critical_text)
                             isError = True
 
                     return not isError
@@ -996,6 +1104,50 @@ class Solutions(Base.Base):
         },
     'BP' :
         {   'desc' : 'Build Pyramid.',
+            'fnc' : executeCommand
+        },
+    'ANCP' :
+        {   'desc' : 'Analyze Control Points.',
+            'fnc' : executeCommand
+        },
+    'APCP' :
+        {   'desc' : 'Append Control Points.',
+            'fnc' : executeCommand
+        },
+    'ABA' :
+        {   'desc' : 'Apply Block Adjustment.',
+            'fnc' : executeCommand
+        },
+    'CBA' :
+        {   'desc' : 'Compute Block Adjustment.',
+            'fnc' : executeCommand
+        },
+    'CCP' :
+        {   'desc' : 'Compute Control Points.',
+            'fnc' : executeCommand
+        },
+    'CTP' :
+        {   'desc' : 'Compute Tie Points.',
+            'fnc' : executeCommand
+        },
+    'AMDS' :
+        {   'desc' : 'Alter Mosaic Dataset Schema.',
+            'fnc' : executeCommand
+        },
+    'AMD' :
+        {   'desc' : 'Analyze Mosaic Dataset.',
+            'fnc' : executeCommand
+        },
+    'BMDIC' :
+        {   'desc' : 'Build Mosaic Dataset Item Cache.',
+            'fnc' : executeCommand
+        },
+    'CDA' :
+        {   'desc' : 'Compute Dirty Area.',
+            'fnc' : executeCommand
+        },
+    'GEA' :
+        {   'desc' : 'Generate Exclude Area.',
             'fnc' : executeCommand
         },
     'CS' :
@@ -1287,7 +1439,7 @@ class Solutions(Base.Base):
                         self.log('Unabled to add user defined function/command (%s) to command chain.' % (ucCommand), self.const_warning_text)
                         return False    # return to prevent further processing.
                 else:
-                    self.log("Command/Err: Unknown command:" + cmd, self.const_general_text)
+                    self.log("Command/Err: Unknown command:" + cmd, self.const_warning_text)
                     continue
 
             indexed_cmd = False if index == 0 else True
@@ -1310,6 +1462,7 @@ class Solutions(Base.Base):
 
             if (status == False and     # do not continue with any following commands if AR / user defined function commands fail.
                 (cmd == 'AR' or
+                 cmd == 'CM' or
                  is_user_cmd == True)):
                     return False
 

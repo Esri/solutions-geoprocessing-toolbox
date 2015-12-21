@@ -1,20 +1,33 @@
 [![Planned Issues](https://badge.waffle.io/Esri/solutions-geoprocessing-toolbox.png?label=0%20-%20backlog&title=In%20Backlog)](https://waffle.io/Esri/solutions-geoprocessing-toolbox)
 [![Issues in Progress](https://badge.waffle.io/Esri/solutions-geoprocessing-toolbox.png?label=2%20-%20In%20Progress&title=In%20Progress)](https://waffle.io/Esri/solutions-geoprocessing-toolbox)
 [![Issues waiting for Verification](https://badge.waffle.io/Esri/solutions-geoprocessing-toolbox.png?label=3%20-%20Verify&title=For%20Verification)](https://waffle.io/Esri/solutions-geoprocessing-toolbox)
-
 [![Code Climate](https://codeclimate.com/github/Esri/solutions-geoprocessing-toolbox/badges/gpa.svg)](https://codeclimate.com/github/Esri/solutions-geoprocessing-toolbox)
 # solutions-geoprocessing-toolbox
 
-The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tools for use in ArcGIS Desktop. These tools provide specialized processing, workflows, and analysis for defense, intelligence, emergency management, and other solutions domains.
+The ArcGIS Solutions Geoprocessing Toolbox is a collection of models, scripts, and tools for use in [ArcGIS for Desktop](http://www.esri.com/software/arcgis/arcgis-for-desktop) and [ArcGIS Pro](http://www.esri.com/en/software/arcgis-pro). These tools provide specialized processing, workflows, and analysis for defense, intelligence, emergency management, and other solutions domains. With these tools you can determine visibility from a specific viewpoint, create search grids, and analyze event data. They are included with many of Esri's [Solutions Templates](http://solutions.arcgis.com/), but developers can use this repository to download and contribute to the tool development process.
 
-![Image of the toolbox](SolutionsGeoprocessingToolboxGraphic.png)
+![Image of the toolbox](solutions-geoprocessing-toolbox-thumbnail007.png)
+
+
+###Repository Owner: [Matt](https://github.com/mfunk)
+
+* Merge Pull Requests
+* Creates Releases and Tags
+* Manages Milestones
+* Manages and Assigns Issues
+
+###Secondary: [Chris](https://github.com/csmoore)
+
+* Backup when the Owner is away
+
+Additional information is available in the repository's [Wiki](https://github.com/Esri/solutions-geoprocessing-toolbox/wiki).
 
 ## Sections
 
 * [Features](#features)
 * [Requirements](#requirements)
 * [A Tale of Two Toolboxes](#a-tale-of-two-toolboxes)
-* [Instructions](#instructions)
+* [Instructions To Get Started](#instructions-to-get-started)
 	* [General Help](#general-help)
 	* [Getting Started with the tools](#getting-started-with-the-tools)
 	* [Downloading Test Data](#downloading-test-data)
@@ -39,19 +52,15 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 
 * The [**data_management**](./data_management/README.md) folder contains:
   * Adjust Sample Data Dates Tools
-  * Build Elevation Mosaic Tools - **To be deprecated**, replaced by Elevation Tools
   * CADRG ECRG Tools
   * CIB Tools
   * Elevation Tools
   * Geonames Tools
-  * Imagery Basemap Tools - **To be deprecated**, replaced by CIB Tools
   * Import and Conversion Tools - formerly Position Analysis Tools
   * LiDAR Elevation Tools
   * Network Data Preparation Tools
   * Patrol Data Capture Tools
   * Publishable Task Tools
-  * Scanned Map Basemap Tools - **To be deprecated**, replaced by CADRG ECRG Tools
-  * Topographic Basemap Tools - **To be deprecated**, replaced by Elevation Tools
 
 * The [**operational_graphics**](./operational_graphics/README.md) folder contains:
   * Clearing Operations Tools
@@ -74,7 +83,7 @@ The ArcGIS Solutions Geoprocessing Toolbox is a set of models, scripts, and tool
 
 ## Requirements
 
-* ArcGIS Desktop 10.3+ or ArcGIS Pro 1.0+
+* ArcGIS Desktop 10.3.1+ or ArcGIS Pro 1.1+
     * Check [Releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases) for tools for previous versions of ArcGIS Desktop
 * Apache Ant - used to download and extract dependent data and run test drivers
 * Java Runtime Environment (JRE) or Developer Kit (JDK) (required by Ant)
@@ -101,7 +110,7 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 * [Help for ArcGIS Pro](http://pro.arcgis.com/en/pro-app/)
 
 
-## Instructions
+## Instructions To Get Started
 
 ### General Help
 [New to Github? Get started here.](http://htmlpreview.github.com/?https://github.com/Esri/esri.github.com/blob/master/help/esri-getting-to-know-github.html)
@@ -159,8 +168,9 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 
 ## Contributing
 
-Esri welcomes contributions from anyone and everyone through GitHub. Please see our [guidelines for contributing](https://github.com/esri/contributing).
+Esri welcomes contributions from anyone and everyone through GitHub. Please see Esri's [guidelines for contributing](https://github.com/esri/contributing).
 
+When you contribute to this repository we ask that you follow the guidelines below. If you've got questions, or you get stuck, please ask the [Repository Owner](#repository-owner). We are here to help! Thanks.
 
 ### Fork and Clone the Repo
 Start contributing to the solutions-geoprocessing-toolbox repo by making a fork and cloning it to your local machine.
@@ -198,6 +208,12 @@ If you've made changes to the repo that you want to share with the community.
 * Commit your changes to your local
 * Sync local with your remote fork
 * Make a **Pull Request** from your remote fork on github.com ![New Pull Request](NewPullRequestButtonIcon.png)
+
+
+### Notes On Contributing
+* Always work in the **dev** branch, never in *master*. This helps us keep our releases clean.
+* Never merge Pull Requests. The [Repository Owner](#repository-owner) needs to test any updates to make sure the repo is stable.
+* Always log an [Issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues) for problems you find, though you should check through the existing issues to make sure it wasn't already logged. 
 
 
 ## Credits

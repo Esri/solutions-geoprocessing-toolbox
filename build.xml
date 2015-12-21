@@ -52,6 +52,18 @@
   </target>
   
   <target name="get_data_management_data">
+    
+    <!-- LiDAR Tools Test Data: fa284eb04ce54f3a834958fca9a76f30 -->
+    <echo message="Downloading LiDAR Tools test data." />
+    <echo message="THIS IS A LARGE DATASET AND WILL TAKE SEVERAL MINUTES TO DOWNLOAD DEPENDING UPON YOUR CONNECTION SPEED..." />
+    <get src="http://www.arcgis.com/sharing/content/items/fa284eb04ce54f3a834958fca9a76f30/data"
+         dest="${dir.zipdir}/Test_LiDAR_Tools.zip"
+         usetimestamp="true"
+         verbose="true"/>
+    <echo message="Unzipping LiDAR Tools test data."/>
+    <unzip src="${dir.zipdir}/Test_LiDAR_Tools.zip"
+          dest="${dir.datamanagementdatadir}/las"/>    
+    
     <!-- Adjust Sample Data Dates Tools Test Data ... DATA NOT NEEDED FOR THIS TEST -->
     
     <!-- Position Analysis Tools Test Data: 130f52ac95a040cb80717d99db100409 -->
@@ -74,7 +86,7 @@
     <unzip src="${dir.zipdir}/PublishableTasksData.gdb.zip"
            dest="${dir.datamanagementdatadir}/geodatabases"/>
            
-    <!-- Build Elevation Mosaic Tools: b212e314ae00453aa5c4a0e3a8e072e6 & ALSO USES TOPOGRAPHIC BASEMAP TOOLS TEST DATA BELOW -->
+    <!-- Build Elevation Mosaic Tools: b212e314ae00453aa5c4a0e3a8e072e6-->
     <echo message="Downloading Build Elevation Mosaic test data" />
     <get src="http://www.arcgis.com/sharing/content/items/b212e314ae00453aa5c4a0e3a8e072e6/data"
           dest="${dir.zipdir}/BuildElevationMosaicToolsTestData.zip"
@@ -106,17 +118,15 @@
     <unzip src="${dir.zipdir}/NetworkPrepData.gdb.zip"
           dest="${dir.datamanagementdatadir}/geodatabases" />
     
-    <!-- Scanned Map Basemap Tools Test Data: HAS BEEN REMOVED-->
-    
     <!-- Topographic Basemap Tools Test Data: 8e682b02ca02482d8caaebae05cbdc1a -->
-    <echo message="Downloading topographic basemap data" />
+<!--    <echo message="Downloading topographic basemap data" />
     <get src="http://www.arcgis.com/sharing/content/items/8e682b02ca02482d8caaebae05cbdc1a/data"
           dest="${dir.zipdir}/Topographic.zip"
           verbose="true"
           usetimestamp="true"/>
     <echo message="Unzipping Topographic Basemap data" />
     <unzip src="${dir.zipdir}/Topographic.zip"
-          dest="${dir.datamanagementdatadir}" />  
+          dest="${dir.datamanagementdatadir}" /> --> 
     
     <!-- Patrol Data Capture Tools Test Data: 853736d171e44a40a55e4c312bf43b66-->
     <echo message="Downloading Patrol Data Capture Tools test data" />
@@ -142,7 +152,15 @@
     <unzip src="${dir.zipdir}/RangeCardToolsTestData.zip"
            dest="${dir.operationalgraphicsdatasdir}/geodatabases" />
     
-    <!-- Clearing Operations Tools Test Data -->
+    <!-- Clearing Operations Tools Test Data: 198f01e263474c209198c9c3c3586287 -->
+    <echo message="Downloading Clearing Operations Tools test data" />
+    <get src="http://www.arcgis.com/sharing/content/items/198f01e263474c209198c9c3c3586287/data"
+         dest="${dir.zipdir}/TestClearingOperationsTestData.zip"
+         verbose="true"
+         usetimestamp="true"/>
+    <echo message="Unzipping Clearing Operations Tools test data" />
+    <unzip src="${dir.zipdir}/TestClearingOperationsTestData.zip"
+           dest="${dir.operationalgraphicsdatasdir}/geodatabases" />    
     
   </target>
   
