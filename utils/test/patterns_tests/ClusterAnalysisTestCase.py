@@ -38,14 +38,20 @@ class ClusterAnalysisTestCase(unittest.TestCase):
     
     proToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools.tbx")
     desktopToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools_10.3.tbx")
-    scratchGDB = os.path.join(Configuration.patternsPaths, "data")
-    incidentDataPath = Configuration.patternsPaths
+    scratchGDB = None
+    incidentDataPath = os.path.join(Configuration.patternsPaths, "data")
+    
+    incidentGDB = os.path.join(incidentDataPath, "IncidentAnalysis.gdb")
+    inputIncidents = None
     
     def setUp(self):
         if Configuration.DEBUG == True: print("     ClusterAnalysisTestCase.setUp")
         UnitTestUtilities.checkArcPy()
         if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
             self.scratchGDB = UnitTestUtilities.createScratch(self.incidentDataPath)
+            
+        # set up inputs
+        self.inputPointsFeatures = os.path.join(self.incidentGDB, "Incidents")
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     ClusterAnalysisTestCase.tearDown")
@@ -61,7 +67,18 @@ class ClusterAnalysisTestCase(unittest.TestCase):
         
     def test_cluster_analysis(self, toolboxPath):
         try:
-            arcpy.AddMessage("Running actual Cluster Test!!!!")
+            if Configuration.DEBUG == True: print("     ClusterAnalysisTestCase.test_cluster_analysis")
+            # import the toolbox
+            arcpy.ImportToolbox(toolboxPath, "iaTools")
+            
+            # set up variables 
+            clusterDistance = 500
+            outputClusterFeatures = os.path.join(self.scratchGDB, "outputClusters")
+            # run the tool
+            arcpy.ClusterAnalysis_iaTools(self.inputIncidents, clusterDistance, outputClusterFeatures)
+            # assertions for passing test
+            clusterCount = int(arcpy.GetCount_management(os.path.join(self.scratchGDB, outputClusterFeatures)).getOutput(0))
+            self.assertEqual(clusterCount, int(37))
         
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()
