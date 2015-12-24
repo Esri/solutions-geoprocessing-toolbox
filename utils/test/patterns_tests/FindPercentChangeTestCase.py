@@ -27,6 +27,7 @@
 
 import unittest
 import arcpy
+import os
 import UnitTestUtilities
 import Configuration
 
@@ -53,10 +54,12 @@ class FindPercentChangeTestCase(unittest.TestCase):
         UnitTestUtilities.deleteScratch(self.scratchGDB)
         
     def test_percent_change_pro(self):
+        if Configuration.DEBUG == True: print("     FindPercentChangeTestCase.test_percent_change_pro")
         arcpy.AddMessage("Testing Find Percent Change (Pro).")
         self.test_percent_change(self.proToolboxPath)
         
     def test_percent_change_desktop(self):
+        if Configuration.DEBUG == True: print("     FindPercentChangeTestCase.test_percent_change_desktop")
         arcpy.AddMessage("Testing Find Percent Change (Desktop).")
         self.test_percent_change(self.desktopToolboxPath)
         

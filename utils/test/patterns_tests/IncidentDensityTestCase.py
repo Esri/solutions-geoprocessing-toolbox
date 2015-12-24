@@ -26,6 +26,8 @@
 # ==================================================
 
 import unittest
+import arcpy
+import os
 import UnitTestUtilities
 import Configuration
 
@@ -35,16 +37,17 @@ class IncidentDensityTestCase(unittest.TestCase):
     
     
     def setUp(self):
-        
+        if Configuration.DEBUG == True: print("     IncidentDensityTestCase.setUp")    
         
     def tearDown(self):
-        
+        if Configuration.DEBUG == True: print("     IncidentDensityTestCase.tearDown")    
         
     def test_incident_density_pro(self):
-        
+        if Configuration.DEBUG == True: print("     IncidentDensityTestCase.test_incident_density_pro")    
     
     def test_incident_density_desktop(self):
-        
+        if Configuration.DEBUG == True: print("     IncidentDensityTestCase.test_incident_density_desktop")    
         
     def test_incident_density(self, toolboxPath):
-        
+        if Configuration.DEBUG == True: print("     IncidentDensityTestCase.test_incident_density")
+            

@@ -26,6 +26,8 @@
 # ==================================================
 
 import unittest
+import arcpy
+import os
 import UnitTestUtilities
 import Configuration
 
@@ -35,15 +37,17 @@ class HotSpotsByAreaTestCase(unittest.TestCase):
     
     
     def setUp(self):
-        
+        if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.setUp")
         
     def tearDown(self):
-        
+        if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.tearDown")    
         
     def test_hot_spots_by_area_pro(self):
-        
+        if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.test_hot_spots_by_area_pro")    
     
     def test_hot_spots_by_area_desktop(self):
-        
+        if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.test_hot_spots_by_area_desktop")    
         
     def test_hot_spots_by_area(self, toolboxPath):
+        if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.test_hot_spots_by_area")
+            

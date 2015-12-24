@@ -35,15 +35,17 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
     
     
     def setUp(self):
-        
+        if Configuration.DEBUG == True: print("     CountIncidentsByLOCTestCase.setUp")    
         
     def tearDown(self):
-        
+        if Configuration.DEBUG == True: print("     CountIncidentsByLOCTestCase.tearDown")
         
     def test_count_incidents_pro(self):
-        
+        if Configuration.DEBUG == True: print("     CountIncidentsByLOCTestCase.test_count_incidents_pro")    
     
     def test_count_incidents_desktop(self):
-        
+        if Configuration.DEBUG == True: print("     CountIncidentsByLOCTestCase.test_count_incidents_desktop")    
         
     def test_count_incidents(self, toolboxPath):
+        if Configuration.DEBUG == True: print("     CountIncidentsByLOCTestCase.test_count_incidents")
+            

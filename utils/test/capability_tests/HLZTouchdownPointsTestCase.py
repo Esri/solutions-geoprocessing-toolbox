@@ -43,6 +43,7 @@ import os
 import unittest
 import Configuration
 import UnitTestUtilities
+import DataDownload
 
 class HLZTouchdownPoints(unittest.TestCase):
     ''' Test all tools and methods related to the HLZ Touchdown Points tool
@@ -52,7 +53,8 @@ class HLZTouchdownPoints(unittest.TestCase):
 
     tbxProFolderPath = os.path.join(Configuration.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools.tbx")
     tbxDesktopFolderPath = os.path.join(Configuration.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools_10.3.tbx")
-    testDataFolderPath = os.path.join(Configuration.capabilityPath, "data")
+    testDataFolderPath = None
+    #testDataFolderPath = os.path.join(Configuration.capabilityPath, "data")
 
     inputAirframeTable = None
     inputSuitableAreas = None
@@ -65,6 +67,8 @@ class HLZTouchdownPoints(unittest.TestCase):
         ''' set-up code '''
         if Configuration.DEBUG == True: print("         HLZTouchdownPoints.setUp")
         UnitTestUtilities.checkArcPy()
+        self.testDataFolderPath = DataDownload.createDataFolder(Configuration.capabilityPath)
+        print("Created Capability test data folder.")
         UnitTestUtilities.checkFilePaths([self.testDataFolderPath,
                                           self.tbxProFolderPath,
                                           self.tbxDesktopFolderPath])

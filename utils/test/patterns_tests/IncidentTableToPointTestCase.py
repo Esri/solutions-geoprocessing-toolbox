@@ -26,6 +26,8 @@
 # ==================================================
 
 import unittest
+import arcpy
+import os
 import UnitTestUtilities
 import Configuration
 
@@ -34,15 +36,17 @@ class IncidentTableToPointTestCase(unittest.TestCase):
     in the Incident Analysis toolbox'''
     
     def setUp(self):
-        
+        if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.setUp")    
         
     def tearDown(self):
-        
+        if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.tearDown")    
         
     def test_incident_table_to_point_pro(self):
-        
+        if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.test_incident_table_to_point_pro")    
     
     def test_incident_table_to_point_desktop(self):
-        
+        if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.test_incident_table_to_point_desktop")    
         
     def test_incident_table_to_point(self, toolboxPath):
+        if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.test_incident_table_to_point")
+            

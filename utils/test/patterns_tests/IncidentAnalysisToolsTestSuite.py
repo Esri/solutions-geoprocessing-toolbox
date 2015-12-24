@@ -42,14 +42,14 @@ history:
 
 import logging
 import unittest
-from . import ClusterAnalysisTestCase
 import Configuration
-# import CountIncidentsByLOCTestCase
-# import FindPercentChangeTestCase
-# import HotSpotsByAreaTestCase
-# import IncidentDensityTestCase
-# import IncidentHotSpotsTestCase
-# import IncidentTableToPointTestCase
+from . import ClusterAnalysisTestCase
+from . import CountIncidentsByLOCTestCase
+from . import FindPercentChangeTestCase
+from . import HotSpotsByAreaTestCase
+from . import IncidentDensityTestCase
+from . import IncidentHotSpotsTestCase
+from . import IncidentTableToPointTestCase
 
 ''' Test suite for all test cases for the Incident Analysis Tools toolbox '''
 
@@ -59,8 +59,7 @@ def getIncidentAnalysisTestSuite():
     desktopTests = ['test_cluster_analysis_desktop']
     proTests = ['test_cluster_analysis_pro']
         
-    if Configuration.DEBUG == True:
-        print("      IncidentAnalysisToolsTestSuite.getIncidentAnalysisTestSuite")
+    if Configuration.DEBUG == True: print("     IncidentAnalysisToolsTestSuite.getIncidentAnalysisTestSuite")
         
     suite = unittest.TestSuite()
     if Configuration.Platform == "PRO":
@@ -75,8 +74,7 @@ def getIncidentAnalysisTestSuite():
 
 def addTestsToSuite(testSuite, inputTestList):
     ''' Add the list of tests to the test suite '''
-    if Configuration.DEBUG == True:
-        print("      IncidentAnalysisToolsTestSuite.addTests")
+    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addTests")
     for test in inputTestList:
         print("adding test: " + str(test))
         Configuration.Logger.info(test)
