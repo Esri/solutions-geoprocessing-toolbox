@@ -26,8 +26,8 @@
 # 12/16/2015 - JH - initial creation
 # ==================================================
 
-import os
 import arcpy
+import os
 import unittest
 import UnitTestUtilities
 import Configuration
@@ -42,7 +42,7 @@ class ClusterAnalysisTestCase(unittest.TestCase):
     incidentDataPath = os.path.join(Configuration.patternsPaths, "data")
     
     incidentGDB = os.path.join(incidentDataPath, "IncidentAnalysis.gdb")
-    inputIncidents = os.path.join(incidentGDB, "Incidents")
+    inputPointsFeatures = None
     
     def setUp(self):
         if Configuration.DEBUG == True: print("     ClusterAnalysisTestCase.setUp")
@@ -75,9 +75,9 @@ class ClusterAnalysisTestCase(unittest.TestCase):
             # set up variables 
             clusterDistance = 500
             outputClusterFeatures = os.path.join(self.scratchGDB, "outputClusters")
-            # run the tool
-            arcpy.ClusterAnalysis_iaTools(self.inputIncidents, clusterDistance, outputClusterFeatures)
-            clusterCount = int(arcpy.GetCount_management(os.path.join(self.scratchGDB, outputClusterFeatures)).getOutput(0))
+
+            arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, clusterDistance, outputClusterFeatures)
+            clusterCount = int(arcpy.GetCount_management(outputClusterFeatures).getOutput(0))
             self.assertEqual(clusterCount, int(37))
         
         except arcpy.ExecuteError:

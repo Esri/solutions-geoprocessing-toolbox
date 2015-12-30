@@ -56,29 +56,40 @@ from . import IncidentTableToPointTestCase
 def getIncidentAnalysisTestSuite():
     ''' Run the Incident Analysis tests as either Pro or Desktop'''
         
-    desktopTests = ['test_cluster_analysis_desktop']
-    proTests = ['test_cluster_analysis_pro']
+    cluster_desktopTests = ['test_cluster_analysis_desktop']
+    cluster_proTests = ['test_cluster_analysis_pro']
+    count_desktopTests = ['test_count_incidents_desktop']
+    count_proTests = ['test_count_incidents_pro']
         
     if Configuration.DEBUG == True: print("     IncidentAnalysisToolsTestSuite.getIncidentAnalysisTestSuite")
         
     suite = unittest.TestSuite()
     if Configuration.Platform == "PRO":
         Configuration.Logger.info("Incident Analysis Tools Pro tests")
-        suite = addTestsToSuite(suite, proTests)
+        suite = addClusterTests(suite, cluster_proTests)
+        suite = addCountIncidentTests(suite, count_proTests)
     else:
         Configuration.Logger.info("Incident Analysis Tools Desktop tests")
-        suite = addTestsToSuite(suite, desktopTests)
+        suite = addClusterTests(suite, cluster_desktopTests)
+        suite = addCountIncidentTests(suite, count_desktopTests)
 
     return suite
 
 
-def addTestsToSuite(testSuite, inputTestList):
-    ''' Add the list of tests to the test suite '''
-    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addTests")
+def addClusterTests(testSuite, inputTestList):
+    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addClusterTests")
     for test in inputTestList:
         print("adding test: " + str(test))
         Configuration.Logger.info(test)
         testSuite.addTest(ClusterAnalysisTestCase.ClusterAnalysisTestCase(test))
+    return testSuite
+    
+def addCountIncidentTests(testSuite, inputTestList):
+    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addCountIncidentTests")
+    for test in inputTestList:
+        print("adding test: " + str(test))
+        Configuration.Logger.info(test)
+        testSuite.addTest(CountIncidentsByLOCTestCase.CountIncidentsByLOCTestCase(test))
     return testSuite
         
     
