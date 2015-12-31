@@ -43,13 +43,13 @@ history:
 import logging
 import unittest
 import Configuration
-from . import ClusterAnalysisTestCase
-from . import CountIncidentsByLOCTestCase
-from . import FindPercentChangeTestCase
-from . import HotSpotsByAreaTestCase
-from . import IncidentDensityTestCase
-from . import IncidentHotSpotsTestCase
-from . import IncidentTableToPointTestCase
+# from . import ClusterAnalysisTestCase
+# from . import CountIncidentsByLOCTestCase
+# from . import FindPercentChangeTestCase
+# from . import HotSpotsByAreaTestCase
+# from . import IncidentDensityTestCase
+# from . import IncidentHotSpotsTestCase
+# from . import IncidentTableToPointTestCase
 
 ''' Test suite for all test cases for the Incident Analysis Tools toolbox '''
 
@@ -60,6 +60,8 @@ def getIncidentAnalysisTestSuite():
     cluster_proTests = ['test_cluster_analysis_pro']
     count_desktopTests = ['test_count_incidents_desktop']
     count_proTests = ['test_count_incidents_pro']
+    density_desktopTests = ['test_incident_density_desktop']
+    density_proTests = ['test_incident_density_pro']
         
     if Configuration.DEBUG == True: print("     IncidentAnalysisToolsTestSuite.getIncidentAnalysisTestSuite")
         
@@ -68,16 +70,19 @@ def getIncidentAnalysisTestSuite():
         Configuration.Logger.info("Incident Analysis Tools Pro tests")
         suite = addClusterTests(suite, cluster_proTests)
         suite = addCountIncidentTests(suite, count_proTests)
+        suite = addIncidentDensityTests(suite, density_proTests)
     else:
         Configuration.Logger.info("Incident Analysis Tools Desktop tests")
         suite = addClusterTests(suite, cluster_desktopTests)
         suite = addCountIncidentTests(suite, count_desktopTests)
+        suite = addIncidentDensityTests(suite, density_desktopTests)
 
     return suite
 
 
 def addClusterTests(testSuite, inputTestList):
     if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addClusterTests")
+    from . import ClusterAnalysisTestCase
     for test in inputTestList:
         print("adding test: " + str(test))
         Configuration.Logger.info(test)
@@ -86,10 +91,20 @@ def addClusterTests(testSuite, inputTestList):
     
 def addCountIncidentTests(testSuite, inputTestList):
     if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addCountIncidentTests")
+    from . import CountIncidentsByLOCTestCase
     for test in inputTestList:
         print("adding test: " + str(test))
         Configuration.Logger.info(test)
         testSuite.addTest(CountIncidentsByLOCTestCase.CountIncidentsByLOCTestCase(test))
+    return testSuite
+    
+def addIncidentDensityTests(testSuite, inputTestList):
+    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addIncidentDensityTests")
+    from . import IncidentDensityTestCase
+    for test in inputTestList:
+        print("adding test: " + str(test))
+        Configuration.Logger.info(test)
+        testSuite.addTest(IncidentDensityTestCase.IncidentDensityTestCase(test))
     return testSuite
         
     

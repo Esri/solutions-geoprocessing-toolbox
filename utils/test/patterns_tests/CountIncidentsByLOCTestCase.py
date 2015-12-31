@@ -39,8 +39,8 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
     desktopToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools_10.3.tbx")
     scratchGDB = None
     incidentDataPath = os.path.join(Configuration.patternsPaths, "data")
-    
     incidentGDB = os.path.join(incidentDataPath, "IncidentAnalysis.gdb")
+    
     inputPointsFeatures = None
     inputLinesFeatures = None
 
