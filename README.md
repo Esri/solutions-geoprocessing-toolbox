@@ -8,6 +8,20 @@ The ArcGIS Solutions Geoprocessing Toolbox is a collection of models, scripts, a
 
 ![Image of the toolbox](solutions-geoprocessing-toolbox-thumbnail007.png)
 
+
+###Repository Owner: [Matt](https://github.com/mfunk)
+
+* Merge Pull Requests
+* Creates Releases and Tags
+* Manages Milestones
+* Manages and Assigns Issues
+
+###Secondary: [Chris](https://github.com/csmoore)
+
+* Backup when the Owner is away
+
+Additional information is available in the repository's [Wiki](https://github.com/Esri/solutions-geoprocessing-toolbox/wiki).
+
 ## Sections
 
 * [Features](#features)
@@ -69,7 +83,7 @@ The ArcGIS Solutions Geoprocessing Toolbox is a collection of models, scripts, a
 
 ## Requirements
 
-* ArcGIS Desktop 10.3.1+ or ArcGIS Pro 1.1+
+* ArcGIS Desktop 10.4+ or ArcGIS Pro 1.1+
     * Check [Releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases) for tools for previous versions of ArcGIS Desktop
 * Apache Ant - used to download and extract dependent data and run test drivers
 * Java Runtime Environment (JRE) or Developer Kit (JDK) (required by Ant)
@@ -87,8 +101,8 @@ The ArcGIS Solutions Geoprocessing Toolbox is a collection of models, scripts, a
 The solutions-geoprocessing-toolbox repo is now supporting toolboxes for both ArcMap/ArcCatalog/ArcGlobe/ArcScene (collectively called ArcGIS for Desktop) and also ArcGIS Pro. Toolboxes that are modified in ArcGIS Pro are not
 backwards compatible with other ArcGIS Desktop applications (ArcMap), so most toolboxes are duplicated for one or the other. The naming of these toolboxes is as follows:
 
-* Toolboxes that are for ArcGIS Desktop 10.3 will include *_10.3* after the toolbox name. For example: **Visibility and Range Tools_10.3.tbx**
-* Toolboxes with a 'unversioned' name are for ArcGIS Pro 1.0. For example: **Visibility and Range Tools.tbx**
+* Toolboxes that are for ArcGIS Desktop 10.4 will include *_10.4* after the toolbox name. For example: **Visibility and Range Tools_10.4.tbx**
+* Toolboxes with a 'unversioned' name are for ArcGIS Pro 1.1. For example: **Visibility and Range Tools.tbx**
 
 Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 only. These toolboxes will follow the above naming convention, but will not have a duplicate.
 
@@ -126,17 +140,7 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 
 ### Running Verification Tests
 
-* Configure and verify Ant as described in the previous steps
-* To run all unit tests
-    * `> cd solutions-geoprocessing-toolbox`
-    * `>  ant -f run_all_tests.xml`
-    *  Note/Warning: this will run the test drivers from each test directory and can take several hours to run
-* To run individual unit tests
-    * Open Command Prompt>
-    * Go to the folder for the area you would like to test, the example below uses the `environment` area/folder, but each area has similar tests 
-    * `> cd solutions-geoprocessing-toolbox\environment\test`
-    * `> ant`
-    * Verify “Build Succeeded”
+**This section is under reconstruction, per issue [#371](https://github.com/Esri/solutions-geoprocessing-toolbox/issues/371)**
 
 ## Resources
 
@@ -150,21 +154,6 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 
 * Find a bug or want to request a new feature?  Please let us know by submitting an issue.
 
-## Repository Points of Contact
-
-###Repository Owner: [Matt](https://github.com/mfunk)
-
-* Merge Pull Requests
-* Creates Releases and Tags
-* Manages Milestones
-* Manages and Assigns Issues
-
-###Secondary: [Chris](https://github.com/csmoore)
-
-* Backup when the Owner is away
-
-Additional information is available in the repository's [Wiki](https://github.com/Esri/solutions-geoprocessing-toolbox/wiki).
-
 ## Contributing
 
 Esri welcomes contributions from anyone and everyone through GitHub. Please see Esri's [guidelines for contributing](https://github.com/esri/contributing).
@@ -176,6 +165,9 @@ Start contributing to the solutions-geoprocessing-toolbox repo by making a fork 
 
 * Fork the **dev** branch from the repo on github.com with ![fork button](ForkButtonIcon.png)
 * Clone your remote onto your local system ![clone button](CloneInDesktopButtonIcon.png)
+* Get the *mdcs-py* submodule:
+	* `> git submodule init`
+	* `> git submodule update`
 
 ### Set Your Upstream
 Setting the parent repo to get changes from.
@@ -234,5 +226,5 @@ limitations under the License.
 A copy of the license is available in the repository's
 [license.txt](license.txt) file.
 
-[](Esri Tags: ArcGIS Defense and Intelligence Military Emergency Management National Security ArcGISSolutions)
+[](Esri Tags: ArcGIS Defense and Intelligence Military Emergency Management National Security)
 [](Esri Language: Python)
