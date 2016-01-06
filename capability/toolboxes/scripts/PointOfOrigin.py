@@ -12,19 +12,13 @@
 # 7/6/2015 - ps Added logic to check for Desktop, or Pro 1.0 in order to call cursor() properly for respective version.
 # 7/8/2015 - ps Review "locals", delete more locals.
 # 7/9/2015 - ps Modified  script to include function CheckVariables() which displays "locals()" when DEBUG is turned on.
-# 7/13/2015 - ps - Added logic to hold Group Layer Result with a time string appended to the Group Layer name.
-# 7/14/2015 - ps - Noticed that issue with hang at MakeFeatureLayer_management is related to Pro's Indexing and/or the Windows process ArcGISCleanup.exe
-# 7/16/2015 - ps - Added option to uncheck True Curve, results in densified polygon which can be projected on the fly more readily that True Curve
-# Using Build 3308 (1.1.1 release)
-# 10/19/2015 - ps - Restructured to use method in Utilities.py  - try block "from arcpy import mp" in GetApplication() function.
-# 10/20/2015 - ps - Fixes for Desktop part of Script that
+# 7/13/2015 - ps Added logic to hold Group Layer Result with a time string appended to the Group Layer name.
+# 7/14/2015 - ps Noticed that issue with hang at MakeFeatureLayer_management is related to Pro's Indexing and/or the Windows process ArcGISCleanup.exe
+# 7/16/2015 - ps Added option to uncheck True Curve, results in densified polygon which can be projected on the fly more readily that True Curve
+# Using Build 3308 (release candidate?)
 # ---------------------------------------------------------------------------
-# To do:
 # Have NOT changed overall structure of script to use Functions()
-# Embedd script in Script Tool. share as project template.
-# ---------------------------------------------------------------------------
-# Known issues:
-# Check for the cases where not all impact buffes intersect, currently results in empty answer.  Q: should any intersection be the result, or do all impact buffers have to intersect?  Might try as  raster process Euclidean distance?
+#
 # ======================Import arcpy module=================================
 import os, sys, traceback, math, decimal, time
 import arcpy
@@ -50,7 +44,7 @@ outputImpactRangeFeatures = [] # Feature Class - multiple
 
 outputCoordinateSystem = arcpy.GetParameter(13) # Coordinate System
 outputCoordinateSystemAsText = arcpy.GetParameterAsText(13) # String
-outputUseTrueCurve = arcpy.GetParameter(14) # boolean string (true or false)
+outputUseTrueCurve = arcpy.GetParameterAsText(14) # boolean string (true or false)
 
 # Will use a time stamp on the grouped layer for keeping track of multiple runs; prefix should distinguish Feature Classes?
 timestr = time.strftime("%Y%m%d_%H%M")
@@ -59,19 +53,11 @@ timestr = time.strftime("%Y%m%d_%H%M")
 delete_me = []
 DEBUG = False
 #DEBUG = True
-#------------------------------------------------------------------------------
-# NO LONGER NEEDED
-#app_found = 'NOT_SET'
-#toolbox10xSuffix = "_10.3"
-
-#desktopVersion = ["10.2.2","10.3","10.3.1"]
-#proVersion = ["1.0", "1.1", "1.2"]
-#------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
 # check which variables are still set...cleanup variables...
 def CheckVariables(inDict):
-
+    
     if DEBUG == True:
         func_mydict = inDict
         myList = []
@@ -86,66 +72,34 @@ def CheckVariables(inDict):
         dictlist.sort()
         for listItem in dictlist:
             arcpy.AddMessage(str(listItem))
-
+            
             print(listItem)
         arcpy.AddMessage(" ********************************************** ")
-
+            
     return
-
 #------------------------------------------------------------------------------
 
 def GetApplication():
-    '''Return app environment as: ARCMAP, ARCGIS_PRO, OTHER'''
-
-    #global app_found
-    try:
-        app_found
-    except NameError:
-        if DEBUG == True: arcpy.AddMessage("Variable app_found not initialized, setting to NOT_SET until it is determined")
-        print("app_found not set")
-        app_found = 'NOT_SET'
-
-    if app_found != 'NOT_SET':
-        return app_found
-
+    '''Return app environment as ARCMAP, ARCGIS_PRO, OTHER'''
     try:
         from arcpy import mp
+        return "ARCGIS_PRO"
     except ImportError:
         try:
             from arcpy import mapping
-            arcpy.AddMessage("In Desktop or python")
-            try:
-                mxd = arcpy.mapping.MapDocument("CURRENT")  # if an MXD has not been set, this would error if in ArcCatalog...
-                app_found = "ARCMAP"
-                arcpy.AddMessage("ARCMAP")
-                return app_found
-            except:
-                # doesnt really matter if its ArcCatalog or Python, neither will be able to add content to TOC if no MXD is set
-                pood_app_found = "ARCCATALOG"
-                app_found = "OTHER"
-                arcpy.AddMessage("ARCCATALOG")
-                return app_found
+            mxd = arcpy.mapping.MapDocument("CURRENT")
+            return "ARCMAP"
         except:
-            app_found = "OTHER"
-            return app_found
-    try:
-        aprx = arcpy.mp.ArcGISProject('CURRENT')
-        app_found = "ARCGIS_PRO"
-        return app_found
-    except:
-        app_found = "OTHER"
-        return app_found
-#------------------------------------------------------------------------------
-
-#------------------------------------------------------------------------------
+            return "OTHER"
+            
 
 if DEBUG == "True":
     arcpy.AddMessage("Check locals at begining ")
     mydict = dict(locals())
     CheckVariables(mydict)
 
-try:
-    # For the model and all outputs remove special characters and replace spaces with underscores
+try:       
+    # For the model and all outputs remove special characters and replace spaces with underscores    
     scrubbedPooOutPrefix = ''.join(e for e in pooOutPrefix if (e.isalnum() or e == " " or e == "_"))
     scrubbedPooOutPrefix = scrubbedPooOutPrefix.replace(" ", "_")
     scrubbedImpactOutPrefix = ''.join(e for e in impactOutPrefix if (e.isalnum() or e == " " or e == "_"))
@@ -153,23 +107,24 @@ try:
     scrubbedImpactBufferOutPrefix = ''.join(e for e in impactBufferOutPrefix if (e.isalnum() or e == " " or e == "_"))
     scrubbedImpactBufferOutPrefix = scrubbedImpactBufferOutPrefix.replace(" ", "_")
 
-    env.overwriteOutput = True
+    app = GetApplication() #what client is being run
+    env.overwriteOutput = True    
     scratch = env.scratchWorkspace
     if scratch == None:
         scratch = 'in_memory'
         env.scratchWorkspace = 'in_memory'
-
-
+    
+    
     if outputCoordinateSystemAsText == '':
         outputCoordinateSystem = arcpy.Describe(inFeature).spatialReference
         arcpy.AddWarning("Spatial Reference is not defined. Using Spatial Reference of Impact Points: " + str(outputCoordinateSystem .name))
     env.outputCoordinateSystem = outputCoordinateSystem
-
+    
     arcpy.AddMessage("Building impact points...")
     copyInFeatures = os.path.join(scratch,"copyInFeatures")
     outputImpactPointFeatures = os.path.join(outWorkspace,scrubbedImpactOutPrefix)
     arcpy.CopyFeatures_management(inFeature,copyInFeatures)
-    delete_me.append(copyInFeatures)
+    delete_me.append(copyInFeatures)   
     arcpy.AddXY_management(copyInFeatures)
     arcpy.ConvertCoordinateNotation_management(copyInFeatures,outputImpactPointFeatures, "Point_X", "Point_Y", "SHAPE", "MGRS")
     delete_me.append(copyInFeatures)
@@ -178,84 +133,73 @@ try:
 
     #Loop through the weapons and create create the Point of Origin for each
     for indexWeaponModel in range(len(selectedWeaponModels)):
-
+        
         selectedModel = selectedWeaponModels[indexWeaponModel]
         scrubbedModel = ''.join(e for e in selectedModel if (e.isalnum() or e == " " or e == "_"))
         scrubbedModel = scrubbedModel.replace(" ", "_")
         arcpy.AddMessage("Getting Range for: " + selectedModel)
-        if DEBUG == True:
-           arcpy.AddMessage("Model: " + selectedModel)
+        if DEBUG == True: 
+           arcpy.AddMessage("Model: " + selectedModel) 
            arcpy.AddMessage("Scrubbed Model: " + scrubbedModel)
-
-
+           
+        
         #Set the minimum and maximum range based on the selected weapon system
         where = modelField + " = " + selectedModel
         fields = minRangeField + "," + maxRangeField
         cursor = arcpy.SearchCursor(weaponTable, where, None,fields)
-
-        appEnvironment = GetApplication()
-
-        gisVersion = arcpy.GetInstallInfo()["Version"]
-        gisBuild = arcpy.GetInstallInfo()["BuildNumber"]
-
-        # Can run this is in ArcCatalog. It will skip symbology stuff later
-        # ArcCatalog or OTHER is fine...
-        # What about Server GP Services...?
-        if appEnvironment == 'ARCMAP' or appEnvironment == 'OTHER' :
-            record = cursor.next() # this is method for Python 2 (Pro 1.0.2)..?
+        
+        #TODO: remove version/app specific switching here if we can
+        # gisVersion = arcpy.GetInstallInfo()["Version"]
+        # gisBuild = arcpy.GetInstallInfo()["BuildNumber"]
+        # if gisVersion in desktopVersion or gisVersion == "1.0" or gisBuild == "3068":
+        if app == "ARCGIS_PRO":
+            record = cursor.next() # this is method for Pro 1.0.2, or public  beta 1.1 build 3068
         else:
-            if appEnvironment == 'ARCGIS_PRO':
-                record = next(cursor) # Python 3 method - but only works in Pro 1.1 later builds.
-
+            record = next(cursor) # Python 3 method - but only works in Pro 1.1 later builds.
+            
         minRange =  record.getValue(minRangeField)
         maxRange =  record.getValue(maxRangeField)
         if DEBUG == True:
             arcpy.AddMessage("Minimum Range: " + str(minRange))
             arcpy.AddMessage("Maximum Range: " + str(maxRange))
-
+            
         del cursor, record
 
-        # Create and combine buffers of all impact points
-        # Option to use True Curves set in Script tool, default is to not use True curves, which requires Densif_edit on Buffers into non-True Curve Polygons whice work when Project-on-the-Fly is used.
+        # combine buffers of all impact points -
+        # Consider not using True Curves, or Densifying/Generalizing Buffers into non-True Curve Polygons for Project-on-the-Fly 
         impactPointBuffersList = []
         inFields = ["OID@","SHAPE@"]
-        #
         rows = arcpy.da.SearchCursor(outputImpactPointFeatures,inFields)
-        for row in rows:
+        for row in rows:                   
             oid = row[0]
             feat = row[1]
             arcpy.AddMessage("Buffering Impact Point OID " + str(oid) + " for " + selectedModel)
-
-            # buffer the MAX distance from point - check if True Curves are not wanted
-
-            impactMaxBuffer = os.path.join(env.scratchWorkspace,"Impact_Max_" + str(oid) + "_" + scrubbedModel)
-            if DEBUG == True: arcpy.AddMessage( str(oid) + ", " + str(feat) + ", " + str(impactMaxBuffer) + ", " + str(maxRange) + ", " + str(outputUseTrueCurve ) )
-
-            if outputUseTrueCurve == True:
+            
+            # buffer the max distance from point - check if True Curves are not wanted 
+            impactMaxBuffer = os.path.join(env.scratchWorkspace,"Impact_Max_" + str(oid) + "_" + scrubbedModel)            
+            if outputUseTrueCurve == "true":
                 if DEBUG == True: arcpy.AddMessage("Using True Curve" )
                 arcpy.Buffer_analysis(feat,impactMaxBuffer,maxRange)
                 delete_me.append(impactMaxBuffer)
-
-            if outputUseTrueCurve == False:
+            if outputUseTrueCurve == "false":
                 if DEBUG == True: arcpy.AddMessage("Densifying True Curve to regular polygon" )
                 arcpy.Buffer_analysis(feat,impactMaxBuffer,maxRange)
                 arcpy.Densify_edit(impactMaxBuffer, "ANGLE","", "", "0.75")
                 delete_me.append(impactMaxBuffer)
-
-            # buffer the MIN distance from point
+                
+            # buffer the min distance from point
             impactMinBuffer = os.path.join(env.scratchWorkspace,"Impact_Min_" + str(oid) + "_" + scrubbedModel)
-
-            if outputUseTrueCurve == True:
+            if outputUseTrueCurve == "true":
                 if DEBUG == True: arcpy.AddMessage("Using True Curve" )
                 arcpy.Buffer_analysis(feat,impactMinBuffer,minRange)
                 delete_me.append(impactMinBuffer)
-
-            if outputUseTrueCurve == False:
+            if outputUseTrueCurve == "false":
                 if DEBUG == True: arcpy.AddMessage("Densifying True Curve to regular polygon" )
                 arcpy.Buffer_analysis(feat,impactMinBuffer,minRange)
                 arcpy.Densify_edit(impactMinBuffer, "ANGLE","", "", "0.75")
                 delete_me.append(impactMinBuffer)
-
+                
+            
             # Find the area within the model weapon areas min and max ranges
             impactPointClassName = scrubbedImpactBufferOutPrefix + "_" + str(oid) + "_" + scrubbedModel
             impactPointOut = os.path.join(outWorkspace,impactPointClassName)
@@ -268,13 +212,13 @@ try:
             arcpy.CalculateField_management(impactPointOut,"MinRange",minRange,"PYTHON_9.3")
             arcpy.AddField_management(impactPointOut,"MaxRange","DOUBLE","","","","Maximum Range")
             arcpy.CalculateField_management(impactPointOut,"MaxRange",maxRange,"PYTHON_9.3")
-
+            
             #Add this area to the list to be intersected.
             impactPointBuffersList.append(impactPointOut);
             #Add this area to the output list
             outputImpactRangeFeatures.append(impactPointOut)
         # impact point loop ends here, on to next point
-
+        
         #Intersect the areas of all impact points for this model
         featureClassName = scrubbedPooOutPrefix + "_" + scrubbedModel
         output_poo = os.path.join(outWorkspace,featureClassName)
@@ -286,14 +230,14 @@ try:
         modelOriginsDict[scrubbedModel] = [{"ranges":impactPointBuffersList},{"combined":output_poo}]
         del rows, row, indexWeaponModel
     # model loop ends here, on to next model
-
+    
     # now for symbology...
     if DEBUG == True: arcpy.AddMessage("Possible locations - examine some paths for locations of layer .lyrx files")
     if DEBUG == True: arcpy.AddMessage("layerSymLocation1 : " + os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
     if DEBUG == True: arcpy.AddMessage("layerSymLocation2 : " + os.path.join(os.path.dirname(__file__)))
     if DEBUG == True: arcpy.AddMessage("layerSymLocation3 : " + os.path.abspath(os.path.join(os.path.dirname(__file__))))
     if DEBUG == True: arcpy.AddMessage("layerSymLocation4 : " + os.path.abspath(os.path.join(os.path.dirname(__file__), 'commondata', 'userdata')))
-
+          
     # now for symbology, check to see if this where layers might be located due to "Share as Project Template", or "Export Project Package"...
 
     # 1. Layers in folder parallel to folder with script - standard as developed -  (i.e. /project_loc/scripts and /project_loc/layers)
@@ -301,7 +245,7 @@ try:
        os.path.isfile(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'layers', 'Impact_Point_Centers.lyrx'))):
         layerSymLocation = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'layers'))
     #
-    # 2. Layers restored into folder at same level as script /project_loc/pointoforigindetection.py and /project_loc/layers)
+    # 2. Layers restored from Share "Project Template" - in folder at same level as script /project_loc/pointoforigindetection.py and /project_loc/layers)
     elif os.path.isdir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'layers'))) and \
          os.path.isfile(os.path.abspath(os.path.join(os.path.dirname(__file__), 'layers', 'Impact_Point_Centers.lyrx'))):
         layerSymLocation = os.path.abspath(os.path.join(os.path.dirname(__file__), 'layers'))
@@ -311,8 +255,8 @@ try:
          os.path.isfile(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Impact_Point_Centers.lyrx'))):
         layerSymLocation = os.path.abspath(os.path.join(os.path.dirname(__file__),''))
     #
-    # 4. commondata\userdata - most common
-    # Layers restored from Share as "Project template" (and "Share as Project Package" - location (i.e /project_loc/pointoforigindetection.py and /project_loc/commondata/userdata/PointOfOrigin.lyrx)
+    # 4. commondata\userdata
+    # Layers restored from Share as "New Project Package"  - location (i.e /project_loc/pointoforigindetection.py and /project_loc/commondata/userdata/PointOfOrigin.lyrx)
     elif os.path.isdir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'commondata', 'userdata'))) and \
          os.path.isfile(os.path.abspath(os.path.join(os.path.dirname(__file__), 'commondata', 'userdata', 'Impact_Point_Centers.lyrx'))):
         layerSymLocation = os.path.abspath(os.path.join(os.path.dirname(__file__), 'commondata', 'userdata'))
@@ -322,59 +266,52 @@ try:
         arcpy.AddWarning("Cannot find location of required layer files (.lyrx), cannot continue")
     #
     if DEBUG == True: arcpy.AddMessage("Using layerSymLocation: " + str(layerSymLocation))
-    gisVersion = arcpy.GetInstallInfo()["Version"]
-    if DEBUG == True: arcpy.AddMessage(r"gisVersion: " + str(gisVersion))
 
-    try:
-        #else: #Update for automated test
-        if appEnvironment == 'ARCMAP':
-            arcpy.AddMessage("Using ArcMap")
-            from arcpy import mapping
+    if app == "ARCMAP":
+        mxd = None
+        try:    # what if we are running this from ArcCatalog with no MXD?
             mxd = arcpy.mapping.MapDocument('CURRENT')
+        except:  # if so, then just skip this part...
+            arcpy.AddWarning("Tool is not run in ArcMap, skipping symbolization scheme.")
+        else:   # otherwise lets add the stuff to our current data frame in our map.
             df = arcpy.mapping.ListDataFrames(mxd)[0]
-            isPro = False
-
-    #except:  # if "OTHER" , then just skip this part...
-            if appEnvironment == 'OTHER':
-                arcpy.AddWarning("Tool is not run in ArcMap, skipping symbolization scheme.")
-
+            
             # make group layer and add it to the map
-
             groupLayerPath = os.path.join(layerSymLocation,"New Group Layer.lyr")
             initialGroupLayer = arcpy.mapping.Layer(groupLayerPath)
             initialGroupLayer.name = "Point Of Origin Results"
             arcpy.mapping.AddLayer(df,initialGroupLayer)
             del initialGroupLayer
-
+            
             # get a reference to the group layer in the map
             topGroupLayer = arcpy.mapping.ListLayers(mxd,"Point Of Origin Results",df)[0]
-
+            
             # add the impact points
             impactPointLayer = arcpy.mapping.Layer(outputImpactPointFeatures)
             impactPointLayer.name = "Impact points"
             arcpy.ApplySymbologyFromLayer_management(impactPointLayer, os.path.join(layerSymLocation, "Impact Point Centers.lyr"))
             arcpy.mapping.AddLayerToGroup(df,topGroupLayer, impactPointLayer,"TOP")
-
+            
             # for all items in the combinedPooDict
             for model in modelOriginsDict:
-
+                
                 # make a group layer for each model
                 initialGroupLayer = arcpy.mapping.Layer(groupLayerPath)
                 initialGroupLayer.name = model
                 arcpy.mapping.AddLayerToGroup(df,topGroupLayer,initialGroupLayer,"BOTTOM")
                 modelGroupLayer = arcpy.mapping.ListLayers(mxd,model,df)[0]
                 del initialGroupLayer
-
+                
                 # get range and POO data from this model
                 modelData = modelOriginsDict[model]
-
+            
                 # make layer for combined area and add to model layer
                 combinedDict = modelData[1]
                 combinedAreaLayer = arcpy.mapping.Layer(combinedDict["combined"]) #combined
                 combinedAreaLayer.name = model + " Point Of Origin"
                 arcpy.ApplySymbologyFromLayer_management(combinedAreaLayer, os.path.join(layerSymLocation, "PointOfOrigin.lyr"))
                 arcpy.mapping.AddLayerToGroup(df,modelGroupLayer,combinedAreaLayer,"BOTTOM")
-
+                
                 # make Range group layer
                 initialGroupLayer = arcpy.mapping.Layer(groupLayerPath)
                 rangeLayerName = model + " Ranges by Impact OID"
@@ -382,7 +319,9 @@ try:
                 arcpy.mapping.AddLayerToGroup(df,modelGroupLayer,initialGroupLayer,"BOTTOM")
                 rangeGroupLayer = arcpy.mapping.ListLayers(mxd,rangeLayerName,df)[0]
                 del initialGroupLayer
+                
 
+                
                 # make Range group layer
                 initialGroupLayer = arcpy.mapping.Layer(groupLayerPath)
                 rangeLayerName = model + " Ranges by Impact OID"
@@ -390,143 +329,161 @@ try:
                 arcpy.mapping.AddLayerToGroup(df,modelGroupLayer,initialGroupLayer,"BOTTOM")
                 rangeGroupLayer = arcpy.mapping.ListLayers(mxd,rangeLayerName,df)[0]
                 del initialGroupLayer
-
+                
                 # Add the individual ranges to the range group layer
                 modelRanges = modelData[0]['ranges'] #ranges
                 for r in modelRanges:
                     rangeToAdd = arcpy.mapping.Layer(r)
                     arcpy.ApplySymbologyFromLayer_management(rangeToAdd, os.path.join(layerSymLocation, "ImpactRange.lyr"))
                     arcpy.mapping.AddLayerToGroup(df,rangeGroupLayer,rangeToAdd,"BOTTOM")
-
+            
             del df
-            del mxd
-
+        del mxd
+         
     # if Pro:
-    #if gisVersion == "1.0": #Pro: #Update for automated test
-        if appEnvironment == "ARCGIS_PRO":
-            from arcpy import mp
-            aprx = arcpy.mp.ArcGISProject("CURRENT")
-            mapList = aprx.listMaps()[0]
-            isPro = True
+    #elif gisVersion in proVersion: #This Is  ArcGIS Pro  1.0.2 or 1.1
+    elif app == "ARCGIS_PRO":
+        arcpy.AddMessage("Working in ArcGIS Pro " + str(gisVersion))
+        aprx = arcpy.mp.ArcGISProject(r"current")
+        m = aprx.listMaps()[0]
+        
+        # make top group layer
+        arcpy.AddMessage("Adding Top Group Layer...")
+        groupLayerPath = os.path.join(layerSymLocation,"New_Group_Layer.lyrx")
+        arcpy.AddMessage("Added Top Group Layer...")
+##      # initialGroupLayer without a date time string - remove if date time is approved by reviewers.
+##        initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
+##        initialGroupLayer.name = "Point Of Origin Results"
+##        m.addLayer(initialGroupLayer,"AUTO_ARRANGE")
+##        topGroupLayer = m.listLayers("Point Of Origin Results")[0]
+        
+               
+        # Add date/timestring to initialGroupLayer - older build were hanging when using this, at point of "Adding Impact Points..." ?
+        if DEBUG == True: arcpy.AddMessage("Using time string on m.addlayer...")
+        initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
+        initialGroupLayer_timestr = "Point Of Origin Results_" + timestr
+        initialGroupLayer.name = initialGroupLayer_timestr
+        m.addLayer(initialGroupLayer,"AUTO_ARRANGE")
+        if DEBUG == True: arcpy.AddMessage(" m.addlayer succeeded...")
+        topGroupLayer = m.listLayers(initialGroupLayer_timestr)[0]
+              
+        initialGroupLayer = None
+        #del initialGroupLayer # this line hangs tool dialog.(this line is not used, but appears there is a typo "initialGroupayer" in original code?)
+        
+        ## add the impact points
+        arcpy.AddMessage("Adding Impact Points ...")
+        #if DEBUG == True: arcpy.AddMessage("impactPointLayer1")
+        impactPointLayerFilePath = os.path.join(layerSymLocation,"Impact_Point_Centers.lyrx")
+        #if DEBUG == True: arcpy.AddMessage("impactPointLayer1a")
+        #impactPointLayer = arcpy.mp.LayerFile(impactPointLayerFilePath).listLayers()[0] # this line hangs tool dialog...
+        #if DEBUG == True: arcpy.AddMessage("impactPointLayer2")
+        #impactPointLayer.dataSource = outputImpactPointFeatures
+        #if DEBUG == True: arcpy.AddMessage("impactPointLayer3")
+        #impactPointLayer.name = "Impact points"
+        #if DEBUG == True: arcpy.AddMessage("impactPointLayer4")
+        #m.addLayerToGroup(topGroupLayer,impactPointLayer,"TOP")
+        #if DEBUG == True: arcpy.AddMessage("impactPointLayer5")
+        
+        ipName = "Impact points" + "_" + timestr
+        #ipNameX = "Impact pointsX"
+        
+        if DEBUG == True:
+            arcpy.AddMessage("Check locals() before MakeFeatureLayer ")
+            mydict = dict(locals())
+            CheckVariables(mydict)
+        if DEBUG == True: arcpy.AddMessage("arcpy.MakeFeatureLayer(...) ** Hang's here **" )
 
-            # make top group layer
-            arcpy.AddMessage("Adding Top Group Layer...")
-            groupLayerPath = os.path.join(layerSymLocation,"New_Group_Layer.lyrx")
-            arcpy.AddMessage("Added Top Group Layer...")
+        # ---> issue with: results = arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,ipName).getOutput(0) <---
+        try:           
+            if arcpy.Exists(outputImpactPointFeatures): # This describe is attempt to verify outputImpactPointFeatures is valid
+                # Create a Describe object from the feature class - put this in DEBUG when all is stable.
+                desc = arcpy.Describe(outputImpactPointFeatures)
 
-            # Add date/timestring to initialGroupLayer - older build were hanging when using this, at point of "Adding Impact Points..." ?
-            if DEBUG == True: arcpy.AddMessage("Using time string on mapList.addlayer...")
+                if DEBUG == True:
+                    # Print some feature class properties of outputImpactPointFeatures
+                    #
+                    arcpy.AddMessage("Feature Type:  " + desc.featureType)
+                    arcpy.AddMessage("Shape Type :   " + desc.shapeType)
+                    arcpy.AddMessage("Spatial Index: " + str(desc.hasSpatialIndex))
+                    arcpy.AddMessage("shapeFieldName:     " + desc.shapeFieldName)
+                    arcpy.AddMessage("ShapeType:     " + desc.shapeType)
+                    
+                if DEBUG == True: arcpy.AddMessage("Current outputImpactPointFeatures exist, proceeding with MakeFeatureLayer_management")			
+                results = arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,ipName, None, None).getOutput(0)
+                #results = arcpy.management.MakeFeatureLayer("imp_2000", "Impact Points_2015_1645", None, None, "OID OID VISIBLE NONE;Shape Shape VISIBLE NONE;POINT_X POINT_X VISIBLE NONE;POINT_Y POINT_Y VISIBLE NONE;MGRS_2 MGRS_2 VISIBLE NONE;MGRS MGRS VISIBLE NONE")
+            else:
+                arcpy.AddMessage("Error: " + outputImpactPointFeatures + " does not exist")
+        except Exception:
+            e = sys.exc_info()[1]
+            arcpy.AddError(e.args[0])
+    
+        
+# ['results', <arcpy._mp.Layer object at 0x0000000063221DA0>] - this is a layer object, cannot check .status or -> ErrorInfo: 'Layer' object has no attribute 'status'
+# tried sleeping until "result" status has succeeded... http://pro.arcgis.com/en/pro-app/arcpy/classes/result.htm -
+# tried change "results" to "result".
+        
+        #  Applying symbology to result points before adding to Group works better than after adding to group
+
+        if DEBUG == True: arcpy.AddMessage("ApplySymbologyFromLayer")
+        arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy does not always work prior to adding apply the symbology
+        #arcpy.ApplySymbologyFromLayer_management(ipName,impactPointLayerFilePath) # for some reason this guy does work prior to adding apply the symbology
+
+        ## following did not work, seems to want the "results" Layer Object.
+        ##arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,impactPointLayerFilePath) # for some reason this guy doesn't apply the symbology
+
+
+        if DEBUG == True: arcpy.AddMessage("m.addLayerToGroup(...)")
+        m.addLayerToGroup(topGroupLayer,results,"TOP")
+        #m.addLayerToGroup(topGroupLayer,ipName,"TOP")
+
+##        if DEBUG == True: arcpy.AddMessage("ApplySymbologyFromLayer")
+##        arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy doesn't apply the symbology
+        
+        # for all items in the combinedPooDict 
+        for model in modelOriginsDict:
+            arcpy.AddMessage("Adding model: " + str(model))
+            
+            # make a group layer for each model
             initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
-            initialGroupLayer_timestr = "Point Of Origin Results_" + timestr
-            initialGroupLayer.name = initialGroupLayer_timestr
-            mapList.addLayer(initialGroupLayer,"AUTO_ARRANGE")
-            if DEBUG == True: arcpy.AddMessage(" mapList.addlayer succeeded...")
-            topGroupLayer = mapList.listLayers(initialGroupLayer_timestr)[0]
-
+            initialGroupLayer.name = model
+            m.addLayerToGroup(topGroupLayer,initialGroupLayer,"BOTTOM")
+            modelGroupLayer = m.listLayers(model)[0]
             initialGroupLayer = None
-            #del initialGroupLayer # this line hangs tool dialog.  (pks - this line is not used, but appears there is a typo "initialGroupayer" in original code?)
+            
+            # get range and POO data from this model
+            modelData = modelOriginsDict[model]
+            
+            # make layer for combined area and add to model layer
+            combinedDict = modelData[1]
+            combinedAreaLayer = arcpy.mp.LayerFile(os.path.join(layerSymLocation, "PointOfOrigin.lyrx")).listLayers()[0]
+            combinedAreaLayer.dataSource = combinedDict["combined"]
+            combinedAreaLayer.name = model + " Point Of Origin"
+            m.addLayerToGroup(modelGroupLayer,combinedAreaLayer,"BOTTOM")
+            
+            initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
+            rangeLayerName = model + " Ranges by Impact OID"
+            initialGroupLayer.name = rangeLayerName
+            m.addLayerToGroup(modelGroupLayer,initialGroupLayer,"BOTTOM")
+            rangeGroupLayer = m.listLayers(rangeLayerName)[0]
+            initialGroupLayer = None
+            
+            # Add the individual ranges to the range group layer
+            modelRanges = modelData[0]['ranges']
+            for r in modelRanges:
+                rangeToAdd = arcpy.mp.LayerFile(os.path.join(layerSymLocation, "ImpactRange.lyrx")).listLayers()[0]
+                rangeToAdd.dataSource = r
+                rangeToAdd.name = os.path.basename(r)
+                m.addLayerToGroup(rangeGroupLayer,rangeToAdd,"BOTTOM")
 
-            ## add the impact points
-            arcpy.AddMessage("Adding Impact Points ...")
-            #if DEBUG == True: arcpy.AddMessage("impactPointLayer1")
-            impactPointLayerFilePath = os.path.join(layerSymLocation,"Impact_Point_Centers.lyrx")
-            #if DEBUG == True: arcpy.AddMessage("impactPointLayer1a")
-            #impactPointLayer = arcpy.mp.LayerFile(impactPointLayerFilePath).listLayers()[0] # this line hangs tool dialog...
-            #if DEBUG == True: arcpy.AddMessage("impactPointLayer2")
-            #impactPointLayer.dataSource = outputImpactPointFeatures
-            #if DEBUG == True: arcpy.AddMessage("impactPointLayer3")
-            #impactPointLayer.name = "Impact points"
-            #if DEBUG == True: arcpy.AddMessage("impactPointLayer4")
-            #mapList.addLayerToGroup(topGroupLayer,impactPointLayer,"TOP")
-            #if DEBUG == True: arcpy.AddMessage("impactPointLayer5")
-
-            ipName = "Impact points" + "_" + timestr
-
-            if DEBUG == True:
-                arcpy.AddMessage("Check locals() before MakeFeatureLayer ")
-                mydict = dict(locals())
-                CheckVariables(mydict)
-            if DEBUG == True: arcpy.AddMessage("arcpy.MakeFeatureLayer(...) ** Hang's here **" )
-
-            # ---> issue with: results = arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,ipName).getOutput(0) <---
-            try:
-                if arcpy.Exists(outputImpactPointFeatures): # This describe is attempt to verify outputImpactPointFeatures is valid
-                    # Create a Describe object from the feature class - put this in DEBUG when all is stable.
-                    desc = arcpy.Describe(outputImpactPointFeatures)
-
-                    if DEBUG == True:
-                        # Print some feature class properties of outputImpactPointFeatures
-                        #
-                        arcpy.AddMessage("Feature Type:  " + desc.featureType)
-                        arcpy.AddMessage("Shape Type :   " + desc.shapeType)
-                        arcpy.AddMessage("Spatial Index: " + str(desc.hasSpatialIndex))
-                        arcpy.AddMessage("shapeFieldName:     " + desc.shapeFieldName)
-                        arcpy.AddMessage("ShapeType:     " + desc.shapeType)
-
-                    if DEBUG == True: arcpy.AddMessage("Current outputImpactPointFeatures exist, proceeding with MakeFeatureLayer_management")
-                    results = arcpy.MakeFeatureLayer_management(outputImpactPointFeatures,ipName, None, None).getOutput(0)
-                    if DEBUG == True: arcpy.AddMessage("After MakeFeatureLayer_management")
-
-                else:
-                    arcpy.AddMessage("Error: " + outputImpactPointFeatures + " does not exist")
-            except Exception:
-                e = sys.exc_info()[1]
-                arcpy.AddError(e.args[0])
-
-            #  Applying symbology to result points before adding to Group works better than after adding to group
-
-            if DEBUG == True: arcpy.AddMessage("ApplySymbologyFromLayer")
-            arcpy.ApplySymbologyFromLayer_management(results,impactPointLayerFilePath) # for some reason this guy does not always work prior to adding apply the symbology
-
-
-            if DEBUG == True: arcpy.AddMessage("mapList.addLayerToGroup(...)")
-            mapList.addLayerToGroup(topGroupLayer,results,"TOP")
-
-
-            # for all items in the combinedPooDict
-            for model in modelOriginsDict:
-                arcpy.AddMessage("Adding model: " + str(model))
-
-                # make a group layer for each model
-                initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
-                initialGroupLayer.name = model
-                mapList.addLayerToGroup(topGroupLayer,initialGroupLayer,"BOTTOM")
-                modelGroupLayer = mapList.listLayers(model)[0]
-                initialGroupLayer = None
-
-                # get range and POO data from this model
-                modelData = modelOriginsDict[model]
-
-                # make layer for combined area and add to model layer
-                combinedDict = modelData[1]
-                combinedAreaLayer = arcpy.mp.LayerFile(os.path.join(layerSymLocation, "PointOfOrigin.lyrx")).listLayers()[0]
-                combinedAreaLayer.dataSource = combinedDict["combined"]
-                combinedAreaLayer.name = model + " Point Of Origin"
-                mapList.addLayerToGroup(modelGroupLayer,combinedAreaLayer,"BOTTOM")
-
-                initialGroupLayer = arcpy.mp.LayerFile(groupLayerPath).listLayers()[0]
-                rangeLayerName = model + " Ranges by Impact OID"
-                initialGroupLayer.name = rangeLayerName
-                mapList.addLayerToGroup(modelGroupLayer,initialGroupLayer,"BOTTOM")
-                rangeGroupLayer = mapList.listLayers(rangeLayerName)[0]
-                initialGroupLayer = None
-
-                # Add the individual ranges to the range group layer
-                modelRanges = modelData[0]['ranges']
-                for r in modelRanges:
-                    rangeToAdd = arcpy.mp.LayerFile(os.path.join(layerSymLocation, "ImpactRange.lyrx")).listLayers()[0]
-                    rangeToAdd.dataSource = r
-                    rangeToAdd.name = os.path.basename(r)
-                    mapList.addLayerToGroup(rangeGroupLayer,rangeToAdd,"BOTTOM")
-
-                # Set Transparency of result Group Layers to "50"
-                if modelGroupLayer.supports("TRANSPARENCY"):
-                    modelGroupLayer.transparency = 50
-
-            del aprx, mapList
-
-    except:
-        arcpy.AddWarning(r"...Could not determine version.\n   Looking for ARCMAP or ARCGIS_PRO" )
+            # Set Transparency of result Group Layers to "50"
+            if modelGroupLayer.supports("TRANSPARENCY"):
+                modelGroupLayer.transparency = 50
+                
+        del aprx, m
+        
+        
+    else:
+        arcpy.AddWarning(r"...Could not determine version.\n   Looking for ArcMap " + str(desktopVersion) + ", or ArcGIS Pro " + str(proVersion) + ".\n   Found " + str(gisVersion))
 
     # Set tool output
     if DEBUG == True: arcpy.AddMessage("Setting output parameters...")
@@ -534,11 +491,11 @@ try:
     arcpy.SetParameter(11,outputPointsOfOriginFeatures) #Multiple?
     arcpy.SetParameter(12,outputImpactRangeFeatures) #Multiple?
     if DEBUG == True: arcpy.AddMessage("Done.")
-
-except arcpy.ExecuteError:
-    # Get the tool error messages
-    msgs = arcpy.GetMessages()
-    arcpy.AddError(msgs)
+  
+except arcpy.ExecuteError: 
+    # Get the tool error messages 
+    msgs = arcpy.GetMessages() 
+    arcpy.AddError(msgs) 
     print(msgs)
 
 except:
@@ -559,17 +516,23 @@ except:
     print(msgs)
 
 finally:
-
+          
+    
     # cleanup intermediate datasets
     if DEBUG == True: arcpy.AddMessage("Removing intermediate datasets...")
     for i in delete_me:
         if DEBUG == True: arcpy.AddMessage("Removing: " + str(i))
         arcpy.Delete_management(i)
 
+    
+    # delete some local variables
+    #del results, initialGroupLayer, combinedDict, modelGroupLayer
+    #del ipName, outputImpactPointFeatures, outputImpactFeatures, outputPointsOfOriginFeatures
+
     # check which variables are still set...cleanup variables...
     if DEBUG == True:
         arcpy.AddMessage("Check locals at end script run ")
         mydict = dict(locals())
         CheckVariables(mydict)
-#eof
+##eof
 

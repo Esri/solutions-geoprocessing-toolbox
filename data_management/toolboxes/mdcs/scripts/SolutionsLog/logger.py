@@ -14,7 +14,7 @@
 #------------------------------------------------------------------------------
 # Name: Logger.py
 # Description: Class to log status from components to log files.
-# Version: 20140417
+# Version: 20151101
 # Requirements: ArcGIS 10.1 SP1
 # Author: Esri Imagery Workflows team
 #------------------------------------------------------------------------------
@@ -26,17 +26,22 @@ from datetime import datetime
 import os,sys
 import arcpy
 
+solutionLib_path = os.path.dirname(os.path.dirname(__file__))        #set the location to the solutionsLib path
+sys.path.append(solutionLib_path)
+sys.path.append(os.path.join(solutionLib_path, 'Base'))
+import Base
+
 const_start_time_node = 'StartTime'
 const_end_time_node = 'EndTime'
 
-class Logger:
+class Logger(Base.Base):
 
     const_general_text = 0
     const_warning_text = 1
     const_critical_text = 2
     const_status_text = 3
 
-    def __init__(self):
+    def __init__(self, base):
         self.projects = {}
         self.command_order = []
         self.active_key = ''
@@ -49,6 +54,10 @@ class Logger:
         self.duration_label = ''
         self.logNamePrefix = ''
         self.logFileName = ''
+
+        if (base):
+            self.setLog(base.m_log)
+        self.m_base = base
 
         self.isGPRun = False
 
@@ -137,10 +146,18 @@ class Logger:
             _message = 'log-' + errorTypeText + ': ' + message     #print out error message to console while logging.
 
             if (self.isGPRun == True):
-                arcpy.AddMessage(_message)
+                _arcpy_msg = _message
+                if (messageType == self.const_warning_text):
+                    arcpy.AddWarning(_arcpy_msg)
+                elif (messageType == self.const_critical_text):
+                    arcpy.AddError(_arcpy_msg)
+                else:
+                    arcpy.AddMessage(_arcpy_msg)
             else:
                 print (_message)
-
+                msg_type = 'general'     # msg-code
+                if (self.m_base):
+                    self.m_base.invoke_cli_msg_callback(msg_type, [_message])
             return True
 
     def WriteLog(self, project):
@@ -263,7 +280,7 @@ class Logger:
 
             logPath = os.path.join(self.logFolder, recordUpdated )
             c = open(logPath, "w")
-            c.write(doc.toxml())
+            c.write(doc.toprettyxml())
             c.close()
         except:
             print ("\nError creating log file.")

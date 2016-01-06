@@ -14,7 +14,7 @@
 #------------------------------------------------------------------------------
 # Name: Base.py
 # Description: Base class used by MDCS/All Raster Solutions components.
-# Version: 20150421
+# Version: 20151209
 # Requirements: ArcGIS 10.1 SP1
 # Author: Esri Imagery Workflows team
 #------------------------------------------------------------------------------
@@ -50,43 +50,45 @@ class DynaInvoke:
         self.m_args = args
         self.m_evnt_update_args =  evnt_fnc_update_args
         self.m_log = log
-    def __message(self, msg, msg_type):
-        if (self.m_log is not None):
+    def _message(self, msg, msg_type):
+        if (self.m_log):
             return self.m_log(msg, msg_type)
         print (msg)
     def init(self):
         try:
             arg_count = eval('%s.__code__.co_argcount' % (self.m_name))
         except Exception as exp:
-            self.__message(str(exp), self.const_critical_text)
+            self._message(str(exp), self.const_critical_text)
             return False
         len_args = len(self.m_args)
         if (len_args < arg_count):
-            self.__message('Args less than required, filling with default (#)', self.const_warning_text)
+            self._message('Args less than required, filling with default (#)', self.const_warning_text)
             for i in range (len_args, arg_count):
                 self.m_args.append('#')
         elif (len_args > arg_count):
-            self.__message ('More args supplied than required to function (%s)' % (self.m_name), self.const_warning_text)
+            self._message ('More args supplied than required to function (%s)' % (self.m_name), self.const_warning_text)
             self.m_args = self.m_args[:arg_count]
         return True
     def invoke(self):
-        result = 'FAILED'
+        result = 'OK'
         try:
             if (self.m_evnt_update_args is not None):
                 usr_args = self.m_evnt_update_args(self.m_args, self.m_name)
+                if (usr_args is None):      # set to (None) to skip fnc invocation, it's treated as a non-error.
+                    return True
                 if (usr_args is not None and
-                    len(usr_args) == len(self.m_args)):      # user is only able to update the contents, not the trim or expand args.
-                        self.__message ('Original args may have been updated through custom code.', self.const_warning_text)
+                    len(usr_args) == len(self.m_args)):      # user is only able to update the contents, not to trim or expand args.
+                        self._message ('Original args may have been updated through custom code.', self.const_warning_text)
                         self.m_args = usr_args
-            self.__message ('Calling (%s)' % (self.m_name), self.const_general_text)
+            self._message ('Calling (%s)' % (self.m_name), self.const_general_text)
             ret = eval ('%s(*self.m_args)' % (self.m_name))     # gp-tools return NULL?
-            result = 'OK'
             return True
         except Exception as exp:
-            self.__message (str(exp), self.const_critical_text)
+            result = 'FAILED'
+            self._message (str(exp), self.const_critical_text)
             return False
         finally:
-            self.__message ('Status: %s' % (result), self.const_general_text)
+            self._message ('Status: %s' % (result), self.const_general_text)
 
 class Base(object):
 
@@ -106,7 +108,6 @@ class Base(object):
     const_init_ret_patch = 'patch'
     # ends
 
-
     #version specific
     const_ver_len = 4
 
@@ -123,8 +124,10 @@ class Base(object):
     CMODULE_NAME = 'MDCS_UC'
     # ends
 
-
-
+    # log status (codes)
+    CCMD_STATUS_OK = 'OK'
+    CCMD_STATUS_FAILED = 'Failed!'
+    # ends
 #ends
 
     def __init__(self):
@@ -168,7 +171,10 @@ class Base(object):
         self.setCodeBase(os.path.dirname(__file__))
         # ends
 
-
+        # client_callback_ptrs
+        self.m_cli_callback_ptr = None
+        self.m_cli_msg_callback_ptr = None
+        # ends
 
     def init(self):         #return (status [true|false], reason)
 
@@ -251,6 +257,26 @@ class Base(object):
         return (True, 'OK')
 
 
+    def invokeDynamicFnCallback(self, args, fn_name = None):
+        if (fn_name == None):
+            return args
+        fn = fn_name.lower()
+        if (self.invoke_cli_callback(fn_name, args)):
+            return args
+        return None
+
+    # cli callback ptrs
+    def invoke_cli_callback(self, fname, args):
+        if (not self.m_cli_callback_ptr is None):
+            return self.m_cli_callback_ptr(fname, args)
+        return args
+
+    def invoke_cli_msg_callback(self, mtype, args):
+        if (not self.m_cli_msg_callback_ptr is None):
+            return self.m_cli_msg_callback_ptr(mtype, args)
+        return args
+    # ends
+
     def setCodeBase(self, path):
         if (os.path.exists(path) == False):
             return None
@@ -332,7 +358,7 @@ class Base(object):
             try:
                 ret = fnc(data)
             except Exception as inf:
-                self.log('Error: executing user defined function (%s)' % (name), self.const_critical_text)
+                self.log('Executing user defined function (%s)' % (name), self.const_critical_text)
                 self.log(str(inf), self.const_critical_text)
                 return False
         except Exception as inf:
@@ -618,7 +644,6 @@ class Base(object):
 
 
     def updateART(self, doc, workspace, dataset):
-
         if (doc == None):
             return False
 
@@ -642,39 +667,35 @@ class Base(object):
                                 if (workspace != ''):
                                     vs[1] = ' ' + workspace
                                     if (node.nextSibling != None):
-                                        if (node.nextSibling.nodeName == 'PathName'):
-                                            node.nextSibling.firstChild.nodeValue = workspace
+                                        if (node.nextSibling.nextSibling.nodeName == 'PathName'):
+                                            node.nextSibling.nextSibling.firstChild.nodeValue = workspace
 
                             elif (vs_.find('rasterdataset') > 0):
                                 if (dataset != ''):
                                     vs[1] = ' ' + dataset
                                     if (node.previousSibling != None):
-                                        if (node.previousSibling.nodeName == 'Name'):
-                                            node.previousSibling.firstChild.nodeValue = dataset
+                                        if (node.previousSibling.previousSibling.nodeName == 'Name'):
+                                            node.previousSibling.previousSibling.firstChild.nodeValue = dataset
                         upd_buff.append('='.join(vs))
 
                     if (len(upd_buff) > 0):
                         upd_nodeValue = ';'.join(upd_buff)
                         node.firstChild.nodeValue = upd_nodeValue
 
-
             nodeName = 'ConnectionProperties'
             node_list = doc.getElementsByTagName(nodeName)
             found = False
             for node in node_list:      # only one node should exist.
-                for n in node.firstChild.childNodes:
-                    if (n.firstChild != None):
-                        if (n.firstChild.firstChild != None):
-                            if (n.firstChild.nodeName.lower() == 'key'):
-                                if (n.firstChild.firstChild.nodeValue.lower() == 'database'):
-                                    n.firstChild.nextSibling.firstChild.nodeValue  = workspace
+                for n in node.firstChild.nextSibling.childNodes:
+                    if (n.nextSibling != None):
+                        if (n.nextSibling.firstChild != None):
+                            if (n.nextSibling.firstChild.nextSibling.nodeName.lower() == 'key'):
+                                if (n.nextSibling.firstChild.nextSibling.firstChild.nodeValue.lower() == 'database'):
+                                    n.nextSibling.firstChild.nextSibling.nextSibling.nextSibling.firstChild.nodeValue  = workspace
                                     found = True
                                     break;
-
                 if (found == True):
                     break
-
-
         except Exception as inst:
             self.log(str(inst), self.const_critical_text)
             return False
