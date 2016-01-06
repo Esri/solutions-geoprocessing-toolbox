@@ -43,15 +43,9 @@ history:
 import logging
 import unittest
 import Configuration
-# from . import ClusterAnalysisTestCase
-# from . import CountIncidentsByLOCTestCase
-# from . import FindPercentChangeTestCase
-# from . import HotSpotsByAreaTestCase
-# from . import IncidentDensityTestCase
-# from . import IncidentHotSpotsTestCase
-# from . import IncidentTableToPointTestCase
 
 ''' Test suite for all test cases for the Incident Analysis Tools toolbox '''
+TestSuite = unittest.TestSuite()
 
 def getIncidentAnalysisTestSuite():
     ''' Run the Incident Analysis tests as either Pro or Desktop'''
@@ -62,49 +56,97 @@ def getIncidentAnalysisTestSuite():
     count_proTests = ['test_count_incidents_pro']
     density_desktopTests = ['test_incident_density_desktop']
     density_proTests = ['test_incident_density_pro']
+    hotSpots_desktopTests = ['test_hot_spots_by_area_desktop']
+    hotSpots_proTests = ['test_hot_spots_by_area_pro']
+    incidentHotSpots_desktopTests = ['test_incident_hot_spots_desktop']
+    incidentHotSpots_proTests = ['test_incident_hot_spots_pro']
+    tabletoPoint_desktopTests = ['test_incident_table_to_point_desktop']
+    tabletoPoint_proTests = ['test_incident_table_to_point_pro']
+    percentChange_desktopTests = ['test_percent_change_desktop']
+    percentChange_proTests = ['test_percent_change_pro']
         
     if Configuration.DEBUG == True: print("     IncidentAnalysisToolsTestSuite.getIncidentAnalysisTestSuite")
         
-    suite = unittest.TestSuite()
     if Configuration.Platform == "PRO":
         Configuration.Logger.info("Incident Analysis Tools Pro tests")
-        suite = addClusterTests(suite, cluster_proTests)
-        suite = addCountIncidentTests(suite, count_proTests)
-        suite = addIncidentDensityTests(suite, density_proTests)
+        addClusterTests(cluster_proTests)
+        addCountIncidentTests(count_proTests)
+        addIncidentDensityTests(density_proTests)
+        addHotSpotsByAreaTests(hotSpots_proTests)
+        addIncidentHotSpotsTests(incidentHotSpots_proTests)
+        addIncidentTableToPointTests(tabletoPoint_proTests)
+        addFindPercentChangeTests(percentChange_proTests)
     else:
         Configuration.Logger.info("Incident Analysis Tools Desktop tests")
-        suite = addClusterTests(suite, cluster_desktopTests)
-        suite = addCountIncidentTests(suite, count_desktopTests)
-        suite = addIncidentDensityTests(suite, density_desktopTests)
+        addClusterTests(cluster_desktopTests)
+        addCountIncidentTests(count_desktopTests)
+        addIncidentDensityTests(density_desktopTests)
+        addHotSpotsByAreaTests(hotSpots_desktopTests)
+        addIncidentHotSpotsTests(incidentHotSpots_desktopTests)
+        addIncidentTableToPointTests(tabletoPoint_desktopTests)
+        addFindPercentChangeTests(percentChange_desktopTests)
 
-    return suite
+    return TestSuite
 
 
-def addClusterTests(testSuite, inputTestList):
+def addClusterTests(inputTestList):
     if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addClusterTests")
     from . import ClusterAnalysisTestCase
     for test in inputTestList:
         print("adding test: " + str(test))
         Configuration.Logger.info(test)
-        testSuite.addTest(ClusterAnalysisTestCase.ClusterAnalysisTestCase(test))
-    return testSuite
+        TestSuite.addTest(ClusterAnalysisTestCase.ClusterAnalysisTestCase(test))
     
-def addCountIncidentTests(testSuite, inputTestList):
+def addCountIncidentTests(inputTestList):
     if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addCountIncidentTests")
     from . import CountIncidentsByLOCTestCase
     for test in inputTestList:
         print("adding test: " + str(test))
         Configuration.Logger.info(test)
-        testSuite.addTest(CountIncidentsByLOCTestCase.CountIncidentsByLOCTestCase(test))
-    return testSuite
+        TestSuite.addTest(CountIncidentsByLOCTestCase.CountIncidentsByLOCTestCase(test))
     
-def addIncidentDensityTests(testSuite, inputTestList):
+def addIncidentDensityTests(inputTestList):
     if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addIncidentDensityTests")
     from . import IncidentDensityTestCase
     for test in inputTestList:
         print("adding test: " + str(test))
         Configuration.Logger.info(test)
-        testSuite.addTest(IncidentDensityTestCase.IncidentDensityTestCase(test))
-    return testSuite
+        TestSuite.addTest(IncidentDensityTestCase.IncidentDensityTestCase(test))
+
+##
+def addHotSpotsByAreaTests(inputTestList):
+    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addHotSpotsByAreaTests")
+    from . import HotSpotsByAreaTestCase
+    for test in inputTestList:
+        print("adding test: " + str(test))
+        Configuration.Logger.info(test)
+        TestSuite.addTest(HotSpotsByAreaTestCase.HotSpotsByAreaTestCase(test))
+
+##        
+def addIncidentHotSpotsTests(inputTestList):
+    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addIncidentHotSpotsTests")
+    from . import IncidentHotSpotsTestCase
+    for test in inputTestList:
+        print("adding test: " + str(test))
+        Configuration.Logger.info(test)
+        TestSuite.addTest(IncidentHotSpotsTestCase.IncidentHotSpotsTestCase(test))
+        
+##
+def addIncidentTableToPointTests(inputTestList):
+    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addIncidentTableToPointTests")
+    from . import IncidentTableToPointTestCase
+    for test in inputTestList:
+        print("adding test: " + str(test))
+        Configuration.Logger.info(test)
+        TestSuite.addTest(IncidentTableToPointTestCase.IncidentTableToPointTestCase(test))
+
+##        
+def addFindPercentChangeTests(inputTestList):
+    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addFindPercentChangeTests")
+    from . import FindPercentChangeTestCase
+    for test in inputTestList:
+        print("adding test: " + str(test))
+        Configuration.Logger.info(test)
+        TestSuite.addTest(FindPercentChangeTestCase.FindPercentChangeTestCase(test))
         
     
