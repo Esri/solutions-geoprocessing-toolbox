@@ -28,7 +28,7 @@ import DataDownload
 class SunPositionAndHillshadeTestCase(unittest.TestCase):
     
     proToolboxPath = os.path.join(Configuration.vis_ToolboxesPath, "Sun Position Analysis Tools.tbx")
-    desktopToolboxPath = os.path.join(Configuration.vis_ToolboxesPath, "Sun Position Analysis Tools_10.3.tbx")
+    desktopToolboxPath = os.path.join(Configuration.vis_ToolboxesPath, "Sun Position Analysis Tools_10.4.tbx")
     
     inputGDB = None
     inputArea = None

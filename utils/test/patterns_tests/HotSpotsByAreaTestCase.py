@@ -37,7 +37,7 @@ class HotSpotsByAreaTestCase(unittest.TestCase):
     
     #TODO: find this test
     proToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools.tbx")
-    desktopToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools_10.3.tbx")
+    desktopToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools_10.4.tbx")
     scratchGDB = None
     incidentDataPath = os.path.join(Configuration.patternsPaths, "data")
     incidentGDB = os.path.join(incidentDataPath, "IncidentAnalysis.gdb")

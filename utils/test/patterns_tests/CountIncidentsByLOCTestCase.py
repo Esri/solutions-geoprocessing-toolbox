@@ -36,7 +36,7 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
     in the Incident Analysis toolbox'''
     
     proToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools.tbx")
-    desktopToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools_10.3.tbx")
+    desktopToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools_10.4.tbx")
     scratchGDB = None
     incidentDataPath = os.path.join(Configuration.patternsPaths, "data")
     incidentGDB = os.path.join(incidentDataPath, "IncidentAnalysis.gdb")
@@ -80,7 +80,7 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
             
             # set up variables
             searchRadius = 50
-            arcpy.CountBusinessByLOC_iaTools(self.inputPointsFeatures, self.inputLinesFeatures, searchRadius, outputCountFeatures)
+            arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures, self.inputLinesFeatures, searchRadius, outputCountFeatures)
             result = arcpy.GetCount_management(outputCountFeatures)
             featureCount = int(result.getOutput(0))
             self.assertEqual(featureCount, int(2971))
