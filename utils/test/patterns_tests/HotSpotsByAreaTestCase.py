@@ -51,7 +51,7 @@ class HotSpotsByAreaTestCase(unittest.TestCase):
             
     def tearDown(self):
         if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(self.scratchGDB)
+        # UnitTestUtilities.deleteScratch(self.scratchGDB)
         
     def test_hot_spots_by_area_pro(self):
         if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.test_hot_spots_by_area_pro")

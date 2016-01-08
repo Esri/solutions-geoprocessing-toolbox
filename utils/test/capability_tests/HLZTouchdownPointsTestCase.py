@@ -52,7 +52,7 @@ class HLZTouchdownPoints(unittest.TestCase):
     scratchGDB = None
 
     tbxProFolderPath = os.path.join(Configuration.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools.tbx")
-    tbxDesktopFolderPath = os.path.join(Configuration.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools_10.3.tbx")
+    tbxDesktopFolderPath = os.path.join(Configuration.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools_10.4.tbx")
     testDataFolderPath = None
     #testDataFolderPath = os.path.join(Configuration.capabilityPath, "data")
 

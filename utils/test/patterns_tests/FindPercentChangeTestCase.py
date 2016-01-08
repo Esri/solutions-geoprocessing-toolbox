@@ -51,7 +51,7 @@ class FindPercentChangeTestCase(unittest.TestCase):
             
     def tearDown(self):
         if Configuration.DEBUG == True: print("     FindPercentChangeTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(self.scratchGDB)
+        # UnitTestUtilities.deleteScratch(self.scratchGDB)
         
     def test_percent_change_pro(self):
         if Configuration.DEBUG == True: print("     FindPercentChangeTestCase.test_percent_change_pro")

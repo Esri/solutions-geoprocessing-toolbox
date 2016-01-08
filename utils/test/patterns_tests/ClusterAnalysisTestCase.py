@@ -56,7 +56,7 @@ class ClusterAnalysisTestCase(unittest.TestCase):
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     ClusterAnalysisTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(self.scratchGDB)
+        # UnitTestUtilities.deleteScratch(self.scratchGDB)
         
     def test_cluster_analysis_pro(self):
         arcpy.AddMessage("Testing Cluster Analysis (Pro).")

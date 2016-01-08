@@ -56,7 +56,7 @@ class IncidentHotSpotsTestCase(unittest.TestCase):
             
     def tearDown(self):
         if Configuration.DEBUG == True: print("     IncidentHotSpotsTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(self.scratchGDB)
+        # UnitTestUtilities.deleteScratch(self.scratchGDB)
         
     def test_incident_hot_spots_pro(self):
         if Configuration.DEBUG == True: print("     IncidentHotSpotsTestCase.test_incident_hot_spots_pro")
