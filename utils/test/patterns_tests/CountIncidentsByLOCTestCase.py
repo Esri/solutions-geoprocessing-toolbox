@@ -58,7 +58,7 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
             
     def tearDown(self):
         if Configuration.DEBUG == True: print("     CountIncidentsByLOCTestCase.tearDown")
-        # UnitTestUtilities.deleteScratch(self.scratchGDB)
+        UnitTestUtilities.deleteScratch(self.scratchGDB)
         
     def test_count_incidents_pro(self):
         if Configuration.DEBUG == True: print("     CountIncidentsByLOCTestCase.test_count_incidents_pro")

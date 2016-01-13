@@ -59,7 +59,7 @@ class IncidentDensityTestCase(unittest.TestCase):
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     IncidentDensityTestCase.tearDown")
-        # UnitTestUtilities.deleteScratch(self.scratchGDB)
+        UnitTestUtilities.deleteScratch(self.scratchGDB)
         
     def test_incident_density_pro(self):
         if Configuration.DEBUG == True: print("     IncidentDensityTestCase.test_incident_density_pro")

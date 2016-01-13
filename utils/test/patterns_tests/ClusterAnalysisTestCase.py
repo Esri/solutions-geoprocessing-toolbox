@@ -56,7 +56,7 @@ class ClusterAnalysisTestCase(unittest.TestCase):
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     ClusterAnalysisTestCase.tearDown")
-        # UnitTestUtilities.deleteScratch(self.scratchGDB)
+        UnitTestUtilities.deleteScratch(self.scratchGDB)
         
     def test_cluster_analysis_pro(self):
         arcpy.AddMessage("Testing Cluster Analysis (Pro).")
@@ -73,10 +73,10 @@ class ClusterAnalysisTestCase(unittest.TestCase):
             arcpy.ImportToolbox(toolboxPath, "iaTools")
             
             # set up variables 
-            clusterDistance = 500
             outputClusterFeatures = os.path.join(self.scratchGDB, "outputClusters")
 
-            arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, clusterDistance, outputClusterFeatures)
+            # arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, Output_Cluster_Features=outputClusterFeatures)
+            arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, "#", outputClusterFeatures)
             clusterCount = int(arcpy.GetCount_management(outputClusterFeatures).getOutput(0))
             self.assertEqual(clusterCount, int(37))
         
