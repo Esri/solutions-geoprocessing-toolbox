@@ -35,40 +35,33 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Count Incidents by LOC tool
     in the Incident Analysis toolbox'''
     
-    proToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools.tbx")
-    desktopToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools_10.4.tbx")
-    scratchGDB = None
-    incidentDataPath = os.path.join(Configuration.patternsPaths, "data")
-    incidentGDB = os.path.join(incidentDataPath, "IncidentAnalysis.gdb")
-    
     inputPointsFeatures = None
     inputLinesFeatures = None
-
     
     def setUp(self):
         if Configuration.DEBUG == True: print("     CountIncidentsByLOCTestCase.setUp")  
         UnitTestUtilities.checkArcPy()
-        UnitTestUtilities.checkFilePaths([self.incidentDataPath, self.proToolboxPath, self.desktopToolboxPath])
-        if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
-            self.scratchGDB = UnitTestUtilities.createScratch(self.incidentDataPath)
+        UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
+        if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
+            Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
         
         # set up inputs    
-        self.inputPointsFeatures = os.path.join(self.incidentGDB, "Incidents")
-        self.inputLinesFeatures = os.path.join(self.incidentGDB, "Roads")
+        self.inputPointsFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
+        self.inputLinesFeatures = os.path.join(Configuration.incidentInputGDB, "Roads")
             
     def tearDown(self):
         if Configuration.DEBUG == True: print("     CountIncidentsByLOCTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(self.scratchGDB)
+        UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
         
     def test_count_incidents_pro(self):
         if Configuration.DEBUG == True: print("     CountIncidentsByLOCTestCase.test_count_incidents_pro")
         arcpy.AddMessage("Testing Count Incidents by LOC (Pro).")
-        self.test_count_incidents(self.proToolboxPath)
+        self.test_count_incidents(Configuration.patterns_ProToolboxPath)
     
     def test_count_incidents_desktop(self):
         if Configuration.DEBUG == True: print("     CountIncidentsByLOCTestCase.test_count_incidents_desktop")
         arcpy.AddMessage("Testing Count Incidents by LOC (Desktop).")
-        self.test_count_incidents(self.desktopToolboxPath)
+        self.test_count_incidents(Configuration.patterns_DesktopToolboxPath)
         
     def test_count_incidents(self, toolboxPath):
         try:
@@ -76,7 +69,7 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
             
             # import the toolbox
             arcpy.ImportToolbox(toolboxPath, "iaTools")
-            outputCountFeatures = os.path.join(self.scratchGDB, "outputCount")
+            outputCountFeatures = os.path.join(Configuration.incidentScratchGDB, "outputCount")
             
             # set up variables
             searchRadius = 50

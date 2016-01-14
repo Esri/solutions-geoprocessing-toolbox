@@ -34,42 +34,35 @@ import Configuration
 class IncidentDensityTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Incident Density tool
     in the Incident Analysis toolbox'''
-    
-    #TODO: consolidate these common Incident Analysis variables
-    proToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools.tbx")
-    desktopToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools_10.4.tbx")
-    scratchGDB = None
-    incidentDataPath = os.path.join(Configuration.patternsPaths, "data")
-    incidentGDB = os.path.join(incidentDataPath, "IncidentAnalysis.gdb")
-    
+     
     inputPointFeatures = None
     inputBoundaryFeatures = None
     
     def setUp(self):
         if Configuration.DEBUG == True: print("     IncidentDensityTestCase.setUp")    
         UnitTestUtilities.checkArcPy()
-        UnitTestUtilities.checkFilePaths([self.incidentDataPath, self.proToolboxPath, self.desktopToolboxPath])
-        if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
-            self.scratchGDB = UnitTestUtilities.createScratch(self.incidentDataPath)
+        UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
+        if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
+            Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
             
         
-        self.inputPointFeatures = os.path.join(self.incidentGDB, "Incidents")
-        self.inputBoundaryFeatures = os.path.join(self.incidentGDB, "Districts")
+        self.inputPointFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
+        self.inputBoundaryFeatures = os.path.join(Configuration.incidentInputGDB, "Districts")
         
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     IncidentDensityTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(self.scratchGDB)
+        UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
         
     def test_incident_density_pro(self):
         if Configuration.DEBUG == True: print("     IncidentDensityTestCase.test_incident_density_pro")
         arcpy.AddMessage("Testing Incident Density (Pro).")
-        self.test_incident_density(self.proToolboxPath)
+        self.test_incident_density(Configuration.patterns_ProToolboxPath)
     
     def test_incident_density_desktop(self):
         if Configuration.DEBUG == True: print("     IncidentDensityTestCase.test_incident_density_desktop")
         arcpy.AddMessage("Testing Incident Density (Desktop).")
-        self.test_incident_density(self.desktopToolboxPath)
+        self.test_incident_density(Configuration.patterns_DesktopToolboxPath)
         
     def test_incident_density(self, toolboxPath):
         try:
@@ -78,7 +71,7 @@ class IncidentDensityTestCase(unittest.TestCase):
             arcpy.CheckOutExtension("Spatial")        
             # import the toolbox
             arcpy.ImportToolbox(toolboxPath, "iaTools")
-            outputDensity = os.path.join(self.scratchGDB, "outputDensity")
+            outputDensity = os.path.join(Configuration.incidentScratchGDB, "outputDensity")
             arcpy.IncidentDensity_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputDensity)
             arcpy.CheckInExtension("Spatial")
             self.assertTrue(arcpy.Exists(outputDensity))

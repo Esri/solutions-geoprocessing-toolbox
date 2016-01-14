@@ -35,33 +35,27 @@ class FindPercentChangeTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Find Percent Change tool
     in the Incident Analysis toolbox'''
     
-    proToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools.tbx")
-    desktopToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools_10.4.tbx")
-    scratchGDB = None
-    incidentDataPath = os.path.join(Configuration.patternsPaths, "data")
-    
-    incidentGDB = os.path.join(incidentDataPath, "IncidentAnalysis.gdb")
     
     def setUp(self):
         if Configuration.DEBUG == True: print("     FindPercentChangeTestCase.setUp")
         UnitTestUtilities.checkArcPy()
-        UnitTestUtilities.checkFilePaths([self.incidentDataPath, self.proToolboxPath, self.desktopToolboxPath])
-        if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
-            self.scratchGDB = UnitTestUtilities.createScratch(self.incidentDataPath)
+        UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
+        if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
+            Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
             
     def tearDown(self):
         if Configuration.DEBUG == True: print("     FindPercentChangeTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(self.scratchGDB)
+        UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
         
     def test_percent_change_pro(self):
         if Configuration.DEBUG == True: print("     FindPercentChangeTestCase.test_percent_change_pro")
         arcpy.AddMessage("Testing Find Percent Change (Pro).")
-        self.test_percent_change(self.proToolboxPath)
+        self.test_percent_change(Configuration.patterns_ProToolboxPath)
         
     def test_percent_change_desktop(self):
         if Configuration.DEBUG == True: print("     FindPercentChangeTestCase.test_percent_change_desktop")
         arcpy.AddMessage("Testing Find Percent Change (Desktop).")
-        self.test_percent_change(self.desktopToolboxPath)
+        self.test_percent_change(Configuration.patterns_DesktopToolboxPath)
         
     def test_percent_change(self, toolboxPath):
         try:

@@ -36,44 +36,36 @@ class ClusterAnalysisTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Cluster Analysis tool
     in the Incident Analysis toolbox'''
     
-    proToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools.tbx")
-    desktopToolboxPath = os.path.join(Configuration.patterns_ToolboxesPath, "Incident Analysis Tools_10.4.tbx")
-    scratchGDB = None
-    incidentDataPath = os.path.join(Configuration.patternsPaths, "data")
-    
-    incidentGDB = os.path.join(incidentDataPath, "IncidentAnalysis.gdb")
     inputPointsFeatures = None
     
     def setUp(self):
         if Configuration.DEBUG == True: print("     ClusterAnalysisTestCase.setUp")
         UnitTestUtilities.checkArcPy()
-        UnitTestUtilities.checkFilePaths([self.incidentDataPath, self.proToolboxPath, self.desktopToolboxPath])
-        if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
-            self.scratchGDB = UnitTestUtilities.createScratch(self.incidentDataPath)
+        UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
+        if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
+            Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
             
         # set up inputs
-        self.inputPointsFeatures = os.path.join(self.incidentGDB, "Incidents")
+        self.inputPointsFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     ClusterAnalysisTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(self.scratchGDB)
+        UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
         
     def test_cluster_analysis_pro(self):
         arcpy.AddMessage("Testing Cluster Analysis (Pro).")
-        self.test_cluster_analysis(self.proToolboxPath)
+        self.test_cluster_analysis(Configuration.patterns_ProToolboxPath)
     
     def test_cluster_analysis_desktop(self):
         arcpy.AddMessage("Testing Cluster Analysis (Desktop).")
-        self.test_cluster_analysis(self.desktopToolboxPath)
+        self.test_cluster_analysis(Configuration.patterns_DesktopToolboxPath)
         
     def test_cluster_analysis(self, toolboxPath):
         try:
             if Configuration.DEBUG == True: print("     ClusterAnalysisTestCase.test_cluster_analysis")
-            # import the toolbox
+
             arcpy.ImportToolbox(toolboxPath, "iaTools")
-            
-            # set up variables 
-            outputClusterFeatures = os.path.join(self.scratchGDB, "outputClusters")
+            outputClusterFeatures = os.path.join(Configuration.incidentScratchGDB, "outputClusters")
 
             # arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, Output_Cluster_Features=outputClusterFeatures)
             arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, "#", outputClusterFeatures)
