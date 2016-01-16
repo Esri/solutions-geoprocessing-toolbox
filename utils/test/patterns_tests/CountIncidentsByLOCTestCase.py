@@ -72,8 +72,11 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
             outputCountFeatures = os.path.join(Configuration.incidentScratchGDB, "outputCount")
             
             # set up variables
-            searchRadius = 50
-            arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures, self.inputLinesFeatures, searchRadius, outputCountFeatures)
+            # searchRadius = 50
+            runToolMsg = "Running tool (Count Incidents By LOC)"
+            arcpy.AddMessage(runToolMsg)
+            Configuration.Logger.info(runToolMsg)
+            arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures, self.inputLinesFeatures, "#", outputCountFeatures)
             result = arcpy.GetCount_management(outputCountFeatures)
             featureCount = int(result.getOutput(0))
             self.assertEqual(featureCount, int(2971))
