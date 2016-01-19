@@ -129,8 +129,9 @@ def runTestSuite():
         Configuration.Platform = "PRO"
     Configuration.Logger.info(Configuration.Platform + " =======================================")
 
-    testSuite.addTests(addVisibilitySuite())
     testSuite.addTests(addCapabilitySuite())
+    testSuite.addTests(addPatternsSuite())
+    testSuite.addTests(addVisibilitySuite())
     #addDataManagementTests(logger, platform)
     #addOperationalGraphicsTests(logger, platform)
     #addPatternsTests(logger, platform)
@@ -151,9 +152,13 @@ def addCapabilitySuite():
     testSuite.addTests(AllCapabilityTestSuite.getCapabilityTestSuites())
     return testSuite
 
-# def addPatternsTests(suite):
-    # #suite.addTest(PatternToolOneTestCase('test_name'))
-    # return suite
+def addPatternsSuite():
+    ''' Add all Patterns tests in the ./patterns_tests folder '''
+    if Configuration.DEBUG == True: print("TestRunner.py - addPatternsSuite")
+    from patterns_tests import AllPatternsTestSuite
+    suite = unittest.TestSuite()
+    suite.addTest(AllPatternsTestSuite.getPatternsTestSuites())
+    return suite
 
 def addVisibilitySuite():
     ''' Add all Visibility tests in the ./visibility_tests folder '''

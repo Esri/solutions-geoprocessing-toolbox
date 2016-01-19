@@ -19,75 +19,71 @@
 # --------------------------------------------------
 # requirments: ArcGIS X.X, Python 2.7 or Python 3.4
 # author: ArcGIS Solutions
-# contact: ArcGISTeam<Solution>@esri.com
 # company: Esri
 # ==================================================
-# description: <Description>
-# ==================================================
 # history:
-# <date> - <initals> - <modifications>
+# 12/16/2015 - JH - initial creation
 # ==================================================
 
 import arcpy
 import os
 import unittest
-import TestUtilities
 import UnitTestUtilities
+import Configuration
 
-
-#class HLZTouchdownPoints(UnitTestCase.UnitTestCase):
-class CountIncidentsByLOC(unittest.TestCase):
-    ''' Test all tools and methods related to the HLZ Touchdown Points tool
-    in the Helicopter Landing Zones toolbox'''
-
-    scratchGDB = None
-
-    tbxProFolderPath = os.path.join(TestUtilities.repoPath, "patterns", "toolboxes", "Incident Analysis Tools.tbx")
-    tbxDesktopFolderPath = os.path.join(TestUtilities.repoPath, "patterns", "toolboxes", "Incident Analysis Tools_10.3.tbx")
-    testDataFolderPath = os.path.join(TestUtilities.patternsPaths, "data")
-
-    inputAirframeTable = None
-    inputSuitableAreas = None
-    inputSlope = None
-    outputGeodatabase = None
-    outputCenterpoints = None
-    outputCircles = None
-
+class CountIncidentsByLOCTestCase(unittest.TestCase):
+    ''' Test all tools and methods related to the Count Incidents by LOC tool
+    in the Incident Analysis toolbox'''
+    
+    inputPointsFeatures = None
+    inputLinesFeatures = None
+    
     def setUp(self):
-        ''' set-up code '''
-
+        if Configuration.DEBUG == True: print("     CountIncidentsByLOCTestCase.setUp")  
         UnitTestUtilities.checkArcPy()
-        UnitTestUtilities.checkFilePaths([self.testDataFolderPath,
-                                          self.tbxProFolderPath,
-                                          self.tbxDesktopFolderPath])
-
-        self.testDataGeodatabase = os.path.join(self.testDataFolderPath, r"test_hlz_tools.gdb")
-
-        # Check the test inputs (do they exist? or not?)
-        if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
-            self.scratchGDB = UnitTestUtilities.createScratch(self.testDataFolderPath)
-
-        # Setup the test inputs
-
-        UnitTestUtilities.checkGeoObjects([])
-        return
-
+        UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
+        if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
+            Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
+        
+        # set up inputs    
+        self.inputPointsFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
+        self.inputLinesFeatures = os.path.join(Configuration.incidentInputGDB, "Roads")
+            
     def tearDown(self):
-        ''' clean up after tests'''
-        UnitTestUtilities.deleteScratch(self.scratchGDB)
-        return
-
-
-    def test_CountIncidentsByLOC001_Pro(self):
-        ''' '''
-        self.CountIncidentsByLOC001()
-        return
-
-    def test_CountIncidentsByLOC001_Desktkop(self):
-        ''' '''
-        self.CountIncidentsByLOC001()
-        return
-
-    def CountIncidentsByLOC001(self):
-        ''' '''
-        return
+        if Configuration.DEBUG == True: print("     CountIncidentsByLOCTestCase.tearDown")
+        UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
+        
+    def test_count_incidents_pro(self):
+        if Configuration.DEBUG == True: print("     CountIncidentsByLOCTestCase.test_count_incidents_pro")
+        arcpy.AddMessage("Testing Count Incidents by LOC (Pro).")
+        self.test_count_incidents(Configuration.patterns_ProToolboxPath)
+    
+    def test_count_incidents_desktop(self):
+        if Configuration.DEBUG == True: print("     CountIncidentsByLOCTestCase.test_count_incidents_desktop")
+        arcpy.AddMessage("Testing Count Incidents by LOC (Desktop).")
+        self.test_count_incidents(Configuration.patterns_DesktopToolboxPath)
+        
+    def test_count_incidents(self, toolboxPath):
+        try:
+            if Configuration.DEBUG == True: print("     CountIncidentsByLOCTestCase.test_count_incidents")
+            
+            # import the toolbox
+            arcpy.ImportToolbox(toolboxPath, "iaTools")
+            outputCountFeatures = os.path.join(Configuration.incidentScratchGDB, "outputCount")
+            
+            # set up variables
+            # searchRadius = 50
+            runToolMsg = "Running tool (Count Incidents By LOC)"
+            arcpy.AddMessage(runToolMsg)
+            Configuration.Logger.info(runToolMsg)
+            arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures, self.inputLinesFeatures, "#", outputCountFeatures)
+            result = arcpy.GetCount_management(outputCountFeatures)
+            featureCount = int(result.getOutput(0))
+            self.assertEqual(featureCount, int(2971))
+        
+        except arcpy.ExecuteError:
+            UnitTestUtilities.handleArcPyError()
+            
+        except:
+            UnitTestUtilities.handleGeneralError()
+            

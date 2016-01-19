@@ -31,22 +31,22 @@ This test suite collects all of the patterns toolbox test suites:
 ==================================================
 history:
 10/23/2015 - MF - placeholder
-11/23/2015 - MF - add Incident Analysis tools test suite
 ==================================================
 '''
 
+import logging
 import unittest
-import TestUtilities
+import Configuration
 from . import IncidentAnalysisToolsTestSuite
 
-def getPatternsTestSuites(logger, platform):
+
+def getPatternsTestSuites():
     ''' This pulls together all of the toolbox test suites in this folder '''
-    logger.info("Adding Patterns Tests including:")
+    if Configuration.DEBUG == True:
+        print("   AllPatternsTestSuite.getPatternsTestSuites")
+    Configuration.Logger.info("Adding Patterns Tests including: ")
     testSuite = unittest.TestSuite()
-
-    # these come from IncidentAnalysisToolsTestSuite.py
-    testSuite.addTests(IncidentAnalysisToolsTestSuite.getIncidentTestSuite(logger, platform))
-
-    #TODO: Add tests for Movement Analysis Tools.tbx (Pro only)
-
+    
+    testSuite.addTests(IncidentAnalysisToolsTestSuite.getIncidentAnalysisTestSuite())
     return testSuite
+    

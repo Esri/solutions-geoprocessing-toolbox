@@ -19,11 +19,34 @@
 # --------------------------------------------------
 # requirments: ArcGIS X.X, Python 2.7 or Python 3.4
 # author: ArcGIS Solutions
-# contact: ArcGISTeam<Solution>@esri.com
 # company: Esri
 # ==================================================
-# description: <Description>
-# ==================================================
 # history:
-# <date> - <initals> - <modifications>
+# 12/16/2015 - JH - initial creation
 # ==================================================
+
+import unittest
+import arcpy
+import os
+import UnitTestUtilities
+import Configuration
+
+class IncidentTableToPointTestCase(unittest.TestCase):
+    ''' Test all tools and methods related to the Incident Table to Point tool
+    in the Incident Analysis toolbox'''
+    
+    def setUp(self):
+        if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.setUp")    
+        
+    def tearDown(self):
+        if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.tearDown")    
+        
+    def test_incident_table_to_point_pro(self):
+        if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.test_incident_table_to_point_pro")    
+    
+    def test_incident_table_to_point_desktop(self):
+        if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.test_incident_table_to_point_desktop")    
+        
+    def test_incident_table_to_point(self, toolboxPath):
+        if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.test_incident_table_to_point")
+            

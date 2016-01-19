@@ -28,7 +28,7 @@ import DataDownload
 class SunPositionAndHillshadeTestCase(unittest.TestCase):
     
     proToolboxPath = os.path.join(Configuration.vis_ToolboxesPath, "Sun Position Analysis Tools.tbx")
-    desktopToolboxPath = os.path.join(Configuration.vis_ToolboxesPath, "Sun Position Analysis Tools_10.3.tbx")
+    desktopToolboxPath = os.path.join(Configuration.vis_ToolboxesPath, "Sun Position Analysis Tools_10.4.tbx")
     
     inputGDB = None
     inputArea = None
@@ -43,19 +43,23 @@ class SunPositionAndHillshadeTestCase(unittest.TestCase):
     def setUp(self):
         if Configuration.DEBUG == True: print("         SunPositionAndHillshadeTestCase.setUp")
         UnitTestUtilities.checkArcPy()
-        UnitTestUtilities.checkFilePaths([self.proToolboxPath, self.desktopToolboxPath, Configuration.visibilityPaths])
-        
+
         name = "test_sun_position.gdb"
         self.sunPosDataPath = DataDownload.runDataDownload(Configuration.visibilityPaths, name, self.sunPosUrl)
         if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
             self.scratchGDB = UnitTestUtilities.createScratch(self.sunPosDataPath)
-            
+        
+        UnitTestUtilities.checkFilePaths([self.proToolboxPath, self.desktopToolboxPath, Configuration.visibilityPaths, self.sunPosDataPath])        
         # set up inputs
         self.sunPosGDBPath = os.path.join(self.sunPosDataPath, name)
         self.inputArea = os.path.join(self.sunPosGDBPath, r"inputArea")
         self.inputSurface = os.path.join(self.sunPosGDBPath, r"Jbad_SRTM_USGS_EROS")
         self.compareResults = os.path.join(self.sunPosGDBPath, r"compareResults")
         UnitTestUtilities.checkGeoObjects([self.inputArea, self.inputSurface, self.compareResults])
+        
+    def tearDown(self):
+        if Configuration.DEBUG == True: print("         SunPositionAndHillshadeTestCase.tearDown")
+        UnitTestUtilities.deleteScratch(self.scratchGDB)
             
     def test_sun_position_analysis_pro(self):
         arcpy.AddMessage("Testing Sun Position Analysis (Pro).")
