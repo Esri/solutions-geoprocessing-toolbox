@@ -35,6 +35,9 @@ class FindPercentChangeTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Find Percent Change tool
     in the Incident Analysis toolbox'''
     
+    inputOldIncidents = None
+    inputNewIncidents = None
+    inputAOIFeatures = None
     
     def setUp(self):
         if Configuration.DEBUG == True: print("     FindPercentChangeTestCase.setUp")
@@ -42,6 +45,10 @@ class FindPercentChangeTestCase(unittest.TestCase):
         UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
         if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
             Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
+            
+        self.inputOldIncidents = os.path.join(Configuration.incidentInputGDB, "Incidents2014")
+        self.inputNewIncidents = os.path.join(Configuration.incidentInputGDB, "Incidents2015")
+        self.inputAOIFeatures = os.path.join(Configuration.incidentInputGDB, "Districts")
             
     def tearDown(self):
         if Configuration.DEBUG == True: print("     FindPercentChangeTestCase.tearDown")
@@ -60,7 +67,19 @@ class FindPercentChangeTestCase(unittest.TestCase):
     def test_percent_change(self, toolboxPath):
         try:
             if Configuration.DEBUG == True: print("     FindPercentChangeTestCase.test_percent_change")
-                
+            
+            arcpy.ImportToolbox(toolboxPath, "iaTools")
+            
+            runToolMessage = "Running tool (Find Percent Change)"
+            arcpy.AddMessage(runToolMessage)
+            Configuration.Logger.info(runToolMessage)
+            
+            # get derived output as "result"
+            #result = arcpy.PercentChange2_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents)
+            result = arcpy.FindPercentChange_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents)
+            featureCount = int(result.getOutput(0))
+            print(featureCount)
+            
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()
             
