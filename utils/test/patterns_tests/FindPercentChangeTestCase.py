@@ -75,7 +75,6 @@ class FindPercentChangeTestCase(unittest.TestCase):
             Configuration.Logger.info(runToolMessage)
             
             # get derived output as "result"
-            #result = arcpy.PercentChange2_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents)
             result = arcpy.FindPercentChange_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents)
             featureCount = int(result.getOutput(0))
             print(featureCount)
