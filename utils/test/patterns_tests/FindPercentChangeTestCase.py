@@ -74,11 +74,12 @@ class FindPercentChangeTestCase(unittest.TestCase):
             arcpy.AddMessage(runToolMessage)
             Configuration.Logger.info(runToolMessage)
             
-            # get derived output as "result"
             result = arcpy.FindPercentChange_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents)
-            featureCount = int(result.getOutput(0))
-            print(featureCount)
-            
+
+            featureResult = arcpy.GetCount_management(result)
+            featureCount = int(featureResult.getOutput(0))
+            self.assertEqual(featureCount, int(10))
+  
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()
             

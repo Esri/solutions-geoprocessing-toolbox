@@ -72,7 +72,6 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
             outputCountFeatures = os.path.join(Configuration.incidentScratchGDB, "outputCount")
             
             # set up variables
-            # searchRadius = 50
             runToolMsg = "Running tool (Count Incidents By LOC)"
             arcpy.AddMessage(runToolMsg)
             Configuration.Logger.info(runToolMsg)
