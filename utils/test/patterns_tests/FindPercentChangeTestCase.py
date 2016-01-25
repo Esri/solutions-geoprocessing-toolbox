@@ -57,14 +57,14 @@ class FindPercentChangeTestCase(unittest.TestCase):
     def test_percent_change_pro(self):
         if Configuration.DEBUG == True: print("     FindPercentChangeTestCase.test_percent_change_pro")
         arcpy.AddMessage("Testing Find Percent Change (Pro).")
-        self.test_percent_change(Configuration.patterns_ProToolboxPath)
+        self.test_percent_change(Configuration.patterns_ProToolboxPath, "Pro")
         
     def test_percent_change_desktop(self):
         if Configuration.DEBUG == True: print("     FindPercentChangeTestCase.test_percent_change_desktop")
         arcpy.AddMessage("Testing Find Percent Change (Desktop).")
-        self.test_percent_change(Configuration.patterns_DesktopToolboxPath)
+        self.test_percent_change(Configuration.patterns_DesktopToolboxPath, "Desktop")
         
-    def test_percent_change(self, toolboxPath):
+    def test_percent_change(self, toolboxPath, platform):
         try:
             if Configuration.DEBUG == True: print("     FindPercentChangeTestCase.test_percent_change")
             
@@ -74,11 +74,20 @@ class FindPercentChangeTestCase(unittest.TestCase):
             arcpy.AddMessage(runToolMessage)
             Configuration.Logger.info(runToolMessage)
             
-            result = arcpy.FindPercentChange_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents)
-
-            featureResult = arcpy.GetCount_management(result)
-            featureCount = int(featureResult.getOutput(0))
-            self.assertEqual(featureCount, int(10))
+            if platform == "Pro":
+                outputFeatures = os.path.join(Configuration.incidentScratchGDB, "outputPercentChange")
+                
+                # Pro adds an extra parameter for output
+                arcpy.FindPercentChange_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents, outputFeatures)
+                proResult = arcpy.GetCount_management(outputFeatures)
+                proCount = int(proResult.getOutput(0))
+                self.assertEqual(proCount, int(10))
+                
+            else:
+                result = arcpy.FindPercentChange_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents)
+                featureResult = arcpy.GetCount_management(result)
+                featureCount = int(featureResult.getOutput(0))
+                self.assertEqual(featureCount, int(10))
   
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()
