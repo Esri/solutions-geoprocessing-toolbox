@@ -75,6 +75,10 @@ class IncidentTableToPointTestCase(unittest.TestCase):
             outputTable = os.path.join(Configuration.incidentScratchGDB, "outputTable")
             arcpy.IncidentTableToPoint_iaTools(self.inputTable, coordFormat, xField, yField, outputTable)
             
+            result = arcpy.GetCount_management(outputTable)
+            featureCount = int(result.getOutput(0))
+            self.assertEqual(featureCount, int(5532))
+            
         
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()

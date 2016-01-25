@@ -70,7 +70,7 @@ def getIncidentAnalysisTestSuite():
     if Configuration.Platform == "PRO":
         Configuration.Logger.info("Incident Analysis Tools Pro tests")
         addClusterTests(cluster_proTests)
-        # addCountIncidentTests(count_proTests)
+        addCountIncidentTests(count_proTests)
         addIncidentDensityTests(density_proTests)
         addHotSpotsByAreaTests(hotSpots_proTests)
         addIncidentHotSpotsTests(incidentHotSpots_proTests)
@@ -79,7 +79,7 @@ def getIncidentAnalysisTestSuite():
     else:
         Configuration.Logger.info("Incident Analysis Tools Desktop tests")
         addClusterTests(cluster_desktopTests)
-        # addCountIncidentTests(count_desktopTests)
+        addCountIncidentTests(count_desktopTests)
         addIncidentDensityTests(density_desktopTests)
         addHotSpotsByAreaTests(hotSpots_desktopTests)
         addIncidentHotSpotsTests(incidentHotSpots_desktopTests)
