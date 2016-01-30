@@ -69,6 +69,7 @@ class IncidentTableToPointTestCase(unittest.TestCase):
             runToolMessage = "Running tool (Incident Table To Point)"
             arcpy.AddMessage(runToolMessage)
             Configuration.Logger.info(runToolMessage)
+            
             coordFormat = "MGRS"
             xField = "MGRS"
             yField = "MGRS"
