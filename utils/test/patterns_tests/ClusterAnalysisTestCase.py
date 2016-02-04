@@ -70,6 +70,7 @@ class ClusterAnalysisTestCase(unittest.TestCase):
             runToolMessage = "Running tool (Cluster Analysis)"
             arcpy.AddMessage(runToolMessage)
             Configuration.Logger.info(runToolMessage)
+            
             # arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, Output_Cluster_Features=outputClusterFeatures)
             arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, "#", outputClusterFeatures)
             clusterCount = int(arcpy.GetCount_management(outputClusterFeatures).getOutput(0))

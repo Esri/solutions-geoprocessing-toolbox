@@ -53,7 +53,7 @@ patterns_DesktopToolboxPath = os.path.normpath(os.path.join(patterns_ToolboxesPa
 ''' Suitability Paths '''
 suitabilityPaths = os.path.normpath(os.path.join(currentPath, r"suitability_tests"))
 
-''' Visibility Paths'''
+''' Visibility Paths '''
 visibilityPaths = os.path.normpath(os.path.join(currentPath, r"visibility_tests"))
 vis_ToolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../visibility/toolboxes/"))
 

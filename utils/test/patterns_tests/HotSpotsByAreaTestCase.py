@@ -35,7 +35,8 @@ class HotSpotsByAreaTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Hot Spots by Area tool
     in the Incident Analysis toolbox'''
     
-    #TODO: find this test in ArcMap
+    inputAOIFeatures = None
+    inputIncidents = None
     
     def setUp(self):
         if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.setUp")
@@ -43,7 +44,10 @@ class HotSpotsByAreaTestCase(unittest.TestCase):
         UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
         if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
             Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
-            
+        
+        self.inputAOIFeatures = os.path.join(Configuration.incidentInputGDB, "Districts")
+        self.inputIncidents = os.path.join(Configuration.incidentInputGDB, "Incidents")
+        
     def tearDown(self):
         if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.tearDown")
         UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
@@ -60,8 +64,23 @@ class HotSpotsByAreaTestCase(unittest.TestCase):
         
     def test_hot_spots_by_area(self, toolboxPath):
         try:
-            if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.test_hot_spots_by_area")
-                
+            if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.test_hot_spots_by_area")  
+            
+            arcpy.ImportToolbox(toolboxPath, "iaTools")
+            
+            runToolMessage = "Running tool (Hot Spots By Area)"
+            arcpy.AddMessage(runToolMessage)
+            Configuration.Logger.info(runToolMessage)
+            
+            incidentFieldName = "district"
+            outputWorkspace = Configuration.incidentDataPath
+            
+            # second parameter: inputIncidents must be a Feature Layer
+            arcpy.MakeFeatureLayer_management(self.inputIncidents, "incidentsLayer") 
+            arcpy.HotSpotsByArea_iaTools(self.inputAOIFeatures, "incidentsLayer", incidentFieldName, outputWorkspace)
+            
+            self.assertTrue(arcpy.Exists(outputWorkspace))
+            
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()
             

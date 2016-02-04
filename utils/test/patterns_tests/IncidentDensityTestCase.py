@@ -69,8 +69,12 @@ class IncidentDensityTestCase(unittest.TestCase):
             if Configuration.DEBUG == True: print("     IncidentDensityTestCase.test_incident_density")
             
             arcpy.CheckOutExtension("Spatial")        
-            # import the toolbox
             arcpy.ImportToolbox(toolboxPath, "iaTools")
+            
+            runToolMsg = "Running tool (Incident Density)"
+            arcpy.AddMessage(runToolMsg)
+            Configuration.Logger.info(runToolMsg)
+            
             outputDensity = os.path.join(Configuration.incidentScratchGDB, "outputDensity")
             arcpy.IncidentDensity_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputDensity)
             arcpy.CheckInExtension("Spatial")

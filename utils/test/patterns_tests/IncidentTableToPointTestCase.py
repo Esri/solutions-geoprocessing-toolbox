@@ -35,18 +35,55 @@ class IncidentTableToPointTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Incident Table to Point tool
     in the Incident Analysis toolbox'''
     
+    inputTable = None
+    
     def setUp(self):
         if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.setUp")    
-        
+        UnitTestUtilities.checkArcPy()
+        UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
+        if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
+            Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
+            
+        self.inputTable = os.path.join(Configuration.incidentInputGDB, "MontereyIncidents")
+            
     def tearDown(self):
-        if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.tearDown")    
+        if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.tearDown")
+        UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
         
     def test_incident_table_to_point_pro(self):
-        if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.test_incident_table_to_point_pro")    
+        if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.test_incident_table_to_point_pro")
+        arcpy.AddMessage("Testing Incident Table To Point (Pro).")
+        self.test_incident_table_to_point(Configuration.patterns_ProToolboxPath)
     
     def test_incident_table_to_point_desktop(self):
         if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.test_incident_table_to_point_desktop")    
+        arcpy.AddMessage("Testing Incident Table To Point (Desktop).")
+        self.test_incident_table_to_point(Configuration.patterns_DesktopToolboxPath)
         
     def test_incident_table_to_point(self, toolboxPath):
-        if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.test_incident_table_to_point")
+        try:
+            if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.test_incident_table_to_point")
+            
+            arcpy.ImportToolbox(toolboxPath, "iaTools")
+            
+            runToolMessage = "Running tool (Incident Table To Point)"
+            arcpy.AddMessage(runToolMessage)
+            Configuration.Logger.info(runToolMessage)
+            
+            coordFormat = "MGRS"
+            xField = "MGRS"
+            yField = "MGRS"
+            outputTable = os.path.join(Configuration.incidentScratchGDB, "outputTable")
+            arcpy.IncidentTableToPoint_iaTools(self.inputTable, coordFormat, xField, yField, outputTable)
+            
+            result = arcpy.GetCount_management(outputTable)
+            featureCount = int(result.getOutput(0))
+            self.assertEqual(featureCount, int(5532))
+            
+        
+        except arcpy.ExecuteError:
+            UnitTestUtilities.handleArcPyError()
+            
+        except:
+            UnitTestUtilities.handleGeneralError()
             

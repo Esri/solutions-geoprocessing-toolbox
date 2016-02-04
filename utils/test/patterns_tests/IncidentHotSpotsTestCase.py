@@ -67,6 +67,11 @@ class IncidentHotSpotsTestCase(unittest.TestCase):
             if Configuration.DEBUG == True: print("     IncidentHotSpotsTestCase.test_incident_hot_spots")
             
             arcpy.ImportToolbox(toolboxPath, "iaTools")
+            
+            runToolMessage = "Running tool (Incident Hot Spots)"
+            arcpy.AddMessage(runToolMessage)
+            Configuration.Logger.info(runToolMessage)
+            
             outputFeatures = os.path.join(Configuration.incidentScratchGDB, "outputHotSpots")
             arcpy.IncidentHotSpots_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputFeatures)
 
