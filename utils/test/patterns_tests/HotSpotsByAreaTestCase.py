@@ -73,19 +73,13 @@ class HotSpotsByAreaTestCase(unittest.TestCase):
             Configuration.Logger.info(runToolMessage)
             
             incidentFieldName = "district"
-            outputWorkspace = Configuration.incidentInputGDB
+            outputWorkspace = Configuration.incidentDataPath
+            
             # second parameter: inputIncidents must be a Feature Layer
-            # use MakeFeatureLayer to convert from feature class
             arcpy.MakeFeatureLayer_management(self.inputIncidents, "incidentsLayer") 
             arcpy.HotSpotsByArea_iaTools(self.inputAOIFeatures, "incidentsLayer", incidentFieldName, outputWorkspace)
-            arcpy.env.workspace = outputWorkspace
-            datasets = arcpy.ListDatasets()
-            dsCount = 0
-            for dataset in datasets:
-                dsCount += 1
-            # Configuration.Logger.info(datasets)
-            # Configuration.Logger.info(dsCount)
-            self.assertEqual(dsCount, int(10))
+            
+            self.assertTrue(arcpy.Exists(outputWorkspace))
             
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()
