@@ -30,27 +30,33 @@ import arcpy
 import os
 import UnitTestUtilities
 import Configuration
+import DataDownload
 
 class HotSpotsByAreaTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Hot Spots by Area tool
     in the Incident Analysis toolbox'''
     
+    incidentURL = "http://www.arcgis.com/sharing/content/items/528faf6b23154b04a8268b33196fa9ad/data"
     inputAOIFeatures = None
     inputIncidents = None
     
     def setUp(self):
         if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.setUp")
         UnitTestUtilities.checkArcPy()
-        UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
+        
+        gdbName = "test_incident_analysis_tools.gdb"
+        Configuration.incidentDataPath = DataDownload.runDataDownload(Configuration.patternsPaths, gdbName, self.incidentURL)
         if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
             Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
+        Configuration.incidentInputGDB = os.path.join(Configuration.incidentDataPath, gdbName)    
+        UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
         
         self.inputAOIFeatures = os.path.join(Configuration.incidentInputGDB, "Districts")
         self.inputIncidents = os.path.join(Configuration.incidentInputGDB, "Incidents")
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
+        # UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
         
     def test_hot_spots_by_area_pro(self):
         if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.test_hot_spots_by_area_pro")

@@ -43,8 +43,10 @@ operationalGraphicsPaths = os.path.normpath(os.path.join(currentPath, r"operatio
 
 ''' Patterns Paths '''
 patternsPaths = os.path.normpath(os.path.join(currentPath, r"patterns_tests"))
-incidentDataPath = os.path.normpath(os.path.join(patternsPaths, r"data"))
-incidentInputGDB = os.path.normpath(os.path.join(incidentDataPath, "IncidentAnalysis.gdb"))
+# incidentDataPath = os.path.normpath(os.path.join(patternsPaths, r"data"))
+incidentDataPath = None
+# incidentInputGDB = os.path.normpath(os.path.join(incidentDataPath, "IncidentAnalysis.gdb"))
+incidentInputGDB = None
 incidentScratchGDB = None
 patterns_ToolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../patterns/toolboxes/"))
 patterns_ProToolboxPath = os.path.normpath(os.path.join(patterns_ToolboxesPath, "Incident Analysis Tools.tbx"))
