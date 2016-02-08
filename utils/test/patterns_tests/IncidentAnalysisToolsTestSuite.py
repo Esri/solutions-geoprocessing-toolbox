@@ -69,22 +69,22 @@ def getIncidentAnalysisTestSuite():
         
     if Configuration.Platform == "PRO":
         Configuration.Logger.info("Incident Analysis Tools Pro tests")
-        # addClusterTests(cluster_proTests)
-        # addCountIncidentTests(count_proTests)
-        # addIncidentDensityTests(density_proTests)
+        addClusterTests(cluster_proTests)
+        addCountIncidentTests(count_proTests)
+        addIncidentDensityTests(density_proTests)
         addHotSpotsByAreaTests(hotSpots_proTests)
-        # addIncidentHotSpotsTests(incidentHotSpots_proTests)
-        # addIncidentTableToPointTests(tabletoPoint_proTests)
-        # addFindPercentChangeTests(percentChange_proTests)
+        addIncidentHotSpotsTests(incidentHotSpots_proTests)
+        addIncidentTableToPointTests(tabletoPoint_proTests)
+        addFindPercentChangeTests(percentChange_proTests)
     else:
         Configuration.Logger.info("Incident Analysis Tools Desktop tests")
-        # addClusterTests(cluster_desktopTests)
-        # addCountIncidentTests(count_desktopTests)
-        # addIncidentDensityTests(density_desktopTests)
+        addClusterTests(cluster_desktopTests)
+        addCountIncidentTests(count_desktopTests)
+        addIncidentDensityTests(density_desktopTests)
         addHotSpotsByAreaTests(hotSpots_desktopTests)
-        # addIncidentHotSpotsTests(incidentHotSpots_desktopTests)
-        # addIncidentTableToPointTests(tabletoPoint_desktopTests)
-        # addFindPercentChangeTests(percentChange_desktopTests)
+        addIncidentHotSpotsTests(incidentHotSpots_desktopTests)
+        addIncidentTableToPointTests(tabletoPoint_desktopTests)
+        addFindPercentChangeTests(percentChange_desktopTests)
 
     return TestSuite
 

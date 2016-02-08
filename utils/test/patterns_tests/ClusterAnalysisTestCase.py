@@ -31,6 +31,7 @@ import os
 import unittest
 import UnitTestUtilities
 import Configuration
+import DataDownload
 
 class ClusterAnalysisTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Cluster Analysis tool
@@ -41,6 +42,12 @@ class ClusterAnalysisTestCase(unittest.TestCase):
     def setUp(self):
         if Configuration.DEBUG == True: print("     ClusterAnalysisTestCase.setUp")
         UnitTestUtilities.checkArcPy()
+        
+        Configuration.incidentDataPath = DataDownload.runDataDownload(Configuration.patternsPaths, Configuration.incidentGDBName, Configuration.incidentURL)
+        if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
+            Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
+        Configuration.incidentInputGDB = os.path.join(Configuration.incidentDataPath, Configuration.incidentGDBName)    
+        
         UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
         if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
             Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)

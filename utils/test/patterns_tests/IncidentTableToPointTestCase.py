@@ -30,6 +30,7 @@ import arcpy
 import os
 import UnitTestUtilities
 import Configuration
+import DataDownload
 
 class IncidentTableToPointTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Incident Table to Point tool
@@ -40,6 +41,12 @@ class IncidentTableToPointTestCase(unittest.TestCase):
     def setUp(self):
         if Configuration.DEBUG == True: print("     IncidentTableToPointTestCase.setUp")    
         UnitTestUtilities.checkArcPy()
+        
+        Configuration.incidentDataPath = DataDownload.runDataDownload(Configuration.patternsPaths, Configuration.incidentGDBName, Configuration.incidentURL)
+        if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
+            Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
+        Configuration.incidentInputGDB = os.path.join(Configuration.incidentDataPath, Configuration.incidentGDBName)
+        
         UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
         if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
             Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)

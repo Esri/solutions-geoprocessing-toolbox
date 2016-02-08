@@ -129,9 +129,9 @@ def runTestSuite():
         Configuration.Platform = "PRO"
     Configuration.Logger.info(Configuration.Platform + " =======================================")
 
-    #testSuite.addTests(addCapabilitySuite())
+    testSuite.addTests(addCapabilitySuite())
     testSuite.addTests(addPatternsSuite())
-    #testSuite.addTests(addVisibilitySuite())
+    testSuite.addTests(addVisibilitySuite())
     #addDataManagementTests(logger, platform)
     #addOperationalGraphicsTests(logger, platform)
     #addPatternsTests(logger, platform)
