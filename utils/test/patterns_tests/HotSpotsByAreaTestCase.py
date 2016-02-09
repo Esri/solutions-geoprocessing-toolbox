@@ -30,6 +30,7 @@ import arcpy
 import os
 import UnitTestUtilities
 import Configuration
+import DataDownload
 
 class HotSpotsByAreaTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Hot Spots by Area tool
@@ -41,9 +42,12 @@ class HotSpotsByAreaTestCase(unittest.TestCase):
     def setUp(self):
         if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.setUp")
         UnitTestUtilities.checkArcPy()
-        UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
+        
+        Configuration.incidentDataPath = DataDownload.runDataDownload(Configuration.patternsPaths, Configuration.incidentGDBName, Configuration.incidentURL)
         if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
             Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
+        Configuration.incidentInputGDB = os.path.join(Configuration.incidentDataPath, Configuration.incidentGDBName)    
+        UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
         
         self.inputAOIFeatures = os.path.join(Configuration.incidentInputGDB, "Districts")
         self.inputIncidents = os.path.join(Configuration.incidentInputGDB, "Incidents")
