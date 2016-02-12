@@ -26,10 +26,26 @@ company: Esri
 ==================================================
 description:
 This test suite collects all of the suitability toolbox test suites:
-* <toolbox>ToolsTestSuite.py
+* MilitaryAspectsOfWeatherTestSuite.py
 
 ==================================================
 history:
-10/23/2015 - MF - placeholder
+2/9/2016 - JH - creation
 ==================================================
 '''
+
+import logging
+import unittest
+import Configuration
+from . import MilitaryAspectsOfWeatherTestSuite
+
+def getSuitabilityTestSuites():
+    ''' This pulls together all of the toolbox test suites in this folder '''
+    if Configuration.DEBUG == True:
+        print("   AllSuitabilityTestSuite.getSuitabilityTestSuites")    
+    Configuration.Logger.info("Adding Suitability tests including: ")
+    testSuite = unittest.TestSuite()
+    
+    testSuite.addTests(MilitaryAspectsOfWeatherTestSuite.getWeatherTestSuite())
+    return testSuite
+        

@@ -17,7 +17,10 @@
 # ==================================================
 # ClusterAnalysisTestCase.py
 # --------------------------------------------------
-# requirments: ArcGIS X.X, Python 2.7 or Python 3.4
+# requirements:
+# * ArcGIS Desktop 10.X+ or ArcGIS Pro 1.X+
+# * Python 2.7 or Python 3.4
+#
 # author: ArcGIS Solutions
 # company: Esri
 #

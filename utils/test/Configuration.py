@@ -54,6 +54,9 @@ incidentGDBName = "test_incident_analysis_tools.gdb"
 
 ''' Suitability Paths '''
 suitabilityPaths = os.path.normpath(os.path.join(currentPath, r"suitability_tests"))
+suitabilityDataPath = None
+suitabilityInputGDB = None
+suitabilityScratchGDB = None
 
 ''' Visibility Paths '''
 visibilityPaths = os.path.normpath(os.path.join(currentPath, r"visibility_tests"))
