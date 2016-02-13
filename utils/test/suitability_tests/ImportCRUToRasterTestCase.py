@@ -44,11 +44,21 @@ class ImportCRUToRasterTestCase(unittest.TestCase):
     def setUp(self):
         if Configuration.DEBUG == True: print("     ImportCRUToRasterTestCase.setUp")
         UnitTestUtilities.checkArcPy()
+        Configuration.suitabilityDataPath = os.path.join(Configuration.suitabilityPaths, "data")
+        if (Configuration.suitabilityScratchGDB == None) or (not arcpy.Exists(Configuration.suitabilityScratchGDB)):
+            Configuration.suitabilityScratchGDB = UnitTestUtilities.createScratch(Configuration.suitabilityDataPath)
+        UnitTestUtilities.checkFilePaths([Configuration.suitabilityDataPath, Configuration.maow_ToolboxPath])
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     ImportCRUToRasterTestCase.tearDown")
+        UnitTestUtilities.deleteScratch(Configuration.suitabilityScratchGDB)
         
     def test_import_cru_to_raster(self):
         if Configuration.DEBUG == True: print("     ImportCRUToRasterTestCase.test_import_cru_to_raster")
+        arcpy.AddMessage("Testing Import CRU CL2.0 To Raster (Desktop)")
+        
+        runToolMessage = "Running tool (Import CRU CL2.0 To Raster)"
+        arcpy.AddMessage(runToolMessage)
+        Configuration.Logger.info(runToolMessage)
             
         

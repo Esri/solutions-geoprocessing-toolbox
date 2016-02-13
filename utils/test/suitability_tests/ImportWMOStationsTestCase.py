@@ -42,11 +42,22 @@ class ImportWMOStationsTestCase(unittest.TestCase):
     
     def setUp(self):
         if Configuration.DEBUG == True: print("     ImportWMOStationsTestCase.setUp")
-        UnitTestUtilities.checkArcPy()    
+        UnitTestUtilities.checkArcPy()
+        Configuration.suitabilityDataPath = os.path.join(Configuration.suitabilityPaths, "data")
+        if (Configuration.suitabilityScratchGDB == None) or (not arcpy.Exists(Configuration.suitabilityScratchGDB)):
+            Configuration.suitabilityScratchGDB = UnitTestUtilities.createScratch(Configuration.suitabilityDataPath)
+        UnitTestUtilities.checkFilePaths([Configuration.suitabilityDataPath, Configuration.maow_ToolboxPath])
+        # scratch GDB needed for output
     
     def tearDown(self):
         if Configuration.DEBUG == True: print("     ImportWMOStationsTestCase.tearDown")
+        UnitTestUtilities.deleteScratch(Configuration.suitabilityScratchGDB)
         
     def test_import_wmo_stations(self):
         if Configuration.DEBUG == True: print("     ImportWMOStationsTestCase.test_import_wmo_stations")
+        arcpy.AddMessage("Testing Import WMO Stations (Desktop)")
+        
+        runToolMessage = "Running tool (Import WMO Stations)"
+        arcpy.AddMessage(runToolMessage)
+        Configuration.Logger.info(runToolMessage)
             
