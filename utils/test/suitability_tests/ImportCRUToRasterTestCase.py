@@ -57,6 +57,7 @@ class ImportCRUToRasterTestCase(unittest.TestCase):
         if Configuration.DEBUG == True: print("     ImportCRUToRasterTestCase.test_import_cru_to_raster")
         arcpy.AddMessage("Testing Import CRU CL2.0 To Raster (Desktop)")
         
+        arcpy.ImportToolbox(Configuration.maow_ToolboxPath, "maow")
         runToolMessage = "Running tool (Import CRU CL2.0 To Raster)"
         arcpy.AddMessage(runToolMessage)
         Configuration.Logger.info(runToolMessage)

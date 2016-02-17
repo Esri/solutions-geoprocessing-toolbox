@@ -181,14 +181,14 @@ def main():
         print(pymsg + "\n")
         print(msgs)
 
-finally:
-    if debug == False and len(deleteme) > 0:
-        # cleanup intermediate datasets
-        if debug == True: arcpy.AddMessage("Removing intermediate datasets...")
-        for i in deleteme:
-            if debug == True: arcpy.AddMessage("Removing: " + str(i))
-            arcpy.Delete_management(i)
-        if debug == True: arcpy.AddMessage("Done")
+    finally:
+        if debug == False and len(deleteme) > 0:
+            # cleanup intermediate datasets
+            if debug == True: arcpy.AddMessage("Removing intermediate datasets...")
+            for i in deleteme:
+                if debug == True: arcpy.AddMessage("Removing: " + str(i))
+                arcpy.Delete_management(i)
+            if debug == True: arcpy.AddMessage("Done")
 
 # MAIN =============================================
 if __name__ == "__main__":
