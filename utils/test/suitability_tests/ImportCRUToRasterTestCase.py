@@ -54,12 +54,29 @@ class ImportCRUToRasterTestCase(unittest.TestCase):
         UnitTestUtilities.deleteScratch(Configuration.suitabilityScratchGDB)
         
     def test_import_cru_to_raster(self):
-        if Configuration.DEBUG == True: print("     ImportCRUToRasterTestCase.test_import_cru_to_raster")
-        arcpy.AddMessage("Testing Import CRU CL2.0 To Raster (Desktop)")
+        try:
+            if Configuration.DEBUG == True: print("     ImportCRUToRasterTestCase.test_import_cru_to_raster")
+            arcpy.AddMessage("Testing Import CRU CL2.0 To Raster (Desktop)")
         
-        arcpy.ImportToolbox(Configuration.maow_ToolboxPath, "maow")
-        runToolMessage = "Running tool (Import CRU CL2.0 To Raster)"
-        arcpy.AddMessage(runToolMessage)
-        Configuration.Logger.info(runToolMessage)
+            arcpy.ImportToolbox(Configuration.maow_ToolboxPath, "maow")
+            runToolMessage = "Running tool (Import CRU CL2.0 To Raster)"
+            arcpy.AddMessage(runToolMessage)
+            Configuration.Logger.info(runToolMessage)
+        
+            outputWorkspace = Configuration.suitabilityScratchGDB
+            arcpy.ImportCRUCL2ToRaster_maow(Configuration.suitabilityDataPath, outputWorkspace)
+            
+            # check that dtr_feb raster exists, then check that its bandCount = 1
+            dtr_feb_output = os.path.join(outputWorkspace, "dtr_feb")
+            self.assertTrue(arcpy.Exists(dtr_feb_output))
+            dtr_desc = arcpy.Describe(dtr_feb_output)
+            self.assertEqual(dtr_desc.bandCount, int(1))
+            
+        except arcpy.ExecuteError:
+            UnitTestUtilities.handleArcPyError()
+            
+        except:
+            UnitTestUtilities.handleGeneralError()
+            
             
         
