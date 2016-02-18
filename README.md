@@ -83,7 +83,7 @@ Additional information is available in the repository's [Wiki](https://github.co
 
 ## Requirements
 
-* ArcGIS Desktop 10.3.1+ or ArcGIS Pro 1.1+
+* ArcGIS Desktop 10.4+ or ArcGIS Pro 1.1+
     * Check [Releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases) for tools for previous versions of ArcGIS Desktop
 * Apache Ant - used to download and extract dependent data and run test drivers
 * Java Runtime Environment (JRE) or Developer Kit (JDK) (required by Ant)
@@ -101,10 +101,10 @@ Additional information is available in the repository's [Wiki](https://github.co
 The solutions-geoprocessing-toolbox repo is now supporting toolboxes for both ArcMap/ArcCatalog/ArcGlobe/ArcScene (collectively called ArcGIS for Desktop) and also ArcGIS Pro. Toolboxes that are modified in ArcGIS Pro are not
 backwards compatible with other ArcGIS Desktop applications (ArcMap), so most toolboxes are duplicated for one or the other. The naming of these toolboxes is as follows:
 
-* Toolboxes that are for ArcGIS Desktop 10.3 will include *_10.3* after the toolbox name. For example: **Visibility and Range Tools_10.3.tbx**
+* Toolboxes that are for ArcGIS Desktop 10.4 will include *_10.4* after the toolbox name. For example: **Visibility and Range Tools_10.4.tbx**
 * Toolboxes with a 'unversioned' name are for ArcGIS Pro 1.0. For example: **Visibility and Range Tools.tbx**
 
-Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 only. These toolboxes will follow the above naming convention, but will not have a duplicate.
+Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.4 only. These toolboxes will follow the above naming convention, but will not have a duplicate.
 
 * [Product info for ArcGIS Pro](http://www.esri.com/software/arcgis-pro)
 * [Help for ArcGIS Pro](http://pro.arcgis.com/en/pro-app/)
@@ -125,32 +125,11 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 
 ### Downloading Test Data
 
-* Install and configure Apache Ant
-    * Download Ant from the [Apache Ant Project](http://ant.apache.org/bindownload.cgi) and unzip to a location on your machine, for example 'c:\apache-ant-1.9.2'.
-    * Set environment variable `ANT_HOME` to Ant Install Location (e.g. the folder from first step)
-    * Add Ant\bin to your path: `%ANT_HOME%\bin`
-    * NOTE: Ant requires Java [Runtime Environment (JRE) or Developer Kit (JDK)](http://www.oracle.com/technetwork/java/javase/downloads/index.html) to be installed and the environment variable `JAVA_HOME` to be set to this location
-    * To verify your Ant Installation: Open Command Prompt> `ant -h` and verify it runs and returns the help options correctly 
-    * You may optionally install the [PyDev Eclipse Plugin for Python](http://pydev.org) if you plan to use Eclipse to run/debug
-* To download the data dependencies 
-    * Open Command Prompt>
-    * `cd solutions-geoprocessing-toolbox`
-    * `> ant`
-    * Verify “Build Succeeded”  
+**This section is under reconstruction, per issue [#371](https://github.com/Esri/solutions-geoprocessing-toolbox/issues/371)** 
 
 ### Running Verification Tests
 
-* Configure and verify Ant as described in the previous steps
-* To run all unit tests
-    * `> cd solutions-geoprocessing-toolbox`
-    * `>  ant -f run_all_tests.xml`
-    *  Note/Warning: this will run the test drivers from each test directory and can take several hours to run
-* To run individual unit tests
-    * Open Command Prompt>
-    * Go to the folder for the area you would like to test, the example below uses the `environment` area/folder, but each area has similar tests 
-    * `> cd solutions-geoprocessing-toolbox\environment\test`
-    * `> ant`
-    * Verify “Build Succeeded”
+**This section is under reconstruction, per issue [#371](https://github.com/Esri/solutions-geoprocessing-toolbox/issues/371)**
 
  
 
