@@ -41,23 +41,46 @@ class SubsetRasterWorkspaceTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Subset Raster Workspace tool
     in the Military Aspects of Weather toolbox'''
     
+    sourceWorkspace = None
+    targetWorkspace = None
+    
     def setUp(self):
         if Configuration.DEBUG == True: print("     SubsetRasterWorkspaceTestCase.setUp")
         UnitTestUtilities.checkArcPy()
         Configuration.suitabilityDataPath = os.path.join(Configuration.suitabilityPaths, "data")
+        self.sourceWorkspace = os.path.join(Configuration.suitabilityDataPath, "CRURasters.gdb")
+        self.targetWorkspace = os.path.join(Configuration.suitabilityDataPath, "SubsetRasters.gdb")
         if (Configuration.suitabilityScratchGDB == None) or (not arcpy.Exists(Configuration.suitabilityScratchGDB)):
             Configuration.suitabilityScratchGDB = UnitTestUtilities.createScratch(Configuration.suitabilityDataPath)
-        UnitTestUtilities.checkFilePaths([Configuration.suitabilityDataPath, Configuration.maow_ToolboxPath])
+        UnitTestUtilities.checkFilePaths([Configuration.suitabilityDataPath, Configuration.maow_ToolboxPath, self.sourceWorkspace, self.targetWorkspace])
     
     def tearDown(self):
         if Configuration.DEBUG == True: print("     SubsetRasterWorkspaceTestCase.tearDown")
         UnitTestUtilities.deleteScratch(Configuration.suitabilityScratchGDB)
         
     def test_subset_raster_workspace(self):
-        if Configuration.DEBUG == True: print("     SubsetRasterWorkspaceTestCase.test_subset_raster_workspace")
-        arcpy.AddMessage("Testing Subset Raster Workspace (Desktop)")
+        try:    
+            if Configuration.DEBUG == True: print("     SubsetRasterWorkspaceTestCase.test_subset_raster_workspace")
+            arcpy.AddMessage("Testing Subset Raster Workspace (Desktop)")
         
-        runToolMessage = "Running tool (Subset Raster Workspace)"
-        arcpy.AddMessage(runToolMessage)
-        Configuration.Logger.info(runToolMessage)
+            arcpy.ImportToolbox(Configuration.maow_ToolboxPath, "maow")
+            runToolMessage = "Running tool (Subset Raster Workspace)"
+            arcpy.AddMessage(runToolMessage)
+            Configuration.Logger.info(runToolMessage)
+            
+            inputAreaPath = os.path.join(self.sourceWorkspace, "AOI")
+            inputArea = arcpy.FeatureSet(inputAreaPath)
+            arcpy.SubsetRasterWorkspace_maow(inputArea, self.sourceWorkspace, self.targetWorkspace)
+            
+            dtr_feb_output = os.path.join(self.targetWorkspace, "dtr_feb")
+            self.assertTrue(arcpy.Exists(dtr_feb_output))
+            dtr_desc = arcpy.Describe(dtr_feb_output)
+            self.assertEqual(dtr_desc.bandCount, int(1))
+            
+        except arcpy.ExecuteError:
+            UnitTestUtilities.handleArcPyError()
+            
+        except:
+            UnitTestUtilities.handleGeneralError()
+            
         

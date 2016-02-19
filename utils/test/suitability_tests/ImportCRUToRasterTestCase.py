@@ -41,13 +41,16 @@ class ImportCRUToRasterTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Import CRU CL 2.0 To Raster tool
     in the Military Aspects of Weather toolbox'''
     
+    outputWorkspace = None
+    
     def setUp(self):
         if Configuration.DEBUG == True: print("     ImportCRUToRasterTestCase.setUp")
         UnitTestUtilities.checkArcPy()
         Configuration.suitabilityDataPath = os.path.join(Configuration.suitabilityPaths, "data")
+        self.outputWorkspace = os.path.join(Configuration.suitabilityDataPath, "CRURasters.gdb")
         if (Configuration.suitabilityScratchGDB == None) or (not arcpy.Exists(Configuration.suitabilityScratchGDB)):
             Configuration.suitabilityScratchGDB = UnitTestUtilities.createScratch(Configuration.suitabilityDataPath)
-        UnitTestUtilities.checkFilePaths([Configuration.suitabilityDataPath, Configuration.maow_ToolboxPath])
+        UnitTestUtilities.checkFilePaths([Configuration.suitabilityDataPath, Configuration.maow_ToolboxPath, self.outputWorkspace])
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     ImportCRUToRasterTestCase.tearDown")
@@ -63,11 +66,10 @@ class ImportCRUToRasterTestCase(unittest.TestCase):
             arcpy.AddMessage(runToolMessage)
             Configuration.Logger.info(runToolMessage)
         
-            outputWorkspace = Configuration.suitabilityScratchGDB
-            arcpy.ImportCRUCL2ToRaster_maow(Configuration.suitabilityDataPath, outputWorkspace)
+            arcpy.ImportCRUCL2ToRaster_maow(Configuration.suitabilityDataPath, self.outputWorkspace)
             
             # check that dtr_feb raster exists, then check that its bandCount = 1
-            dtr_feb_output = os.path.join(outputWorkspace, "dtr_feb")
+            dtr_feb_output = os.path.join(self.outputWorkspace, "dtr_feb")
             self.assertTrue(arcpy.Exists(dtr_feb_output))
             dtr_desc = arcpy.Describe(dtr_feb_output)
             self.assertEqual(dtr_desc.bandCount, int(1))
