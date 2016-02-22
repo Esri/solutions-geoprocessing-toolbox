@@ -102,7 +102,8 @@ The solutions-geoprocessing-toolbox repo is now supporting toolboxes for both Ar
 backwards compatible with other ArcGIS Desktop applications (ArcMap), so most toolboxes are duplicated for one or the other. The naming of these toolboxes is as follows:
 
 * Toolboxes that are for ArcGIS Desktop 10.4 will include *_10.4* after the toolbox name. For example: **Visibility and Range Tools_10.4.tbx**
-* Toolboxes with a 'unversioned' name are for ArcGIS Pro 1.0. For example: **Visibility and Range Tools.tbx**
+* Toolboxes with a 'unversioned' name are for ArcGIS Pro 1.1. For example: **Visibility and Range Tools.tbx**
+
 
 Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.4 only. These toolboxes will follow the above naming convention, but will not have a duplicate.
 
@@ -130,8 +131,6 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.4 
 ### Running Verification Tests
 
 **This section is under reconstruction, per issue [#371](https://github.com/Esri/solutions-geoprocessing-toolbox/issues/371)**
-
- 
 
 ## Resources
 
