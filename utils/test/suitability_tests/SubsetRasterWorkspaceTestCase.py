@@ -50,13 +50,11 @@ class SubsetRasterWorkspaceTestCase(unittest.TestCase):
         Configuration.suitabilityDataPath = os.path.join(Configuration.suitabilityPaths, "data")
         self.sourceWorkspace = os.path.join(Configuration.suitabilityDataPath, "CRURasters.gdb")
         self.targetWorkspace = os.path.join(Configuration.suitabilityDataPath, "SubsetRasters.gdb")
-        if (Configuration.suitabilityScratchGDB == None) or (not arcpy.Exists(Configuration.suitabilityScratchGDB)):
-            Configuration.suitabilityScratchGDB = UnitTestUtilities.createScratch(Configuration.suitabilityDataPath)
+        
         UnitTestUtilities.checkFilePaths([Configuration.suitabilityDataPath, Configuration.maow_ToolboxPath, self.sourceWorkspace, self.targetWorkspace])
     
     def tearDown(self):
         if Configuration.DEBUG == True: print("     SubsetRasterWorkspaceTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(Configuration.suitabilityScratchGDB)
         
     def test_subset_raster_workspace(self):
         try:    

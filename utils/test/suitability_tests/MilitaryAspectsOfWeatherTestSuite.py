@@ -54,8 +54,8 @@ def getWeatherTestSuite():
         
     if Configuration.Platform == "DESKTOP":
         Configuration.Logger.info("Military Aspects of Weather Desktop tests")
-        addWMOStationDataTests(importWMODataTests)
         addWMOStationsTests(importWMOStationsTests)
+        addWMOStationDataTests(importWMODataTests)
         addCRUToRasterTests(importCRUToRasterTests)
         addSubsetRasterWorkspaceTests(subsetRasterWorkspaceTests)
 

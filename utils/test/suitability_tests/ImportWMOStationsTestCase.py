@@ -51,8 +51,7 @@ class ImportWMOStationsTestCase(unittest.TestCase):
         self.stationsTextFile = os.path.join(Configuration.suitabilityDataPath, "WMOStations.tab")
         self.WMOGDB = os.path.join(Configuration.suitabilityDataPath, "WMO.gdb")
         self.WMOStationsFC = os.path.join(self.WMOGDB, "WMOFC_output")
-        if (Configuration.suitabilityScratchGDB == None) or (not arcpy.Exists(Configuration.suitabilityScratchGDB)):
-            Configuration.suitabilityScratchGDB = UnitTestUtilities.createScratch(Configuration.suitabilityDataPath)
+        
         UnitTestUtilities.checkFilePaths([Configuration.suitabilityDataPath, Configuration.maow_ToolboxPath, self.WMOGDB])
         if (arcpy.Exists(self.WMOStationsFC)):
             arcpy.Delete_management(self.WMOStationsFC)
@@ -60,7 +59,6 @@ class ImportWMOStationsTestCase(unittest.TestCase):
     
     def tearDown(self):
         if Configuration.DEBUG == True: print("     ImportWMOStationsTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(Configuration.suitabilityScratchGDB)
         
     def test_import_wmo_stations(self):
         try:

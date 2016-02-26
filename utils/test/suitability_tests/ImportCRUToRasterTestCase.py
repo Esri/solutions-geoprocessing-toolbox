@@ -48,13 +48,11 @@ class ImportCRUToRasterTestCase(unittest.TestCase):
         UnitTestUtilities.checkArcPy()
         Configuration.suitabilityDataPath = os.path.join(Configuration.suitabilityPaths, "data")
         self.outputWorkspace = os.path.join(Configuration.suitabilityDataPath, "CRURasters.gdb")
-        if (Configuration.suitabilityScratchGDB == None) or (not arcpy.Exists(Configuration.suitabilityScratchGDB)):
-            Configuration.suitabilityScratchGDB = UnitTestUtilities.createScratch(Configuration.suitabilityDataPath)
+       
         UnitTestUtilities.checkFilePaths([Configuration.suitabilityDataPath, Configuration.maow_ToolboxPath, self.outputWorkspace])
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     ImportCRUToRasterTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(Configuration.suitabilityScratchGDB)
         
     def test_import_cru_to_raster(self):
         try:
