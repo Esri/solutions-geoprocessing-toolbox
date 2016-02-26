@@ -58,9 +58,7 @@ class ImportWMOStationDataTestCase(unittest.TestCase):
         self.WMOFolder = os.path.join(Configuration.suitabilityDataPath, "WMOStationFiles")
         
         UnitTestUtilities.checkFilePaths([Configuration.suitabilityDataPath, Configuration.maow_ToolboxPath, self.WMOFolder, self.WMOGDB])
-        if (arcpy.Exists(self.StationDataOutputFC)):
-            arcpy.Delete_management(self.StationDataOutputFC)
-            arcpy.AddMessage("Deleted previous output feature class: " + self.StationDataOutputFC)
+        UnitTestUtilities.deleteIfExists(self.StationDataOutputFC)
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     ImportWMOStationDataTestCase.tearDown")
