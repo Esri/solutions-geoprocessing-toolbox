@@ -41,12 +41,14 @@ class ImportCRUToRasterTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Import CRU CL 2.0 To Raster tool
     in the Military Aspects of Weather toolbox'''
     
+    inputCRUFolder = None
     outputWorkspace = None
     
     def setUp(self):
         if Configuration.DEBUG == True: print("     ImportCRUToRasterTestCase.setUp")
         UnitTestUtilities.checkArcPy()
         Configuration.suitabilityDataPath = os.path.join(Configuration.suitabilityPaths, "data")
+        self.inputCRUFolder = os.path.join(Configuration.suitabilityDataPath, "CRUdata")
         self.outputWorkspace = os.path.join(Configuration.suitabilityDataPath, "CRURasters.gdb")
        
         UnitTestUtilities.checkFilePaths([Configuration.suitabilityDataPath, Configuration.maow_ToolboxPath, self.outputWorkspace])
@@ -64,7 +66,7 @@ class ImportCRUToRasterTestCase(unittest.TestCase):
             arcpy.AddMessage(runToolMessage)
             Configuration.Logger.info(runToolMessage)
         
-            arcpy.ImportCRUCL2ToRaster_maow(Configuration.suitabilityDataPath, self.outputWorkspace)
+            arcpy.ImportCRUCL2ToRaster_maow(self.inputCRUFolder, self.outputWorkspace)
             
             # check that dtr_feb raster exists, then check that its bandCount = 1
             dtr_feb_output = os.path.join(self.outputWorkspace, "dtr_feb")
