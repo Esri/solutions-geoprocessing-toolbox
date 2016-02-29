@@ -50,7 +50,8 @@ class ImportWMOStationDataTestCase(unittest.TestCase):
         if Configuration.DEBUG == True: print("     ImportWMOStationDataTestCase.setUp")
         UnitTestUtilities.checkArcPy()
         self.outputFCName = "WMOStationData"
-        Configuration.suitabilityDataPath = os.path.join(Configuration.suitabilityPaths, "data")
+        
+        # DO NOT run data download again; dependent data is needed from the ImportWMOStationsTestCase
         self.WMOGDB = os.path.join(Configuration.suitabilityDataPath, "WMO.gdb")
         
         self.StationDataInputFC = os.path.join(self.WMOGDB, "WMOFC_output")

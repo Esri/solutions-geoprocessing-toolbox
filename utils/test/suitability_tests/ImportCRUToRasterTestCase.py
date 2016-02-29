@@ -47,7 +47,8 @@ class ImportCRUToRasterTestCase(unittest.TestCase):
     def setUp(self):
         if Configuration.DEBUG == True: print("     ImportCRUToRasterTestCase.setUp")
         UnitTestUtilities.checkArcPy()
-        Configuration.suitabilityDataPath = os.path.join(Configuration.suitabilityPaths, "data")
+
+        Configuration.suitabilityDataPath = DataDownload.runDataDownload(Configuration.suitabilityPaths, "MilitaryAspectsOfWeatherTestData", Configuration.maowURL)
         self.inputCRUFolder = os.path.join(Configuration.suitabilityDataPath, "CRUdata")
         self.outputWorkspace = os.path.join(Configuration.suitabilityDataPath, "CRURasters.gdb")
        

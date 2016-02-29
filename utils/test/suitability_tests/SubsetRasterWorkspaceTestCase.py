@@ -47,7 +47,8 @@ class SubsetRasterWorkspaceTestCase(unittest.TestCase):
     def setUp(self):
         if Configuration.DEBUG == True: print("     SubsetRasterWorkspaceTestCase.setUp")
         UnitTestUtilities.checkArcPy()
-        Configuration.suitabilityDataPath = os.path.join(Configuration.suitabilityPaths, "data")
+
+        # DO NOT run data download again; dependent data is needed from ImportCRUToRasterTestCase
         self.sourceWorkspace = os.path.join(Configuration.suitabilityDataPath, "CRURasters.gdb")
         self.targetWorkspace = os.path.join(Configuration.suitabilityDataPath, "SubsetRasters.gdb")
         

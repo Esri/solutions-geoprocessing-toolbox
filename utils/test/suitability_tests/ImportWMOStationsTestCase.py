@@ -47,7 +47,7 @@ class ImportWMOStationsTestCase(unittest.TestCase):
     def setUp(self):
         if Configuration.DEBUG == True: print("     ImportWMOStationsTestCase.setUp")
         UnitTestUtilities.checkArcPy()
-        Configuration.suitabilityDataPath = os.path.join(Configuration.suitabilityPaths, "data")
+        Configuration.suitabilityDataPath = DataDownload.runDataDownload(Configuration.suitabilityPaths, "MilitaryAspectsOfWeatherTestData", Configuration.maowURL)
         self.stationsTextFile = os.path.join(Configuration.suitabilityDataPath, "WMOStations.tab")
         self.WMOGDB = os.path.join(Configuration.suitabilityDataPath, "WMO.gdb")
         self.WMOStationsFC = os.path.join(self.WMOGDB, "WMOFC_output")
