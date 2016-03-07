@@ -132,6 +132,7 @@ def runTestSuite():
     testSuite.addTests(addCapabilitySuite())
     testSuite.addTests(addPatternsSuite())
     testSuite.addTests(addVisibilitySuite())
+    testSuite.addTests(addSuitabilitySuite())
     #addDataManagementTests(logger, platform)
     #addOperationalGraphicsTests(logger, platform)
     #addPatternsTests(logger, platform)
@@ -166,6 +167,14 @@ def addVisibilitySuite():
     from visibility_tests import AllVisibilityTestSuite    
     suite = unittest.TestSuite()
     suite.addTests(AllVisibilityTestSuite.getVisibilityTestSuites())
+    return suite
+    
+def addSuitabilitySuite():
+    ''' Add all Suitability tests in the ./suitability_tests folder '''
+    if Configuration.DEBUG == True: print("TestRunner.py - addSuitabilitySuite")
+    from suitability_tests import AllSuitabilityTestSuite
+    suite = unittest.TestSuite()
+    suite.addTests(AllSuitabilityTestSuite.getSuitabilityTestSuites())
     return suite
 
 # MAIN =============================================

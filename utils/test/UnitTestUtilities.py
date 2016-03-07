@@ -222,3 +222,9 @@ def folderPathsExist(paths):
             allExist = False
     return allExist
     
+def deleteIfExists(dataset):
+    ''' Delete the input dataset if it exists '''
+    if (arcpy.Exists(dataset)):
+        arcpy.Delete_management(dataset)
+        arcpy.AddMessage("deleted dataset: " + dataset)
+    

@@ -17,7 +17,7 @@
 # ==================================================
 # HotSpotsByAreaTestCase.py
 # --------------------------------------------------
-# requirments: ArcGIS X.X, Python 2.7 or Python 3.4
+# requirements: ArcGIS X.X, Python 2.7 or Python 3.4
 # author: ArcGIS Solutions
 # company: Esri
 # ==================================================
