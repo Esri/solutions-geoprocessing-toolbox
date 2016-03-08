@@ -38,6 +38,7 @@ import logging
 import unittest
 import Configuration
 from . import MilitaryAspectsOfWeatherTestSuite
+from . import MaritimeDecisionAidToolsTestSuite
 
 def getSuitabilityTestSuites():
     ''' This pulls together all of the toolbox test suites in this folder '''
@@ -47,5 +48,7 @@ def getSuitabilityTestSuites():
     testSuite = unittest.TestSuite()
     
     testSuite.addTests(MilitaryAspectsOfWeatherTestSuite.getWeatherTestSuite())
+    testSuite.addTests(MaritimeDecisionAidToolsTestSuite.getMaritimeTestSuite())
+    
     return testSuite
         
