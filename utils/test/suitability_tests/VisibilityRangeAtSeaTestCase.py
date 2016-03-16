@@ -40,8 +40,29 @@ class VisibilityRangeAtSeaTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Visibility Range At Sea tool
     in the Maritime Decision Aid toolbox'''
     
+    maritimeOutputGDB = None
+    maritimeDataGDB = None
+    visibleRange = None
+    vessel = None
+    shipLocation = None
+    
     def setUp(self):
         if Configuration.DEBUG == True: print("     VisibilityRangeAtSeaTestCase.setUp")
+        
+        UnitTestUtilities.checkArcPy()
+        # Configuration.suitabilityDataPath = os.path.join(Configuration.suitabilityPaths, "data")
+        
+        self.maritimeOutputGDB = os.path.join(Configuration.maritimeDataPath, "output.gdb")
+        self.maritimeDataGDB = os.path.join(Configuration.maritimeDataPath, "data.gdb")
+        
+        self.visibleRange = os.path.join(self.maritimeOutputGDB, "visRangeOutput")
+        self.vessel = os.path.join(self.maritimeOutputGDB, "vesselOutput")
+        self.shipLocation = os.path.join(self.maritimeDataGDB, "Ships")
+        
+        UnitTestUtilities.checkFilePaths([Configuration.maritimeDataPath, Configuration.maritime_DesktopToolboxPath, Configuration.maritime_ProToolboxPath])
+        UnitTestUtilities.deleteIfExists(self.vessel)
+        UnitTestUtilities.deleteIfExists(self.visibleRange)
+        
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     VisibilityRangeAtSeaTestCase.tearDown")
@@ -58,9 +79,18 @@ class VisibilityRangeAtSeaTestCase(unittest.TestCase):
         try:
             if Configuration.DEBUG == True: print("     VisibilityRangeAtSeaTestCase.test_visibility_range_at_sea")
                 
+            arcpy.ImportToolbox(Configuration.maritime_DesktopToolboxPath, "mdat")
             runToolMessage = "Running tool (Visibility Range At Sea)"
             arcpy.AddMessage(runToolMessage)
             Configuration.Logger.info(runToolMessage)
+            
+            arcpy.HorizonVisibility_mdat(self.shipLocation, "#", self.visibleRange, self.vessel)
+            
+            visibleRangeCount = int(arcpy.GetCount_management(self.visibleRange).getOutput(0))
+            self.assertEqual(visibleRangeCount, int(1))
+            
+            vesselCount = int(arcpy.GetCount_management(self.vessel).getOutput(0))
+            self.assertEqual(vesselCount, int(1))
             
             
         except arcpy.ExecuteError:
