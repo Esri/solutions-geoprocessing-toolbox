@@ -40,8 +40,20 @@ class FarthestOnCircleTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Farthest On Circle tool
     in the Maritime Decision Aid toolbox'''
     
+    maritimeOutputGDB = None
+    maritimeDataGDB = None
+    position = None
+    hoursOfTransit = None
+    
     def setUp(self):
         if Configuration.DEBUG == True: print("     FarthestOnCircleTestCase.setUp")    
+        
+        UnitTestUtilities.checkArcPy()
+        self.maritimeOutputGDB = os.path.join(Configuration.maritimeDataPath, "output.gdb")
+        self.maritimeDataGDB = os.path.join(Configuration.maritimeDataPath, "data.gdb")
+        
+        self.position = os.path.join(self.maritimeDataGDB, "Ships")
+        self.hoursOfTransit = os.path.join(self.maritimeOutputGDB, "hoursOutput")
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     FarthestOnCircleTestCase.tearDown")
@@ -58,9 +70,15 @@ class FarthestOnCircleTestCase(unittest.TestCase):
         try:
             if Configuration.DEBUG == True: print("     FarthestOnCircleTestCase.test_farthest_on_cirle") 
             
+            arcpy.ImportToolbox(toolboxPath, "mdat")
             runToolMessage = "Running tool (Farthest On Circle)"
             arcpy.AddMessage(runToolMessage)
             Configuration.Logger.info(runToolMessage)
+            
+            arcpy.CheckOutExtension("Spatial")
+            arcpy.FarthestOnCircle_mdat(self.position, "#", "#", self.hoursOfTransit)
+            
+            self.assertTrue(arcpy.Exists(self.hoursOfTransit))
        
             
         except arcpy.ExecuteError:
@@ -68,4 +86,8 @@ class FarthestOnCircleTestCase(unittest.TestCase):
             
         except:
             UnitTestUtilities.handleGeneralError()
+            
+        finally:
+            arcpy.CheckInExtension("Spatial")
+            
         

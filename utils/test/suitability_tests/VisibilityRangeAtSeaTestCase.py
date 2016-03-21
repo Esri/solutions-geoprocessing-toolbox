@@ -79,7 +79,7 @@ class VisibilityRangeAtSeaTestCase(unittest.TestCase):
         try:
             if Configuration.DEBUG == True: print("     VisibilityRangeAtSeaTestCase.test_visibility_range_at_sea")
                 
-            arcpy.ImportToolbox(Configuration.maritime_DesktopToolboxPath, "mdat")
+            arcpy.ImportToolbox(toolboxPath, "mdat")
             runToolMessage = "Running tool (Visibility Range At Sea)"
             arcpy.AddMessage(runToolMessage)
             Configuration.Logger.info(runToolMessage)
