@@ -3,6 +3,7 @@ application/
 data/
 maps/
 scratch/
+log/
 arc.dir
 #*.pyt.xml -- We cannot ignore these files... these are documentation
 *.zip
@@ -13,6 +14,7 @@ arc.dir
 *-sav
 *-sav.*
 *Copy.*
+*.log
 
 #############
 ## Python
