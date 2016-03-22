@@ -58,7 +58,7 @@ def main():
         # Set tool param variables
         inPoint = arcpy.Point(77.0, 38.9)
         inWGS84Point = arcpy.PointGeometry(inPoint)
-        sr = arcpy.SpatialReference(4326)
+        sr = arcpy.SpatialReference(4326) #GCS_WGS_1984
         inWGS84Point.spatial_reference = sr
         # create an in_memory feature class to initially contain the input point
         fc = arcpy.CreateFeatureclass_management("in_memory", "tempfc", "POINT",
