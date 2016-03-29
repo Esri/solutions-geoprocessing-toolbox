@@ -417,7 +417,7 @@ def main():
         if appEnvironment == "ARCGIS_PRO":
             toolboxPath = os.path.join(os.path.dirname(sysPath), "Clearing Operations Tools.tbx")
         else:
-            toolboxPath = os.path.join(os.path.dirname(sysPath), "Clearing Operations Tools_10.3.tbx")
+            toolboxPath = os.path.join(os.path.dirname(sysPath), "Clearing Operations Tools_10.4.tbx")
 
         arcpy.ImportToolbox(toolboxPath)
         arcpy.AddMessage("Creating Fishnet Grid...")
