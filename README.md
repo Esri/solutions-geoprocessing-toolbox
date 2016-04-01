@@ -104,7 +104,8 @@ backwards compatible with other ArcGIS Desktop applications (ArcMap), so most to
 * Toolboxes that are for ArcGIS Desktop 10.4 will include *_10.4* after the toolbox name. For example: **Visibility and Range Tools_10.4.tbx**
 * Toolboxes with a 'unversioned' name are for ArcGIS Pro 1.1. For example: **Visibility and Range Tools.tbx**
 
-Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 only. These toolboxes will follow the above naming convention, but will not have a duplicate.
+
+Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.4 only. These toolboxes will follow the above naming convention, but will not have a duplicate.
 
 * [Product info for ArcGIS Pro](http://www.esri.com/software/arcgis-pro)
 * [Help for ArcGIS Pro](http://pro.arcgis.com/en/pro-app/)
@@ -125,18 +126,7 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 
 ### Downloading Test Data
 
-* Install and configure Apache Ant
-    * Download Ant from the [Apache Ant Project](http://ant.apache.org/bindownload.cgi) and unzip to a location on your machine, for example 'c:\apache-ant-1.9.2'.
-    * Set environment variable `ANT_HOME` to Ant Install Location (e.g. the folder from first step)
-    * Add Ant\bin to your path: `%ANT_HOME%\bin`
-    * NOTE: Ant requires Java [Runtime Environment (JRE) or Developer Kit (JDK)](http://www.oracle.com/technetwork/java/javase/downloads/index.html) to be installed and the environment variable `JAVA_HOME` to be set to this location
-    * To verify your Ant Installation: Open Command Prompt> `ant -h` and verify it runs and returns the help options correctly 
-    * You may optionally install the [PyDev Eclipse Plugin for Python](http://pydev.org) if you plan to use Eclipse to run/debug
-* To download the data dependencies 
-    * Open Command Prompt>
-    * `cd solutions-geoprocessing-toolbox`
-    * `> ant`
-    * Verify “Build Succeeded”  
+**This section is under reconstruction, per issue [#371](https://github.com/Esri/solutions-geoprocessing-toolbox/issues/371)** 
 
 ### Running Verification Tests
 
