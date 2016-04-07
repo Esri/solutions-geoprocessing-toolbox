@@ -30,10 +30,10 @@ history:
 ==================================================
 '''
 import os
+import sys
 import arcpy
 import unittest
 import datetime
-import RangeRingUtils
 import logging
 import Configuration
 import UnitTestUtilities
@@ -46,6 +46,18 @@ class RangeRingUtilsTestCase(unittest.TestCase):
 
     def setUp(self):
         ''' setup for tests'''
+
+        # Have to modify the path temporarily just to get the UTILS module
+        # into the tests.
+        pathToUtils = os.path.join('..',
+                                   '..',
+                                   '..',
+                                   'visibility',
+                                   'toolboxes',
+                                   'scripts')
+        sys.path.insert(0, pathToUtils)
+        import RangeRingUtils
+
         if Configuration.DEBUG == True: print("         RangeRingsUtilsTestCase.setUp")
         UnitTestUtilities.checkArcPy()
         self.proToolboxPath = os.path.join(Configuration.vis_ToolboxesPath,

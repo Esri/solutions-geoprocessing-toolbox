@@ -36,7 +36,7 @@ history:
 
 import unittest
 import Configuration
-import RangeRingUtilsTestCase
+from . import RangeRingUtilsTestCase
 
 
 def getRangeRingTestSuite():
