@@ -34,3 +34,14 @@ history:
 <date> - <initals> - <modifications>
 ==================================================
 '''
+import unittest
+import Configuration
+from . import RangeRingUtilsTestCase
+
+
+def getVisibilityAndRangeTestSuite():
+    '''Collecting all test cases from Visibility and Range'''
+    if Configuration.DEBUG == True:
+        print("      getVisibilityAndRangeTestSuite")
+    
+    return
