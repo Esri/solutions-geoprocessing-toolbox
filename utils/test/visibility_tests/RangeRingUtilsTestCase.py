@@ -39,26 +39,27 @@ import Configuration
 import UnitTestUtilities
 import DataDownload
 
-
+# ============================================================================
+# Have to modify the path temporarily just to get the RangeRingUtils.py module
+# into the tests.
+if os.path.isdir(sys.argv[0]):
+    pathOfCurrentScript = os.path.normpath(sys.argv[0])
+else:
+    pathOfCurrentScript = os.getcwd()
+pathOfSGTParent = pathOfCurrentScript[0:int(pathOfCurrentScript.find('solutions-geoprocessing-toolbox'))]
+relPathToVizScripts = os.path.join('solutions-geoprocessing-toolbox', 'visibility', 'toolboxes', 'scripts')
+pathToRRUtils = os.path.normpath(os.path.join(pathOfSGTParent, relPathToVizScripts))
+sys.path.insert(0, pathToRRUtils)
+import RangeRingUtils
+# ============================================================================
 
 class RangeRingUtilsTestCase(unittest.TestCase):
     ''' Test all methods and classes in RangeRingUtils.py '''
 
     def setUp(self):
         ''' setup for tests'''
-
-        # Have to modify the path temporarily just to get the UTILS module
-        # into the tests.
-        pathToUtils = os.path.join('..',
-                                   '..',
-                                   '..',
-                                   'visibility',
-                                   'toolboxes',
-                                   'scripts')
-        sys.path.insert(0, pathToUtils)
-        import RangeRingUtils
-
         if Configuration.DEBUG == True: print("         RangeRingsUtilsTestCase.setUp")
+
         UnitTestUtilities.checkArcPy()
         self.proToolboxPath = os.path.join(Configuration.vis_ToolboxesPath,
                                            "Visibility and Range Tools.tbx")
@@ -68,12 +69,17 @@ class RangeRingUtilsTestCase(unittest.TestCase):
         self.srWGS84 = arcpy.SpatialReference(4326) #GCS_WGS_1984
         self.srWAZED = arcpy.SpatialReference(54032) #World_Azimuthal_Equidistant
         self.deleteme = []
+
         self.DataGDB = None
+        self.rrDataPath = os.path.join(Configuration.visibilityPaths, 'data')
         if (self.DataGDB == None) or (not arcpy.Exists(self.DataGDB)):
-            self.DataGDB = UnitTestUtilities.createScratch(self.DataGDB)
+            self.DataGDB = UnitTestUtilities.createScratch(self.rrDataPath)
+
         UnitTestUtilities.checkFilePaths([self.proToolboxPath,
                                           self.desktopToolboxPath,
-                                          Configuration.visibilityPaths])
+                                          Configuration.visibilityPaths,
+                                          self.rrDataPath,
+                                          self.DataGDB])
 
 
         #create a temp point feature class
@@ -81,7 +87,10 @@ class RangeRingUtilsTestCase(unittest.TestCase):
         tempfcPath = os.path.join("in_memory", "tempfc")
         if arcpy.Exists(tempfcPath):
             arcpy.Delete_management(tempfcPath)
-        self.pointGeographic = arcpy.CreateFeatureclass_management(os.path.dirname(tempfcPath), os.path.basename(tempfcPath), "POINT", "#", "DISABLED", "DISABLED", self.srWGS84)[0]
+        self.pointGeographic = arcpy.CreateFeatureclass_management(os.path.dirname(tempfcPath),
+                                                                   os.path.basename(tempfcPath),
+                                                                   "POINT", "#", "DISABLED",
+                                                                   "DISABLED", self.srWGS84)[0]
         with arcpy.da.InsertCursor(self.pointGeographic, ["SHAPE@XY"]) as cursor:
             for (x, y) in ptCoords:
                 cursor.insertRow([(x, y)])
@@ -91,7 +100,7 @@ class RangeRingUtilsTestCase(unittest.TestCase):
 
     def tearDown(self):
         ''' cleanup after tests'''
-        print("RangeRingsUtilsTestCase.tearDown")
+        if Configuration.DEBUG == True: print("         RangeRingsUtilsTestCase.tearDown")
         del self.pointGeographic
         for i in self.deleteme:
             if arcpy.Exists(i):
@@ -119,7 +128,8 @@ class RangeRingUtilsTestCase(unittest.TestCase):
     def test_RingMaker_sortList_empty(self):
         ''' test RingMaker's internal _sortList method if it handles an empty list'''
         print("RangeRingsUtilsTestCase.test_RingMaker_sortList_emtpy")
-        outList = RangeRingUtils.RingMaker._sortList(self, [])
+        rm = RangeRingUtils.RingMaker(self.pointGeographic, [10.0, 20.0], "METERS", self.srWAZED)
+        outList = rm._sortList([])
         self.assertIsNone(outList)
         return
 
@@ -127,7 +137,8 @@ class RangeRingUtilsTestCase(unittest.TestCase):
         ''' test Ringmaker's internal _sortedList method if it sorts a list'''
         print("RangeRingsUtilsTestCase.test_sortList_isSorted")
         l = [7, 5, 9, 3, 8, 1, 6, 2, 4, 0]
-        outList = RangeRingUtils.RingMaker._sortList(self, l)
+        rm = RangeRingUtils.RingMaker(self.pointGeographic, [10.0, 20.0], "METERS", self.srWAZED)
+        outList = rm._sortList(l)
         self.assertEqual(outList, sorted(l))
         return
 
