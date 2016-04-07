@@ -64,8 +64,8 @@ def getMaritimeTestSuite():
     if Configuration.Platform == "DESKTOP":
         Configuration.Logger.info("Maritime Decision Aid Tools Desktop tests")
         addFindSubmarineTests(findSubmarineDesktopTests)
-        addSubDepthRestrictionTests(subDepthRestribtionSuitabilityDesktopTests)
         addSubSpecificationsTests(subSpecificationsDesktopTests)
+        addSubDepthRestrictionTests(subDepthRestribtionSuitabilityDesktopTests)
         addVisibilityRangeTests(visibilityRangeAtSeaDesktopTests)
         addFarthestOnCircleTests(farthestOnCircleDesktopTests)
         addSensorViewshedTests(sensorViewshedProcessingDesktopTests)
@@ -73,8 +73,8 @@ def getMaritimeTestSuite():
     else:
         Configuration.Logger.info("Maritime Decision Aid Tools Pro tests")
         addFindSubmarineTests(findSubmarineProTests)
-        addSubDepthRestrictionTests(subDepthRestrictionSuitabilityProTests)
         addSubSpecificationsTests(subSpecificationsProTests)
+        addSubDepthRestrictionTests(subDepthRestrictionSuitabilityProTests)
         addVisibilityRangeTests(visibilityRangeAtSeaProTests)
         addFarthestOnCircleTests(farthestOnCircleProTests)
         addSensorViewshedTests(sensorViewshedProcessingProTests)

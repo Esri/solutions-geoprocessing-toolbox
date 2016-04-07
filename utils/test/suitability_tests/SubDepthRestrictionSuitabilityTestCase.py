@@ -40,8 +40,22 @@ class SubDepthRestrictionSuitabilityTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Sub Depth Restriction Suitability tool
     in the Maritime Decision Aid toolbox'''
     
+    maritimeOutputGDB = None
+    maritimeGDB = None
+    bathymetry = None
+    subDepthOutput = None
+    
     def setUp(self):
         if Configuration.DEBUG == True: print("     SubDepthRestrictionSuitabilityTestCase.setUp")
+            
+        UnitTestUtilities.checkArcPy()
+        self.maritimeOutputGDB = os.path.join(Configuration.maritimeDataPath, "output.gdb")
+        self.maritimeGDB = os.path.join(Configuration.maritimeDataPath, "data.gdb")
+        
+        self.bathymetry = os.path.join(self.maritimeGDB, "SoCalDepths32Aux")
+        self.subDepthOutput = os.path.join(self.maritimeOutputGDB, "SubDepth")
+        UnitTestUtilities.checkFilePaths([Configuration.maritimeDataPath, Configuration.maritime_DesktopToolboxPath, Configuration.maritime_ProToolboxPath])
+        UnitTestUtilities.deleteIfExists(self.subDepthOutput)
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     SubDepthRestrictionSuitabilityTestCase.tearDown")
@@ -58,16 +72,26 @@ class SubDepthRestrictionSuitabilityTestCase(unittest.TestCase):
         try:
             if Configuration.DEBUG == True: print("     SubDepthRestrictionSuitabilityTestCase.test_sub_depth_restriction_suitability")
             
+            arcpy.ImportToolbox(toolboxPath, "mdat")
             runToolMessage = "Running tool (Sub Depth Restriction Suitability)"
             arcpy.AddMessage(runToolMessage)
             Configuration.Logger.info(runToolMessage)
             
+            arcpy.CheckOutExtension("Spatial")
+            arcpy.SubDepthRestrictionSuitability_mdat(self.bathymetry, Submarine_Depth_Navigability=self.subDepthOutput)
+
+            subs = int(arcpy.GetCount_management(self.subDepthOutput).getOutput(0))
+            self.assertEqual(subs, int(856))
             
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()
             
         except:
             UnitTestUtilities.handleGeneralError()
+        
+        finally:
+            arcpy.CheckInExtension("Spatial")
+            
             
         
         
