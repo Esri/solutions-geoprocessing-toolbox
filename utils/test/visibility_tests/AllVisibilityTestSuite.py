@@ -29,16 +29,19 @@ This test suite collects all of the visibility toolbox test suites:
 * VisibilityAndRangeToolsTestSuite.py
 * SunPositionAnalysisToolsTestSuite.py
 * VisibilityDataPrepToolsTestSuite.py
+* RangeRingTestSuite.py
 
 ==================================================
 history:
 12/4/2015 - JH - original writeup
+04/07/2016 - mf - added Range Rings test suite
 ==================================================
 '''
 
 import unittest
 import Configuration
 from . import SunPositionAnalysisToolsTestSuite
+from . import RangeRingTestSuite
 
 def getVisibilityTestSuites():
     ''' This pulls together all of the toolbox test suites in this folder '''
@@ -46,7 +49,7 @@ def getVisibilityTestSuites():
         print("   AllVisibilityTestSuite.getVisibilityTestSuites")
     Configuration.Logger.info("Adding Visibility Tests including: ")
     testSuite = unittest.TestSuite()
-    
+
     testSuite.addTests(SunPositionAnalysisToolsTestSuite.getSunPositionTestSuite())
+    testSuite.addTests(RangeRingTestSuite.getRangeRingTestSuite())
     return testSuite
-    
