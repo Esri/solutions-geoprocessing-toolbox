@@ -115,7 +115,7 @@ def resultsFailures(result):
             msg += str(j)
         msg += "\n"
     return msg
-   
+
 
 def runTestSuite():
     ''' collect all test suites before running them '''
@@ -133,6 +133,7 @@ def runTestSuite():
     testSuite.addTests(addPatternsSuite())
     testSuite.addTests(addVisibilitySuite())
     testSuite.addTests(addSuitabilitySuite())
+
     #addDataManagementTests(logger, platform)
     #addOperationalGraphicsTests(logger, platform)
     #addPatternsTests(logger, platform)
@@ -164,11 +165,11 @@ def addPatternsSuite():
 def addVisibilitySuite():
     ''' Add all Visibility tests in the ./visibility_tests folder '''
     if Configuration.DEBUG == True: print("TestRunner.py - addVisibilitySuite")
-    from visibility_tests import AllVisibilityTestSuite    
+    from visibility_tests import AllVisibilityTestSuite
     suite = unittest.TestSuite()
     suite.addTests(AllVisibilityTestSuite.getVisibilityTestSuites())
     return suite
-    
+
 def addSuitabilitySuite():
     ''' Add all Suitability tests in the ./suitability_tests folder '''
     if Configuration.DEBUG == True: print("TestRunner.py - addSuitabilitySuite")
@@ -176,6 +177,7 @@ def addSuitabilitySuite():
     suite = unittest.TestSuite()
     suite.addTests(AllSuitabilityTestSuite.getSuitabilityTestSuites())
     return suite
+
 
 # MAIN =============================================
 if __name__ == "__main__":
