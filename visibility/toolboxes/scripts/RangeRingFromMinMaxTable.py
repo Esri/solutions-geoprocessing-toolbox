@@ -18,7 +18,7 @@ limitations under the License.
 ==================================================
 RangeRingFromMinMaxTable.py
 --------------------------------------------------
-requirments: ArcGIS X.X, Python 2.7 or Python 3.4
+requirments: ArcGIS 10.3.1+, ArcGIS Pro 1.2+
 author: ArcGIS Solutions
 company: Esri
 ==================================================
@@ -27,6 +27,7 @@ from values in an input table
 ==================================================
 history:
 4/2/2016 - mf - original coding
+4/11/2016 - mf - update handling of empty spatial ref
 ==================================================
 '''
 
@@ -58,6 +59,7 @@ inputTypeMinRangeField = arcpy.GetParameterAsText(8)
 inputTypeMaxRangeField = arcpy.GetParameterAsText(9)
 
 def main():
+    ''' Call to tool method '''
     try:
         # get/set environment
         env.overwriteOutput = True
@@ -68,6 +70,9 @@ def main():
                 if str(inputSelectedType) == str(row[0]):
                     inputMinimumRange = row[1]
                     inputMaximumRange = row[2]
+
+        if optionalSpatialReferenceAsText == "#" or optionalSpatialReferenceAsText == "":
+            optionalSpatialReference = None
 
         # Call tool method
         rr = RangeRingUtils.rangeRingsFromMinMax(inputCenterFeatures,
