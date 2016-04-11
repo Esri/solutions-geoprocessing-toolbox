@@ -18,7 +18,7 @@ limitations under the License.
 ==================================================
 RangeRingUtils.py
 --------------------------------------------------
-requirements: ArcGIS X.X, Python 2.7 or Python 3.4
+requirements: ArcGIS 10.3.1+, ArcGIS Pro 1.2+
 author: ArcGIS Solutions
 company: Esri
 ==================================================
@@ -43,7 +43,11 @@ def rangeRingsFromList(centerFC, rangeList, distanceUnits, numRadials, outputRin
     ''' Make range ring features from a center, and list of distances '''
     try:
 
-        if sr == "#" or sr == "" or sr == None:
+        #if sr == "#" or sr == "" or sr == None:
+        if not sr:
+            msg = r"Using default spatial reference: " + str(srDefault.name)
+            arcpy.AddWarning(msg)
+            print(msg)
             sr = srDefault
 
         rm = RingMaker(centerFC, rangeList, distanceUnits, sr)
