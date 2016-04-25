@@ -58,6 +58,9 @@ inputTypeNameField = arcpy.GetParameterAsText(7)
 inputTypeMinRangeField = arcpy.GetParameterAsText(8)
 inputTypeMaxRangeField = arcpy.GetParameterAsText(9)
 
+if optionalSpatialReferenceAsText == "#" or optionalSpatialReferenceAsText == "":
+    optionalSpatialReference = None
+
 def main():
     ''' Call to tool method '''
     try:
@@ -70,9 +73,6 @@ def main():
                 if str(inputSelectedType) == str(row[0]):
                     inputMinimumRange = row[1]
                     inputMaximumRange = row[2]
-
-        if optionalSpatialReferenceAsText == "#" or optionalSpatialReferenceAsText == "":
-            optionalSpatialReference = None
 
         # Call tool method
         rr = RangeRingUtils.rangeRingsFromMinMax(inputCenterFeatures,
