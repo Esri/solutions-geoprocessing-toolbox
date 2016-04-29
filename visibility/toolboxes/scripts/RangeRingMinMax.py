@@ -18,14 +18,16 @@ limitations under the License.
 ==================================================
 RangeRingMinMax.py
 --------------------------------------------------
-requirments: ArcGIS Pro 1.2, Python 3.4
+requirments: ArcGIS 10.3.1+, ArcGIS Pro 1.2+
 author: ArcGIS Solutions
 company: Esri
 ==================================================
-description: <Description>
+description: build two range rings from a minimum and
+maximum distances.
 ==================================================
 history:
 3/29/2016 - mf - design & original coding
+4/11/2016 - mf - update handling of empty spatial ref
 ==================================================
 '''
 
@@ -51,15 +53,16 @@ outputRingFeatures = arcpy.GetParameterAsText(5)
 outputRadialFeatures = arcpy.GetParameterAsText(6)
 optionalSpatialReference = arcpy.GetParameterAsText(7)
 
-if optionalSpatialReference == "#" or optionalSpatialReference == "":
-    optionalSpatialReference = None
-
 def main():
     ''' main... call the method, pass the inputs, get the results '''
     try:
         # get/set environment
         env.overwriteOutput = True
         # Call tool method
+        
+        if optionalSpatialReferenceAsText == "#" or optionalSpatialReferenceAsText == "":
+            optionalSpatialReference = None
+        
         rr = RangeRingUtils.rangeRingsFromMinMax(inputCenterFeatures,
                                                  inputMinimumRange,
                                                  inputMaximumRange,
