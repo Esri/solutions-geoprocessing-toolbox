@@ -1,21 +1,25 @@
-#------------------------------------------------------------------------------
-# Copyright 2015 Esri
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#-----------------------------------------------------------------------------
-# Configuration.py
-# Description: Common objects/methods used by test scripts
-# Requirements: ArcGIS Desktop Standard
-# ----------------------------------------------------------------------------
+'''
+------------------------------------------------------------------------------
+Copyright 2015 Esri
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-----------------------------------------------------------------------------
+Configuration.py
+Description: Common objects/methods used by test scripts
+Requirements: ArcGIS Desktop Standard
+
+data URL pattern: r"http://www.arcgis.com/sharing/content/items/XXX/data", where XXX is the item GUID
+ ----------------------------------------------------------------------------
+'''
 
 import os
 
@@ -35,11 +39,22 @@ logPath = os.path.normpath(os.path.join(currentPath, r"log")) # should go to .\s
 ''' Capability Paths'''
 capabilityPath = os.path.normpath(os.path.join(currentPath, r"capability_tests"))
 
+pooURL = r"http://www.arcgis.com/sharing/content/items/9d8a534a70d54a74911d9ddb60b5a1d9/data"
+
 ''' Data Management Paths '''
 dataManagementPaths = os.path.normpath(os.path.join(currentPath, r"data_management_tests"))
+geonamesURL = r"http://www.arcgis.com/sharing/content/items/afc766d5276648ab80aa85b819af1ffc/data"
+networkPrepURL = r"http://www.arcgis.com/sharing/content/items/cf09da3684214d2b9b18c22149130fc4/data"
+patrolDataCaptureURL = r"http://www.arcgis.com/sharing/content/items/853736d171e44a40a55e4c312bf43b66/data"
+importAndConversionURL = r"http://www.arcgis.com/sharing/content/items/130f52ac95a040cb80717d99db100409/data"
+publishableTasksURL = r"http://www.arcgis.com/sharing/content/items/921fc6d5f5e2444dab14831edc01ef9d/data"
 
 ''' Operational Graphics Paths '''
 operationalGraphicsPaths = os.path.normpath(os.path.join(currentPath, r"operational_graphics_tests"))
+clearingOperationsURL = r"http://www.arcgis.com/sharing/content/items/198f01e263474c209198c9c3c3586287/data"
+sunPositionAnalysisURL = r"http://www.arcgis.com/sharing/content/items/bf6a04b4c9a3447b91e9c0b4074ca1e4/data"
+rangeCardURL = r"http://www.arcgis.com/sharing/content/items/f5414250daf14dd389cc50199efeef8d/data"
+
 
 ''' Patterns Paths '''
 patternsPaths = os.path.normpath(os.path.join(currentPath, r"patterns_tests"))
@@ -59,9 +74,11 @@ suitability_ToolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../s
 # maritimeDataPath = os.path.normpath(os.path.join(currentPath, r"../../data/"))
 maritimeDataPath = os.path.join(suitability_ToolboxesPath, "tooldata")
 maow_ToolboxPath = os.path.join(suitability_ToolboxesPath, "Military Aspects of Weather Tools_10.4.tbx")
+maotURL = r"http://www.arcgis.com/sharing/content/items/127bff2341694342a6df884aaa51237e/data"
 maowURL = "http://www.arcgis.com/sharing/content/items/74eeb356c7dd4422bf52f36f38bb8a9b/data"
 maritime_DesktopToolboxPath = os.path.join(suitability_ToolboxesPath, "Maritime Decision Aid Tools_10.4.tbx")
 maritime_ProToolboxPath = os.path.join(suitability_ToolboxesPath, "Maritime Decision Aid Tools.tbx")
+pathSlopeURL = r"http://www.arcgis.com/sharing/content/items/cbb812326b6f4fb2b77cac4a85e734a9/data"
 
 ''' Visibility Paths '''
 visibilityPaths = os.path.normpath(os.path.join(currentPath, r"visibility_tests"))
