@@ -35,6 +35,7 @@ Includes the following tests:
 history:
 9/24/2015 - 10/19/2015 - MF - original test writeup
 10/21/2015 - MF - removed 10.x/1.x split between test cases
+04/29/2016 - MF - fix #387 where test_hlz_tools.gdb is not created
 ==================================================
 '''
 
@@ -50,9 +51,6 @@ class HLZTouchdownPoints(unittest.TestCase):
     in the Helicopter Landing Zones toolbox'''
 
     scratchGDB = None
-
-    tbxProFolderPath = os.path.join(Configuration.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools.tbx")
-    tbxDesktopFolderPath = os.path.join(Configuration.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools_10.4.tbx")
     testDataFolderPath = None
     #testDataFolderPath = os.path.join(Configuration.capabilityPath, "data")
 
@@ -67,13 +65,25 @@ class HLZTouchdownPoints(unittest.TestCase):
         ''' set-up code '''
         if Configuration.DEBUG == True: print("         HLZTouchdownPoints.setUp")
         UnitTestUtilities.checkArcPy()
+
+        # Setup the test specific paths
+        self.tbxProFolderPath = os.path.join(Configuration.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools.tbx")
+        self.tbxDesktopFolderPath = os.path.join(Configuration.repoPath, "capability", "toolboxes", "Helicopter Landing Zone Tools_10.4.tbx")
+        self.dataDownloadURL = r"http://www.arcgis.com/sharing/content/items/eb5685e1af5d4c16b49fc8870ced036c/data"
         self.testDataFolderPath = DataDownload.createDataFolder(Configuration.capabilityPath)
+
+        # Check the paths exist
         print("Created Capability test data folder.")
         UnitTestUtilities.checkFilePaths([self.testDataFolderPath,
                                           self.tbxProFolderPath,
                                           self.tbxDesktopFolderPath])
-
+        # set the geodatabase
         self.testDataGeodatabase = os.path.join(self.testDataFolderPath, r"test_hlz_tools.gdb")
+        
+        # Download the test data from arcgis.com
+        self.testDataFolderPath = DataDownload.runDataDownload(self.testDataFolderPath,
+                                                               os.path.basename(self.testDataGeodatabase),
+                                                               self.dataDownloadURL)
 
         # Check the test inputs (do they exist? or not?)
         if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
