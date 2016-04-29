@@ -44,7 +44,7 @@ try:
     
     arcpy.AddMessage("Geometry Check: Make sure input feature class geometry is point...")
     
-    if desc.shapeType.upper() <> "POINT":
+    if desc.shapeType.upper() != "POINT":
         arcpy.AddError("Error: Input feature class does not have geometry type of point")
         hasError = hasError + 1
     
@@ -62,7 +62,7 @@ try:
                   "COUNTRYNAME1", "ADM1CODE", "ADM1NAMEALL", "ADM1NAME", "ADM1CLASSALL", \
                   "ADM1CLASS", "PLACENAME", "DSGNAME", "USER_FLD", \
                   "DISPLAY", "NAME_RANK", "NAME_LINK", "TRANSL_CD", "NM_MODIFY_DATE", \
-                  "POINT_X", "POINT_Y"]
+                  "POINT_X", "POINT_Y", "F_EFCTV_DT", "F_TERM_DT"]
     
     numMissing = 0
 
@@ -83,7 +83,10 @@ try:
     # ======================================================
     # Check if input has any features
     # ======================================================
-    numCount = long(arcpy.GetCount_management(featClass).getOutput(0))
+    if sys.version_info[0] > 2:
+        numCount = int(arcpy.GetCount_management(featClass).getOutput(0))
+    else:
+        numCount = long(arcpy.GetCount_management(featClass).getOutput(0))
     
     arcpy.AddMessage("Feature Count Check: Make sure input feature class does not have any features...")
     
@@ -98,7 +101,7 @@ try:
     
     arcpy.AddMessage("Spatial Reference Check: Make sure input feature class is 'GCS_WGS_1984'...")
 
-    if SR.name.upper() <> "GCS_WGS_1984":
+    if SR.name.upper() != "GCS_WGS_1984":
         arcpy.AddError("Error: Spatial Reference is " + SR.name)
         hasError = hasError + 1
 
