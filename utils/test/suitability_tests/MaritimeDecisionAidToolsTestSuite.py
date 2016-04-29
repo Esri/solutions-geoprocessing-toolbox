@@ -56,8 +56,6 @@ def getMaritimeTestSuite():
     visibilityRangeAtSeaDesktopTests = ['test_visibility_range_at_sea_desktop']
     farthestOnCircleProTests = ['test_farthest_on_circle_pro']
     farthestOnCircleDesktopTests = ['test_farthest_on_circle_desktop']
-    sensorViewshedProcessingProTests = ['test_sensor_viewshed_processing_pro']
-    sensorViewshedProcessingDesktopTests = ['test_sensor_viewshed_processing_desktop']
     
     if Configuration.DEBUG == True: print("     MaritimeDecisionAidToolsTestSuite.getMaritimeTestSuite")
         
@@ -68,7 +66,6 @@ def getMaritimeTestSuite():
         addSubDepthRestrictionTests(subDepthRestribtionSuitabilityDesktopTests)
         addVisibilityRangeTests(visibilityRangeAtSeaDesktopTests)
         addFarthestOnCircleTests(farthestOnCircleDesktopTests)
-        addSensorViewshedTests(sensorViewshedProcessingDesktopTests)
     
     else:
         Configuration.Logger.info("Maritime Decision Aid Tools Pro tests")
@@ -77,7 +74,6 @@ def getMaritimeTestSuite():
         addSubDepthRestrictionTests(subDepthRestrictionSuitabilityProTests)
         addVisibilityRangeTests(visibilityRangeAtSeaProTests)
         addFarthestOnCircleTests(farthestOnCircleProTests)
-        addSensorViewshedTests(sensorViewshedProcessingProTests)
 
     return TestSuite
 
@@ -121,14 +117,6 @@ def addFarthestOnCircleTests(inputTestList):
         print("adding test: " + str(test))
         Configuration.Logger.info(test)
         TestSuite.addTest(FarthestOnCircleTestCase.FarthestOnCircleTestCase(test))
-        
-def addSensorViewshedTests(inputTestList):
-    if Configuration.DEBUG == True: print("      MaritimeDecisionAidToolsTestSuite.addSensorViewshedTests")
-    from . import SensorViewshedProcessingTestCase
-    for test in inputTestList:
-        print("adding test: " + str(test))
-        Configuration.Logger.info(test)
-        TestSuite.addTest(SensorViewshedProcessingTestCase.SensorViewshedProcessingTestCase(test))
         
     
     

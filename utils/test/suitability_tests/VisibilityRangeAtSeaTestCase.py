@@ -53,7 +53,8 @@ class VisibilityRangeAtSeaTestCase(unittest.TestCase):
         # Configuration.suitabilityDataPath = os.path.join(Configuration.suitabilityPaths, "data")
         
         self.maritimeOutputGDB = os.path.join(Configuration.maritimeDataPath, "output.gdb")
-        self.maritimeDataGDB = os.path.join(Configuration.maritimeDataPath, "data.gdb")
+        # self.maritimeDataGDB = os.path.join(Configuration.maritimeDataPath, "data.gdb")
+        self.maritimeDataGDB = os.path.join(Configuration.maritimeDataPath, "Maritime Decision Aid Tools.gdb")
         
         self.visibleRange = os.path.join(self.maritimeOutputGDB, "visRangeOutput")
         self.vessel = os.path.join(self.maritimeOutputGDB, "vesselOutput")

@@ -50,9 +50,10 @@ class SubDepthRestrictionSuitabilityTestCase(unittest.TestCase):
             
         UnitTestUtilities.checkArcPy()
         self.maritimeOutputGDB = os.path.join(Configuration.maritimeDataPath, "output.gdb")
-        self.maritimeGDB = os.path.join(Configuration.maritimeDataPath, "data.gdb")
+        # self.maritimeGDB = os.path.join(Configuration.maritimeDataPath, "data.gdb")
+        self.maritimeDataGDB = os.path.join(Configuration.maritimeDataPath, "Maritime Decision Aid Tools.gdb")
         
-        self.bathymetry = os.path.join(self.maritimeGDB, "SoCalDepths32Aux")
+        self.bathymetry = os.path.join(self.maritimeDataGDB, "SoCalDepths32Aux")
         self.subDepthOutput = os.path.join(self.maritimeOutputGDB, "SubDepth")
         UnitTestUtilities.checkFilePaths([Configuration.maritimeDataPath, Configuration.maritime_DesktopToolboxPath, Configuration.maritime_ProToolboxPath])
         UnitTestUtilities.deleteIfExists(self.subDepthOutput)

@@ -47,7 +47,8 @@ class SubSpecificationsTestCase(unittest.TestCase):
         if Configuration.DEBUG == True: print("     SubSpecificationsTestCase.setUp")
     
         UnitTestUtilities.checkArcPy()
-        self.maritimeDataGDB = os.path.join(Configuration.maritimeDataPath, "data.gdb")
+        # self.maritimeDataGDB = os.path.join(Configuration.maritimeDataPath, "data.gdb")
+        self.maritimeDataGDB = os.path.join(Configuration.maritimeDataPath, "Maritime Decision Aid Tools.gdb")
         self.subSpecsTable = os.path.join(self.maritimeDataGDB, "Sub_Specs")
         UnitTestUtilities.checkFilePaths([Configuration.maritimeDataPath, Configuration.maritime_DesktopToolboxPath, Configuration.maritime_ProToolboxPath])
             
