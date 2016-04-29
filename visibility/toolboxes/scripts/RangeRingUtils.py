@@ -138,8 +138,7 @@ class RingMaker:
 
     def __del__(self):
         ''' clean up rings '''
-        for i in self.intermediateDataToDelete
-
+        for i in self.intermediateDataToDelete:
             if arcpy.Exists(i):
                 arcpy.Delete_management(i)
 
