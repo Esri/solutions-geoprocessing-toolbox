@@ -23,6 +23,7 @@ import arcpy
 
 def convertPoints():
     
+    overwriteOutputDefault = arcpy.overwriteOutput
     arcpy.overwriteOutput = True
 
     # Input point FC
@@ -36,7 +37,8 @@ def convertPoints():
     sortField   = arcpy.GetParameterAsText(3)
     closeLine   = arcpy.GetParameterAsText(4)
 
-    if IDField in ["", "#"]: IDField = None
+    if IDField in ["", "#"]:
+        IDField = None
 
     if sortField in ["", "#"]:
         cursorSort = IDField
@@ -53,6 +55,7 @@ def convertPoints():
             close = True
 
     convertPointsToLine(inPts, outFeatures, IDField, cursorSort, close)
+    arcpy.overwriteOutput = overwriteOutputDefault
 
 def enableParam(hasMZ):
     if hasMZ:
