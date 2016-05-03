@@ -72,7 +72,6 @@ def deleteZip(tempFile):
     ''' Delete the data zip file '''
     os.remove(tempFile)
     
-    
 def runDataDownload(basePath, gdbName, url):
     ''' Download and extract the geodatabase with specified gdbName from the given url to the basePath's data folder '''
     dataPath = createDataFolder(basePath)
