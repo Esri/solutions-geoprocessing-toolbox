@@ -52,9 +52,7 @@ class ClusterAnalysisTestCase(unittest.TestCase):
         Configuration.incidentInputGDB = os.path.join(Configuration.incidentDataPath, Configuration.incidentGDBName)    
         
         UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
-        if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
-            Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
-            
+      
         # set up inputs
         self.inputPointsFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
         
@@ -81,7 +79,6 @@ class ClusterAnalysisTestCase(unittest.TestCase):
             arcpy.AddMessage(runToolMessage)
             Configuration.Logger.info(runToolMessage)
             
-            # arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, Output_Cluster_Features=outputClusterFeatures)
             arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, "#", outputClusterFeatures)
             clusterCount = int(arcpy.GetCount_management(outputClusterFeatures).getOutput(0))
             self.assertEqual(clusterCount, int(37))

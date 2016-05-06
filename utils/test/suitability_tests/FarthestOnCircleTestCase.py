@@ -50,10 +50,12 @@ class FarthestOnCircleTestCase(unittest.TestCase):
         
         UnitTestUtilities.checkArcPy()
         self.maritimeOutputGDB = os.path.join(Configuration.maritimeDataPath, "output.gdb")
-        self.maritimeDataGDB = os.path.join(Configuration.maritimeDataPath, "data.gdb")
-        
+        self.maritimeDataGDB = os.path.join(Configuration.maritimeDataPath, "Maritime Decision Aid Tools.gdb")
+
         self.position = os.path.join(self.maritimeDataGDB, "Ships")
         self.hoursOfTransit = os.path.join(self.maritimeOutputGDB, "hoursOutput")
+        UnitTestUtilities.checkFilePaths([Configuration.maritimeDataPath, Configuration.maritime_DesktopToolboxPath, Configuration.maritime_ProToolboxPath])
+        UnitTestUtilities.deleteIfExists(self.hoursOfTransit)
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     FarthestOnCircleTestCase.tearDown")

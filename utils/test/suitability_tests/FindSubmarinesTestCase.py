@@ -37,11 +37,20 @@ import Configuration
 import DataDownload
 
 class FindSubmarinesTestCase(unittest.TestCase):
-    ''' Test all tools and methods related to the Find Submarines tool
+    ''' Test all tools and methods related to the Find Submarine Canyons tool
     in the Maritime Decision Aid toolbox'''
+    
+    useableCanyons = None
+    maritimeOutputGDB = None
     
     def setUp(self):
         if Configuration.DEBUG == True: print("     FindSubmarinesTestCase.setUp")
+            
+        UnitTestUtilities.checkArcPy()
+        self.maritimeOutputGDB = os.path.join(Configuration.maritimeDataPath, "output.gdb")
+        self.useableCanyons = os.path.join(self.maritimeOutputGDB, "canyonsOutput")
+        UnitTestUtilities.checkFilePaths([Configuration.maritimeDataPath, Configuration.maritime_DesktopToolboxPath, Configuration.maritime_ProToolboxPath])
+        UnitTestUtilities.deleteIfExists(self.useableCanyons)
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     FindSubmarinesTestCase.tearDown")
@@ -58,16 +67,24 @@ class FindSubmarinesTestCase(unittest.TestCase):
         try:
             if Configuration.DEBUG == True: print("     FindSubmarinesTestCase.test_find_submarine")
             
+            arcpy.ImportToolbox(toolboxPath, "mdat")
             runToolMessage = "Running tool (Find Submarines)"
             arcpy.AddMessage(runToolMessage)
             Configuration.Logger.info(runToolMessage)
             
+            arcpy.CheckOutExtension("Spatial")
+            arcpy.UseableSubmarineCanyons_mdat("#", "#", self.useableCanyons)
+            
+            self.assertTrue(arcpy.Exists(self.useableCanyons))
             
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()
             
         except:
             UnitTestUtilities.handleGeneralError()
+            
+        finally:
+            arcpy.CheckInExtension("Spatial")
             
     
     

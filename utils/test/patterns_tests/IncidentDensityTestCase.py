@@ -49,10 +49,7 @@ class IncidentDensityTestCase(unittest.TestCase):
         Configuration.incidentInputGDB = os.path.join(Configuration.incidentDataPath, Configuration.incidentGDBName)
         
         UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
-        if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
-            Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
-            
-        
+       
         self.inputPointFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
         self.inputBoundaryFeatures = os.path.join(Configuration.incidentInputGDB, "Districts")
         
