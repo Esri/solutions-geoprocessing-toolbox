@@ -70,8 +70,9 @@ incidentGDBName = "test_incident_analysis_tools.gdb"
 ''' Suitability Paths '''
 suitabilityPaths = os.path.normpath(os.path.join(currentPath, r"suitability_tests"))
 suitabilityDataPath = None
-maritimeDataPath = os.path.normpath(os.path.join(currentPath, r"../../data/"))
 suitability_ToolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../suitability/toolboxes/"))
+# maritimeDataPath = os.path.normpath(os.path.join(currentPath, r"../../data/"))
+maritimeDataPath = os.path.join(suitability_ToolboxesPath, "tooldata")
 maow_ToolboxPath = os.path.join(suitability_ToolboxesPath, "Military Aspects of Weather Tools_10.4.tbx")
 maotURL = r"http://www.arcgis.com/sharing/content/items/127bff2341694342a6df884aaa51237e/data"
 maowURL = "http://www.arcgis.com/sharing/content/items/74eeb356c7dd4422bf52f36f38bb8a9b/data"

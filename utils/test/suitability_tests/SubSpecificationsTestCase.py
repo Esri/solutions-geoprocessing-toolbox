@@ -40,9 +40,17 @@ class SubSpecificationsTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Sub Specifications tool
     in the Maritime Decision Aid toolbox'''
     
+    maritimeDataGDB = None
+    subSpecsTable = None
+    
     def setUp(self):
         if Configuration.DEBUG == True: print("     SubSpecificationsTestCase.setUp")
     
+        UnitTestUtilities.checkArcPy()
+        self.maritimeDataGDB = os.path.join(Configuration.maritimeDataPath, "Maritime Decision Aid Tools.gdb")
+        self.subSpecsTable = os.path.join(self.maritimeDataGDB, "Sub_Specs")
+        UnitTestUtilities.checkFilePaths([Configuration.maritimeDataPath, Configuration.maritime_DesktopToolboxPath, Configuration.maritime_ProToolboxPath])
+            
     def tearDown(self):
         if Configuration.DEBUG == True: print("     SubSpecificationsTestCase.tearDown")
     
@@ -58,10 +66,12 @@ class SubSpecificationsTestCase(unittest.TestCase):
         try:
             if Configuration.DEBUG == True: print("     SubSpecificationsTestCase.test_sub_specifications")
                 
+            arcpy.ImportToolbox(toolboxPath, "mdat")
             runToolMessage = "Running tool (Sub Specifications)"
             arcpy.AddMessage(runToolMessage)
             Configuration.Logger.info(runToolMessage)
             
+            arcpy.SubSpecifications_mdat(self.subSpecsTable)
             
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()

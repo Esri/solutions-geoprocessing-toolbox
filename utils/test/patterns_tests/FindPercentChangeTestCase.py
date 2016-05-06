@@ -50,8 +50,6 @@ class FindPercentChangeTestCase(unittest.TestCase):
         Configuration.incidentInputGDB = os.path.join(Configuration.incidentDataPath, Configuration.incidentGDBName)
         
         UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
-        if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
-            Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
             
         self.inputOldIncidents = os.path.join(Configuration.incidentInputGDB, "Incidents2014")
         self.inputNewIncidents = os.path.join(Configuration.incidentInputGDB, "Incidents2015")
