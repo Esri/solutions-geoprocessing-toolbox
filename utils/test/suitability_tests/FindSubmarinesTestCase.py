@@ -41,19 +41,21 @@ class FindSubmarinesTestCase(unittest.TestCase):
     in the Maritime Decision Aid toolbox'''
     
     useableCanyons = None
-    maritimeOutputGDB = None
     
     def setUp(self):
         if Configuration.DEBUG == True: print("     FindSubmarinesTestCase.setUp")
             
         UnitTestUtilities.checkArcPy()
-        self.maritimeOutputGDB = os.path.join(Configuration.maritimeDataPath, "output.gdb")
-        self.useableCanyons = os.path.join(self.maritimeOutputGDB, "canyonsOutput")
+        Configuration.maritimeDataPath = DataDownload.runDataDownload(Configuration.suitabilityPaths, Configuration.maritimeGDBName, Configuration.maritimeURL)
+        if(Configuration.maritimeScratchGDB == None) or (not arcpy.Exists(Configuration.maritimeScratchGDB)):
+            Configuration.maritimeScratchGDB = UnitTestUtilities.createScratch(Configuration.maritimeDataPath)
+            
+        self.useableCanyons = os.path.join(Configuration.maritimeScratchGDB, "canyonsOutput")
         UnitTestUtilities.checkFilePaths([Configuration.maritimeDataPath, Configuration.maritime_DesktopToolboxPath, Configuration.maritime_ProToolboxPath])
-        UnitTestUtilities.deleteIfExists(self.useableCanyons)
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     FindSubmarinesTestCase.tearDown")
+        UnitTestUtilities.deleteScratch(Configuration.maritimeScratchGDB)
     
     def test_find_submarine_desktop(self):
         arcpy.AddMessage("Testing Find Submarines (Desktop).")
@@ -73,7 +75,7 @@ class FindSubmarinesTestCase(unittest.TestCase):
             Configuration.Logger.info(runToolMessage)
             
             arcpy.CheckOutExtension("Spatial")
-            arcpy.UseableSubmarineCanyons_mdat("#", "#", self.useableCanyons)
+            arcpy.UseableSubmarineCanyons_mdat("#", "#", "#", self.useableCanyons)
             
             self.assertTrue(arcpy.Exists(self.useableCanyons))
             

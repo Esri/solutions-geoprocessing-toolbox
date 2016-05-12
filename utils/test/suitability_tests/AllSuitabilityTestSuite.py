@@ -47,7 +47,7 @@ def getSuitabilityTestSuites():
     Configuration.Logger.info("Adding Suitability tests including: ")
     testSuite = unittest.TestSuite()
     
-    # testSuite.addTests(MilitaryAspectsOfWeatherTestSuite.getWeatherTestSuite())
+    testSuite.addTests(MilitaryAspectsOfWeatherTestSuite.getWeatherTestSuite())
     testSuite.addTests(MaritimeDecisionAidToolsTestSuite.getMaritimeTestSuite())
     
     return testSuite
