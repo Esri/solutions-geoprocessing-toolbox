@@ -71,13 +71,15 @@ incidentGDBName = "test_incident_analysis_tools.gdb"
 suitabilityPaths = os.path.normpath(os.path.join(currentPath, r"suitability_tests"))
 suitabilityDataPath = None
 suitability_ToolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../suitability/toolboxes/"))
-# maritimeDataPath = os.path.normpath(os.path.join(currentPath, r"../../data/"))
-maritimeDataPath = os.path.join(suitability_ToolboxesPath, "tooldata")
+maritimeDataPath = None
+maritimeScratchGDB = None
 maow_ToolboxPath = os.path.join(suitability_ToolboxesPath, "Military Aspects of Weather Tools_10.4.tbx")
 maotURL = r"http://www.arcgis.com/sharing/content/items/127bff2341694342a6df884aaa51237e/data"
 maowURL = "http://www.arcgis.com/sharing/content/items/74eeb356c7dd4422bf52f36f38bb8a9b/data"
 maritime_DesktopToolboxPath = os.path.join(suitability_ToolboxesPath, "Maritime Decision Aid Tools_10.4.tbx")
 maritime_ProToolboxPath = os.path.join(suitability_ToolboxesPath, "Maritime Decision Aid Tools.tbx")
+maritimeURL = "http://www.arcgis.com/sharing/content/items/43fbe3e823614783a391676d47dd3c5f/data"
+maritimeGDBName = "MaritimeDecisionAidToolsTestData"
 pathSlopeURL = r"http://www.arcgis.com/sharing/content/items/cbb812326b6f4fb2b77cac4a85e734a9/data"
 
 ''' Visibility Paths '''

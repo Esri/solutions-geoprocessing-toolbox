@@ -40,7 +40,6 @@ class SubDepthRestrictionSuitabilityTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Sub Depth Restriction Suitability tool
     in the Maritime Decision Aid toolbox'''
     
-    maritimeOutputGDB = None
     maritimeGDB = None
     bathymetry = None
     subDepthOutput = None
@@ -49,16 +48,19 @@ class SubDepthRestrictionSuitabilityTestCase(unittest.TestCase):
         if Configuration.DEBUG == True: print("     SubDepthRestrictionSuitabilityTestCase.setUp")
             
         UnitTestUtilities.checkArcPy()
-        self.maritimeOutputGDB = os.path.join(Configuration.maritimeDataPath, "output.gdb")
+        Configuration.maritimeDataPath = DataDownload.runDataDownload(Configuration.suitabilityPaths, Configuration.maritimeGDBName, Configuration.maritimeURL)
+        if(Configuration.maritimeScratchGDB == None) or (not arcpy.Exists(Configuration.maritimeScratchGDB)):
+            Configuration.maritimeScratchGDB = UnitTestUtilities.createScratch(Configuration.maritimeDataPath)
+            
         self.maritimeDataGDB = os.path.join(Configuration.maritimeDataPath, "Maritime Decision Aid Tools.gdb")
         
         self.bathymetry = os.path.join(self.maritimeDataGDB, "SoCalDepthsGEBCO")
-        self.subDepthOutput = os.path.join(self.maritimeOutputGDB, "SubDepth")
+        self.subDepthOutput = os.path.join(Configuration.maritimeScratchGDB, "SubDepth")
         UnitTestUtilities.checkFilePaths([Configuration.maritimeDataPath, Configuration.maritime_DesktopToolboxPath, Configuration.maritime_ProToolboxPath])
-        UnitTestUtilities.deleteIfExists(self.subDepthOutput)
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     SubDepthRestrictionSuitabilityTestCase.tearDown")
+        UnitTestUtilities.deleteScratch(Configuration.maritimeScratchGDB)
     
     def test_sub_depth_restriction_suitability_desktop(self):
         arcpy.AddMessage("Testing Sub Depth Restriction Suitability (Desktop).")
