@@ -29,23 +29,59 @@ rem ==================================================
 rem  history:
 rem  10/06/2015 - MF - placeholder
 rem  10/30/2015 - MF - tests running
-rem  12/01/2015 - JH - added paremeter for default log file name
+rem  12/01/2015 - JH - added parameter for default log file name
+rem  06/03/2016 - MF - work on exit codes
 rem ==================================================
 
+REM === TEST SETUP ===================================
+
+REM === TEST SETUP ===================================
+
+
+REM === LOG SETUP ====================================
 REM usage: set LOG=<defaultLogFileName.log>
 REM name is optional; if not specified, name will be specified for you
-set LOG=default.log
+set LOG=
+REM === LOG SETUP ====================================
 
+
+REM === SINGLE VERSION ==================================
+REM If you only have ONE version of Python installed
+REM uncomment the following lines
 REM =====================================================
-REM If you have BOTH versions of Python installed:
+REM python TestRunner.py
+REM IF %ERRORLEVEL% NEQ 0 (
+REM    ECHO 'One or more tests failed'
+REM )
+REM === SINGLE VERSION ==================================
 
+
+REM === MULTIPLE VERSIONS ===============================
+REM If you have BOTH versions of Python installed use
+REM these lines
+REM =====================================================
 ECHO Python 3.4 Tests ===============================
-py -3.4 TestRunner.py %LOG%
+REM py -3.4 TestRunner.py %LOG%
+REM The location of python.exe will depend upon your installation
+REM of ArcGIS Pro. Modify the following line as necessary:
+"C:\Program Files\ArcGIS\Pro\bin\Python\envs\arcgispro-py3\python.exe" TestRunner.py %LOG%
+REM check if ArcGIS Pro/Python 3.4 tests failed
+IF %ERRORLEVEL% NEQ 0 (
+   ECHO 'One or more tests failed'
+)
 
 ECHO Python 2.7 Tests ===============================
-py -2.7 TestRunner.py %LOG%
+REM py -2.7 TestRunner.py %LOG%
+python TestRunner.py %LOG%
+REM check if Desktop for ArcGIS/Python 2.7 tests failed
+IF %ERRORLEVEL% NEQ 0 (
+   ECHO 'One or more tests failed'
+)
+REM === MULTIPLE VERSIONS ===============================
 
-REM =====================================================
-REM If you only have ONE version of Python installed:
-REM python TestRunner.py
+
+REM === CLEANUP =========================================
+
+REM === CLEANUP =========================================
+
 pause
