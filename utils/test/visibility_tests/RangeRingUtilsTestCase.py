@@ -40,15 +40,9 @@ import UnitTestUtilities
 import DataDownload
 
 # ============================================================================
-# Have to modify the path temporarily just to get the RangeRingUtils.py module
-# into the tests.
-if os.path.isdir(sys.argv[0]):
-    pathOfCurrentScript = os.path.normpath(sys.argv[0])
-else:
-    pathOfCurrentScript = os.getcwd()
-pathOfSGTParent = pathOfCurrentScript[0:int(pathOfCurrentScript.find('solutions-geoprocessing-toolbox'))]
-relPathToVizScripts = os.path.join('solutions-geoprocessing-toolbox', 'visibility', 'toolboxes', 'scripts')
-pathToRRUtils = os.path.normpath(os.path.join(pathOfSGTParent, relPathToVizScripts))
+# Add RangeRingUtils.py module to python path
+currentPath = os.path.dirname(__file__)
+pathToRRUtils= os.path.normpath(os.path.join(currentPath, r"../../../visibility/toolboxes/scripts"))
 sys.path.insert(0, pathToRRUtils)
 import RangeRingUtils
 # ============================================================================
