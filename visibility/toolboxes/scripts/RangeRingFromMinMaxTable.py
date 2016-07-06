@@ -58,6 +58,9 @@ inputTypeNameField = arcpy.GetParameterAsText(7)
 inputTypeMinRangeField = arcpy.GetParameterAsText(8)
 inputTypeMaxRangeField = arcpy.GetParameterAsText(9)
 
+if optionalSpatialReferenceAsText == "#" or optionalSpatialReferenceAsText == "":
+    optionalSpatialReference = None
+
 def main():
     ''' Call to tool method '''
     try:

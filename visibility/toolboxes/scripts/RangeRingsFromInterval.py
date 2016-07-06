@@ -52,7 +52,11 @@ inputDistanceUnits = arcpy.GetParameterAsText(3)
 inputNumberOfRadials = int(arcpy.GetParameterAsText(4))
 outputRingFeatures = arcpy.GetParameterAsText(5)
 outputRadialFeatures = arcpy.GetParameterAsText(6)
-optionalSpatialReference = arcpy.GetParameterAsText(7)
+optionalSpatialReference = arcpy.GetParameter(7)
+optionalSpatialReferenceAsText = arcpy.GetParameterAsText(7)
+
+if optionalSpatialReferenceAsText == "#" or optionalSpatialReferenceAsText == "":
+    optionalSpatialReference = None
 
 def main():
     try:
@@ -60,8 +64,7 @@ def main():
         env.overwriteOutput = True
 
         # Call tool method
-        if optionalSpatialReferenceAsText == "#" or optionalSpatialReferenceAsText == "":
-            optionalSpatialReference = None
+
         rr = RangeRingUtils.rangeRingsFromInterval(inputCenterFeatures,
                                                    inputNumberOfRings,
                                                    inputDistanceBetween,
