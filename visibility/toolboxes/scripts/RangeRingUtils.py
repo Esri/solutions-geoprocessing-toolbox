@@ -18,7 +18,7 @@ limitations under the License.
 ==================================================
 RangeRingUtils.py
 --------------------------------------------------
-requirements: ArcGIS X.X, Python 2.7 or Python 3.4
+requirements: ArcGIS 10.3.1+, ArcGIS Pro 1.2+
 author: ArcGIS Solutions
 company: Esri
 ==================================================
@@ -43,7 +43,11 @@ def rangeRingsFromList(centerFC, rangeList, distanceUnits, numRadials, outputRin
     ''' Make range ring features from a center, and list of distances '''
     try:
 
-        if sr == "#" or sr == "" or sr == None:
+        #if sr == "#" or sr == "" or sr == None:
+        if not sr:
+            msg = r"Using default spatial reference: " + str(srDefault.name)
+            arcpy.AddWarning(msg)
+            print(msg)
             sr = srDefault
 
         rm = RingMaker(centerFC, rangeList, distanceUnits, sr)
@@ -106,7 +110,7 @@ class RingMaker:
     def __init__(self, center, inputRangeList, distanceUnits, sr):
         ''' initialize rings '''
 
-        self.deleteme = []
+        self.intermediateDataToDelete = []
 
         # project center to sr, and keep it as a list of PointGeometries object
         originalGeom = arcpy.CopyFeatures_management(center, arcpy.Geometry())
@@ -134,7 +138,7 @@ class RingMaker:
 
     def __del__(self):
         ''' clean up rings '''
-        for i in self.deleteme:
+        for i in self.intermediateDataToDelete:
             if arcpy.Exists(i):
                 arcpy.Delete_management(i)
 
@@ -156,7 +160,7 @@ class RingMaker:
         tab = os.path.join("in_memory", name)
         arcpy.CreateTable_management(os.path.dirname(tab),
                                      os.path.basename(tab))
-        self.deleteme.append(tab)
+        self.intermediateDataToDelete.append(tab)
         if fields:
             newtab = self._addFieldsToTable(tab, fields)
         else:
@@ -176,7 +180,7 @@ class RingMaker:
             for r in self.rangeList:
                 cursor.insertRow([pt.X, pt.Y, r * 2])
         del cursor
-        self.deleteme.append(inTable)
+        self.intermediateDataToDelete.append(inTable)
         outFeatures = os.path.join("in_memory", "outRings")
         arcpy.TableToEllipse_management(inTable, outFeatures,
                                         'x', 'y', 'Range', 'Range',
@@ -184,7 +188,7 @@ class RingMaker:
                                         '#', '#', '#', self.sr)
         exp = r"!Range! / 2.0"
         arcpy.CalculateField_management(inTable, 'Range', exp, 'PYTHON_9.3')
-        self.deleteme.append(outFeatures)
+        self.intermediateDataToDelete.append(outFeatures)
         self.ringFeatures = outFeatures
         return outFeatures
 
@@ -205,12 +209,12 @@ class RingMaker:
             for r in segmentAngleList:
                 cursor.insertRow([pt.X, pt.Y, r, self.ringMax])
         del cursor
-        self.deleteme.append(tab)
+        self.intermediateDataToDelete.append(tab)
         outRadialFeatures = os.path.join("in_memory", "outRadials")
         arcpy.BearingDistanceToLine_management(tab, outRadialFeatures, 'x', 'y',
                                                'Range', self.distanceUnits, 'Bearing', "DEGREES",
                                                "GEODESIC", "#", self.sr)
-        self.deleteme.append(outRadialFeatures)
+        self.intermediateDataToDelete.append(outRadialFeatures)
         self.radialFeatures = outRadialFeatures
         return outRadialFeatures
 

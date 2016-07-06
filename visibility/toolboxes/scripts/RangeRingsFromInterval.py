@@ -18,14 +18,16 @@ limitations under the License.
 ==================================================
 RangeRingsFromInterval.py
 --------------------------------------------------
-requirments: ArcGIS X.X, Python 2.7 or Python 3.4
+requirments: ArcGIS 10.3.1+, ArcGIS Pro 1.2+
 author: ArcGIS Solutions
 company: Esri
 ==================================================
-description: <Description>
+description: build range rings from number of rings
+and an interval distance between rings.
 ==================================================
 history:
 4/1/2016 - mf - original coding
+4/11/2016 - mf - update handling of empty spatial ref
 ==================================================
 '''
 
@@ -50,9 +52,10 @@ inputDistanceUnits = arcpy.GetParameterAsText(3)
 inputNumberOfRadials = int(arcpy.GetParameterAsText(4))
 outputRingFeatures = arcpy.GetParameterAsText(5)
 outputRadialFeatures = arcpy.GetParameterAsText(6)
-optionalSpatialReference = arcpy.GetParameterAsText(7)
+optionalSpatialReference = arcpy.GetParameter(7)
+optionalSpatialReferenceAsText = arcpy.GetParameterAsText(7)
 
-if optionalSpatialReference == "#" or optionalSpatialReference == "":
+if optionalSpatialReferenceAsText == "#" or optionalSpatialReferenceAsText == "":
     optionalSpatialReference = None
 
 def main():
@@ -61,6 +64,7 @@ def main():
         env.overwriteOutput = True
 
         # Call tool method
+
         rr = RangeRingUtils.rangeRingsFromInterval(inputCenterFeatures,
                                                    inputNumberOfRings,
                                                    inputDistanceBetween,
