@@ -155,9 +155,6 @@ Start contributing to the solutions-geoprocessing-toolbox repo by making a fork 
 
 * Fork the **dev** branch from the repo on github.com with ![fork button](ForkButtonIcon.png)
 * Clone your remote onto your local system ![clone button](CloneInDesktopButtonIcon.png)
-* Get the *mdcs-py* submodule:
-	* `> git submodule init`
-	* `> git submodule update`
 
 ### Set Your Upstream
 Setting the parent repo to get changes from.
