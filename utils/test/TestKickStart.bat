@@ -29,7 +29,7 @@ rem ==================================================
 rem  history:
 rem  10/06/2015 - MF - placeholder
 rem  10/30/2015 - MF - tests running
-rem  12/01/2015 - JH - added paremeter for default log file name
+rem  12/01/2015 - JH - added parameter for default log file name
 rem  07/05/2016 - MF - updates to changes for Pro 1.3+
 rem ==================================================
 
@@ -43,16 +43,16 @@ REM name is optional; if not specified, name will be specified for you
 set LOG=
 REM === LOG SETUP ====================================
 
-
 REM === SINGLE VERSION ==================================
 REM If you only have ONE version of Python installed
-REM uncomment the following lines
+REM uncomment the following lines of code
 REM =====================================================
 REM python TestRunner.py
 REM IF %ERRORLEVEL% NEQ 0 (
 REM    ECHO 'One or more tests failed'
 REM )
 REM === SINGLE VERSION ==================================
+
 
 
 REM === MULTIPLE VERSIONS ===============================
@@ -79,8 +79,6 @@ REM === MULTIPLE VERSIONS ===============================
 
 
 REM === CLEANUP =========================================
-ECHO Removing RangeRingUtils.py ...
-DEL ".\distance_tests\RangeRingUtils.py"
 REM === CLEANUP =========================================
 
 pause

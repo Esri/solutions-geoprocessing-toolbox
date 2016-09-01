@@ -63,7 +63,7 @@ def main():
         # get/set environment
         env.overwriteOutput = True
         # Call tool method
-
+        
         rr = RangeRingUtils.rangeRingsFromMinMax(inputCenterFeatures,
                                                  inputMinimumRange,
                                                  inputMaximumRange,

@@ -116,7 +116,6 @@ def resultsFailures(result):
         msg += "\n"
     return msg
 
-
 def runTestSuite():
     ''' collect all test suites before running them '''
     if Configuration.DEBUG == True: print("TestRunner.py - runTestSuite")
@@ -144,7 +143,6 @@ def runTestSuite():
     testSuite.run(result)
     print("Test success: {0}".format(str(result.wasSuccessful())))
     return result
-
 
 def addCapabilitySuite():
     ''' Add all Capability tests in the ./capability_tests folder '''
@@ -177,7 +175,6 @@ def addSuitabilitySuite():
     suite = unittest.TestSuite()
     suite.addTests(AllSuitabilityTestSuite.getSuitabilityTestSuites())
     return suite
-
 
 # MAIN =============================================
 if __name__ == "__main__":

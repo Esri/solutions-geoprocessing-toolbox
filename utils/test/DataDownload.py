@@ -38,6 +38,16 @@ def createDataFolder(path):
     if not os.path.exists(dataPath):
         os.makedirs(dataPath)
     return dataPath
+
+def createFGDB(gPath):
+    ''' Create a file geodatabase from the input path. Path should include the file geodatabase name like:
+    <path>\...\<path>\<geodatabase_name>.gdb'''
+    result = arcpy.CreateFileGDB_management(os.path.dirname(gPath), os.path.basename(gPath),"CURRENT")
+    if result.maxSeverity > 1:
+        arcpy.AddError("ERROR (DataDownload.createFileGDB): " + str(result.getMessages()))
+        return None
+    else:
+        return path
     
 def saveOnlineDataAsZip(url, zipName):
     ''' Save the zip file from the specified url to the current directory, passing in '''
@@ -61,7 +71,6 @@ def extractDataZip(zip, path):
 def deleteZip(tempFile):
     ''' Delete the data zip file '''
     os.remove(tempFile)
-    
     
 def runDataDownload(basePath, gdbName, url):
     ''' Download and extract the geodatabase with specified gdbName from the given url to the basePath's data folder '''

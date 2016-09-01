@@ -40,11 +40,27 @@ class SubDepthRestrictionSuitabilityTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Sub Depth Restriction Suitability tool
     in the Maritime Decision Aid toolbox'''
     
+    maritimeGDB = None
+    bathymetry = None
+    subDepthOutput = None
+    
     def setUp(self):
         if Configuration.DEBUG == True: print("     SubDepthRestrictionSuitabilityTestCase.setUp")
+            
+        UnitTestUtilities.checkArcPy()
+        Configuration.maritimeDataPath = DataDownload.runDataDownload(Configuration.suitabilityPaths, Configuration.maritimeGDBName, Configuration.maritimeURL)
+        if(Configuration.maritimeScratchGDB == None) or (not arcpy.Exists(Configuration.maritimeScratchGDB)):
+            Configuration.maritimeScratchGDB = UnitTestUtilities.createScratch(Configuration.maritimeDataPath)
+            
+        self.maritimeDataGDB = os.path.join(Configuration.maritimeDataPath, "Maritime Decision Aid Tools.gdb")
+        
+        self.bathymetry = os.path.join(self.maritimeDataGDB, "SoCalDepthsGEBCO")
+        self.subDepthOutput = os.path.join(Configuration.maritimeScratchGDB, "SubDepth")
+        UnitTestUtilities.checkFilePaths([Configuration.maritimeDataPath, Configuration.maritime_DesktopToolboxPath, Configuration.maritime_ProToolboxPath])
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     SubDepthRestrictionSuitabilityTestCase.tearDown")
+        UnitTestUtilities.deleteScratch(Configuration.maritimeScratchGDB)
     
     def test_sub_depth_restriction_suitability_desktop(self):
         arcpy.AddMessage("Testing Sub Depth Restriction Suitability (Desktop).")
@@ -58,16 +74,26 @@ class SubDepthRestrictionSuitabilityTestCase(unittest.TestCase):
         try:
             if Configuration.DEBUG == True: print("     SubDepthRestrictionSuitabilityTestCase.test_sub_depth_restriction_suitability")
             
+            arcpy.ImportToolbox(toolboxPath, "mdat")
             runToolMessage = "Running tool (Sub Depth Restriction Suitability)"
             arcpy.AddMessage(runToolMessage)
             Configuration.Logger.info(runToolMessage)
             
+            arcpy.CheckOutExtension("Spatial")
+            arcpy.SubDepthRestrictionSuitability_mdat(self.bathymetry, Submarine_Depth_Navigability=self.subDepthOutput)
+
+            subs = int(arcpy.GetCount_management(self.subDepthOutput).getOutput(0))
+            self.assertEqual(subs, int(856))
             
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()
             
         except:
             UnitTestUtilities.handleGeneralError()
+        
+        finally:
+            arcpy.CheckInExtension("Spatial")
+            
             
         
         

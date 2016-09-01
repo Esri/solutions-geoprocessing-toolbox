@@ -74,6 +74,9 @@ def main():
                     inputMinimumRange = row[1]
                     inputMaximumRange = row[2]
 
+        if optionalSpatialReferenceAsText == "#" or optionalSpatialReferenceAsText == "":
+            optionalSpatialReference = None
+
         # Call tool method
         rr = RangeRingUtils.rangeRingsFromMinMax(inputCenterFeatures,
                                                  inputMinimumRange,
