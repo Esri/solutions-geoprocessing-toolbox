@@ -85,8 +85,6 @@ Additional information is available in the repository's [Wiki](https://github.co
 
 * ArcGIS Desktop 10.4+ or ArcGIS Pro 1.1+
     * Check [Releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases) for tools for previous versions of ArcGIS Desktop
-* Apache Ant - used to download and extract dependent data and run test drivers
-* Java Runtime Environment (JRE) or Developer Kit (JDK) (required by Ant)
 * Some tools require additional licenses (these tools will be disabled if license is unavailable), see READMEs for more information: 
     * ArcGIS Desktop Advanced (ArcInfo)
     * ArcGIS Spatial Analyst Extension
@@ -130,7 +128,7 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.4 
 
 ### Running Verification Tests
 
-**This section is under reconstruction, per issue [#371](https://github.com/Esri/solutions-geoprocessing-toolbox/issues/371)**
+[Running tests for solutions-geoprocessing-toolbox](.utils/test/Readme.md)
 
 ## Resources
 
