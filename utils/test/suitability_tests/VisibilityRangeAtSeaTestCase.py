@@ -15,7 +15,7 @@
 # -----------------------------------------------------------------------------
 
 # ==================================================
-# FarthestOnCircleTestCase.py
+# VisibilityRangeAtSeaTestCase.py
 # --------------------------------------------------
 # requirements:
 # * ArcGIS Desktop 10.X+ or ArcGIS Pro 1.X+
@@ -40,7 +40,6 @@ class VisibilityRangeAtSeaTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Visibility Range At Sea tool
     in the Maritime Decision Aid toolbox'''
     
-    maritimeOutputGDB = None
     maritimeDataGDB = None
     visibleRange = None
     vessel = None
@@ -50,22 +49,21 @@ class VisibilityRangeAtSeaTestCase(unittest.TestCase):
         if Configuration.DEBUG == True: print("     VisibilityRangeAtSeaTestCase.setUp")
         
         UnitTestUtilities.checkArcPy()
-        # Configuration.suitabilityDataPath = os.path.join(Configuration.suitabilityPaths, "data")
+        Configuration.maritimeDataPath = DataDownload.runDataDownload(Configuration.suitabilityPaths, Configuration.maritimeGDBName, Configuration.maritimeURL)
+        if(Configuration.maritimeScratchGDB == None) or (not arcpy.Exists(Configuration.maritimeScratchGDB)):
+            Configuration.maritimeScratchGDB = UnitTestUtilities.createScratch(Configuration.maritimeDataPath)
+            
+        self.maritimeDataGDB = os.path.join(Configuration.maritimeDataPath, "Maritime Decision Aid Tools.gdb")
         
-        self.maritimeOutputGDB = os.path.join(Configuration.maritimeDataPath, "output.gdb")
-        self.maritimeDataGDB = os.path.join(Configuration.maritimeDataPath, "data.gdb")
-        
-        self.visibleRange = os.path.join(self.maritimeOutputGDB, "visRangeOutput")
-        self.vessel = os.path.join(self.maritimeOutputGDB, "vesselOutput")
-        self.shipLocation = os.path.join(self.maritimeDataGDB, "Ships")
+        self.visibleRange = os.path.join(Configuration.maritimeScratchGDB, "visRangeOutput")
+        self.vessel = os.path.join(Configuration.maritimeScratchGDB, "vesselOutput")
+        self.shipLocation = os.path.join(self.maritimeDataGDB, "Vessel")
         
         UnitTestUtilities.checkFilePaths([Configuration.maritimeDataPath, Configuration.maritime_DesktopToolboxPath, Configuration.maritime_ProToolboxPath])
-        UnitTestUtilities.deleteIfExists(self.vessel)
-        UnitTestUtilities.deleteIfExists(self.visibleRange)
-        
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     VisibilityRangeAtSeaTestCase.tearDown")
+        UnitTestUtilities.deleteScratch(Configuration.maritimeScratchGDB)
     
     def test_visibility_range_at_sea_desktop(self):
         arcpy.AddMessage("Testing Visibility Range At Sea (Desktop).")

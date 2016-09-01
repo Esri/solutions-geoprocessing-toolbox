@@ -40,7 +40,6 @@ class FarthestOnCircleTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Farthest On Circle tool
     in the Maritime Decision Aid toolbox'''
     
-    maritimeOutputGDB = None
     maritimeDataGDB = None
     position = None
     hoursOfTransit = None
@@ -49,14 +48,19 @@ class FarthestOnCircleTestCase(unittest.TestCase):
         if Configuration.DEBUG == True: print("     FarthestOnCircleTestCase.setUp")    
         
         UnitTestUtilities.checkArcPy()
-        self.maritimeOutputGDB = os.path.join(Configuration.maritimeDataPath, "output.gdb")
-        self.maritimeDataGDB = os.path.join(Configuration.maritimeDataPath, "data.gdb")
-        
-        self.position = os.path.join(self.maritimeDataGDB, "Ships")
-        self.hoursOfTransit = os.path.join(self.maritimeOutputGDB, "hoursOutput")
+        Configuration.maritimeDataPath = DataDownload.runDataDownload(Configuration.suitabilityPaths, Configuration.maritimeGDBName, Configuration.maritimeURL)
+        if(Configuration.maritimeScratchGDB == None) or (not arcpy.Exists(Configuration.maritimeScratchGDB)):
+            Configuration.maritimeScratchGDB = UnitTestUtilities.createScratch(Configuration.maritimeDataPath)
+            
+        self.maritimeDataGDB = os.path.join(Configuration.maritimeDataPath, "Maritime Decision Aid Tools.gdb")
+
+        self.position = os.path.join(self.maritimeDataGDB, "Vessel")
+        self.hoursOfTransit = os.path.join(Configuration.maritimeScratchGDB, "hoursOutput")
+        UnitTestUtilities.checkFilePaths([Configuration.maritimeDataPath, Configuration.maritime_DesktopToolboxPath, Configuration.maritime_ProToolboxPath])
         
     def tearDown(self):
         if Configuration.DEBUG == True: print("     FarthestOnCircleTestCase.tearDown")
+        UnitTestUtilities.deleteScratch(Configuration.maritimeScratchGDB)
     
     def test_farthest_on_circle_desktop(self):
         arcpy.AddMessage("Testing Farthest On Circle (Desktop).")
