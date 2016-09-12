@@ -14,6 +14,7 @@ Script works as follow;
 History:
 9/21/2015 - ab - original coding
 6/10/2016 - mf - Updates for dimension and formatting
+9/12/2016 - mf - fix for Python3 not liking leading zeros
 '''
 
 #Import modules
@@ -135,7 +136,7 @@ def main():
         stringDateNow = datetime.utcnow().strftime(patternDate)
         stringTimeNow = datetime.utcnow().strftime(patternTime)
         
-        if now_time >= time(02,50,00) and now_time < time(8,50,00):
+        if now_time >= time(2,50,00) and now_time < time(8,50,00):
             print("Going to download 1hr_00z...")
             download(stringDateNow, stringTimeNow,"1hr00z", "1hr_00z")
             
@@ -151,7 +152,7 @@ def main():
             print("Going to download 1hr_18z...")
             download(stringDateNow, stringTimeNow,"1hr18z", "1hr_18z")
             
-        elif (now_time >= time(00,00,00) and now_time <= time(02,49,59)):
+        elif (now_time >= time(00,00,00) and now_time <= time(2,49,59)):
             # Get yesterday's forecast, because today's isn't
             # published yet:
             stringDateNow = (datetime.utcnow() - timedelta(days=1)).strftime(patternDate)
