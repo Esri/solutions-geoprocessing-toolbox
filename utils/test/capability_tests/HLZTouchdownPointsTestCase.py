@@ -81,7 +81,7 @@ class HLZTouchdownPoints(unittest.TestCase):
         self.testDataGeodatabase = os.path.join(self.testDataFolderPath, r"test_hlz_tools.gdb")
         
         # Download the test data from arcgis.com
-        self.testDataFolderPath = DataDownload.runDataDownload(self.testDataFolderPath,
+        self.testDataFolderPath = DataDownload.runDataDownload(Configuration.capabilityPath,
                                                                os.path.basename(self.testDataGeodatabase),
                                                                self.dataDownloadURL)
 
