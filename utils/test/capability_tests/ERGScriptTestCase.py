@@ -99,6 +99,7 @@ class ERGTest(unittest.TestCase):
         inPlacardID = 1017
         inSpillSize = 'Large' #'Large' or 'Small'
         inTimeOfDay = 'Day' #'Day' or 'Night'
+        outResult = ERG.LookUpERG(inChemical, inPlacardID, inSpillSize, inTimeOfDay, self.dbfFolderPath)
         self.assertEqual(outResult[0], 500.0) # Initial Isolation Distance
         self.assertEqual(outResult[1], 3000.0) # Protective Action Distance
         self.assertEqual(outResult[2], 'Chlorine') # Materials
@@ -115,6 +116,7 @@ class ERGTest(unittest.TestCase):
         inPlacardID = 1076
         inSpillSize = 'Small' #'Large' or 'Small'
         inTimeOfDay = 'Day' #'Day' or 'Night'
+        outResult = ERG.LookUpERG(inChemical, inPlacardID, inSpillSize, inTimeOfDay, self.dbfFolderPath)
         self.assertEqual(outResult[0], 100.0) # Initial Isolation Distance
         self.assertEqual(outResult[1], 600.0) # Protective Action Distance
         self.assertEqual(outResult[2], 'Phosgene') # Materials
@@ -131,6 +133,7 @@ class ERGTest(unittest.TestCase):
         inPlacardID = 2810
         inSpillSize = 'Large' #'Large' or 'Small'
         inTimeOfDay = 'Night' #'Day' or 'Night'
+        outResult = ERG.LookUpERG(inChemical, inPlacardID, inSpillSize, inTimeOfDay, self.dbfFolderPath)
         self.assertEqual(outResult[0], 400.0) # Initial Isolation Distance
         self.assertEqual(outResult[1], 4900.0) # Protective Action Distance
         #self.assertEqual(outResult[2], 'Sarin (when used as a weapon)') # Materials
