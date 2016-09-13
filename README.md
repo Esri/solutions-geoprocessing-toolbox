@@ -6,7 +6,7 @@
 
 The ArcGIS Solutions Geoprocessing Toolbox is a collection of models, scripts, and tools for use in [ArcGIS for Desktop](http://www.esri.com/software/arcgis/arcgis-for-desktop) and [ArcGIS Pro](http://www.esri.com/en/software/arcgis-pro). These tools provide specialized processing, workflows, and analysis for defense, intelligence, emergency management, and other solutions domains. With these tools you can determine visibility from a specific viewpoint, create search grids, and analyze event data. They are included with many of Esri's [Solutions Templates](http://solutions.arcgis.com/), but developers can use this repository to download and contribute to the tool development process.
 
-![Image of the toolbox](solutions-geoprocessing-toolbox-thumbnail007.png)
+![Image of the toolbox](solutions-geoprocessing-toolbox_screenshot_14APR2016_824x400.png)
 
 
 ###Repository Owner: [Matt](https://github.com/mfunk)
@@ -40,11 +40,8 @@ Additional information is available in the repository's [Wiki](https://github.co
 
 ## Features
 
-* Specialized geoprocessing models and tools for general defense and intelligence analysis tasks including
-  * Tools for visibility and range analysis
-  * Tools for analyzing the battlefield environment
-  * Tools for data management and coordinates 
-
+Specialized geoprocessing models and tools for general defense and intelligence analysis tasks including:
+ 
 * The [**capability**](./capability/README.md) folder contains:
   * ERG (Emergency Resources Guide) Tools
   * Helicopter Landing Zone Tools
@@ -128,10 +125,10 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.4 
 
 ### Running Verification Tests
 
-[Running tests for solutions-geoprocessing-toolbox](.utils/test/Readme.md)
+- Follow instructions in [Running tests for solutions-geoprocessing-toolbox](.utils/test/Readme.md)
 
 ## Resources
-
+* [GitHub Help](https://help.github.com/)
 * Learn more about [ArcGIS Solutions](http://solutions.arcgis.com/).
 * Learn more about [ArcGIS for the Military](http://solutions.arcgis.com/military/).
 * Learn more about [ArcGIS for Intelligence](http://solutions.arcgis.com/intelligence/).
@@ -140,53 +137,13 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.4 
 
 ## Issues
 
-* Find a bug or want to request a new feature?  Please let us know by submitting an issue.
+Find a bug or want to request a new feature?  Please let us know by submitting an [issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues).
 
 ## Contributing
 
 Esri welcomes contributions from anyone and everyone through GitHub. Please see Esri's [guidelines for contributing](https://github.com/esri/contributing).
 
-When you contribute to this repository we ask that you follow the guidelines below. If you've got questions, or you get stuck, please ask the [Repository Owner](#repository-owner). We are here to help! Thanks.
-
-### Fork and Clone the Repo
-Start contributing to the solutions-geoprocessing-toolbox repo by making a fork and cloning it to your local machine.
-
-* Fork the **dev** branch from the repo on github.com with ![fork button](ForkButtonIcon.png)
-* Clone your remote onto your local system ![clone button](CloneInDesktopButtonIcon.png)
-
-### Set Your Upstream
-Setting the parent repo to get changes from.
-
-* `> git remote -v`
-
-if no *upstream* is listed continue with:
-
-* `> git remote add upstream https://github.com/Esri/solutions-geoprocessing-toolbox`
-* `> git remote set-url upstream --push no_push`
-
-check that an *upstream* is registered:
-
-* `> git remote -v`
-
-### Getting Changes from Upstream
-The solutions-geoprocessing-toolbox repo changes often, so make sure you are getting the latest updates often.
-
-* `> git fetch upstream`
-* `> git merge upstream/dev`
-*
-
-### Share Your Mods
-If you've made changes to the repo that you want to share with the community.
-
-* Commit your changes to your local
-* Sync local with your remote fork
-* Make a **Pull Request** from your remote fork on github.com ![New Pull Request](NewPullRequestButtonIcon.png)
-
-
-### Notes On Contributing
-* Always work in the **dev** branch, never in *master*. This helps us keep our releases clean.
-* Never merge Pull Requests. The [Repository Owner](#repository-owner) needs to test any updates to make sure the repo is stable.
-* Always log an [Issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues) for problems you find, though you should check through the existing issues to make sure it wasn't already logged. 
+When you contribute to this repository we ask that you follow the guidelines in the [guidelines for contributing](https://github.com/esri/contributing). If you have questions, or you get stuck, please ask the [Repository Owner](#repository-owner). We are here to help! Thanks.
 
 
 ## Credits
@@ -194,13 +151,13 @@ Mosaic Dataset Configuration Scripts (MDCS) is an Esri repo available at [https:
 
 ## Licensing
 
-Copyright 2015 Esri
+Copyright 2016 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+You may obtain a copy of the License at:
 
-   http://www.apache.org/licenses/LICENSE-2.0
+[http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
