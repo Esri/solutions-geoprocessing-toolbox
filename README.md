@@ -46,23 +46,23 @@ Specialized geoprocessing models and tools for general defense and intelligence 
 * The [**capability**](./capability/README.md) folder contains:
   * ERG (Emergency Resources Guide) Tools
   * Helicopter Landing Zone Tools
-  * Point Of Origin Tools [This tool is moving to Mature Support](#mature-support)
+  * Point Of Origin Tools -- [This tool is moving to Mature Support](#mature-support)
 
 * The [**data_management**](./data_management/README.md) folder contains:
   * Adjust Sample Data Dates Tools
-  * CADRG ECRG Tools [This tool is moving to Mature Support](#mature-support)
-  * CIB Tools [This tool is moving to Mature Support](#mature-support)
-  * Elevation Tools [This tool is moving to Mature Support](#mature-support)
+  * CADRG ECRG Tools -- [This tool is moving to Mature Support](#mature-support)
+  * CIB Tools -- [This tool is moving to Mature Support](#mature-support)
+  * Elevation Tools -- [This tool is moving to Mature Support](#mature-support)
   * Geonames Tools
-  * Import and Conversion Tools - formerly Position Analysis Tools [This tool is moving to Mature Support](#mature-support)
+  * Import and Conversion Tools - formerly Position Analysis Tools -- [This tool is moving to Mature Support](#mature-support)
   * LiDAR Elevation Tools
   * Network Data Preparation Tools
-  * Patrol Data Capture Tools [This tool is moving to Mature Support](#mature-support)
+  * Patrol Data Capture Tools -- [This tool is moving to Mature Support](#mature-support)
   * Publishable Task Tools
 
 * The [**operational_graphics**](./operational_graphics/README.md) folder contains:
   * Clearing Operations Tools
-  * Range Card Tools [This tool is moving to Mature Support](#mature-support)
+  * Range Card Tools -- [This tool is moving to Mature Support](#mature-support)
   
 * The [**patterns**](./patterns/README.md) folder contains:
   * Incident Analysis Tools
@@ -129,7 +129,7 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.4 
 - Follow instructions in [Running tests for solutions-geoprocessing-toolbox](.utils/test/Readme.md)
 
 ## Mature Support
-* For information Esri support levels visit the [Esri Product Life Cycle](http://support.esri.com/other-resources/product-life-cycle) page. Toolboxes marked for Mature Support will be removed from this repository's *dev* and *master* branches in the future, but will still be availalbe from earlier [releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases).
+For information Esri support levels visit the [Esri Product Life Cycle](http://support.esri.com/other-resources/product-life-cycle) page. Toolboxes marked for Mature Support will be removed from this repository's *dev* and *master* branches in the future, but will still be availalbe from earlier [releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases).
 
 ## Resources
 * [GitHub Help](https://help.github.com/)
