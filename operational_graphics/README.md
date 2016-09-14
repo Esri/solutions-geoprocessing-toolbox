@@ -25,6 +25,8 @@ These tools are part of the [Clearing Operations](http://www.arcgis.com/home/ite
 
 ## Range Card Tools
 
+> IMPORTANT: This toolbox is moving to Mature Support and will be removed in the future, but will be available from earlier [releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases).
+
 Tools to build range cards for defensive positions.
 
 * Create Range Fan Index Features
