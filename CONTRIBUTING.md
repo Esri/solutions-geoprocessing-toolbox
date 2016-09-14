@@ -8,7 +8,7 @@ Start contributing to the *solutions-geoprocessing-toolbox* repo by making a bra
 Select the **dev** drop down
 Type a new branch name. The convention uses your initials and a title separated by dashes "-". For example: *xy-new-suitabilty-tool*
 
-![Create new branch](CreateNewBranchDialogScreenshot.png)
+![Create new branch](./img/CreateNewBranchDialogScreenshot.png)
 
 *Fetch* and *merge* the new branch from the **Esri** remote: [Getting Changes from the repo](#getting-changes-from-the-repo).
 
@@ -44,7 +44,7 @@ If you've made changes to the repo that you want to share with the community.
 
 * Commit your changes
 * Sync local with your remote
-* Make a **Pull Request** from your remote fork on github.com ![New Pull Request](NewPullRequestButtonIcon.png)
+* Make a **Pull Request** from your remote fork on github.com ![New Pull Request](./img/NewPullRequestButtonIcon.png)
 
 
 ### Notes On Contributing
