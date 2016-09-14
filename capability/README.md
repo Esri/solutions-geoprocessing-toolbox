@@ -32,6 +32,8 @@ Tools in toolbox:
 
 ## Point Of Origin Tools
 
+> IMPORTANT: This toolbox is moving to Mature Support and will be removed in the future, but will be available from earlier [releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases).
+
 Tool for finding possible locations of firing position from point of impact.
 
 Tools in toolbox:
@@ -43,7 +45,7 @@ Find a bug or want to request a new feature?  Please let us know by submitting a
 
 ## Licensing
 
-Copyright 2014 Esri
+Copyright 2016 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
