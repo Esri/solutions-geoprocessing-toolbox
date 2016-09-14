@@ -6,7 +6,7 @@
 
 The ArcGIS Solutions Geoprocessing Toolbox is a collection of models, scripts, and tools for use in [ArcGIS for Desktop](http://www.esri.com/software/arcgis/arcgis-for-desktop) and [ArcGIS Pro](http://www.esri.com/en/software/arcgis-pro). These tools provide specialized processing, workflows, and analysis for defense, intelligence, emergency management, and other solutions domains. With these tools you can determine visibility from a specific viewpoint, create search grids, and analyze event data. They are included with many of Esri's [Solutions Templates](http://solutions.arcgis.com/), but developers can use this repository to download and contribute to the tool development process.
 
-![Image of the toolbox](solutions-geoprocessing-toolbox_screenshot_14APR2016_824x400.png)
+![Image of the toolbox](./img/solutions-geoprocessing-toolbox_screenshot_14APR2016_824x400.png)
 
 
 ###Repository Owner: [Matt](https://github.com/mfunk)
