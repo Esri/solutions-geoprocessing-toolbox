@@ -87,8 +87,6 @@ These tools are a part of the [Import and Conversion Tools](http://solutions.arc
 
 ## LiDAR Elevation Tools
 
-> IMPORTANT: This toolbox is moving to Mature Support and will be removed in the future, but will be available from earlier [releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases).
-
 This toolbox contains tools that  create surface or terrain mosaics from LiDAR data.
 
 * Create Source LAS Ground Elevation Mosaic
