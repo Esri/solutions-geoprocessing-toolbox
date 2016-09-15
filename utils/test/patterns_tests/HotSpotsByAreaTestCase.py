@@ -1,29 +1,32 @@
 # coding: utf-8
-# -----------------------------------------------------------------------------
-# Copyright 2015 Esri
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# -----------------------------------------------------------------------------
+'''
+-----------------------------------------------------------------------------
+Copyright 2016 Esri
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-# ==================================================
-# HotSpotsByAreaTestCase.py
-# --------------------------------------------------
-# requirements: ArcGIS X.X, Python 2.7 or Python 3.4
-# author: ArcGIS Solutions
-# company: Esri
-# ==================================================
-# history:
-# 12/16/2015 - JH - initial creation
-# ==================================================
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-----------------------------------------------------------------------------
+
+==================================================
+HotSpotsByAreaTestCase.py
+--------------------------------------------------
+requirements: ArcGIS X.X, Python 2.7 or Python 3.4
+author: ArcGIS Solutions
+company: Esri
+==================================================
+history:
+12/16/2015 - JH - initial creation
+09/15/2016 - mf - update to two test case instead of three
+==================================================
+'''
 
 import unittest
 import arcpy
@@ -40,7 +43,7 @@ class HotSpotsByAreaTestCase(unittest.TestCase):
     inputIncidents = None
     
     def setUp(self):
-        if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.setUp")
+        if Configuration.DEBUG == True: print(".....HotSpotsByAreaTestCase.setUp")
         UnitTestUtilities.checkArcPy()
         
         Configuration.incidentDataPath = DataDownload.runDataDownload(Configuration.patternsPaths, Configuration.incidentGDBName, Configuration.incidentURL)
@@ -53,42 +56,41 @@ class HotSpotsByAreaTestCase(unittest.TestCase):
         self.inputIncidents = os.path.join(Configuration.incidentInputGDB, "Incidents")
         
     def tearDown(self):
-        if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.tearDown")
+        if Configuration.DEBUG == True: print(".....HotSpotsByAreaTestCase.tearDown")
         UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
         
     def test_hot_spots_by_area_pro(self):
-        if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.test_hot_spots_by_area_pro")
-        arcpy.AddMessage("Testing Hot Spots by Area (Pro).")
-        self.test_hot_spots_by_area(Configuration.patterns_ProToolboxPath)
+        if Configuration.DEBUG == True: print(" .....HotSpotsByAreaTestCase.test_hot_spots_by_area_pro")
+        arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
+        
+        runToolMessage = "Running tool (Hot Spots By Area)"
+        arcpy.AddMessage(runToolMessage)
+        Configuration.Logger.info(runToolMessage)
+        
+        incidentFieldName = "district"
+        outputWorkspace = Configuration.incidentDataPath
+        
+        # second parameter: inputIncidents must be a Feature Layer
+        arcpy.MakeFeatureLayer_management(self.inputIncidents, "incidentsLayer") 
+        arcpy.HotSpotsByArea_iaTools(self.inputAOIFeatures, "incidentsLayer", incidentFieldName, outputWorkspace)
+        
+        self.assertTrue(arcpy.Exists(outputWorkspace))
+        return
     
     def test_hot_spots_by_area_desktop(self):
-        if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.test_hot_spots_by_area_desktop")    
-        arcpy.AddMessage("Testing Hot Spots by Area (Desktop).")
-        self.test_hot_spots_by_area(Configuration.patterns_DesktopToolboxPath)
+        if Configuration.DEBUG == True: print(".....HotSpotsByAreaTestCase.test_hot_spots_by_area_desktop")    
+        arcpy.ImportToolbox(Configuration.patterns_DesktopToolboxPath, "iaTools")
         
-    def test_hot_spots_by_area(self, toolboxPath):
-        try:
-            if Configuration.DEBUG == True: print("     HotSpotsByAreaTestCase.test_hot_spots_by_area")  
-            
-            arcpy.ImportToolbox(toolboxPath, "iaTools")
-            
-            runToolMessage = "Running tool (Hot Spots By Area)"
-            arcpy.AddMessage(runToolMessage)
-            Configuration.Logger.info(runToolMessage)
-            
-            incidentFieldName = "district"
-            outputWorkspace = Configuration.incidentDataPath
-            
-            # second parameter: inputIncidents must be a Feature Layer
-            arcpy.MakeFeatureLayer_management(self.inputIncidents, "incidentsLayer") 
-            arcpy.HotSpotsByArea_iaTools(self.inputAOIFeatures, "incidentsLayer", incidentFieldName, outputWorkspace)
-            
-            self.assertTrue(arcpy.Exists(outputWorkspace))
-            
-        except arcpy.ExecuteError:
-            UnitTestUtilities.handleArcPyError()
-            
-        except:
-            UnitTestUtilities.handleGeneralError()
-            
-            
+        runToolMessage = "Running tool (Hot Spots By Area)"
+        arcpy.AddMessage(runToolMessage)
+        Configuration.Logger.info(runToolMessage)
+        
+        incidentFieldName = "district"
+        outputWorkspace = Configuration.incidentDataPath
+        
+        # second parameter: inputIncidents must be a Feature Layer
+        arcpy.MakeFeatureLayer_management(self.inputIncidents, "incidentsLayer") 
+        arcpy.HotSpotsByArea_iaTools(self.inputAOIFeatures, "incidentsLayer", incidentFieldName, outputWorkspace)
+        
+        self.assertTrue(arcpy.Exists(outputWorkspace))
+        return
