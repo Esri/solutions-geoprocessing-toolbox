@@ -46,7 +46,8 @@ class ClusterAnalysisTestCase(unittest.TestCase):
     inputPointsFeatures = None
 
     def setUp(self):
-        if Configuration.DEBUG is True: print(".....ClusterAnalysisTestCase.setUp")
+        if Configuration.DEBUG is True:
+            print(".....ClusterAnalysisTestCase.setUp")
         UnitTestUtilities.checkArcPy()
 
         Configuration.incidentDataPath = DataDownload.runDataDownload(Configuration.patternsPaths,
@@ -64,14 +65,18 @@ class ClusterAnalysisTestCase(unittest.TestCase):
 
         # set up inputs
         self.inputPointsFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
+        return
 
     def tearDown(self):
-        if Configuration.DEBUG is True: print(".....ClusterAnalysisTestCase.tearDown")
+        if Configuration.DEBUG is True:
+            print(".....ClusterAnalysisTestCase.tearDown")
         UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
+        return
 
     def test_cluster_analysis_pro(self):
         '''test_cluster_analysis_pro'''
-        if Configuration.DEBUG is True: print(".....ClusterAnalysisTestCase.test_cluster_analysis_pro")
+        if Configuration.DEBUG is True:
+            print(".....ClusterAnalysisTestCase.test_cluster_analysis_pro")
 
         arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
         outputClusterFeatures = os.path.join(Configuration.incidentScratchGDB, "outputClusters")
@@ -89,7 +94,8 @@ class ClusterAnalysisTestCase(unittest.TestCase):
 
     def test_cluster_analysis_desktop(self):
         '''test_cluster_analysis_desktop'''
-        if Configuration.DEBUG is True: print(".....ClusterAnalysisTestCase.test_cluster_analysis_desktop")
+        if Configuration.DEBUG is True:
+            print(".....ClusterAnalysisTestCase.test_cluster_analysis_desktop")
 
         arcpy.ImportToolbox(Configuration.patterns_DesktopToolboxPath, "iaTools")
         outputClusterFeatures = os.path.join(Configuration.incidentScratchGDB,
