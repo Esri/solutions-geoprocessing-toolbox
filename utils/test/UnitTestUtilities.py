@@ -150,15 +150,12 @@ def createScratch(scratchPath):
 
 def deleteScratch(scratchPath):
     ''' delete scratch geodatabase '''
-    if Configuration.DEBUG is True:
-        print("UnitTestUtilities - deleteScratch")
+    if Configuration.DEBUG == True: print("UnitTestUtilities - deleteScratch")
     try:
         arcpy.Delete_management(scratchPath)
-        if Configuration.DEBUG is True:
-            print("Deleted scratch")
+        if Configuration.DEBUG == True: print("Deleted scratch gdb.")
     except:
         print("scratch.gdb delete failed")
-        self.handleGeneralError()
     return
 
 def checkFilePaths(paths):
@@ -191,7 +188,6 @@ def handleArcPyError():
     arcpy.AddError(msgs)
     print(msgs)
     Configuration.Logger.error(msgs)
-    return
 
 def handleGeneralError():
     ''' Basic error handler, errors printed to console and logger '''
@@ -209,7 +205,6 @@ def handleGeneralError():
     Configuration.Logger.error(pymsg)
     print(msgs)
     Configuration.Logger.error(msgs)
-    return
     
 def geoObjectsExist(objects):
     ''' Return true if all of the input list of geo-objects exist, false otherwise '''

@@ -23,7 +23,7 @@ data URL pattern: r"http://www.arcgis.com/sharing/content/items/XXX/data", where
 
 import os
 
-DEBUG = True # this guy is a flag for extra messaging while debugging tests
+DEBUG = False # this guy is a flag for extra messaging while debugging tests
 
 #NOTE: Logger and Platform are initialized in TestRunner's main()
 Logger = None
