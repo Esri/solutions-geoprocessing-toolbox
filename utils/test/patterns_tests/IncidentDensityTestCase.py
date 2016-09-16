@@ -1,29 +1,32 @@
 # coding: utf-8
-# -----------------------------------------------------------------------------
-# Copyright 2015 Esri
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# -----------------------------------------------------------------------------
+'''
+-----------------------------------------------------------------------------
+Copyright 2016 Esri
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-# ==================================================
-# IncidentDensityTestCase.py
-# --------------------------------------------------
-# requirments: ArcGIS X.X, Python 2.7 or Python 3.4
-# author: ArcGIS Solutions
-# company: Esri
-# ==================================================
-# history:
-# 12/16/2015 - JH - initial creation
-# ==================================================
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-----------------------------------------------------------------------------
+
+==================================================
+IncidentDensityTestCase.py
+--------------------------------------------------
+requirments: ArcGIS X.X, Python 2.7 or Python 3.4
+author: ArcGIS Solutions
+company: Esri
+==================================================
+history:
+12/16/2015 - JH - initial creation
+09/15/2016 - mf - update to two test case instead of three
+==================================================
+'''
 
 import unittest
 import arcpy
@@ -40,7 +43,7 @@ class IncidentDensityTestCase(unittest.TestCase):
     inputBoundaryFeatures = None
     
     def setUp(self):
-        if Configuration.DEBUG == True: print("     IncidentDensityTestCase.setUp")    
+        if Configuration.DEBUG == True: print(".....IncidentDensityTestCase.setUp")    
         UnitTestUtilities.checkArcPy()
         
         Configuration.incidentDataPath = DataDownload.runDataDownload(Configuration.patternsPaths, Configuration.incidentGDBName, Configuration.incidentURL)
@@ -52,42 +55,37 @@ class IncidentDensityTestCase(unittest.TestCase):
        
         self.inputPointFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
         self.inputBoundaryFeatures = os.path.join(Configuration.incidentInputGDB, "Districts")
-        
-        
+ 
     def tearDown(self):
-        if Configuration.DEBUG == True: print("     IncidentDensityTestCase.tearDown")
+        if Configuration.DEBUG == True: print(".....IncidentDensityTestCase.tearDown")
         UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
         
     def test_incident_density_pro(self):
-        if Configuration.DEBUG == True: print("     IncidentDensityTestCase.test_incident_density_pro")
-        arcpy.AddMessage("Testing Incident Density (Pro).")
-        self.test_incident_density(Configuration.patterns_ProToolboxPath)
+        if Configuration.DEBUG == True: print(".....IncidentDensityTestCase.test_incident_density_pro")
+        arcpy.CheckOutExtension("Spatial")        
+        arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
+        
+        runToolMsg = "Running tool (Incident Density)"
+        arcpy.AddMessage(runToolMsg)
+        Configuration.Logger.info(runToolMsg)
+        
+        outputDensity = os.path.join(Configuration.incidentScratchGDB, "outputDensity")
+        arcpy.IncidentDensity_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputDensity)
+        arcpy.CheckInExtension("Spatial")
+        self.assertTrue(arcpy.Exists(outputDensity))
+        return
     
     def test_incident_density_desktop(self):
-        if Configuration.DEBUG == True: print("     IncidentDensityTestCase.test_incident_density_desktop")
-        arcpy.AddMessage("Testing Incident Density (Desktop).")
-        self.test_incident_density(Configuration.patterns_DesktopToolboxPath)
+        if Configuration.DEBUG == True: print(".....IncidentDensityTestCase.test_incident_density_desktop")
+        arcpy.CheckOutExtension("Spatial")        
+        arcpy.ImportToolbox(Configuration.patterns_DesktopToolboxPath, "iaTools")
         
-    def test_incident_density(self, toolboxPath):
-        try:
-            if Configuration.DEBUG == True: print("     IncidentDensityTestCase.test_incident_density")
-            
-            arcpy.CheckOutExtension("Spatial")        
-            arcpy.ImportToolbox(toolboxPath, "iaTools")
-            
-            runToolMsg = "Running tool (Incident Density)"
-            arcpy.AddMessage(runToolMsg)
-            Configuration.Logger.info(runToolMsg)
-            
-            outputDensity = os.path.join(Configuration.incidentScratchGDB, "outputDensity")
-            arcpy.IncidentDensity_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputDensity)
-            arcpy.CheckInExtension("Spatial")
-            self.assertTrue(arcpy.Exists(outputDensity))
-            
-        except arcpy.ExecuteError:
-            UnitTestUtilities.handleArcPyError()
-            
-        except:
-            UnitTestUtilities.handleGeneralError()
-            
-            
+        runToolMsg = "Running tool (Incident Density)"
+        arcpy.AddMessage(runToolMsg)
+        Configuration.Logger.info(runToolMsg)
+        
+        outputDensity = os.path.join(Configuration.incidentScratchGDB, "outputDensity")
+        arcpy.IncidentDensity_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputDensity)
+        arcpy.CheckInExtension("Spatial")
+        self.assertTrue(arcpy.Exists(outputDensity))
+        return
