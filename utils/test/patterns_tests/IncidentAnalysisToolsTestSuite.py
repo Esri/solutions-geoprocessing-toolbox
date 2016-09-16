@@ -90,23 +90,29 @@ def getIncidentAnalysisTestSuite():
 
 
 def addClusterTests(inputTestList):
-    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addClusterTests")
-    from . import ClusterAnalysisTestCase
-    for test in inputTestList:
-        print("adding test: " + str(test))
-        Configuration.Logger.info(test)
-        TestSuite.addTest(ClusterAnalysisTestCase.ClusterAnalysisTestCase(test))
+    try:
+        if Configuration.DEBUG == True: print(".....IncidentAnalysisToolsTestSuite.addClusterTests")
+        from . import ClusterAnalysisTestCase
+        for test in inputTestList:
+            print("adding test: " + str(test))
+            Configuration.Logger.info(test)
+            TestSuite.addTest(ClusterAnalysisTestCase.ClusterAnalysisTestCase(test))
+    except:
+        UnitTestUtilities.handleGeneralError()
     
 def addCountIncidentTests(inputTestList):
-    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addCountIncidentTests")
-    from . import CountIncidentsByLOCTestCase
-    for test in inputTestList:
-        print("adding test: " + str(test))
-        Configuration.Logger.info(test)
-        TestSuite.addTest(CountIncidentsByLOCTestCase.CountIncidentsByLOCTestCase(test))
+    try:
+        if Configuration.DEBUG == True: print(".....IncidentAnalysisToolsTestSuite.addCountIncidentTests")
+        from . import CountIncidentsByLOCTestCase
+        for test in inputTestList:
+            print("adding test: " + str(test))
+            Configuration.Logger.info(test)
+            TestSuite.addTest(CountIncidentsByLOCTestCase.CountIncidentsByLOCTestCase(test))
+    except:
+        UnitTestUtilities.handleGeneralError()
     
 def addIncidentDensityTests(inputTestList):
-    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addIncidentDensityTests")
+    if Configuration.DEBUG == True: print(".....IncidentAnalysisToolsTestSuite.addIncidentDensityTests")
     from . import IncidentDensityTestCase
     for test in inputTestList:
         print("adding test: " + str(test))
@@ -114,7 +120,7 @@ def addIncidentDensityTests(inputTestList):
         TestSuite.addTest(IncidentDensityTestCase.IncidentDensityTestCase(test))
 
 def addHotSpotsByAreaTests(inputTestList):
-    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addHotSpotsByAreaTests")
+    if Configuration.DEBUG == True: print(".....IncidentAnalysisToolsTestSuite.addHotSpotsByAreaTests")
     from . import HotSpotsByAreaTestCase
     for test in inputTestList:
         print("adding test: " + str(test))
@@ -122,7 +128,7 @@ def addHotSpotsByAreaTests(inputTestList):
         TestSuite.addTest(HotSpotsByAreaTestCase.HotSpotsByAreaTestCase(test))
      
 def addIncidentHotSpotsTests(inputTestList):
-    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addIncidentHotSpotsTests")
+    if Configuration.DEBUG == True: print(".....IncidentAnalysisToolsTestSuite.addIncidentHotSpotsTests")
     from . import IncidentHotSpotsTestCase
     for test in inputTestList:
         print("adding test: " + str(test))
@@ -130,7 +136,7 @@ def addIncidentHotSpotsTests(inputTestList):
         TestSuite.addTest(IncidentHotSpotsTestCase.IncidentHotSpotsTestCase(test))
         
 def addIncidentTableToPointTests(inputTestList):
-    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addIncidentTableToPointTests")
+    if Configuration.DEBUG == True: print(".....IncidentAnalysisToolsTestSuite.addIncidentTableToPointTests")
     from . import IncidentTableToPointTestCase
     for test in inputTestList:
         print("adding test: " + str(test))
@@ -138,7 +144,7 @@ def addIncidentTableToPointTests(inputTestList):
         TestSuite.addTest(IncidentTableToPointTestCase.IncidentTableToPointTestCase(test))
 
 def addFindPercentChangeTests(inputTestList):
-    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addFindPercentChangeTests")
+    if Configuration.DEBUG == True: print(".....IncidentAnalysisToolsTestSuite.addFindPercentChangeTests")
     from . import FindPercentChangeTestCase
     for test in inputTestList:
         print("adding test: " + str(test))

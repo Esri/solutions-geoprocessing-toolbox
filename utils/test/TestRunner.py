@@ -52,97 +52,113 @@ if len(sys.argv) > 1:
 
 def main():
     ''' main test logic '''
-    if Configuration.DEBUG == True:
-        print("TestRunner.py - main")
-    else:
-        print("Debug messaging is OFF")
-
-    # setup logger
-    logName = None
-    if not logFileFromBAT == None:
-        logName = logFileFromBAT
-        Configuration.Logger = UnitTestUtilities.initializeLogger(logFileFromBAT)
-    else:
-        logName = UnitTestUtilities.getLoggerName()
-        Configuration.Logger = UnitTestUtilities.initializeLogger(logName)
-    print("Logging results to: " + str(logName))
-    UnitTestUtilities.setUpLogFileHeader()
+    try:
+        if Configuration.DEBUG == True:
+            print("TestRunner.py - main")
+        else:
+            print("Debug messaging is OFF")
     
-    result = runTestSuite()
-    logTestResults(result)
-    print("END OF TEST =========================================\n")
-    return
+        # setup logger
+        logName = None
+        if not logFileFromBAT == None:
+            logName = logFileFromBAT
+            Configuration.Logger = UnitTestUtilities.initializeLogger(logFileFromBAT)
+        else:
+            logName = UnitTestUtilities.getLoggerName()
+            Configuration.Logger = UnitTestUtilities.initializeLogger(logName)
+        print("Logging results to: " + str(logName))
+        UnitTestUtilities.setUpLogFileHeader()
+        
+        result = runTestSuite()
+        logTestResults(result)
+        print("END OF TEST =========================================\n")
+    except:
+        UnitTestUtilities.handleGeneralError()
 
 def logTestResults(result):
     ''' Write the log file '''
-    resultHead = resultsHeader(result)
-    print(resultHead)
-    Configuration.Logger.info(resultHead)
-    if len(result.errors) > 0:
-        rError = resultsErrors(result)
-        print(rError)
-        Configuration.Logger.error(rError)
-    if len(result.failures) > 0:
-        rFail = resultsFailures(result)
-        print(rFail)
-        Configuration.Logger.error(rFail)
-    Configuration.Logger.info("END OF TEST =========================================\n")
-
-    return
+    try:
+        resultHead = resultsHeader(result)
+        print(resultHead)
+        Configuration.Logger.info(resultHead)
+        if len(result.errors) > 0:
+            rError = resultsErrors(result)
+            print(rError)
+            Configuration.Logger.error(rError)
+        if len(result.failures) > 0:
+            rFail = resultsFailures(result)
+            print(rFail)
+            Configuration.Logger.error(rFail)
+        Configuration.Logger.info("END OF TEST =========================================\n")
+        return
+    except:
+        UnitTestUtilities.handleGeneralError()
 
 def resultsHeader(result):
     ''' Generic header for the results in the log file '''
-    msg = "RESULTS =================================================\n\n"
-    msg += "Number of tests run: " + str(result.testsRun) + "\n"
-    msg += "Number of errors: " + str(len(result.errors)) + "\n"
-    msg += "Number of failures: " + str(len(result.failures)) + "\n"
-    return msg
+    try:
+        msg = "RESULTS =================================================\n\n"
+        msg += "Number of tests run: " + str(result.testsRun) + "\n"
+        msg += "Number of errors: " + str(len(result.errors)) + "\n"
+        msg += "Number of failures: " + str(len(result.failures)) + "\n"
+        return msg
+    except:
+        UnitTestUtilities.handleGeneralError()
 
 def resultsErrors(result):
     ''' Error results formatting '''
-    msg = "ERRORS =================================================\n\n"
-    for i in result.errors:
-        for j in i:
-            msg += str(j)
-        msg += "\n"
-    return msg
+    try:
+        msg = "ERRORS =================================================\n\n"
+        for i in result.errors:
+            for j in i:
+                msg += str(j)
+            msg += "\n"
+        return msg
+    except:
+        UnitTestUtilities.handleGeneralError()
 
 def resultsFailures(result):
     ''' Assert failures formatting '''
-    msg = "FAILURES ===============================================\n\n"
-    for i in result.failures:
-        for j in i:
-            msg += str(j)
-        msg += "\n"
-    return msg
+    try:
+        msg = "FAILURES ===============================================\n\n"
+        for i in result.failures:
+            for j in i:
+                msg += str(j)
+            msg += "\n"
+        return msg
+    except:
+        UnitTestUtilities.handleGeneralError()
 
 def runTestSuite():
     ''' collect all test suites before running them '''
-    if Configuration.DEBUG == True: print("TestRunner.py - runTestSuite")
-    testSuite = unittest.TestSuite()
-    result = unittest.TestResult()
-
-    #What are we working with?
-    Configuration.Platform = "DESKTOP"
-    if arcpy.GetInstallInfo()['ProductName'] == 'ArcGISPro':
-        Configuration.Platform = "PRO"
-    Configuration.Logger.info(Configuration.Platform + " =======================================")
-
-    testSuite.addTests(addCapabilitySuite())
-    testSuite.addTests(addPatternsSuite())
-    testSuite.addTests(addVisibilitySuite())
-    testSuite.addTests(addSuitabilitySuite())
-
-    #addDataManagementTests(logger, platform)
-    #addOperationalGraphicsTests(logger, platform)
-    #addPatternsTests(logger, platform)
-    #addSuitabilityTests(logger, platform)
-    #testSuite.addTests(addVisibilityTests(logger, platform))
-
-    print("running " + str(testSuite.countTestCases()) + " tests...")
-    testSuite.run(result)
-    print("Test success: {0}".format(str(result.wasSuccessful())))
-    return result
+    try:
+        if Configuration.DEBUG == True: print("TestRunner.py - runTestSuite")
+        testSuite = unittest.TestSuite()
+        result = unittest.TestResult()
+    
+        #What are we working with?
+        Configuration.Platform = "DESKTOP"
+        if arcpy.GetInstallInfo()['ProductName'] == 'ArcGISPro':
+            Configuration.Platform = "PRO"
+        Configuration.Logger.info(Configuration.Platform + " =======================================")
+    
+        testSuite.addTests(addCapabilitySuite())
+        testSuite.addTests(addPatternsSuite())
+        testSuite.addTests(addVisibilitySuite())
+        testSuite.addTests(addSuitabilitySuite())
+    
+        #addDataManagementTests(logger, platform)
+        #addOperationalGraphicsTests(logger, platform)
+        #addPatternsTests(logger, platform)
+        #addSuitabilityTests(logger, platform)
+        #testSuite.addTests(addVisibilityTests(logger, platform))
+    
+        print("running " + str(testSuite.countTestCases()) + " tests...")
+        testSuite.run(result)
+        print("Test success: {0}".format(str(result.wasSuccessful())))
+        return result
+    except:
+        UnitTestUtilities.handleGeneralError()
 
 def addCapabilitySuite():
     ''' Add all Capability tests in the ./capability_tests folder '''
@@ -154,11 +170,14 @@ def addCapabilitySuite():
 
 def addPatternsSuite():
     ''' Add all Patterns tests in the ./patterns_tests folder '''
-    if Configuration.DEBUG == True: print("TestRunner.py - addPatternsSuite")
-    from patterns_tests import AllPatternsTestSuite
-    suite = unittest.TestSuite()
-    suite.addTest(AllPatternsTestSuite.getPatternsTestSuites())
-    return suite
+    try:
+        if Configuration.DEBUG == True: print("TestRunner.py - addPatternsSuite")
+        from patterns_tests import AllPatternsTestSuite
+        suite = unittest.TestSuite()
+        suite.addTest(AllPatternsTestSuite.getPatternsTestSuites())
+        return suite
+    except:
+        UnitTestUtilities.handleGeneralError()
 
 def addVisibilitySuite():
     ''' Add all Visibility tests in the ./visibility_tests folder '''
@@ -178,6 +197,9 @@ def addSuitabilitySuite():
 
 # MAIN =============================================
 if __name__ == "__main__":
-    if Configuration.DEBUG == True:
-        print("TestRunner.py")
-    main()
+    try:
+        if Configuration.DEBUG == True:
+            print("TestRunner.py")
+        main()
+    except:
+        UnitTestUtilities.handleGeneralError()

@@ -44,7 +44,7 @@ import datetime
 
 def getLoggerName():
     ''' get unique log file name '''
-    if Configuration.DEBUG == True:
+    if Configuration.DEBUG is True:
         print("UnitTestUtilities - getLoggerName")
     seq = 0
     name = nameFromDate(seq)
@@ -90,7 +90,7 @@ def makeFolderFromPath(folderPath):
 
 def initializeLogger(name):
     ''' get and return named logger '''
-    if Configuration.DEBUG == True:
+    if Configuration.DEBUG is True:
         print("UnitTestUtilities - initializeLogger")
 
     # Check if the path to the log files exists, and create if not
@@ -113,7 +113,7 @@ def initializeLogger(name):
 
 def setUpLogFileHeader():
     ''' Add a header to log file when initalized '''
-    if Configuration.DEBUG == True:
+    if Configuration.DEBUG is True:
         print("UnitTestUtilities - setUpLogFileHeader")
     Configuration.Logger.info("------------ Begin Test ------------------")
     Configuration.Logger.info("Platform: {0}".format(platform.platform()))
@@ -124,28 +124,31 @@ def setUpLogFileHeader():
 
 def checkArcPy():
     ''' sanity check that ArcPy is working '''
-    if Configuration.DEBUG == True: print("UnitTestUtilities - checkArcPy")
-    arcpy.AddMessage("ArcPy works")
+    if Configuration.DEBUG is True:
+        print("UnitTestUtilities - checkArcPy")
+    #arcpy.AddMessage("ArcPy works")
+    import arcpy
 
 def checkExists(p):
     ''' Python check for existance '''
-    if Configuration.DEBUG == True: print("UnitTestUtilities - checkExists")
+    if Configuration.DEBUG is True: print("UnitTestUtilities - checkExists")
     return os.path.exists(p)
 
 def createScratch(scratchPath):
     ''' create scratch geodatabase '''
-    if Configuration.DEBUG == True: print("UnitTestUtilities - createScratch")
+    if Configuration.DEBUG is True: print("UnitTestUtilities - createScratch")
     scratchName = 'scratch.gdb'
     scratchGDB = os.path.join(scratchPath, scratchName)
     if checkExists(scratchGDB):
         print("Scratch already exists")
         return scratchGDB
     try:
-        if Configuration.DEBUG == True: print("Creating scratch geodatabase...")
+        if Configuration.DEBUG is True: print("Creating scratch geodatabase...")
         arcpy.CreateFileGDB_management(scratchPath, scratchName)
-        if Configuration.DEBUG == True: print("Created scratch gdb.")
+        if Configuration.DEBUG is True: print("Created scratch gdb.")
     except:
         print("Problem creating scratch.gdb")
+        self.handleGeneralError()
     return scratchGDB
 
 def deleteScratch(scratchPath):
@@ -163,16 +166,16 @@ def deleteScratch(scratchPath):
 
 def checkFilePaths(paths):
     ''' check file/folder paths exist '''
-    if Configuration.DEBUG == True: print("UnitTestUtilities - checkFilePaths")
+    if Configuration.DEBUG is True: print("UnitTestUtilities - checkFilePaths")
     for path2check in paths:
         if os.path.exists(path2check):
-            if Configuration.DEBUG == True: print("Valid Path: " + path2check)
+            if Configuration.DEBUG is True: print("Valid Path: " + path2check)
         else:
             raise Exception('Bad Path: ' + str(path2check))
 
 def checkGeoObjects(objects):
     ''' check geospatial stuff exists '''
-    if Configuration.DEBUG == True: print("UnitTestUtilities - checkGeoObjects")
+    if Configuration.DEBUG is True: print("UnitTestUtilities - checkGeoObjects")
     for object2Check in objects:
         #TODO: Shouldn't we be using arcpy.Exists()?
         desc = arcpy.Describe(object2Check)
@@ -181,11 +184,11 @@ def checkGeoObjects(objects):
             arcpy.AddError("Bad Input")
             raise Exception('Bad Input')
         else:
-            if Configuration.DEBUG == True: print("Valid Object: " + desc.Name)
+            if Configuration.DEBUG is True: print("Valid Object: " + desc.Name)
 
 def handleArcPyError():
     ''' Basic GP error handling, errors printed to console and logger '''
-    if Configuration.DEBUG == True: print("UnitTestUtilities - handleArcPyError")
+    if Configuration.DEBUG is True: print("UnitTestUtilities - handleArcPyError")
     # Get the arcpy error messages
     msgs = arcpy.GetMessages()
     arcpy.AddError(msgs)
@@ -195,7 +198,7 @@ def handleArcPyError():
 
 def handleGeneralError():
     ''' Basic error handler, errors printed to console and logger '''
-    if Configuration.DEBUG == True: print("UnitTestUtilities - handleGeneralError")
+    if Configuration.DEBUG is True: print("UnitTestUtilities - handleGeneralError")
     # Get the traceback object
     tb = sys.exc_info()[2]
     tbinfo = traceback.format_tb(tb)[0]

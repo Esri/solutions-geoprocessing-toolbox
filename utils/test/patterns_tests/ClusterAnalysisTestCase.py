@@ -46,32 +46,34 @@ class ClusterAnalysisTestCase(unittest.TestCase):
     inputPointsFeatures = None
 
     def setUp(self):
-        if Configuration.DEBUG is True:
-            print(".....ClusterAnalysisTestCase.setUp")
-        UnitTestUtilities.checkArcPy()
-
-        Configuration.incidentDataPath = DataDownload.runDataDownload(Configuration.patternsPaths,
-                                                                      Configuration.incidentGDBName,
-                                                                      Configuration.incidentURL)
-        if (Configuration.incidentScratchGDB is None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
-            Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
-        Configuration.incidentInputGDB = os.path.join(Configuration.incidentDataPath,
-                                                      Configuration.incidentGDBName)
-
-        UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath,
-                                          Configuration.incidentInputGDB,
-                                          Configuration.patterns_ProToolboxPath,
-                                          Configuration.patterns_DesktopToolboxPath])
-
-        # set up inputs
-        self.inputPointsFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
-        return
+        try:
+            if Configuration.DEBUG is True:
+                print(".....ClusterAnalysisTestCase.setUp")
+            UnitTestUtilities.checkArcPy()
+            Configuration.incidentDataPath = DataDownload.runDataDownload(Configuration.patternsPaths,
+                                                                          Configuration.incidentGDBName,
+                                                                          Configuration.incidentURL)
+            if (Configuration.incidentScratchGDB is None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
+                Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
+            Configuration.incidentInputGDB = os.path.join(Configuration.incidentDataPath,
+                                                          Configuration.incidentGDBName)
+            UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath,
+                                              Configuration.incidentInputGDB,
+                                              Configuration.patterns_ProToolboxPath,
+                                              Configuration.patterns_DesktopToolboxPath])
+            # set up inputs
+            self.inputPointsFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
+        except:
+            UnitTestUtilities.handleGeneralError()
 
     def tearDown(self):
-        if Configuration.DEBUG is True:
-            print(".....ClusterAnalysisTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
-        return
+        try:
+            if Configuration.DEBUG is True:
+                print(".....ClusterAnalysisTestCase.tearDown")
+            UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
+        except:
+            UnitTestUtilities.handleGeneralError()
+
 
     def test_cluster_analysis_pro(self):
         '''test_cluster_analysis_pro'''
@@ -90,7 +92,7 @@ class ClusterAnalysisTestCase(unittest.TestCase):
                                       outputClusterFeatures)
         clusterCount = int(arcpy.GetCount_management(outputClusterFeatures).getOutput(0))
         self.assertEqual(clusterCount, int(37))
-        return
+
 
     def test_cluster_analysis_desktop(self):
         '''test_cluster_analysis_desktop'''
@@ -111,4 +113,3 @@ class ClusterAnalysisTestCase(unittest.TestCase):
         clusterCount = int(arcpy.GetCount_management(outputClusterFeatures).getOutput(0))
         self.assertEqual(clusterCount, int(37))
 
-        return

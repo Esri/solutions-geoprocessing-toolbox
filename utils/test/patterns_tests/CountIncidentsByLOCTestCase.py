@@ -43,26 +43,34 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
     inputLinesFeatures = None
     
     def setUp(self):
-        if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.setUp")  
-        UnitTestUtilities.checkArcPy()
-        
-        Configuration.incidentDataPath = DataDownload.runDataDownload(Configuration.patternsPaths, Configuration.incidentGDBName, Configuration.incidentURL)
-        if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
-            Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
-        Configuration.incidentInputGDB = os.path.join(Configuration.incidentDataPath, Configuration.incidentGDBName)
-        
-        UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
-     
-        # set up inputs    
-        self.inputPointsFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
-        self.inputLinesFeatures = os.path.join(Configuration.incidentInputGDB, "Roads")
+        try:
+            if Configuration.DEBUG is True:
+                print(".....CountIncidentsByLOCTestCase.setUp")  
+            UnitTestUtilities.checkArcPy()
+            
+            Configuration.incidentDataPath = DataDownload.runDataDownload(Configuration.patternsPaths, Configuration.incidentGDBName, Configuration.incidentURL)
+            if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
+                Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
+            Configuration.incidentInputGDB = os.path.join(Configuration.incidentDataPath, Configuration.incidentGDBName)
+            
+            UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
+         
+            # set up inputs    
+            self.inputPointsFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
+            self.inputLinesFeatures = os.path.join(Configuration.incidentInputGDB, "Roads")
+        except:
+            UnitTestUtilities.handleGeneralError()
             
     def tearDown(self):
-        if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
+        try:
+            if Configuration.DEBUG is True:
+                print(".....CountIncidentsByLOCTestCase.tearDown")
+            UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
+        except:
+            UnitTestUtilities.handleGeneralError()
         
     def test_count_incidents_pro(self):
-        if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.test_count_incidents_pro")
+        if Configuration.DEBUG is True: print(".....CountIncidentsByLOCTestCase.test_count_incidents_pro")
         arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
         outputCountFeatures = os.path.join(Configuration.incidentScratchGDB, "outputCount")
         
@@ -77,7 +85,7 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
         return
     
     def test_count_incidents_desktop(self):
-        if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.test_count_incidents_desktop")
+        if Configuration.DEBUG is True: print(".....CountIncidentsByLOCTestCase.test_count_incidents_desktop")
         arcpy.ImportToolbox(Configuration.patterns_DesktopToolboxPath, "iaTools")
         outputCountFeatures = os.path.join(Configuration.incidentScratchGDB, "outputCount")
         
