@@ -24,6 +24,7 @@ company: Esri
 ==================================================
 history:
 12/16/2015 - JH - initial creation
+09/20/2016 - MF - Update to two method test pattern
 ==================================================
 '''
 
