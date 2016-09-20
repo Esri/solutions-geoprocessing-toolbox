@@ -62,36 +62,26 @@ class IncidentDensityTestCase(unittest.TestCase):
         
     def test_incident_density_pro(self):
         '''test_incident_density_pro'''
-        try:
-            if Configuration.DEBUG == True: print(".....IncidentDensityTestCase.test_incident_density_pro")
-            arcpy.CheckOutExtension("Spatial")        
-            arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
-            runToolMsg = "Running tool (Incident Density)"
-            arcpy.AddMessage(runToolMsg)
-            Configuration.Logger.info(runToolMsg)
-            outputDensity = os.path.join(Configuration.incidentScratchGDB, "outputDensity")
-            arcpy.IncidentDensity_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputDensity)
-            arcpy.CheckInExtension("Spatial")
-            self.assertTrue(arcpy.Exists(outputDensity))
-        except arcpy.ExecuteError:
-            UnitTestUtilities.handleArcPyError()
-        except:
-            UnitTestUtilities.handleGeneralError()
+        if Configuration.DEBUG == True: print(".....IncidentDensityTestCase.test_incident_density_pro")
+        arcpy.CheckOutExtension("Spatial")        
+        arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
+        runToolMsg = "Running tool (Incident Density)"
+        arcpy.AddMessage(runToolMsg)
+        Configuration.Logger.info(runToolMsg)
+        outputDensity = os.path.join(Configuration.incidentScratchGDB, "outputDensity")
+        arcpy.IncidentDensity_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputDensity)
+        arcpy.CheckInExtension("Spatial")
+        self.assertTrue(arcpy.Exists(outputDensity))
     
     def test_incident_density_desktop(self):
         '''test_incident_density_desktop'''
-        try:
-            if Configuration.DEBUG == True: print(".....IncidentDensityTestCase.test_incident_density_desktop")
-            arcpy.CheckOutExtension("Spatial")        
-            arcpy.ImportToolbox(Configuration.patterns_DesktopToolboxPath, "iaTools")
-            runToolMsg = "Running tool (Incident Density)"
-            arcpy.AddMessage(runToolMsg)
-            Configuration.Logger.info(runToolMsg)
-            outputDensity = os.path.join(Configuration.incidentScratchGDB, "outputDensity")
-            arcpy.IncidentDensity_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputDensity)
-            arcpy.CheckInExtension("Spatial")
-            self.assertTrue(arcpy.Exists(outputDensity))
-        except arcpy.ExecuteError:
-            UnitTestUtilities.handleArcPyError()
-        except:
-            UnitTestUtilities.handleGeneralError()
+        if Configuration.DEBUG == True: print(".....IncidentDensityTestCase.test_incident_density_desktop")
+        arcpy.CheckOutExtension("Spatial")        
+        arcpy.ImportToolbox(Configuration.patterns_DesktopToolboxPath, "iaTools")
+        runToolMsg = "Running tool (Incident Density)"
+        arcpy.AddMessage(runToolMsg)
+        Configuration.Logger.info(runToolMsg)
+        outputDensity = os.path.join(Configuration.incidentScratchGDB, "outputDensity")
+        arcpy.IncidentDensity_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputDensity)
+        arcpy.CheckInExtension("Spatial")
+        self.assertTrue(arcpy.Exists(outputDensity))

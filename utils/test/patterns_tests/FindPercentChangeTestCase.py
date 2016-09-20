@@ -63,39 +63,29 @@ class FindPercentChangeTestCase(unittest.TestCase):
         
     def test_percent_change_pro(self):
         '''test_percent_change_pro'''
-        try:
-            if Configuration.DEBUG == True: print(".....FindPercentChangeTestCase.test_percent_change_pro")
-            arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
-            runToolMessage = "Running tool (Find Percent Change - Pro)"
-            arcpy.AddMessage(runToolMessage)
-            Configuration.Logger.info(runToolMessage)
-            outputFeatures = os.path.join(Configuration.incidentScratchGDB, "outputPercentChange")
-            # Pro adds an extra parameter for output
-            arcpy.FindPercentChange_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents, outputFeatures)
-            proResult = arcpy.GetCount_management(outputFeatures)
-            proCount = int(proResult.getOutput(0))
-            self.assertEqual(proCount, int(10))
-        except arcpy.ExecuteError:
-            UnitTestUtilities.handleArcPyError()
-        except:
-            UnitTestUtilities.handleGeneralError()
+        if Configuration.DEBUG == True: print(".....FindPercentChangeTestCase.test_percent_change_pro")
+        arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
+        runToolMessage = "Running tool (Find Percent Change - Pro)"
+        arcpy.AddMessage(runToolMessage)
+        Configuration.Logger.info(runToolMessage)
+        outputFeatures = os.path.join(Configuration.incidentScratchGDB, "outputPercentChange")
+        # Pro adds an extra parameter for output
+        arcpy.FindPercentChange_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents, outputFeatures)
+        proResult = arcpy.GetCount_management(outputFeatures)
+        proCount = int(proResult.getOutput(0))
+        self.assertEqual(proCount, int(10))
         
     def test_percent_change_desktop(self):
         '''test_percent_change_desktop'''
-        try:
-            if Configuration.DEBUG == True: print(".....FindPercentChangeTestCase.test_percent_change_desktop")
-            arcpy.ImportToolbox(Configuration.patterns_DesktopToolboxPath, "iaTools")
-            runToolMessage = "Running tool (Find Percent Change)"
-            arcpy.AddMessage(runToolMessage)
-            Configuration.Logger.info(runToolMessage)
-            result = arcpy.FindPercentChange_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents)
-            featureResult = arcpy.GetCount_management(result)
-            featureCount = int(featureResult.getOutput(0))
-            self.assertEqual(featureCount, int(10))
-        except arcpy.ExecuteError:
-            UnitTestUtilities.handleArcPyError()
-        except:
-            UnitTestUtilities.handleGeneralError()
+        if Configuration.DEBUG == True: print(".....FindPercentChangeTestCase.test_percent_change_desktop")
+        arcpy.ImportToolbox(Configuration.patterns_DesktopToolboxPath, "iaTools")
+        runToolMessage = "Running tool (Find Percent Change)"
+        arcpy.AddMessage(runToolMessage)
+        Configuration.Logger.info(runToolMessage)
+        result = arcpy.FindPercentChange_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents)
+        featureResult = arcpy.GetCount_management(result)
+        featureCount = int(featureResult.getOutput(0))
+        self.assertEqual(featureCount, int(10))
         
     # def test_percent_change(self, toolboxPath, platform):
     #     try:

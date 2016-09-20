@@ -59,43 +59,33 @@ class IncidentTableToPointTestCase(unittest.TestCase):
         UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
         
     def test_incident_table_to_point_pro(self):
-        ''''''
-        try:
-            if Configuration.DEBUG == True: print(".....IncidentTableToPointTestCase.test_incident_table_to_point")
-            arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
-            runToolMessage = "Running tool (Incident Table To Point - Pro)"
-            arcpy.AddMessage(runToolMessage)
-            Configuration.Logger.info(runToolMessage)
-            coordFormat = "MGRS"
-            xField = "MGRS"
-            yField = "MGRS"
-            outputTable = os.path.join(Configuration.incidentScratchGDB, "outputTable")
-            arcpy.IncidentTableToPoint_iaTools(self.inputTable, coordFormat, xField, yField, outputTable)
-            result = arcpy.GetCount_management(outputTable)
-            featureCount = int(result.getOutput(0))
-            self.assertEqual(featureCount, int(5532))
-        except arcpy.ExecuteError:
-            UnitTestUtilities.handleArcPyError()
-        except:
-            UnitTestUtilities.handleGeneralError()
+        '''test_incident_table_to_point_pro'''
+        if Configuration.DEBUG == True: print(".....IncidentTableToPointTestCase.test_incident_table_to_point")
+        arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
+        runToolMessage = "Running tool (Incident Table To Point - Pro)"
+        arcpy.AddMessage(runToolMessage)
+        Configuration.Logger.info(runToolMessage)
+        coordFormat = "MGRS"
+        xField = "MGRS"
+        yField = "MGRS"
+        outputTable = os.path.join(Configuration.incidentScratchGDB, "outputTable")
+        arcpy.IncidentTableToPoint_iaTools(self.inputTable, coordFormat, xField, yField, outputTable)
+        result = arcpy.GetCount_management(outputTable)
+        featureCount = int(result.getOutput(0))
+        self.assertEqual(featureCount, int(5532))
     
     def test_incident_table_to_point_desktop(self):
-        ''''''
-        try:
-            if Configuration.DEBUG == True: print(".....IncidentTableToPointTestCase.test_incident_table_to_point_desktop")
-            arcpy.ImportToolbox(Configuration.patterns_DesktopToolboxPath, "iaTools")
-            runToolMessage = "Running tool (Incident Table To Point - Desktop)"
-            arcpy.AddMessage(runToolMessage)
-            Configuration.Logger.info(runToolMessage)
-            coordFormat = "MGRS"
-            xField = "MGRS"
-            yField = "MGRS"
-            outputTable = os.path.join(Configuration.incidentScratchGDB, "outputTable")
-            arcpy.IncidentTableToPoint_iaTools(self.inputTable, coordFormat, xField, yField, outputTable)
-            result = arcpy.GetCount_management(outputTable)
-            featureCount = int(result.getOutput(0))
-            self.assertEqual(featureCount, int(5532))
-        except arcpy.ExecuteError:
-            UnitTestUtilities.handleArcPyError()
-        except:
-            UnitTestUtilities.handleGeneralError()
+        '''test_incident_table_to_point_desktop'''
+        if Configuration.DEBUG == True: print(".....IncidentTableToPointTestCase.test_incident_table_to_point_desktop")
+        arcpy.ImportToolbox(Configuration.patterns_DesktopToolboxPath, "iaTools")
+        runToolMessage = "Running tool (Incident Table To Point - Desktop)"
+        arcpy.AddMessage(runToolMessage)
+        Configuration.Logger.info(runToolMessage)
+        coordFormat = "MGRS"
+        xField = "MGRS"
+        yField = "MGRS"
+        outputTable = os.path.join(Configuration.incidentScratchGDB, "outputTable")
+        arcpy.IncidentTableToPoint_iaTools(self.inputTable, coordFormat, xField, yField, outputTable)
+        result = arcpy.GetCount_management(outputTable)
+        featureCount = int(result.getOutput(0))
+        self.assertEqual(featureCount, int(5532))
