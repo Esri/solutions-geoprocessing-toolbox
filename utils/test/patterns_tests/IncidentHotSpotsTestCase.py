@@ -45,14 +45,11 @@ class IncidentHotSpotsTestCase(unittest.TestCase):
     def setUp(self):
         if Configuration.DEBUG == True: print(".....IncidentHotSpotsTestCase.setUp")    
         UnitTestUtilities.checkArcPy()
-        
         Configuration.incidentDataPath = DataDownload.runDataDownload(Configuration.patternsPaths, Configuration.incidentGDBName, Configuration.incidentURL)
         if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
             Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
         Configuration.incidentInputGDB = os.path.join(Configuration.incidentDataPath, Configuration.incidentGDBName)
-        
         UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
-            
         self.inputPointFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
         self.inputBoundaryFeatures = os.path.join(Configuration.incidentInputGDB, "Districts")
             
@@ -61,37 +58,27 @@ class IncidentHotSpotsTestCase(unittest.TestCase):
         UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
         
     def test_incident_hot_spots_pro(self):
-        ''''''
-        try:
-            if Configuration.DEBUG == True: print(".....IncidentHotSpotsTestCase.test_incident_hot_spots_pro")
-            arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
-            runToolMessage = "Running tool (Incident Hot Spots - Pro)"
-            arcpy.AddMessage(runToolMessage)
-            Configuration.Logger.info(runToolMessage)
-            outputFeatures = os.path.join(Configuration.incidentScratchGDB, "outputHotSpots")
-            arcpy.IncidentHotSpots_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputFeatures)
-            result = arcpy.GetCount_management(outputFeatures)
-            featureCount = int(result.getOutput(0))
-            self.assertEqual(featureCount, int(7302))
-        except arcpy.ExecuteError:
-            UnitTestUtilities.handleArcPyError()
-        except:
-            UnitTestUtilities.handleGeneralError()
+        '''test_incident_hot_spots_pro'''
+        if Configuration.DEBUG == True: print(".....IncidentHotSpotsTestCase.test_incident_hot_spots_pro")
+        arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
+        runToolMessage = "Running tool (Incident Hot Spots - Pro)"
+        arcpy.AddMessage(runToolMessage)
+        Configuration.Logger.info(runToolMessage)
+        outputFeatures = os.path.join(Configuration.incidentScratchGDB, "outputHotSpots")
+        arcpy.IncidentHotSpots_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputFeatures)
+        result = arcpy.GetCount_management(outputFeatures)
+        featureCount = int(result.getOutput(0))
+        self.assertEqual(featureCount, int(7302))
     
     def test_incident_hot_spots_desktop(self):
-        ''''''
-        try:
-            if Configuration.DEBUG == True: print(".....IncidentHotSpotsTestCase.test_incident_hot_spots_desktop")
-            arcpy.ImportToolbox(Configuration.patterns_DesktopToolboxPath, "iaTools")
-            runToolMessage = "Running tool (Incident Hot Spots - Desktop)"
-            arcpy.AddMessage(runToolMessage)
-            Configuration.Logger.info(runToolMessage)
-            outputFeatures = os.path.join(Configuration.incidentScratchGDB, "outputHotSpots")
-            arcpy.IncidentHotSpots_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputFeatures)
-            result = arcpy.GetCount_management(outputFeatures)
-            featureCount = int(result.getOutput(0))
-            self.assertEqual(featureCount, int(7302))
-        except arcpy.ExecuteError:
-            UnitTestUtilities.handleArcPyError()
-        except:
-            UnitTestUtilities.handleGeneralError()
+        '''test_incident_hot_spots_desktop'''
+        if Configuration.DEBUG == True: print(".....IncidentHotSpotsTestCase.test_incident_hot_spots_desktop")
+        arcpy.ImportToolbox(Configuration.patterns_DesktopToolboxPath, "iaTools")
+        runToolMessage = "Running tool (Incident Hot Spots - Desktop)"
+        arcpy.AddMessage(runToolMessage)
+        Configuration.Logger.info(runToolMessage)
+        outputFeatures = os.path.join(Configuration.incidentScratchGDB, "outputHotSpots")
+        arcpy.IncidentHotSpots_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputFeatures)
+        result = arcpy.GetCount_management(outputFeatures)
+        featureCount = int(result.getOutput(0))
+        self.assertEqual(featureCount, int(7302))
