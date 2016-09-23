@@ -63,16 +63,19 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
         
     def test_count_incidents_pro(self):
         '''test_count_incidents_pro'''
-        if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.test_count_incidents_pro")
-        arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
-        outputCountFeatures = os.path.join(Configuration.incidentScratchGDB, "outputCount")
-        runToolMsg = "Running tool (Count Incidents By LOC - Pro)"
-        arcpy.AddMessage(runToolMsg)
-        Configuration.Logger.info(runToolMsg)
-        arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures, self.inputLinesFeatures, "#", outputCountFeatures)
-        result = arcpy.GetCount_management(outputCountFeatures)
-        featureCount = int(result.getOutput(0))
-        self.assertEqual(featureCount, int(2971))
+        try:
+            if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.test_count_incidents_pro")
+            arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
+            outputCountFeatures = os.path.join(Configuration.incidentScratchGDB, "outputCount")
+            runToolMsg = "Running tool (Count Incidents By LOC - Pro)"
+            arcpy.AddMessage(runToolMsg)
+            Configuration.Logger.info(runToolMsg)
+            arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures, self.inputLinesFeatures, "#", outputCountFeatures)
+            result = arcpy.GetCount_management(outputCountFeatures)
+            featureCount = int(result.getOutput(0))
+            self.assertEqual(featureCount, int(2971))
+        except:
+            self.fail('Exception in test_count_incidents_pro')
     
     def test_count_incidents_desktop(self):
         if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.test_count_incidents_desktop")

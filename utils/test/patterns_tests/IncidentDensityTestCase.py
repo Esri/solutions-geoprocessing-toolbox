@@ -62,16 +62,19 @@ class IncidentDensityTestCase(unittest.TestCase):
         
     def test_incident_density_pro(self):
         '''test_incident_density_pro'''
-        if Configuration.DEBUG == True: print(".....IncidentDensityTestCase.test_incident_density_pro")
-        arcpy.CheckOutExtension("Spatial")        
-        arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
-        runToolMsg = "Running tool (Incident Density)"
-        arcpy.AddMessage(runToolMsg)
-        Configuration.Logger.info(runToolMsg)
-        outputDensity = os.path.join(Configuration.incidentScratchGDB, "outputDensity")
-        arcpy.IncidentDensity_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputDensity)
-        arcpy.CheckInExtension("Spatial")
-        self.assertTrue(arcpy.Exists(outputDensity))
+        try:
+            if Configuration.DEBUG == True: print(".....IncidentDensityTestCase.test_incident_density_pro")
+            arcpy.CheckOutExtension("Spatial")        
+            arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
+            runToolMsg = "Running tool (Incident Density)"
+            arcpy.AddMessage(runToolMsg)
+            Configuration.Logger.info(runToolMsg)
+            outputDensity = os.path.join(Configuration.incidentScratchGDB, "outputDensity")
+            arcpy.IncidentDensity_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputDensity)
+            arcpy.CheckInExtension("Spatial")
+            self.assertTrue(arcpy.Exists(outputDensity))
+        except:
+            self.fail('Exception in test_incident_density_pro')
     
     def test_incident_density_desktop(self):
         '''test_incident_density_desktop'''
