@@ -67,18 +67,18 @@ class ClusterAnalysisTestCase(unittest.TestCase):
 
     def test_cluster_analysis_pro(self):
         '''test_cluster_analysis_pro'''
+        if Configuration.DEBUG == True: print(".....ClusterAnalysisTestCase.test_cluster_analysis_pro")
+        arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
+        outputClusterFeatures = os.path.join(Configuration.incidentScratchGDB, "outputClusters")
+        runToolMessage = "Running tool (Cluster Analysis - Pro)"
+        arcpy.AddMessage(runToolMessage)
+        Configuration.Logger.info(runToolMessage)
         try:
-            if Configuration.DEBUG == True: print(".....ClusterAnalysisTestCase.test_cluster_analysis_pro")
-            arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
-            outputClusterFeatures = os.path.join(Configuration.incidentScratchGDB, "outputClusters")
-            runToolMessage = "Running tool (Cluster Analysis - Pro)"
-            arcpy.AddMessage(runToolMessage)
-            Configuration.Logger.info(runToolMessage)
             arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, "#", outputClusterFeatures)
-            clusterCount = int(arcpy.GetCount_management(outputClusterFeatures).getOutput(0))
-            self.assertEqual(clusterCount, int(37))
         except:
-            self.fail('Exception in test_cluster_analysis_pro')
+            self.fail('Exception in ClusterAnalysis_iaTools for Pro toolbox')
+        clusterCount = int(arcpy.GetCount_management(outputClusterFeatures).getOutput(0))
+        self.assertEqual(clusterCount, int(37))
 
     def test_cluster_analysis_desktop(self):
         '''test_cluster_analysis_desktop'''
@@ -88,6 +88,9 @@ class ClusterAnalysisTestCase(unittest.TestCase):
         runToolMessage = "Running tool (Cluster Analysis - Desktop)"
         arcpy.AddMessage(runToolMessage)
         Configuration.Logger.info(runToolMessage)
-        arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, "#", outputClusterFeatures)
+        try:
+            arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, "#", outputClusterFeatures)
+        except:
+            self.fail('Exception in ClusterAnalysis_iaTools for Desktop toolbox')
         clusterCount = int(arcpy.GetCount_management(outputClusterFeatures).getOutput(0))
         self.assertEqual(clusterCount, int(37))

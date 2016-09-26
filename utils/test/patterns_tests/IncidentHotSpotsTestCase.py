@@ -59,19 +59,19 @@ class IncidentHotSpotsTestCase(unittest.TestCase):
         
     def test_incident_hot_spots_pro(self):
         '''test_incident_hot_spots_pro'''
+        if Configuration.DEBUG == True: print(".....IncidentHotSpotsTestCase.test_incident_hot_spots_pro")
+        arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
+        runToolMessage = "Running tool (Incident Hot Spots - Pro)"
+        arcpy.AddMessage(runToolMessage)
+        Configuration.Logger.info(runToolMessage)
+        outputFeatures = os.path.join(Configuration.incidentScratchGDB, "outputHotSpots")
         try:
-            if Configuration.DEBUG == True: print(".....IncidentHotSpotsTestCase.test_incident_hot_spots_pro")
-            arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
-            runToolMessage = "Running tool (Incident Hot Spots - Pro)"
-            arcpy.AddMessage(runToolMessage)
-            Configuration.Logger.info(runToolMessage)
-            outputFeatures = os.path.join(Configuration.incidentScratchGDB, "outputHotSpots")
             arcpy.IncidentHotSpots_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputFeatures)
-            result = arcpy.GetCount_management(outputFeatures)
-            featureCount = int(result.getOutput(0))
-            self.assertEqual(featureCount, int(7302))
         except:
-            self.fail('Exception in test_incident_hot_spots_pro')
+            self.fail('Exception in IncidentHotSpots_iaTools for Pro toolbox')
+        result = arcpy.GetCount_management(outputFeatures)
+        featureCount = int(result.getOutput(0))
+        self.assertEqual(featureCount, int(7302))
     
     def test_incident_hot_spots_desktop(self):
         '''test_incident_hot_spots_desktop'''
@@ -81,7 +81,10 @@ class IncidentHotSpotsTestCase(unittest.TestCase):
         arcpy.AddMessage(runToolMessage)
         Configuration.Logger.info(runToolMessage)
         outputFeatures = os.path.join(Configuration.incidentScratchGDB, "outputHotSpots")
-        arcpy.IncidentHotSpots_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputFeatures)
+        try:
+            arcpy.IncidentHotSpots_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputFeatures)
+        except:
+            self.fail('Exception in IncidentHotSpots_iaTools for Desktop toolbox')
         result = arcpy.GetCount_management(outputFeatures)
         featureCount = int(result.getOutput(0))
         self.assertEqual(featureCount, int(7302))
