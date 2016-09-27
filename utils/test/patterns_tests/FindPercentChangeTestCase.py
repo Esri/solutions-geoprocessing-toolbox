@@ -74,7 +74,8 @@ class FindPercentChangeTestCase(unittest.TestCase):
         try:
             arcpy.FindPercentChange_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents, outputFeatures)
         except:
-            self.fail('Exception in FindPercentChange_iaTools for Pro toolbox')
+            msg = arcpy.GetMessages(2)
+            self.fail('Exception in FindPercentChange_iaTools for Pro toolbox \n' + msg)
         proResult = arcpy.GetCount_management(outputFeatures)
         proCount = int(proResult.getOutput(0))
         self.assertEqual(proCount, int(10))
@@ -89,7 +90,8 @@ class FindPercentChangeTestCase(unittest.TestCase):
         try:
             result = arcpy.FindPercentChange_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents)
         except:
-            self.fail('Exception in FindPercentChange_iaTools for Desktop toolbox')
+            msg = arcpy.GetMessages(2)
+            self.fail('Exception in FindPercentChange_iaTools for Desktop toolbox \n' + msg)
         featureResult = arcpy.GetCount_management(result)
         featureCount = int(featureResult.getOutput(0))
         self.assertEqual(featureCount, int(10))

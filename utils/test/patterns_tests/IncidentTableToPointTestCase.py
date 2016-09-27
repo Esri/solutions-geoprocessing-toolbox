@@ -72,7 +72,8 @@ class IncidentTableToPointTestCase(unittest.TestCase):
         try:
             arcpy.IncidentTableToPoint_iaTools(self.inputTable, coordFormat, xField, yField, outputTable)
         except:
-            self.fail('Exception in IncidentTableToPoint_iaTools for Pro toolbox')
+            msg = arcpy.GetMessages(2)
+            self.fail('Exception in IncidentTableToPoint_iaTools for Pro toolbox \n' + msg)
         result = arcpy.GetCount_management(outputTable)
         featureCount = int(result.getOutput(0))
         self.assertEqual(featureCount, int(5532))
@@ -91,7 +92,8 @@ class IncidentTableToPointTestCase(unittest.TestCase):
         try:
             arcpy.IncidentTableToPoint_iaTools(self.inputTable, coordFormat, xField, yField, outputTable)
         except:
-            self.fail('Exception in IncidentTableToPoint_iaTools for Desktop toolbox')
+            msg = arcpy.GetMessages(2)
+            self.fail('Exception in IncidentTableToPoint_iaTools for Desktop toolbox \n' + msg)
         result = arcpy.GetCount_management(outputTable)
         featureCount = int(result.getOutput(0))
         self.assertEqual(featureCount, int(5532))

@@ -72,7 +72,8 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
         try:
             arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures, self.inputLinesFeatures, "#", outputCountFeatures)
         except:
-            self.fail('Exception in CountIncidentsByLOC_iaTools in Pro toolbox')
+            msg = arcpy.GetMessages(2)
+            self.fail('Exception in CountIncidentsByLOC_iaTools in Pro toolbox \n' + msg)
         result = arcpy.GetCount_management(outputCountFeatures)
         featureCount = int(result.getOutput(0))
         self.assertEqual(featureCount, int(2971))
@@ -88,7 +89,8 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
         try:
             arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures, self.inputLinesFeatures, "#", outputCountFeatures)
         except:
-            self.fail('Exception in CountIncidentsByLOC_iaTools in Desktop toolbox')
+            msg = arcpy.GetMessages(2)
+            self.fail('Exception in CountIncidentsByLOC_iaTools in Desktop toolbox \n' + msg) 
         result = arcpy.GetCount_management(outputCountFeatures)
         featureCount = int(result.getOutput(0))
         self.assertEqual(featureCount, int(2971))

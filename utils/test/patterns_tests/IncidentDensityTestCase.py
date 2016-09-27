@@ -72,7 +72,8 @@ class IncidentDensityTestCase(unittest.TestCase):
         try:
             arcpy.IncidentDensity_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputDensity)
         except:
-            self.fail('Exception in IncidentDensity_iaTools for Pro toolbox')
+            msg = arcpy.GetMessages(2)
+            self.fail('Exception in IncidentDensity_iaTools for Pro toolbox \n' + msg)
         arcpy.CheckInExtension("Spatial")
         self.assertTrue(arcpy.Exists(outputDensity))
 
@@ -88,6 +89,7 @@ class IncidentDensityTestCase(unittest.TestCase):
         try:
             arcpy.IncidentDensity_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputDensity)
         except:
-            self.fail('Exception in IncidentDensity_iaTools for Desktop toolbox')
+            msg = arcpy.GetMessages(2)
+            self.fail('Exception in IncidentDensity_iaTools for Desktop toolbox \n' + msg)
         arcpy.CheckInExtension("Spatial")
         self.assertTrue(arcpy.Exists(outputDensity))

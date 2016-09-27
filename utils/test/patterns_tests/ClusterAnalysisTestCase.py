@@ -76,7 +76,8 @@ class ClusterAnalysisTestCase(unittest.TestCase):
         try:
             arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, "#", outputClusterFeatures)
         except:
-            self.fail('Exception in ClusterAnalysis_iaTools for Pro toolbox')
+            msg = arcpy.GetMessages(2)
+            self.fail('Exception in ClusterAnalysis_iaTools for Pro toolbox \n' + msg)
         clusterCount = int(arcpy.GetCount_management(outputClusterFeatures).getOutput(0))
         self.assertEqual(clusterCount, int(37))
 
@@ -91,6 +92,7 @@ class ClusterAnalysisTestCase(unittest.TestCase):
         try:
             arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, "#", outputClusterFeatures)
         except:
-            self.fail('Exception in ClusterAnalysis_iaTools for Desktop toolbox')
+            msg = arcpy.GetMessages(2)
+            self.fail('Exception in ClusterAnalysis_iaTools for Desktop toolbox \n' + msg )
         clusterCount = int(arcpy.GetCount_management(outputClusterFeatures).getOutput(0))
         self.assertEqual(clusterCount, int(37))

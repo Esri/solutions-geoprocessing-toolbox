@@ -68,7 +68,8 @@ class IncidentHotSpotsTestCase(unittest.TestCase):
         try:
             arcpy.IncidentHotSpots_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputFeatures)
         except:
-            self.fail('Exception in IncidentHotSpots_iaTools for Pro toolbox')
+            msg = arcpy.GetMessages(2)
+            self.fail('Exception in IncidentHotSpots_iaTools for Pro toolbox \n' + msg)
         result = arcpy.GetCount_management(outputFeatures)
         featureCount = int(result.getOutput(0))
         self.assertEqual(featureCount, int(7302))
@@ -84,7 +85,8 @@ class IncidentHotSpotsTestCase(unittest.TestCase):
         try:
             arcpy.IncidentHotSpots_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputFeatures)
         except:
-            self.fail('Exception in IncidentHotSpots_iaTools for Desktop toolbox')
+            msg = arcpy.GetMessages(2)
+            self.fail('Exception in IncidentHotSpots_iaTools for Desktop toolbox \n' + msg)
         result = arcpy.GetCount_management(outputFeatures)
         featureCount = int(result.getOutput(0))
         self.assertEqual(featureCount, int(7302))

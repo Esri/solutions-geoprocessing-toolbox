@@ -73,7 +73,8 @@ class HotSpotsByAreaTestCase(unittest.TestCase):
         try:
             arcpy.HotSpotsByArea_iaTools(self.inputAOIFeatures, "incidentsLayer", incidentFieldName, outputWorkspace)
         except:
-            self.fail('Exception in HotSpotsByArea_iaTools for Pro toolbox')
+            msg = arcpy.GetMessages(2)
+            self.fail('Exception in HotSpotsByArea_iaTools for Pro toolbox \n' + msg)
         self.assertTrue(arcpy.Exists(outputWorkspace))
     
     def test_hot_spots_by_area_desktop(self):
@@ -90,5 +91,6 @@ class HotSpotsByAreaTestCase(unittest.TestCase):
         try:
             arcpy.HotSpotsByArea_iaTools(self.inputAOIFeatures, "incidentsLayer", incidentFieldName, outputWorkspace)
         except:
-            self.fail('Exception in HotSpotsByArea_iaTools for Desktop toolbox')
+            msg = arcpy.GetMessages(2)
+            self.fail('Exception in HotSpotsByArea_iaTools for Desktop toolbox \n' + msg)
         self.assertTrue(arcpy.Exists(outputWorkspace))
