@@ -32,7 +32,8 @@ MDCS is maintained as a separate repository from Solutions Geoprocessing Toolbox
 
 ## Adjust Sample Data Dates Tools
 
-This toolbox contains a tool to adjust the date fields of the sample data included with the Inciedent Analysis toolbox.
+This toolbox contains a tool to adjust the date fields of the sample data included with the Incident Analysis toolbox.
+Supports the [Incident Analysis](http://solutions.arcgis.com/defense/templates/incident-analysis/) template.
 
 * Change Sample Data Dates to Recent Dates
 
@@ -62,6 +63,7 @@ This toolbox will help to automate the creation of CADRG/ECRG Mosaic Datasets.
 ## Geonames Tools
 
 Tools for building geonames locator.
+Supports the [Geonames Locator](http://solutions.arcgis.com/defense/templates/geonames-locator/) template.
 
 * Create Geonames Gazetter Locator
 * Load Geonames File

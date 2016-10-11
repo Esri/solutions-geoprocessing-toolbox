@@ -14,6 +14,7 @@ Create and visualize graphic products in support of operations.
 ## Clearing Operations Tools
 
 Tools for building gridded reference graphics (GRG) for marking buildings and structures for clearing operations.
+Supports the [Clearing Operations](http://solutions.arcgis.com/defense/templates/clearing-operations/) template.
 
 * Canvas Area GRG
 * Linear Line Of Sight
