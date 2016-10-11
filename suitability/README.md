@@ -27,6 +27,7 @@ Tools included in this toolbox help analysts understand threats against operatio
 ## Military Aspects Of Terrain Tools
 
 Contains tools used in the Military Aspects Of Terrain (MAoT) template. They are tools for doing terrain analysis as part of the Intelligence Preparation of the Battlefield process.
+Supports the [Military Aspects of Terrain](http://solutions.arcgis.com/defense/templates/maot/) template.
 
 * Cover and Concealment
   * Concealment from Aerial Detection
@@ -51,7 +52,8 @@ These tools are part of the [Military Aspects of Terrain template](http://www.ar
 
 ## Military Aspects of Weather Tools
 
-Tools for describing and importing weather data in GRIB and NetCDF format.
+Tools for describing and importing weather data in CRU CL2.0 and NetCDF format.
+Supports the [Miltiary Aspects of Weather](http://solutions.arcgis.com/defense/templates/maow/) template.
 
 * Import CRU Data
 	* Import CRU CL2.0 To Raster
