@@ -94,6 +94,8 @@ This toolbox contains tools that  create surface or terrain mosaics from LiDAR d
 
 ## Network Data Preparation Tools
 
+> IMPORTANT: This toolbox is moving to Mature Support and will be removed in the future, but will be available from earlier [releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases).
+
 These tools are used to prepare road data for use in a road network dataset.
 
 * Add Orientation Angle To Lines
@@ -120,6 +122,8 @@ Includes tools to import data that has been gathered on or after a patrol. This 
 These tools are a part of the [Patrol Data Capture](http://www.arcgis.com/home/item.html?id=6238c4cdb3ca4a7ea54287241f53349f) template.
 
 ## Publishable Task Tools
+
+> IMPORTANT: This toolbox is moving to Mature Support and will be removed in the future, but will be available from earlier [releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases).
 
 Publishable Tasks are a series of models that should be published as geoprocessing services for:
 
