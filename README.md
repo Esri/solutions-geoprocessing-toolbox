@@ -56,9 +56,9 @@ Specialized geoprocessing models and tools for general defense and intelligence 
   * Geonames Tools
   * Import and Conversion Tools - formerly Position Analysis Tools -- [This tool is moving to Mature Support](#mature-support)
   * LiDAR Elevation Tools
-  * Network Data Preparation Tools
+  * Network Data Preparation Tools -- [This tool is moving to Mature Support](#mature-support)
   * Patrol Data Capture Tools -- [This tool is moving to Mature Support](#mature-support)
-  * Publishable Task Tools
+  * Publishable Task Tools -- [This tool is moving to Mature Support](#mature-support)
 
 * The [**operational_graphics**](./operational_graphics/README.md) folder contains:
   * Clearing Operations Tools
