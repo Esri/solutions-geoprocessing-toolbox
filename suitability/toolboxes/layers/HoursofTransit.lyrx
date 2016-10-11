@@ -1,0 +1,667 @@
+{
+  "type" : "CIMLayerDocument",
+  "version" : "1.3.0",
+  "build" : 5861,
+  "layers" : [
+    "CIMPATH=map1/farthestoncdh.xml"
+  ],
+  "layerDefinitions" : [
+    {
+      "type" : "CIMRasterLayer",
+      "name" : "Hours of Transit",
+      "uRI" : "CIMPATH=map1/farthestoncdh.xml",
+      "sourceModifiedTime" : {
+        "type" : "TimeInstant",
+        "start" : 978307200000
+      },
+      "metadataURI" : "CIMPATH=Metadata/363296b7406af14f5c49c0046d96b93f.xml",
+      "description" : "FarthestOnCDh",
+      "expanded" : true,
+      "layerType" : "Operational",
+      "showLegends" : true,
+      "transparency" : 25,
+      "visibility" : true,
+      "displayCacheType" : "Permanent",
+      "maxDisplayCacheAge" : 5,
+      "showPopups" : true,
+      "serviceLayerID" : -1,
+      "dataConnection" : {
+        "type" : "CIMStandardDataConnection",
+        "workspaceConnectionString" : "DATABASE=..\\tooldata\\Maritime Decision Aid Tools.gdb",
+        "workspaceFactory" : "FileGDB",
+        "dataset" : "HoursOfTransit",
+        "datasetType" : "esriDTRasterDataset"
+      },
+      "colorizer" : {
+        "type" : "CIMRasterClassifyColorizer",
+        "resamplingType" : "NearestNeighbor",
+        "classBreaks" : [
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 1,
+            "label" : "<= 1",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                146,
+                0,
+                0,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 2,
+            "label" : "<= 2",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                177,
+                52,
+                0,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 3,
+            "label" : "<= 3",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                209,
+                93,
+                0,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 4,
+            "label" : "<= 4",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                241,
+                131,
+                0,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 5,
+            "label" : "<= 5",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                254,
+                167,
+                0,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 6,
+            "label" : "<= 6",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                251,
+                199,
+                15,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 7,
+            "label" : "<= 7",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                246,
+                230,
+                8,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 8,
+            "label" : "<= 8",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                235,
+                254,
+                23,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 9,
+            "label" : "<= 9",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                181,
+                255,
+                8,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 10,
+            "label" : "<= 10",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                108,
+                255,
+                22,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 11,
+            "label" : "<= 11",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                0,
+                254,
+                6,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 12,
+            "label" : "<= 12",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                0,
+                254,
+                94,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 13,
+            "label" : "<= 13",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                2,
+                252,
+                158,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 14,
+            "label" : "<= 14",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                18,
+                253,
+                216,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 15,
+            "label" : "<= 15",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                35,
+                235,
+                253,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 16,
+            "label" : "<= 16",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                91,
+                173,
+                254,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 17,
+            "label" : "<= 17",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                103,
+                107,
+                254,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 18,
+            "label" : "<= 18",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                90,
+                3,
+                252,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 19,
+            "label" : "<= 19",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                146,
+                0,
+                251,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 20,
+            "label" : "<= 20",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                198,
+                5,
+                251,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 21,
+            "label" : "<= 21",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                245,
+                11,
+                251,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 22,
+            "label" : "<= 22",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                255,
+                81,
+                252,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 23,
+            "label" : "<= 23",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                255,
+                151,
+                253,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 24,
+            "label" : "<= 24",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                255,
+                205,
+                254,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 1000,
+            "label" : "Greater than 1 day",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                253,
+                253,
+                255,
+                100
+              ]
+            }
+          }
+        ],
+        "classificationMethod" : "Manual",
+        "colorRamp" : {
+          "type" : "CIMMultipartColorRamp",
+          "colorRamps" : [
+            {
+              "type" : "CIMLinearContinuousColorRamp",
+              "colorSpace" : {
+                "type" : "CIMICCColorSpace",
+                "url" : "CIELAB"
+              },
+              "fromColor" : {
+                "type" : "CIMLABColor",
+                "values" : [
+                  31.863181823211498,
+                  50.734705399697603,
+                  44.931516733483981,
+                  100
+                ]
+              },
+              "toColor" : {
+                "type" : "CIMLABColor",
+                "values" : [
+                  72.06845683600443,
+                  34.635676622700174,
+                  73.392315229931029,
+                  100
+                ]
+              }
+            },
+            {
+              "type" : "CIMLinearContinuousColorRamp",
+              "colorSpace" : {
+                "type" : "CIMICCColorSpace",
+                "url" : "CIELAB"
+              },
+              "fromColor" : {
+                "type" : "CIMLABColor",
+                "values" : [
+                  72.06845683600443,
+                  34.635676622700174,
+                  73.392315229931029,
+                  100
+                ]
+              },
+              "toColor" : {
+                "type" : "CIMLABColor",
+                "values" : [
+                  96.683616491167115,
+                  -20.419171018551619,
+                  87.367929001284963,
+                  100
+                ]
+              }
+            },
+            {
+              "type" : "CIMLinearContinuousColorRamp",
+              "colorSpace" : {
+                "type" : "CIMICCColorSpace",
+                "url" : "CIELAB"
+              },
+              "fromColor" : {
+                "type" : "CIMLABColor",
+                "values" : [
+                  96.683616491167115,
+                  -20.419171018551619,
+                  87.367929001284963,
+                  100
+                ]
+              },
+              "toColor" : {
+                "type" : "CIMLABColor",
+                "values" : [
+                  85.607074229000403,
+                  -91.486192975967157,
+                  73.962202685380788,
+                  100
+                ]
+              }
+            },
+            {
+              "type" : "CIMLinearContinuousColorRamp",
+              "colorSpace" : {
+                "type" : "CIMICCColorSpace",
+                "url" : "CIELAB"
+              },
+              "fromColor" : {
+                "type" : "CIMLABColor",
+                "values" : [
+                  85.607074229000403,
+                  -91.486192975967157,
+                  73.962202685380788,
+                  100
+                ]
+              },
+              "toColor" : {
+                "type" : "CIMLABColor",
+                "values" : [
+                  89.644590646826003,
+                  -51.521697716782114,
+                  -16.300660645455501,
+                  100
+                ]
+              }
+            },
+            {
+              "type" : "CIMLinearContinuousColorRamp",
+              "colorSpace" : {
+                "type" : "CIMICCColorSpace",
+                "url" : "CIELAB"
+              },
+              "fromColor" : {
+                "type" : "CIMLABColor",
+                "values" : [
+                  89.644590646826003,
+                  -51.521697716782114,
+                  -16.300660645455501,
+                  100
+                ]
+              },
+              "toColor" : {
+                "type" : "CIMLABColor",
+                "values" : [
+                  34.668982832368499,
+                  71.125560221348664,
+                  -101.88789308244294,
+                  100
+                ]
+              }
+            },
+            {
+              "type" : "CIMLinearContinuousColorRamp",
+              "colorSpace" : {
+                "type" : "CIMICCColorSpace",
+                "url" : "CIELAB"
+              },
+              "fromColor" : {
+                "type" : "CIMLABColor",
+                "values" : [
+                  34.668982832368499,
+                  71.125560221348664,
+                  -101.88789308244294,
+                  100
+                ]
+              },
+              "toColor" : {
+                "type" : "CIMLABColor",
+                "values" : [
+                  63.995042207660305,
+                  92.113234125181236,
+                  -53.03187738755495,
+                  100
+                ]
+              }
+            },
+            {
+              "type" : "CIMLinearContinuousColorRamp",
+              "colorSpace" : {
+                "type" : "CIMICCColorSpace",
+                "url" : "CIELAB"
+              },
+              "fromColor" : {
+                "type" : "CIMLABColor",
+                "values" : [
+                  63.995042207660305,
+                  92.113234125181236,
+                  -53.03187738755495,
+                  100
+                ]
+              },
+              "toColor" : {
+                "type" : "CIMLABColor",
+                "values" : [
+                  99.532245803496281,
+                  1.0199694287250094,
+                  -0.65140689316849354,
+                  100
+                ]
+              }
+            }
+          ],
+          "weights" : [
+            0.14285714285714285,
+            0.16035714285714281,
+            0.11285714285714286,
+            0.14535714285714285,
+            0.13035714285714287,
+            0.16535714285714281,
+            0.14285714285714285
+          ]
+        },
+        "field" : "VALUE",
+        "hillshadeZFactor" : 1,
+        "showInAscendingOrder" : true,
+        "numberFormat" : {
+          "type" : "CIMNumericFormat",
+          "alignmentOption" : "esriAlignRight",
+          "alignmentWidth" : 0,
+          "roundingOption" : "esriRoundNumberOfDecimals",
+          "roundingValue" : 6
+        },
+        "normalizationType" : "Nothing"
+      },
+      "attributeTable" : {
+        "type" : "CIMRasterTable",
+        "displayField" : "Value",
+        "editable" : true,
+        "fieldDescriptions" : [
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "OID",
+            "fieldName" : "OID",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 0
+            },
+            "readOnly" : true,
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "RASTER",
+            "fieldName" : "RASTER",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "FOOTPRINT",
+            "fieldName" : "FOOTPRINT",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "FOOTPRINT_Length",
+            "fieldName" : "FOOTPRINT_Length",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "readOnly" : true,
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "FOOTPRINT_Area",
+            "fieldName" : "FOOTPRINT_Area",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "readOnly" : true,
+            "visible" : true,
+            "searchMode" : "Exact"
+          }
+        ]
+      }
+    }
+  ],
+  "binaryReferences" : [
+    {
+      "type" : "CIMBinaryReference",
+      "uRI" : "CIMPATH=Metadata/363296b7406af14f5c49c0046d96b93f.xml",
+      "data" : "<?xml version=\"1.0\"?>\r\n<metadata xml:lang=\"en\"><Esri><CreaDate>20160929</CreaDate><CreaTime>13091500</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce></Esri><dataIdInfo><idCitation><resTitle>Hours of Transit</resTitle></idCitation><idAbs>FarthestOnCDh</idAbs><idPurp></idPurp><idCredit></idCredit><resConst><Consts><useLimit></useLimit></Consts></resConst></dataIdInfo></metadata>\r\n"
+    }
+  ]
+}
