@@ -143,6 +143,13 @@ For information Esri support levels visit the [Esri Product Life Cycle](http://s
 
 Find a bug or want to request a new feature?  Please let us know by submitting an [issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues).
 
+To submit an issue:
+
+1. Go to the [issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues) tab
+2. Click **New Issue**
+3. Fill out *all* of the relevant sections
+4. **Submit new issue** when completed
+
 ## Contributing
 
 When you contribute to this repository we ask that you follow the guidelines in the [repository-specific guidelines for contributing](./CONTRIBUTING.md). If you have questions, or you get stuck, please ask the [Repository Owner](#repository-owner). We are here to help! Thanks.
