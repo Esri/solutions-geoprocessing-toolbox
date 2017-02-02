@@ -1,0 +1,85 @@
+========================================================================================================================================================
+Data Dictionary - ERG2016LookupTable.dbf
+========================================================================================================================================================
+FieldName		Type								Description
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+GuildeNum		Double(Precision:15, Scale: 0)		Guide number; orange section of ERG
+IDNum			Double(Precision:15, Scale: 0)		4-digit identification number (UN or NA)
+Material		Text (Length: 254)					Name of Material
+
+SM_ISO			Double(Precision:15, Scale: 6)		Small spill isolation distance in all directions (meters) - Table 1.			
+SM_DY			Double(Precision:15, Scale: 6)		Small spill protection distance downwind during day (meters) - Table 1.		
+SM_NTE			Double(Precision:15, Scale: 6)		Small spill protection distance downwind during night (meters) - Table 1.		
+LG_ISO			Double(Precision:15, Scale: 6)		Large spill isolation distance in all directions (meters) - Table 1.		
+LG_DY			Double(Precision:15, Scale: 6)		Large spill protection distance downwind during day (meters) - Table 1.		
+LG_NTE 			Double(Precision:15, Scale: 6)		Large spill protection distance downwind during night (meters) - Table 1.		
+
+ATM				Text (Length: 5)					Atmospheric - indicates if material in ERG was marked with "+" which denotes that distance can be larger in certain atmospheric conditions
+POLYMERIZE		Text (Length: 5)					Indicates if material can polymerize.
+FIRE_ISO		Double(Precision:15, Scale: 6)		Isolation distance in all directions when material is involved in a fire.
+
+BLEVE			Text (Length: 5)					Indicates if the information from "BLEVE - SAFETY PRECAUTIONS" section in ERG (page 369) applies to this material as described in Guide section (orange) of ERG.
+BLV100L			Double(Precision:15, Scale: 6)		BLEVE 100L - Preferred evacuation distance (meters) for this capacity tank defined in the "BLEVE - SAFETY PRECAUTIONS" section in ERG (page 369).
+BLV400L			Double(Precision:15, Scale: 6)		BLEVE 400L - Preferred evacuation distance (meters) for this capacity tank defined in the "BLEVE - SAFETY PRECAUTIONS" section in ERG (page 369).
+BLV2000L		Double(Precision:15, Scale: 6)		BLEVE 2000L - Preferred evacuation distance (meters) for this capacity tank defined in the "BLEVE - SAFETY PRECAUTIONS" section in ERG (page 369).
+BLV4000L		Double(Precision:15, Scale: 6)		BLEVE 4000L - Preferred evacuation distance (meters) for this capacity tank defined in the "BLEVE - SAFETY PRECAUTIONS" section in ERG (page 369).
+BLV8000L		Double(Precision:15, Scale: 6)		BLEVE 8000L - Preferred evacuation distance (meters) for this capacity tank defined in the "BLEVE - SAFETY PRECAUTIONS" section in ERG (page 369).
+BLV22000L		Double(Precision:15, Scale: 6)		BLEVE 22000L - Preferred evacuation distance (meters) for this capacity tank defined in the "BLEVE - SAFETY PRECAUTIONS" section in ERG (page 369).
+BLV42000L		Double(Precision:15, Scale: 6)		BLEVE 42000L - Preferred evacuation distance (meters) for this capacity tank defined in the "BLEVE - SAFETY PRECAUTIONS" section in ERG (page 369).
+BLV82000L		Double(Precision:15, Scale: 6)		BLEVE 82000L- Preferred evacuation distance (meters) for this capacity tank defined in the "BLEVE - SAFETY PRECAUTIONS" section in ERG (page 369).
+BLV140000L		Double(Precision:15, Scale: 6)		BLEVE 140000L - Preferred evacuation distance (meters) for this capacity tank defined in the "BLEVE - SAFETY PRECAUTIONS" section in ERG (page 369).
+
+TABLE3			Text (Length: 5)					Indicates if the initial isolation and protective action distances for the material for large spills are defined by Table 3 of the ERG.
+RAIL_ISO		Double(Precision:15, Scale: 6)		Rail tank car - Isolation distance in all directions (meters) - Table 3.
+RAILDYLOW		Double(Precision:15, Scale: 6)		Rail tank car - Protection distance downwind during day, low wind (meters) - Table 3.
+RAILDYMOD		Double(Precision:15, Scale: 6)		Rail tank car - Protection distance downwind during day, moderate wind (meters) - Table 3.
+RAILDYHI		Double(Precision:15, Scale: 6)		Rail tank car - Protection distance downwind during day, high wind (meters) - Table 3.
+RAILNTELOW 		Double(Precision:15, Scale: 6)		Rail tank car - Protection distance downwind during night, low wind (meters) - Table 3.
+RAILNTEMOD		Double(Precision:15, Scale: 6)		Rail tank car - Protection distance downwind during night, moderate wind (meters) - Table 3.
+RAILNTEHI		Double(Precision:15, Scale: 6)		Rail tank car - Protection distance downwind during night, high wind (meters) - Table 3.
+		NOTE: Field name prefix "RAIL", derived from "(Rail) tank car"
+		
+SEMI_ISO		Double(Precision:15, Scale: 6)		Highway tank truck or trailer -  Isolation distance in all directions (meters) - Table 3.
+SEMIDYLOW		Double(Precision:15, Scale: 6)		Highway tank truck or trailer -  Protection distance downwind during day, low wind (meters) - Table 3.
+SEMIDYMOD		Double(Precision:15, Scale: 6)		Highway tank truck or trailer -  Protection distance downwind during day, moderate wind (meters) - Table 3.
+SEMIDYHI		Double(Precision:15, Scale: 6)		Highway tank truck or trailer -  Protection distance downwind during day, high wind (meters) - Table 3.
+SEMINTELOW		Double(Precision:15, Scale: 6)		Highway tank truck or trailer -  Protection distance downwind during night, low wind (meters) - Table 3.
+SEMINTEMOD		Double(Precision:15, Scale: 6)		Highway tank truck or trailer -  Protection distance downwind during night, moderate wind (meters) - Table 3.
+SEMINTEHI		Double(Precision:15, Scale: 6)		Highway tank truck or trailer -  Protection distance downwind during night, high wind (meters) - Table 3.
+		NOTE: Field name prefix "SEMI", derived from common term to describe a tractor and trailer combination
+		
+MTON_ISO		Double(Precision:15, Scale: 6)		Multiple ton cylinders -  Isolation distance in all directions (meters) - Table 3.
+MTONDYLOW		Double(Precision:15, Scale: 6)		Multiple ton cylinders -  Protection distance downwind during day, low wind (meters) - Table 3.
+MTONDYMOD		Double(Precision:15, Scale: 6)		Multiple ton cylinders -  Protection distance downwind during day, moderate wind (meters) - Table 3.
+MTONDYHI		Double(Precision:15, Scale: 6)		Multiple ton cylinders -  Protection distance downwind during day, high wind (meters) - Table 3.
+MTONNTELOW		Double(Precision:15, Scale: 6)		Multiple ton cylinders -  Protection distance downwind during night, low wind (meters) - Table 3.
+MTONNTEMOD		Double(Precision:15, Scale: 6)		Multiple ton cylinders -  Protection distance downwind during night, moderate wind (meters) - Table 3.
+MTONNTEHI		Double(Precision:15, Scale: 6)		Multiple ton cylinders -  Protection distance downwind during night, high wind (meters) - Table 3.
+		NOTE: Field name prefix "MTON", derived from "(M)ultiple (ton) cylinders"
+		
+STON_ISO		Double(Precision:15, Scale: 6)		Multiple small cylinders or single ton cylinder -  Isolation distance in all directions (meters) - Table 3.
+STONDYLOW		Double(Precision:15, Scale: 6)		Multiple small cylinders or single ton cylinder -  Protection distance downwind during day, low wind (meters) - Table 3.
+STONDYMOD		Double(Precision:15, Scale: 6)		Multiple small cylinders or single ton cylinder -  Protection distance downwind during day, moderate wind (meters) - Table 3.
+STONDYHI		Double(Precision:15, Scale: 6)		Multiple small cylinders or single ton cylinder -  Protection distance downwind during day, high wind (meters) - Table 3.
+STONNTELOW		Double(Precision:15, Scale: 6)		Multiple small cylinders or single ton cylinder -  Protection distance downwind during night, low wind (meters) - Table 3.
+STONNTEMOD		Double(Precision:15, Scale: 6)		Multiple small cylinders or single ton cylinder -  Protection distance downwind during night, moderate wind (meters) - Table 3.
+STONNTEHI		Double(Precision:15, Scale: 6)		Multiple small cylinders or single ton cylinder -  Protection distance downwind during night, high wind (meters) - Table 3.
+		NOTE: Field name prefix "STON", derived from "Multiple small cylinders or (s)ingle (ton) cylinder"
+		
+AG_ISO			Double(Precision:15, Scale: 6)		Agricultural nurse tank -  Isolation distance in all directions (meters) - Table 3.
+AGDYLOW			Double(Precision:15, Scale: 6)		Agricultural nurse tank -  Protection distance downwind during day, low wind (meters) - Table 3.
+AGDYMOD			Double(Precision:15, Scale: 6)		Agricultural nurse tank -  Protection distance downwind during day, moderate wind (meters) - Table 3.
+AGDYHI			Double(Precision:15, Scale: 6)		Agricultural nurse tank -  Protection distance downwind during day, high wind (meters) - Table 3.
+AGNTELOW		Double(Precision:15, Scale: 6)		Agricultural nurse tank -  Protection distance downwind during night, low wind (meters) - Table 3.
+AGNTEMOD		Double(Precision:15, Scale: 6)		Agricultural nurse tank -  Protection distance downwind during night, moderate wind (meters) - Table 3.
+AGNTEHI			Double(Precision:15, Scale: 6)		Agricultural nurse tank -  Protection distance downwind during night, high wind (meters) - Table 3.
+		NOTE: Field name prefix "AG", derived from "(Ag)ricultural nurse tank"
+
+MSM_ISO			Double(Precision:15, Scale: 6)		Multiple small cylinders -  Isolation distance in all directions (meters) - Table 3.
+MSMDYLOW		Double(Precision:15, Scale: 6)		Multiple small cylinders -  Protection distance downwind during day, low wind (meters) - Table 3.
+MSMDYMOD		Double(Precision:15, Scale: 6)		Multiple small cylinders -  Protection distance downwind during day, moderate wind (meters) - Table 3.
+MSMDYHI			Double(Precision:15, Scale: 6)		Multiple small cylinders -  Protection distance downwind during day, high wind (meters) - Table 3.
+MSMNTELOW		Double(Precision:15, Scale: 6)		Multiple small cylinders -  Protection distance downwind during night, low wind (meters) - Table 3.
+MSMNTEMOD		Double(Precision:15, Scale: 6)		Multiple small cylinders -  Protection distance downwind during night, moderate wind (meters) - Table 3.
+MSMNTEHI		Double(Precision:15, Scale: 6)		Multiple small cylinders -  Protection distance downwind during night, high wind (meters) - Table 3.
+		NOTE: Field name prefix "MSM", derived from "(M)ultiple (sm)all cylinders"

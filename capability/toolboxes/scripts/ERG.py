@@ -26,7 +26,7 @@ def LookUpERG(pChemical, pPlacardID, pSpillSize, pTimeOfDay, pERGdbf):
     # equal to pChemical) and the last the guide number that relates to the ERG entry
 
     materialFieldName = "Material"
-    placardFieldName = "Placard"
+    placardFieldName = "IDNum"
     guideNumFieldName = "GuideNum"
 
     scriptFolder = os.path.dirname(__file__)
@@ -41,11 +41,11 @@ def LookUpERG(pChemical, pPlacardID, pSpillSize, pTimeOfDay, pERGdbf):
     if (pSpillSize == "Large"):
         prefix = "LG"
 
-    timeField = "DWD_DAY"
+    timeField = "_DY"
     if (pTimeOfDay == "Night"):
-        timeField = "DWD_NITE"
+        timeField = "_NTE"
 
-    iidField = prefix + "_RAD"
+    iidField = prefix + "_ISO"
     padField = prefix + timeField
 
     # Look up the dbf file for the relevant distances
@@ -137,7 +137,7 @@ def MakeERGFeatures(pProjectedPointGeometry, pWindBlowingToDirection, pInitialIs
     # Convert the supplied distances into meters (if needed)
     sr = pProjectedPointGeometry.spatialReference
     metersPerUnit = sr.metersPerUnit
-    arcpy.AddMessage("Metres per map unit: " + str(metersPerUnit))
+    arcpy.AddMessage("Meters per map unit: " + str(metersPerUnit))
     iiDistanceInSrUnits = pInitialIsolationDistance / metersPerUnit
     paDistanceInSrUnits = pProtectiveActionDistance / metersPerUnit
     arcpy.AddMessage("IID: " + str(iiDistanceInSrUnits))

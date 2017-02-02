@@ -47,8 +47,9 @@ class ERGByChemical(object):
             direction="Input")
 
         # grab the list of materials from a dbf file
-        dbfFile = os.path.join(thisFolder, r"tooldata\ERG2012LookupTable.dbf")
-        matList = [row[0] for row in arcpy.da.SearchCursor(dbfFile, ("Material"))]
+        dbfFile = os.path.join(thisFolder, r"tooldata\ERG2016LookupTable.dbf")
+        expression = arcpy.AddFieldDelimiters(dbfFile, 'IDNum') + ' > 0 AND NOT ' + arcpy.AddFieldDelimiters(dbfFile, 'BLEVE') + ' = \'Yes\''
+        matList = [row[0] for row in arcpy.da.SearchCursor(dbfFile, ["Material"], where_clause=expression)]
         param1.filter.type = "ValueList"
         param1.filter.list = sorted(set(matList))
 
@@ -167,7 +168,7 @@ class ERGByChemical(object):
         """The source code of the tool."""
 
         # Get the paths to the ERG lookup file and the Template location
-        ergDbf = os.path.join(thisFolder, r"tooldata\ERG2012LookupTable.dbf")
+        ergDbf = os.path.join(thisFolder, r"tooldata\ERG2016LookupTable.dbf")
         templateLoc = os.path.join(thisFolder, r"tooldata\Templates.gdb")
 
         # Ensure the point of spill is in a projected coord system
@@ -178,7 +179,12 @@ class ERGByChemical(object):
         
         # Look up the ERG for the relevant distances, given the input parameters
         iid, pad, materials, guidenum = ERG.LookUpERG(parameters[1].valueAsText, "", parameters[4].valueAsText, parameters[3].valueAsText, ergDbf)
-        
+        if (iid == 0 or pad == 0):
+            arcpy.AddWarning("The Initial Isolation Distance and/or the Protective Action Distance is zero. " + \
+                    "Output features will not be created. The selected material may be from Table 3 " + \
+                    "of the Emergency Response Guidebook, which is currently not supported.")
+            return
+            
         # Generate the output FCs and output them
         ERG.MakeERGFeatures(spillPoint, parameters[2].valueAsText, iid, pad, materials, guidenum, parameters[4].valueAsText,
                             parameters[3].valueAsText, parameters[5].valueAsText, parameters[6].valueAsText, templateLoc)
@@ -215,8 +221,9 @@ class ERGByPlacard(object):
             direction="Input")
         
         # grab the list of materials from a dbf file
-        dbfFile = os.path.join(thisFolder, r"tooldata\ERG2012LookupTable.dbf")
-        placList = [row[0] for row in arcpy.da.SearchCursor(dbfFile, ["Placard"])]
+        dbfFile = os.path.join(thisFolder, r"tooldata\ERG2016LookupTable.dbf")
+        expression = arcpy.AddFieldDelimiters(dbfFile, 'IDNum') + ' > 0 AND NOT ' + arcpy.AddFieldDelimiters(dbfFile, 'BLEVE') + ' = \'Yes\''
+        placList = [row[0] for row in arcpy.da.SearchCursor(dbfFile, ["IDNum"], where_clause=expression)]
         param1.filter.type = "ValueList"
         param1.filter.list = sorted(set(placList))
 
@@ -335,7 +342,7 @@ class ERGByPlacard(object):
         """The source code of the tool."""
 
         # Get the paths to the ERG lookup file and the Template location
-        ergDbf = os.path.join(thisFolder, r"tooldata\ERG2012LookupTable.dbf")
+        ergDbf = os.path.join(thisFolder, r"tooldata\ERG2016LookupTable.dbf")
         templateLoc = os.path.join(thisFolder, r"tooldata\Templates.gdb")
 
         # Ensure the point of spill is in a projected coord system
@@ -346,6 +353,11 @@ class ERGByPlacard(object):
         
         # Look up the ERG for the relevant distances, given the input parameters
         iid, pad, materials, guidenum = ERG.LookUpERG("", parameters[1].valueAsText, parameters[4].valueAsText, parameters[3].valueAsText, ergDbf)
+        if (iid == 0 or pad == 0):
+            arcpy.AddWarning("The Initial Isolation Distance and/or the Protective Action Distance is zero. " + \
+                    "Output features will not be created. The selected material may be from Table 3 " + \
+                    "of the Emergency Response Guidebook, which is currently not supported.")
+            return
         
         # Generate the output FCs and output them
         ERG.MakeERGFeatures(spillPoint, parameters[2].valueAsText, iid, pad, materials, guidenum, parameters[4].valueAsText,
