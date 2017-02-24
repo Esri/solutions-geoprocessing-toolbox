@@ -31,6 +31,7 @@ Includes the following tests:
 ==================================================
 history:
 11/09/2015 - MF - original coding
+02/24/2017 - MF - update for new 2016 ERG chemical list
 ==================================================
 '''
 
@@ -105,7 +106,7 @@ class ERGByChemical(unittest.TestCase):
     def test_ERGByChemical_003(self):
         ''' test the tool '''
         if Configuration.DEBUG == True: print("         ERGByChemical.test_ERGByChemical_003")
-        inputMaterialType = "Sarin (when used as a weapon)"
+        inputMaterialType = "GB (Weaponized Sarin)"
         inputWindBearing = 250
         inputDayOrNight = "Night"
         inputLargeOrSmall = "Large"

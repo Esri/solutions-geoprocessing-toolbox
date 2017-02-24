@@ -58,8 +58,10 @@ class ERGTest(unittest.TestCase):
     scratchGDB = None
     scriptFolderPath = os.path.join(Configuration.repoPath, "capability",
                                     "toolboxes", "scripts", "ERG.py")
+    # dbfFolderPath = os.path.join(Configuration.repoPath, "capability",
+    #                              "toolboxes", "tooldata", "ERG2012LookupTable.dbf")
     dbfFolderPath = os.path.join(Configuration.repoPath, "capability",
-                                 "toolboxes", "tooldata", "ERG2012LookupTable.dbf")
+                                 "toolboxes", "tooldata", "ERG2016LookupTable.dbf")
     testDataFolderPath = os.path.join(Configuration.capabilityPath, "data")
 
     def setUp(self):
@@ -86,13 +88,13 @@ class ERGTest(unittest.TestCase):
     ergDict = {
         '001': [1017, 124, 'Chlorine', 'Large', 'Day', 500.0, 3000.0],
         '002': [1076, 125, 'Phosgene', 'Small', 'Day', 100.0, 600.0],
-        '003': [2810, 153, 'Sarin (when used as a weapon)', 'Large', 'Night', 400.0, 4900.0]
+        '003': [2810, 153, 'GB (Weaponized Sarin)', 'Large', 'Night', 400.0, 4900.0]
         }
 
     def test_LookUpERG001(self):
         '''
         test case one
-        ERG Table 1, p292: ID No. 1017 Chlorine
+        ERG: ID No. 1017 Chlorine
         '''
         if Configuration.DEBUG: print(".....ERGScript.test_LookUpERG001")
         inChemical = 'Chlorine'
@@ -109,7 +111,7 @@ class ERGTest(unittest.TestCase):
     def test_LookUpERG002(self):
         '''
         test case two
-        ERG Table 1, p293: ID No. 1076 Phosgene
+        ERG: ID No. 1076 Phosgene
         '''
         if Configuration.DEBUG: print(".....ERGScript.test_LookUpERG002")
         inChemical = 'Phosgene'
@@ -126,10 +128,10 @@ class ERGTest(unittest.TestCase):
     def test_LookUpERG003(self):
         '''
         test case three
-        ERG Table 1, p316: ID No. 2810 Sarin
+        ERG: ID No. 2810 Sarin
         '''
         if Configuration.DEBUG == True: print(".....ERGScript.test_LookUpERG003")
-        inChemical = 'Sarin (when used as a weapon)'
+        inChemical = 'GB (Weaponized Sarin)'
         inPlacardID = 2810
         inSpillSize = 'Large' #'Large' or 'Small'
         inTimeOfDay = 'Night' #'Day' or 'Night'
