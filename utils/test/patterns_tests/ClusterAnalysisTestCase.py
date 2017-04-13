@@ -74,7 +74,7 @@ class ClusterAnalysisTestCase(unittest.TestCase):
         arcpy.AddMessage(runToolMessage)
         Configuration.Logger.info(runToolMessage)
         try:
-            arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, "#", outputClusterFeatures)
+            arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, outputClusterFeatures)
         except:
             msg = arcpy.GetMessages(2)
             self.fail('Exception in ClusterAnalysis_iaTools for Pro toolbox \n' + msg)
@@ -90,7 +90,7 @@ class ClusterAnalysisTestCase(unittest.TestCase):
         arcpy.AddMessage(runToolMessage)
         Configuration.Logger.info(runToolMessage)
         try:
-            arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, "#", outputClusterFeatures)
+            arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, outputClusterFeatures)
         except:
             msg = arcpy.GetMessages(2)
             self.fail('Exception in ClusterAnalysis_iaTools for Desktop toolbox \n' + msg )
