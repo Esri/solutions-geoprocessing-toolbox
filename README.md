@@ -6,14 +6,14 @@ The ArcGIS Solutions Geoprocessing Toolbox is a collection of models, scripts, a
 ![Image of the toolbox](./img/solutions-geoprocessing-toolbox_screenshot_14APR2016_824x400.png)
 
 
-###Repository Owner: [Matt](https://github.com/mfunk)
+### Repository Owner: [Matt](https://github.com/mfunk)
 
 * Merge Pull Requests
 * Creates Releases and Tags
 * Manages Milestones
 * Manages and Assigns Issues
 
-###Secondary: [Chris](https://github.com/csmoore)
+### Secondary: [Chris](https://github.com/csmoore)
 
 * Backup when the Owner is away
 
