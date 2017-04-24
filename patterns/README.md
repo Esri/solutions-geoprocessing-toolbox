@@ -22,7 +22,6 @@ Supports the [Incident Analysis](http://solutions.arcgis.com/defense/templates/i
 * Hot Spots By Area
 * Incident Density
 * Incident Hot Spots
-* Incident Table To Point
 
 These tools are part of the [Incident Analysis Template](http://www.arcgis.com/home/item.html?id=fd6e2c3272c14826b9781e93580dacfe)
 
