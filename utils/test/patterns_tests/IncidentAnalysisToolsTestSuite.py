@@ -32,11 +32,11 @@ This test suite collects all of the Incident Analysis Tools toolbox test cases:
 * HotSpotsByAreaTestCase.py
 * IncidentDensityTestCase.py
 * IncidentHotSpotsTestCase.py
-* IncidentTableToPointTestCase.py
 
 ==================================================
 history:
 10/23/2015 - MF - intial coding started
+04/25/2017 - EL - removed IncidentTableToPointTestCase.py
 ==================================================
 '''
 
@@ -60,8 +60,6 @@ def getIncidentAnalysisTestSuite():
     hotSpots_proTests = ['test_hot_spots_by_area_pro']
     incidentHotSpots_desktopTests = ['test_incident_hot_spots_desktop']
     incidentHotSpots_proTests = ['test_incident_hot_spots_pro']
-    tabletoPoint_desktopTests = ['test_incident_table_to_point_desktop']
-    tabletoPoint_proTests = ['test_incident_table_to_point_pro']
     percentChange_desktopTests = ['test_percent_change_desktop']
     percentChange_proTests = ['test_percent_change_pro']
         
@@ -74,7 +72,6 @@ def getIncidentAnalysisTestSuite():
         addIncidentDensityTests(density_proTests)
         addHotSpotsByAreaTests(hotSpots_proTests)
         addIncidentHotSpotsTests(incidentHotSpots_proTests)
-        addIncidentTableToPointTests(tabletoPoint_proTests)
         addFindPercentChangeTests(percentChange_proTests)
     else:
         Configuration.Logger.info("Incident Analysis Tools Desktop tests")
@@ -83,7 +80,6 @@ def getIncidentAnalysisTestSuite():
         addIncidentDensityTests(density_desktopTests)
         addHotSpotsByAreaTests(hotSpots_desktopTests)
         addIncidentHotSpotsTests(incidentHotSpots_desktopTests)
-        addIncidentTableToPointTests(tabletoPoint_desktopTests)
         addFindPercentChangeTests(percentChange_desktopTests)
 
     return TestSuite
@@ -128,14 +124,6 @@ def addIncidentHotSpotsTests(inputTestList):
         print("adding test: " + str(test))
         Configuration.Logger.info(test)
         TestSuite.addTest(IncidentHotSpotsTestCase.IncidentHotSpotsTestCase(test))
-        
-def addIncidentTableToPointTests(inputTestList):
-    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addIncidentTableToPointTests")
-    from . import IncidentTableToPointTestCase
-    for test in inputTestList:
-        print("adding test: " + str(test))
-        Configuration.Logger.info(test)
-        TestSuite.addTest(IncidentTableToPointTestCase.IncidentTableToPointTestCase(test))
 
 def addFindPercentChangeTests(inputTestList):
     if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addFindPercentChangeTests")
