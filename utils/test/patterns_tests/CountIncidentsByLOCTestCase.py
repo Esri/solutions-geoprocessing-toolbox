@@ -35,8 +35,9 @@ import unittest
 import UnitTestUtilities
 import Configuration
 import DataDownload
+import arcpyAssert
 
-class CountIncidentsByLOCTestCase(unittest.TestCase):
+class CountIncidentsByLOCTestCase(unittest.TestCase, arcpyAssert.FeatureClassAssertMixin):
     ''' Test all tools and methods related to the Count Incidents by LOC tool
     in the Incident Analysis toolbox'''
     
@@ -51,6 +52,7 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
         if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
             Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
         Configuration.incidentInputGDB = os.path.join(Configuration.incidentDataPath, Configuration.incidentGDBName)
+        Configuration.incidentResultGDB = os.path.join(Configuration.incidentDataPath, Configuration.incidentResultGDBName)
         
         UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
      
@@ -58,6 +60,7 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
         self.inputPointsFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
         self.inputLinesFeatures = os.path.join(Configuration.incidentInputGDB, "Roads")
         self.inputAOIFeatures = os.path.join(Configuration.incidentInputGDB, "Districts")
+        self.resultCompareFeatures0001 = os.path.join(Configuration.incidentResultGDB, "resultsCountIncidentsByLOC_0001")
             
     def tearDown(self):
         if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.tearDown")
@@ -71,17 +74,12 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
         runToolMsg = "Running tool (Count Incidents By LOC - Pro)"
         arcpy.AddMessage(runToolMsg)
         Configuration.Logger.info(runToolMsg)
-        try:
-            arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures,
-                                              self.inputLinesFeatures,
-                                              self.inputAOIFeatures,
-                                              outputCountFeatures)
-        except:
-            msg = arcpy.GetMessages(2)
-            self.fail('Exception in CountIncidentsByLOC_iaTools in Pro toolbox \n' + msg)
-        result = arcpy.GetCount_management(outputCountFeatures)
-        featureCount = int(result.getOutput(0))
-        self.assertEqual(featureCount, int(2971))
+        arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures,
+                                          self.inputLinesFeatures,
+                                          self.inputAOIFeatures,
+                                          outputCountFeatures,
+                                          "50 Meters")
+        self.assertFeatureClassEqual(self.resultCompareFeatures0001, outputCountFeatures, "OBJECTID")
             
     
     def test_count_incidents_desktop(self):
@@ -91,14 +89,9 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
         runToolMsg = "Running tool (Count Incidents By LOC - Desktop)"
         arcpy.AddMessage(runToolMsg)
         Configuration.Logger.info(runToolMsg)
-        try:
-            arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures,
-                                              self.inputLinesFeatures,
-                                              self.inputAOIFeatures,
-                                              outputCountFeatures)
-        except:
-            msg = arcpy.GetMessages(2)
-            self.fail('Exception in CountIncidentsByLOC_iaTools in Desktop toolbox \n' + msg) 
-        result = arcpy.GetCount_management(outputCountFeatures)
-        featureCount = int(result.getOutput(0))
-        self.assertEqual(featureCount, int(2971))
+        arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures,
+                                          self.inputLinesFeatures,
+                                          self.inputAOIFeatures,
+                                          outputCountFeatures,
+                                          "50 Meters")
+        self.assertFeatureClassEqual(self.resultCompareFeatures0001,outputCountFeatures,"OBJECTID")
