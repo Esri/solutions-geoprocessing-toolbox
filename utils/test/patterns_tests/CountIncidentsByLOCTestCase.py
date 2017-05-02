@@ -25,6 +25,7 @@ company: Esri
 history:
 12/16/2015 - JH - initial creation
 09/20/2016 - MF - Update to two method test pattern
+05/02/2017 - MF - Update test for new AOI parameter in the tool
 ==================================================
 '''
 
@@ -56,6 +57,7 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
         # set up inputs    
         self.inputPointsFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
         self.inputLinesFeatures = os.path.join(Configuration.incidentInputGDB, "Roads")
+        self.inputAOIFeatures = os.path.join(Configuration.incidentInputGDB, "Districts")
             
     def tearDown(self):
         if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.tearDown")
@@ -70,7 +72,10 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
         arcpy.AddMessage(runToolMsg)
         Configuration.Logger.info(runToolMsg)
         try:
-            arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures, self.inputLinesFeatures, outputCountFeatures)
+            arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures,
+                                              self.inputLinesFeatures,
+                                              self.inputAOIFeatures,
+                                              outputCountFeatures)
         except:
             msg = arcpy.GetMessages(2)
             self.fail('Exception in CountIncidentsByLOC_iaTools in Pro toolbox \n' + msg)
@@ -87,7 +92,10 @@ class CountIncidentsByLOCTestCase(unittest.TestCase):
         arcpy.AddMessage(runToolMsg)
         Configuration.Logger.info(runToolMsg)
         try:
-            arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures, self.inputLinesFeatures, outputCountFeatures)
+            arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures,
+                                              self.inputLinesFeatures,
+                                              self.inputAOIFeatures,
+                                              outputCountFeatures)
         except:
             msg = arcpy.GetMessages(2)
             self.fail('Exception in CountIncidentsByLOC_iaTools in Desktop toolbox \n' + msg) 
