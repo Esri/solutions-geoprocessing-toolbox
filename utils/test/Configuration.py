@@ -60,12 +60,14 @@ rangeCardURL = r"http://www.arcgis.com/sharing/content/items/f5414250daf14dd389c
 patternsPaths = os.path.normpath(os.path.join(currentPath, r"patterns_tests"))
 incidentDataPath = None
 incidentInputGDB = None
+incidentResultGDB = None
 incidentScratchGDB = None
 patterns_ToolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../patterns/toolboxes/"))
 patterns_ProToolboxPath = os.path.normpath(os.path.join(patterns_ToolboxesPath, "Incident Analysis Tools.tbx"))
 patterns_DesktopToolboxPath = os.path.normpath(os.path.join(patterns_ToolboxesPath, "Incident Analysis Tools_10.4.tbx"))
 incidentURL = "http://www.arcgis.com/sharing/content/items/528faf6b23154b04a8268b33196fa9ad/data"
 incidentGDBName = "test_incident_analysis_tools.gdb"
+incidentResultGDBName = "test_incident_analysis_results.gdb"
 
 ''' Suitability Paths '''
 suitabilityPaths = os.path.normpath(os.path.join(currentPath, r"suitability_tests"))
