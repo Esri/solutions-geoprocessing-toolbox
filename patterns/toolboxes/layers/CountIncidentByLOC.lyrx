@@ -1,6 +1,7 @@
 {
   "type" : "CIMLayerDocument",
-  "version" : "1.0.0",
+  "version" : "1.4.0",
+  "build" : 7198,
   "layers" : [
     "CIMPATH=gp_arcpy_map/count_incidents_by_loc.xml"
   ],
@@ -12,17 +13,20 @@
       "sourceModifiedTime" : {
         "type" : "TimeInstant"
       },
+      "metadataURI" : "CIMPATH=Metadata/c07d0cfae5363482ad9b6e1d52b11c92.xml",
       "description" : "Jalalabad Road Hotspots - Count by LOC",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "mapElevationID" : "{A56F15D5-996B-4A94-A31B-1D83EF964646}"
+        "mapElevationID" : "53006ba2e94a468eb67bdaf44815bf87"
       },
+      "expanded" : true,
       "layerType" : "Operational",
       "showLegends" : true,
       "visibility" : false,
       "displayCacheType" : "Permanent",
       "maxDisplayCacheAge" : 5,
       "showPopups" : true,
+      "serviceLayerID" : -1,
       "autoGenerateFeatureTemplates" : true,
       "featureTable" : {
         "type" : "CIMFeatureTable",
@@ -42,7 +46,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=..\\Results.gdb",
+          "workspaceConnectionString" : "DATABASE=D:\\GitHub\\solutions-geoprocessing-toolbox\\patterns\\toolboxes\\Results.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "CountIncidentsbyLOC",
           "datasetType" : "esriDTFeatureClass"
@@ -66,7 +70,6 @@
             {
               "type" : "CIMSolidStroke",
               "enable" : true,
-              "colorLocked" : false,
               "capStyle" : "Round",
               "joinStyle" : "Round",
               "lineStyle3D" : "Strip",
@@ -86,8 +89,8 @@
         },
         "symbolName" : "Symbol_139"
       },
-      "exclusionSet" : {
-      },
+      "featureCacheType" : "None",
+      "enableDisplayFilters" : true,
       "labelClasses" : [
         {
           "type" : "CIMLabelClass",
@@ -207,6 +210,45 @@
           },
           "name" : "Default",
           "priority" : 10,
+          "standardLabelPlacementProperties" : {
+            "type" : "CIMStandardLabelPlacementProperties",
+            "featureType" : "Line",
+            "featureWeight" : "Low",
+            "labelWeight" : "High",
+            "numLabelsOption" : "OneLabelPerName",
+            "lineLabelPosition" : {
+              "type" : "CIMStandardLineLabelPosition",
+              "above" : true,
+              "inLine" : true,
+              "parallel" : true
+            },
+            "lineLabelPriorities" : {
+              "type" : "CIMStandardLineLabelPriorities",
+              "aboveStart" : 3,
+              "aboveAlong" : 3,
+              "aboveEnd" : 3,
+              "centerStart" : 3,
+              "centerAlong" : 3,
+              "centerEnd" : 3,
+              "belowStart" : 3,
+              "belowAlong" : 3,
+              "belowEnd" : 3
+            },
+            "pointPlacementMethod" : "AroundPoint",
+            "pointPlacementPriorities" : {
+              "type" : "CIMStandardPointPlacementPriorities",
+              "aboveLeft" : 2,
+              "aboveCenter" : 2,
+              "aboveRight" : 1,
+              "centerLeft" : 3,
+              "centerRight" : 2,
+              "belowLeft" : 3,
+              "belowCenter" : 3,
+              "belowRight" : 2
+            },
+            "rotationType" : "Arithmetic",
+            "polygonPlacementMethod" : "AlwaysHorizontal"
+          },
           "textSymbol" : {
             "type" : "CIMSymbolReference",
             "symbol" : {
@@ -243,20 +285,16 @@
                 "type" : "CIMPolygonSymbol",
                 "symbolLayers" : [
                   {
-                    "type" : "CIMFill",
+                    "type" : "CIMSolidFill",
                     "enable" : true,
-                    "colorLocked" : false,
-                    "pattern" : {
-                      "type" : "CIMSolidPattern",
-                      "color" : {
-                        "type" : "CIMRGBColor",
-                        "values" : [
-                          0,
-                          0,
-                          0,
-                          100
-                        ]
-                      }
+                    "color" : {
+                      "type" : "CIMRGBColor",
+                      "values" : [
+                        0,
+                        0,
+                        0,
+                        100
+                      ]
                     }
                   }
                 ]
@@ -271,7 +309,8 @@
             "symbolName" : "Symbol_138"
           },
           "useCodedValue" : true,
-          "visibility" : true
+          "visibility" : true,
+          "iD" : -1
         }
       ],
       "renderer" : {
@@ -290,7 +329,6 @@
                   {
                     "type" : "CIMSolidStroke",
                     "enable" : true,
-                    "colorLocked" : false,
                     "capStyle" : "Round",
                     "joinStyle" : "Round",
                     "lineStyle3D" : "Strip",
@@ -324,7 +362,6 @@
                   {
                     "type" : "CIMSolidStroke",
                     "enable" : true,
-                    "colorLocked" : false,
                     "capStyle" : "Round",
                     "joinStyle" : "Round",
                     "lineStyle3D" : "Strip",
@@ -358,7 +395,6 @@
                   {
                     "type" : "CIMSolidStroke",
                     "enable" : true,
-                    "colorLocked" : false,
                     "capStyle" : "Round",
                     "joinStyle" : "Round",
                     "lineStyle3D" : "Strip",
@@ -392,7 +428,6 @@
                   {
                     "type" : "CIMSolidStroke",
                     "enable" : true,
-                    "colorLocked" : false,
                     "capStyle" : "Round",
                     "joinStyle" : "Round",
                     "lineStyle3D" : "Strip",
@@ -453,9 +488,9 @@
           "zeroPad" : true
         },
         "showInAscendingOrder" : true,
-        "heading" : "FREQUENCY",
+        "heading" : "Incident Frequency",
         "sampleSize" : 10000,
-        "exclusionClause" : "FREQUENCY \u003c= 4",
+        "exclusionClause" : "FREQUENCY <= 4",
         "useExclusionSymbol" : false,
         "normalizationTotal" : 1,
         "normalizationType" : "Nothing"
@@ -464,13 +499,21 @@
       "snappable" : true
     }
   ],
+  "binaryReferences" : [
+    {
+      "type" : "CIMBinaryReference",
+      "uRI" : "CIMPATH=Metadata/c07d0cfae5363482ad9b6e1d52b11c92.xml",
+      "data" : "<?xml version=\"1.0\"?>\r\n<metadata xml:lang=\"en\"><Esri><CreaDate>20170508</CreaDate><CreaTime>15460200</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce></Esri><dataIdInfo><idCitation><resTitle>Count Incidents by LOC</resTitle></idCitation><idAbs>Jalalabad Road Hotspots - Count by LOC</idAbs><idPurp></idPurp><idCredit></idCredit><resConst><Consts><useLimit></useLimit></Consts></resConst></dataIdInfo></metadata>\r\n"
+    }
+  ],
   "elevationSurfaces" : [
     {
       "type" : "CIMMapElevationSurface",
       "elevationMode" : "BaseGlobeSurface",
       "name" : "Ground",
       "verticalExaggeration" : 1,
-      "mapElevationID" : "{A56F15D5-996B-4A94-A31B-1D83EF964646}"
+      "mapElevationID" : "53006ba2e94a468eb67bdaf44815bf87",
+      "surfaceTINShadingMode" : "Smooth"
     }
   ]
 }
