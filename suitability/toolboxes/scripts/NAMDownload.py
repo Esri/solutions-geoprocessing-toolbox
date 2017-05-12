@@ -29,6 +29,8 @@ History:
 9/21/2015 - ab - original coding
 6/10/2016 - mf - Updates for dimension and formatting
 9/12/2016 - mf - fix for Python3 not liking leading zeros
+12/6/2016 - ab - edited to make relevant to MAoWv2.1 template - added extra output featurclasses
+01/27/2017 - bb - move tools to correspond to GitHub repo folder structure
 '''
 
 #Import modules
@@ -45,34 +47,44 @@ from datetime import timedelta
 
 #Gets the current directory where the script is sitting so that everything else can work off relative paths.
 currentFolder = os.path.dirname(__file__)
+print currentFolder
 topFolder = os.path.dirname(currentFolder)
 
-#Names of folders to be added to topFolder generated above
-gdb = "Geodatabase"
-NetCDFData = "NetCDFdata"
-tls = "Tools"
 
-env.workspace = os.path.join(topFolder, gdb, r"MAOWdata.gdb")
+#Names of folders to be added to topFolder generated above
+#gdb = "Geodatabase"
+NetCDFData = "NetCDFdata"
+#tls = "Tools"
+tldata = "tooldata"
+
+# add mst to currentFolder, not topFolder
+mst = "MultidimensionSupplementalTools"
+
+env.workspace = os.path.join(topFolder, tldata, r"MAOWdata.gdb")
 env.scratchWorkspace = env.workspace
 
 #Declaration of variables used later
 opVariables = "rh2m;tcdcclm;tmpsfc;hgtclb;vissfc;ugrd10m;vgrd10m;ugrdmwl;vgrdmwl;snodsfc;gustsfc;apcpsfc"
 windVariables = "ugrd10m;vgrd10m"
-geoExtent = "-126 32 -114 43"
-timeDimension = "time '2016-01-01 00:00:00' '2016-12-31 00:00:00'"
+#geoExtent = "-126 32 -114 43"
+#geoExtent = "-89 36 -74 46"
+geoExtent = "-80 36 -74 40"
+timeDimension = "time '2017-01-01 00:00:00' '2017-12-31 00:00:00'"
 
 # Processing flags
 REMOVE_EXISTING_RASTERS = True
 DEBUG = True # Extra messaging while debugging
 
-def makeOutputFilePath(topFolder, NetCDFData, stringDateNow, paramFN):
+def makeOutputFilePath(topFolder, tldata, NetCDFData, stringDateNow, paramFN):
     '''Set output file paths for op weather and wind'''
+    
     opDataFileName = "nam%s%s.nc" % (stringDateNow, paramFN)
-    outputOpDataFile = os.path.join(topFolder, NetCDFData, opDataFileName)
+    outputOpDataFile = os.path.join(topFolder, tldata, NetCDFData, opDataFileName)
     
     windDataFileName = "nam%s%sWind.nc" % (stringDateNow, paramFN)
-    outputWindDataFile = os.path.join(topFolder, NetCDFData, windDataFileName)
+    outputWindDataFile = os.path.join(topFolder, tldata, NetCDFData, windDataFileName)
     return [outputOpDataFile, outputWindDataFile]
+    
 
 def makeSourceURLPath(stringDateNow, paramDL):
     '''make the URL to the source forecast data'''
@@ -84,12 +96,12 @@ def download(stringDateNow, stringTimeNow, paramFN, paramDL):
     if DEBUG: print ("datetime to use: %s, %s" % (stringDateNow, stringTimeNow))
     
     #Import required Multidimensional tools
-    tbxMST = os.path.join(topFolder, tls, r"MultidimensionSupplementalTools\Multidimension Supplemental Tools.pyt")
+    tbxMST = os.path.join(currentFolder, mst, r"Multidimension Supplemental Tools.pyt")
     if DEBUG: print ("Importing %s" % tbxMST)
     arcpy.ImportToolbox(tbxMST)   
 
     # Get target NetCDF data file names
-    outputOpDataFile, outputWindDataFile = makeOutputFilePath(topFolder, NetCDFData, stringDateNow, paramFN)
+    outputOpDataFile, outputWindDataFile = makeOutputFilePath(topFolder, tldata, NetCDFData, stringDateNow, paramFN)
     
     if os.path.exists(outputOpDataFile):
         print("removing existing %s" % outputOpDataFile)
@@ -114,29 +126,52 @@ def download(stringDateNow, stringTimeNow, paramFN, paramDL):
     print ("OPeNDAP Tool run for Wind variables...")
     arcpy.OPeNDAPtoNetCDF_mds(in_url, windVariables, outputWindDataFile, geoExtent, timeDimension, "BY_VALUE")
 
-    targetOpDataMosaic = os.path.join(topFolder, gdb, r"OperationalWeather.gdb\OperationalData") 
-    targetWindDataMosaic = os.path.join(topFolder, gdb, r"OperationalWeather.gdb\OperationalWind")
+    targetOpDataMosaic_Local = os.path.join(topFolder, tldata, r"OperationalWeather.gdb\OperationalData_Local") 
+    targetWindDataMosaic_Local = os.path.join(topFolder, tldata, r"OperationalWeather.gdb\OperationalWind_Local")
+    targetOpDataMosaic_Online = os.path.join(topFolder, tldata, r"OperationalWeather.gdb\OperationalData_Online") 
+    targetWindDataMosaic_Online = os.path.join(topFolder, tldata, r"OperationalWeather.gdb\OperationalWind_Online")
 
     # Remove Rasters From Mosaic Dataset
     if REMOVE_EXISTING_RASTERS:
-        print ("Removing existing rasters from Operational Weather...")
-        arcpy.RemoveRastersFromMosaicDataset_management(targetOpDataMosaic, "OBJECTID >=0", "NO_BOUNDARY", "NO_MARK_OVERVIEW_ITEMS",
+
+        print ("Removing existing rasters from Operational Weather_Local...")
+        arcpy.RemoveRastersFromMosaicDataset_management(targetOpDataMosaic_Local, "OBJECTID >=0", "NO_BOUNDARY", "NO_MARK_OVERVIEW_ITEMS",
                                                         "NO_DELETE_OVERVIEW_IMAGES", "NO_DELETE_ITEM_CACHE", "REMOVE_MOSAICDATASET_ITEMS",
                                                         "NO_CELL_SIZES")
-        print ("Removing existing rasters from Wind...")
-        arcpy.RemoveRastersFromMosaicDataset_management(targetWindDataMosaic, "OBJECTID >= 0", "UPDATE_BOUNDARY", "MARK_OVERVIEW_ITEMS",
+        print ("Removing existing rasters from Wind_Local...")
+        arcpy.RemoveRastersFromMosaicDataset_management(targetWindDataMosaic_Local, "OBJECTID >= 0", "UPDATE_BOUNDARY", "MARK_OVERVIEW_ITEMS",
+                                                        "DELETE_OVERVIEW_IMAGES", "DELETE_ITEM_CACHE", "REMOVE_MOSAICDATASET_ITEMS",
+                                                        "UPDATE_CELL_SIZES")
+        print ("Removing existing rasters from Operational Weather_Online...")
+        arcpy.RemoveRastersFromMosaicDataset_management(targetOpDataMosaic_Online, "OBJECTID >=0", "NO_BOUNDARY", "NO_MARK_OVERVIEW_ITEMS",
+                                                        "NO_DELETE_OVERVIEW_IMAGES", "NO_DELETE_ITEM_CACHE", "REMOVE_MOSAICDATASET_ITEMS",
+                                                        "NO_CELL_SIZES")
+        print ("Removing existing rasters from Wind_Online...")
+        arcpy.RemoveRastersFromMosaicDataset_management(targetWindDataMosaic_Online, "OBJECTID >= 0", "UPDATE_BOUNDARY", "MARK_OVERVIEW_ITEMS",
                                                         "DELETE_OVERVIEW_IMAGES", "DELETE_ITEM_CACHE", "REMOVE_MOSAICDATASET_ITEMS",
                                                         "UPDATE_CELL_SIZES")
 
     # Add Rasters To Mosaic Dataset
-    print ("Adding new rasters from Operational Weather...")
-    arcpy.AddRastersToMosaicDataset_management(targetOpDataMosaic, "NetCDF", outputOpDataFile, "UPDATE_CELL_SIZES", "UPDATE_BOUNDARY",
+
+    Raster_Type = topFolder + os.sep + "Scripts" + os.sep + "NETCDF_type.art.xml"
+    
+    print ("Adding new rasters to Operational Weather_Local...")
+    arcpy.AddRastersToMosaicDataset_management(targetOpDataMosaic_Local, "NetCDF", outputOpDataFile, "UPDATE_CELL_SIZES", "UPDATE_BOUNDARY",
                                                "NO_OVERVIEWS", "", "0", "1500", "", "*.nc", "SUBFOLDERS", "ALLOW_DUPLICATES",
                                                "NO_PYRAMIDS", "NO_STATISTICS", "NO_THUMBNAILS", "", "NO_FORCE_SPATIAL_REFERENCE")
-    print ("Adding new rasters from Wind...")
-    arcpy.AddRastersToMosaicDataset_management(targetWindDataMosaic, "NetCDF", outputWindDataFile, "UPDATE_CELL_SIZES", "UPDATE_BOUNDARY",
+    print ("Adding new rasters to Wind_Local...")
+    arcpy.AddRastersToMosaicDataset_management(targetWindDataMosaic_Local, Raster_Type, outputOpDataFile, "UPDATE_CELL_SIZES", "UPDATE_BOUNDARY",
                                                "NO_OVERVIEWS", "", "0", "1500", "", "*.nc", "SUBFOLDERS", "ALLOW_DUPLICATES",
                                                "NO_PYRAMIDS", "NO_STATISTICS", "NO_THUMBNAILS", "", "NO_FORCE_SPATIAL_REFERENCE")
+    print ("Adding new rasters to Operational Weather_Online...")
+    arcpy.AddRastersToMosaicDataset_management(targetOpDataMosaic_Online, "NetCDF", outputOpDataFile, "UPDATE_CELL_SIZES", "UPDATE_BOUNDARY",
+                                               "NO_OVERVIEWS", "", "0", "1500", "", "*.nc", "SUBFOLDERS", "ALLOW_DUPLICATES",
+                                               "NO_PYRAMIDS", "NO_STATISTICS", "NO_THUMBNAILS", "", "NO_FORCE_SPATIAL_REFERENCE")
+    print ("Adding new rasters to Wind_Online...")
+    arcpy.AddRastersToMosaicDataset_management(targetWindDataMosaic_Online, Raster_Type, outputOpDataFile, "UPDATE_CELL_SIZES", "UPDATE_BOUNDARY",
+                                               "NO_OVERVIEWS", "", "0", "1500", "", "*.nc", "SUBFOLDERS", "ALLOW_DUPLICATES",
+                                               "NO_PYRAMIDS", "NO_STATISTICS", "NO_THUMBNAILS", "", "NO_FORCE_SPATIAL_REFERENCE")
+    
     return
 
 def main():
