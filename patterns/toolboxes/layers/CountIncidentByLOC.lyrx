@@ -3,26 +3,18 @@
   "version" : "1.4.0",
   "build" : 7198,
   "layers" : [
-    "CIMPATH=gp_arcpy_map/count_incidents_by_loc.xml"
+    "CIMPATH=roadwic_fix5.xml"
   ],
   "layerDefinitions" : [
     {
       "type" : "CIMFeatureLayer",
-      "name" : "Count Incidents by LOC",
-      "uRI" : "CIMPATH=gp_arcpy_map/count_incidents_by_loc.xml",
-      "sourceModifiedTime" : {
-        "type" : "TimeInstant"
-      },
-      "metadataURI" : "CIMPATH=Metadata/c07d0cfae5363482ad9b6e1d52b11c92.xml",
-      "description" : "Jalalabad Road Hotspots - Count by LOC",
-      "layerElevation" : {
-        "type" : "CIMLayerElevationSurface",
-        "mapElevationID" : "53006ba2e94a468eb67bdaf44815bf87"
-      },
-      "expanded" : true,
+      "name" : "RoadWIC_fix5",
+      "uRI" : "CIMPATH=roadwic_fix5.xml",
+      "attribution" : "Esri",
+      "description" : "Incident Fequency",
       "layerType" : "Operational",
       "showLegends" : true,
-      "visibility" : false,
+      "visibility" : true,
       "displayCacheType" : "Permanent",
       "maxDisplayCacheAge" : 5,
       "showPopups" : true,
@@ -30,8 +22,138 @@
       "autoGenerateFeatureTemplates" : true,
       "featureTable" : {
         "type" : "CIMFeatureTable",
-        "displayField" : "FID_roads",
+        "displayField" : "fcsubtype",
         "editable" : true,
+        "fieldDescriptions" : [
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "OBJECTID",
+            "fieldName" : "OBJECTID",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 12,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 0
+            },
+            "readOnly" : true,
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Shape",
+            "fieldName" : "shape",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Feature Code Subtype",
+            "fieldName" : "fcsubtype",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 12,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 0
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Feature Code",
+            "fieldName" : "f_code",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Length",
+            "fieldName" : "lzn",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 12,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Route Designation",
+            "fieldName" : "rtn",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Route Designation (route designation type)",
+            "fieldName" : "rtn_roi",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 12,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 0
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Width",
+            "fieldName" : "wid",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 12,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Geographic Name Information : Full Name",
+            "fieldName" : "zi005_fna",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "shape_Length",
+            "fieldName" : "shape_Length",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 12,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "readOnly" : true,
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "FREQUENCY",
+            "fieldName" : "FREQUENCY",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 12,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 0
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          }
+        ],
         "timeFields" : {
           "type" : "CIMTimeTableDefinition"
         },
@@ -46,9 +168,9 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=D:\\GitHub\\solutions-geoprocessing-toolbox\\patterns\\toolboxes\\Results.gdb",
+          "workspaceConnectionString" : "DATABASE=C:\\Users\\matt2542\\Documents\\ArcGIS\\scratch.gdb",
           "workspaceFactory" : "FileGDB",
-          "dataset" : "CountIncidentsbyLOC",
+          "dataset" : "RoadWIC_fix5",
           "datasetType" : "esriDTFeatureClass"
         },
         "studyAreaSpatialRel" : "esriSpatialRelUndefined",
@@ -87,25 +209,25 @@
             }
           ]
         },
-        "symbolName" : "Symbol_139"
+        "symbolName" : "Symbol_18"
       },
       "featureCacheType" : "None",
       "enableDisplayFilters" : true,
       "labelClasses" : [
         {
           "type" : "CIMLabelClass",
-          "expression" : "[FID_roads]",
-          "expressionEngine" : "VBScript",
+          "expression" : "[f_code]",
+          "expressionEngine" : "Python",
           "featuresToLabel" : "AllVisibleFeatures",
           "maplexLabelPlacementProperties" : {
             "type" : "CIMMaplexLabelPlacementProperties",
-            "featureType" : "Point",
+            "featureType" : "Line",
             "avoidPolygonHoles" : true,
             "canOverrunFeature" : true,
             "canPlaceLabelOutsidePolygon" : true,
             "canRemoveOverlappingLabel" : true,
             "canStackLabel" : true,
-            "connectionType" : "MinimizeLabels",
+            "connectionType" : "Unambiguous",
             "constrainOffset" : "AboveLine",
             "contourAlignmentType" : "Page",
             "contourLadderType" : "Straight",
@@ -209,46 +331,7 @@
             "truncationPreferredCharacters" : "aeiou"
           },
           "name" : "Default",
-          "priority" : 10,
-          "standardLabelPlacementProperties" : {
-            "type" : "CIMStandardLabelPlacementProperties",
-            "featureType" : "Line",
-            "featureWeight" : "Low",
-            "labelWeight" : "High",
-            "numLabelsOption" : "OneLabelPerName",
-            "lineLabelPosition" : {
-              "type" : "CIMStandardLineLabelPosition",
-              "above" : true,
-              "inLine" : true,
-              "parallel" : true
-            },
-            "lineLabelPriorities" : {
-              "type" : "CIMStandardLineLabelPriorities",
-              "aboveStart" : 3,
-              "aboveAlong" : 3,
-              "aboveEnd" : 3,
-              "centerStart" : 3,
-              "centerAlong" : 3,
-              "centerEnd" : 3,
-              "belowStart" : 3,
-              "belowAlong" : 3,
-              "belowEnd" : 3
-            },
-            "pointPlacementMethod" : "AroundPoint",
-            "pointPlacementPriorities" : {
-              "type" : "CIMStandardPointPlacementPriorities",
-              "aboveLeft" : 2,
-              "aboveCenter" : 2,
-              "aboveRight" : 1,
-              "centerLeft" : 3,
-              "centerRight" : 2,
-              "belowLeft" : 3,
-              "belowCenter" : 3,
-              "belowRight" : 2
-            },
-            "rotationType" : "Arithmetic",
-            "polygonPlacementMethod" : "AlwaysHorizontal"
-          },
+          "priority" : 19,
           "textSymbol" : {
             "type" : "CIMSymbolReference",
             "symbol" : {
@@ -265,12 +348,12 @@
               "fontStyleName" : "Regular",
               "fontType" : "Unspecified",
               "haloSize" : 1,
-              "height" : 8,
+              "height" : 12,
               "hinting" : "Default",
-              "horizontalAlignment" : "Center",
+              "horizontalAlignment" : "Left",
               "kerning" : true,
               "letterWidth" : 100,
-              "ligatures" : false,
+              "ligatures" : true,
               "lineGapType" : "ExtraLeading",
               "shadowColor" : {
                 "type" : "CIMRGBColor",
@@ -291,8 +374,8 @@
                       "type" : "CIMRGBColor",
                       "values" : [
                         0,
-                        0,
-                        0,
+                        112,
+                        255,
                         100
                       ]
                     }
@@ -301,12 +384,12 @@
               },
               "textCase" : "Normal",
               "textDirection" : "LTR",
-              "verticalAlignment" : "Bottom",
+              "verticalAlignment" : "Baseline",
               "verticalGlyphOrientation" : "Right",
               "wordSpacing" : 100,
               "billboardMode3D" : "FaceNearPlane"
             },
-            "symbolName" : "Symbol_138"
+            "symbolName" : "Symbol_17"
           },
           "useCodedValue" : true,
           "visibility" : true,
@@ -346,9 +429,9 @@
                   }
                 ]
               },
-              "symbolName" : "Symbol_134"
+              "symbolName" : "Symbol_13"
             },
-            "upperBound" : 10.011133839331503
+            "upperBound" : 10
           },
           {
             "type" : "CIMClassBreak",
@@ -379,13 +462,13 @@
                   }
                 ]
               },
-              "symbolName" : "Symbol_135"
+              "symbolName" : "Symbol_14"
             },
-            "upperBound" : 20.992267478383116
+            "upperBound" : 21
           },
           {
             "type" : "CIMClassBreak",
-            "label" : "22 - 31",
+            "label" : "22 - 46",
             "patch" : "Default",
             "symbol" : {
               "type" : "CIMSymbolReference",
@@ -412,13 +495,13 @@
                   }
                 ]
               },
-              "symbolName" : "Symbol_136"
+              "symbolName" : "Symbol_15"
             },
-            "upperBound" : 31
+            "upperBound" : 46
           },
           {
             "type" : "CIMClassBreak",
-            "label" : "32 - 76",
+            "label" : "47 - 85",
             "patch" : "Default",
             "symbol" : {
               "type" : "CIMSymbolReference",
@@ -445,13 +528,13 @@
                   }
                 ]
               },
-              "symbolName" : "Symbol_137"
+              "symbolName" : "Symbol_16"
             },
-            "upperBound" : 76
+            "upperBound" : 85
           }
         ],
         "classBreakType" : "GraduatedColor",
-        "classificationMethod" : "Manual",
+        "classificationMethod" : "NaturalBreaks",
         "colorRamp" : {
           "type" : "CIMLinearContinuousColorRamp",
           "colorSpace" : {
@@ -478,7 +561,7 @@
           }
         },
         "field" : "FREQUENCY",
-        "minimumBreak" : 1,
+        "minimumBreak" : 5,
         "numberFormat" : {
           "type" : "CIMNumericFormat",
           "alignmentOption" : "esriAlignLeft",
@@ -490,30 +573,12 @@
         "showInAscendingOrder" : true,
         "heading" : "Incident Frequency",
         "sampleSize" : 10000,
-        "exclusionClause" : "FREQUENCY <= 4",
         "useExclusionSymbol" : false,
         "normalizationTotal" : 1,
         "normalizationType" : "Nothing"
       },
       "scaleSymbols" : true,
       "snappable" : true
-    }
-  ],
-  "binaryReferences" : [
-    {
-      "type" : "CIMBinaryReference",
-      "uRI" : "CIMPATH=Metadata/c07d0cfae5363482ad9b6e1d52b11c92.xml",
-      "data" : "<?xml version=\"1.0\"?>\r\n<metadata xml:lang=\"en\"><Esri><CreaDate>20170508</CreaDate><CreaTime>15460200</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce></Esri><dataIdInfo><idCitation><resTitle>Count Incidents by LOC</resTitle></idCitation><idAbs>Jalalabad Road Hotspots - Count by LOC</idAbs><idPurp></idPurp><idCredit></idCredit><resConst><Consts><useLimit></useLimit></Consts></resConst></dataIdInfo></metadata>\r\n"
-    }
-  ],
-  "elevationSurfaces" : [
-    {
-      "type" : "CIMMapElevationSurface",
-      "elevationMode" : "BaseGlobeSurface",
-      "name" : "Ground",
-      "verticalExaggeration" : 1,
-      "mapElevationID" : "53006ba2e94a468eb67bdaf44815bf87",
-      "surfaceTINShadingMode" : "Smooth"
     }
   ]
 }
