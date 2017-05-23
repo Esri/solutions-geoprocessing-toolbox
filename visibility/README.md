@@ -15,12 +15,14 @@ Tools to determine what you can or cannot see from a location.
 ## Sun Position Analysis Tools
 
 Analyze sun position and hillshade based on a date and time.
+Supports the [Sun Position Analysis](http://solutions.arcgis.com/defense/templates/sun-position-analysis/) template.
 
 * Sun Position and Hillshade
 
 ## Visibility and Range Tools
 
 Tools to help basic visibility and distance analysis from locations.
+Supports the [Visibility and Range](http://solutions.arcgis.com/defense/templates/visibility-and-range/) template.
 
 * Visibility Services
   * Fast Visibility By Circle
@@ -48,6 +50,7 @@ These tools are part of the [Visibility and Range Template](http://www.arcgis.co
 ## Visibility Data Prep Tools
 
 Tools use to update position data for Visibility and Range Template
+Supports the [Visibility and Range](http://solutions.arcgis.com/defense/templates/visibility-and-range/) template.
 
 * Update Defensive Position Domain
 

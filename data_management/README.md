@@ -32,7 +32,8 @@ MDCS is maintained as a separate repository from Solutions Geoprocessing Toolbox
 
 ## Adjust Sample Data Dates Tools
 
-This toolbox contains a tool to adjust the date fields of the sample data included with the Inciedent Analysis toolbox.
+This toolbox contains a tool to adjust the date fields of the sample data included with the Incident Analysis toolbox.
+Supports the [Incident Analysis](http://solutions.arcgis.com/defense/templates/incident-analysis/) template.
 
 * Change Sample Data Dates to Recent Dates
 
@@ -40,15 +41,21 @@ These tools are a part of the [Incident Analysis Template](http://www.arcgis.com
 
 ## CADRG ECRG Tools
 
+> IMPORTANT: This toolbox is moving to Mature Support and will be removed in the future, but will be available from earlier [releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases).
+
 This toolbox will help to automate the creation of CADRG/ECRG Mosaic Datasets. 
 
 * CADRG/ECRG Mosaic Datasets
 
 ## CIB Tools
 
+> IMPORTANT: This toolbox is moving to Mature Support and will be removed in the future, but will be available from earlier [releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases).
+
 * Create CIB Mosaic
 
 ## Elevation Tools
+
+> IMPORTANT: This toolbox is moving to Mature Support and will be removed in the future, but will be available from earlier [releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases).
 
 * Create Derived Elevation Mosaic
 * Create Source Elevation Mosaic
@@ -56,11 +63,14 @@ This toolbox will help to automate the creation of CADRG/ECRG Mosaic Datasets.
 ## Geonames Tools
 
 Tools for building geonames locator.
+Supports the [Geonames Locator](http://solutions.arcgis.com/defense/templates/geonames-locator/) template.
 
 * Create Geonames Gazetter Locator
 * Load Geonames File
 
 ## Import and Conversion Tools (formerly Position Analysis Tools)
+
+> IMPORTANT: This toolbox is moving to Mature Support and will be removed in the future, but will be available from earlier [releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases).
 
 Tools for converting tabular information to different geometries, and generating coordinate location datasets.
 
@@ -86,6 +96,8 @@ This toolbox contains tools that  create surface or terrain mosaics from LiDAR d
 
 ## Network Data Preparation Tools
 
+> IMPORTANT: This toolbox is moving to Mature Support and will be removed in the future, but will be available from earlier [releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases).
+
 These tools are used to prepare road data for use in a road network dataset.
 
 * Add Orientation Angle To Lines
@@ -94,6 +106,8 @@ These tools are used to prepare road data for use in a road network dataset.
 * Split Lines At Intersections
 
 ## Patrol Data Capture Tools
+
+> IMPORTANT: This toolbox is moving to Mature Support and will be removed in the future, but will be available from earlier [releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases).
 
 Includes tools to import data that has been gathered on or after a patrol. This includes GPS data, saved in .gpx files, and Patrol Report data, saved in .xml files (as saved by an Infopath form)
 
@@ -110,6 +124,8 @@ Includes tools to import data that has been gathered on or after a patrol. This 
 These tools are a part of the [Patrol Data Capture](http://www.arcgis.com/home/item.html?id=6238c4cdb3ca4a7ea54287241f53349f) template.
 
 ## Publishable Task Tools
+
+> IMPORTANT: This toolbox is moving to Mature Support and will be removed in the future, but will be available from earlier [releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases).
 
 Publishable Tasks are a series of models that should be published as geoprocessing services for:
 

@@ -1,22 +1,19 @@
-[![Planned Issues](https://badge.waffle.io/Esri/solutions-geoprocessing-toolbox.png?label=0%20-%20backlog&title=In%20Backlog)](https://waffle.io/Esri/solutions-geoprocessing-toolbox)
-[![Issues in Progress](https://badge.waffle.io/Esri/solutions-geoprocessing-toolbox.png?label=2%20-%20In%20Progress&title=In%20Progress)](https://waffle.io/Esri/solutions-geoprocessing-toolbox)
-[![Issues waiting for Verification](https://badge.waffle.io/Esri/solutions-geoprocessing-toolbox.png?label=3%20-%20Verify&title=For%20Verification)](https://waffle.io/Esri/solutions-geoprocessing-toolbox)
-[![Code Climate](https://codeclimate.com/github/Esri/solutions-geoprocessing-toolbox/badges/gpa.svg)](https://codeclimate.com/github/Esri/solutions-geoprocessing-toolbox)
+
 # solutions-geoprocessing-toolbox
 
 The ArcGIS Solutions Geoprocessing Toolbox is a collection of models, scripts, and tools for use in [ArcGIS for Desktop](http://www.esri.com/software/arcgis/arcgis-for-desktop) and [ArcGIS Pro](http://www.esri.com/en/software/arcgis-pro). These tools provide specialized processing, workflows, and analysis for defense, intelligence, emergency management, and other solutions domains. With these tools you can determine visibility from a specific viewpoint, create search grids, and analyze event data. They are included with many of Esri's [Solutions Templates](http://solutions.arcgis.com/), but developers can use this repository to download and contribute to the tool development process.
 
-![Image of the toolbox](solutions-geoprocessing-toolbox-thumbnail007.png)
+![Image of the toolbox](./img/solutions-geoprocessing-toolbox_screenshot_14APR2016_824x400.png)
 
 
-###Repository Owner: [Matt](https://github.com/mfunk)
+### Repository Owner: [Matt](https://github.com/mfunk)
 
 * Merge Pull Requests
 * Creates Releases and Tags
 * Manages Milestones
 * Manages and Assigns Issues
 
-###Secondary: [Chris](https://github.com/csmoore)
+### Secondary: [Chris](https://github.com/csmoore)
 
 * Backup when the Owner is away
 
@@ -32,6 +29,7 @@ Additional information is available in the repository's [Wiki](https://github.co
 	* [Getting Started with the tools](#getting-started-with-the-tools)
 	* [Downloading Test Data](#downloading-test-data)
 	* [Running Verification Tests](#running-verification-tests)
+* [Mature Support](#mature-support)
 * [Resources](#resources)
 * [Issues](#issues)
 * [Contributing](#contributing)
@@ -40,31 +38,28 @@ Additional information is available in the repository's [Wiki](https://github.co
 
 ## Features
 
-* Specialized geoprocessing models and tools for general defense and intelligence analysis tasks including
-  * Tools for visibility and range analysis
-  * Tools for analyzing the battlefield environment
-  * Tools for data management and coordinates 
-
+Specialized geoprocessing models and tools for general defense and intelligence analysis tasks including:
+ 
 * The [**capability**](./capability/README.md) folder contains:
   * ERG (Emergency Resources Guide) Tools
   * Helicopter Landing Zone Tools
-  * Point Of Origin Tools
+  * Point Of Origin Tools -- [This tool is moving to Mature Support](#mature-support)
 
 * The [**data_management**](./data_management/README.md) folder contains:
   * Adjust Sample Data Dates Tools
-  * CADRG ECRG Tools
-  * CIB Tools
-  * Elevation Tools
+  * CADRG ECRG Tools -- [This tool is moving to Mature Support](#mature-support)
+  * CIB Tools -- [This tool is moving to Mature Support](#mature-support)
+  * Elevation Tools -- [This tool is moving to Mature Support](#mature-support)
   * Geonames Tools
-  * Import and Conversion Tools - formerly Position Analysis Tools
+  * Import and Conversion Tools - formerly Position Analysis Tools -- [This tool is moving to Mature Support](#mature-support)
   * LiDAR Elevation Tools
-  * Network Data Preparation Tools
-  * Patrol Data Capture Tools
-  * Publishable Task Tools
+  * Network Data Preparation Tools -- [This tool is moving to Mature Support](#mature-support)
+  * Patrol Data Capture Tools -- [This tool is moving to Mature Support](#mature-support)
+  * Publishable Task Tools -- [This tool is moving to Mature Support](#mature-support)
 
 * The [**operational_graphics**](./operational_graphics/README.md) folder contains:
   * Clearing Operations Tools
-  * Range Card Tools
+  * Range Card Tools -- [This tool is moving to Mature Support](#mature-support)
   
 * The [**patterns**](./patterns/README.md) folder contains:
   * Incident Analysis Tools
@@ -85,8 +80,6 @@ Additional information is available in the repository's [Wiki](https://github.co
 
 * ArcGIS Desktop 10.4+ or ArcGIS Pro 1.1+
     * Check [Releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases) for tools for previous versions of ArcGIS Desktop
-* Apache Ant - used to download and extract dependent data and run test drivers
-* Java Runtime Environment (JRE) or Developer Kit (JDK) (required by Ant)
 * Some tools require additional licenses (these tools will be disabled if license is unavailable), see READMEs for more information: 
     * ArcGIS Desktop Advanced (ArcInfo)
     * ArcGIS Spatial Analyst Extension
@@ -104,7 +97,8 @@ backwards compatible with other ArcGIS Desktop applications (ArcMap), so most to
 * Toolboxes that are for ArcGIS Desktop 10.4 will include *_10.4* after the toolbox name. For example: **Visibility and Range Tools_10.4.tbx**
 * Toolboxes with a 'unversioned' name are for ArcGIS Pro 1.1. For example: **Visibility and Range Tools.tbx**
 
-Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 only. These toolboxes will follow the above naming convention, but will not have a duplicate.
+
+Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.4 only. These toolboxes will follow the above naming convention, but will not have a duplicate.
 
 * [Product info for ArcGIS Pro](http://www.esri.com/software/arcgis-pro)
 * [Help for ArcGIS Pro](http://pro.arcgis.com/en/pro-app/)
@@ -122,28 +116,23 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 * Download the Github repository
     * If repository was downloaded as a zip, extract the zip file
     * Make note of this directory, the steps below assume it will be called "solutions-geoprocessing-toolbox"
+    * Open the toolboxes in the appropriate version of ArcMap or ArcGIS Pro listed in [requirements](#requirements).
+    * Questions about the tools? Start by reading the tool doc.
+    * Tool doc doesn't make sense? Please log an [issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues) and let us know!
 
 ### Downloading Test Data
 
-* Install and configure Apache Ant
-    * Download Ant from the [Apache Ant Project](http://ant.apache.org/bindownload.cgi) and unzip to a location on your machine, for example 'c:\apache-ant-1.9.2'.
-    * Set environment variable `ANT_HOME` to Ant Install Location (e.g. the folder from first step)
-    * Add Ant\bin to your path: `%ANT_HOME%\bin`
-    * NOTE: Ant requires Java [Runtime Environment (JRE) or Developer Kit (JDK)](http://www.oracle.com/technetwork/java/javase/downloads/index.html) to be installed and the environment variable `JAVA_HOME` to be set to this location
-    * To verify your Ant Installation: Open Command Prompt> `ant -h` and verify it runs and returns the help options correctly 
-    * You may optionally install the [PyDev Eclipse Plugin for Python](http://pydev.org) if you plan to use Eclipse to run/debug
-* To download the data dependencies 
-    * Open Command Prompt>
-    * `cd solutions-geoprocessing-toolbox`
-    * `> ant`
-    * Verify “Build Succeeded”  
+**This section is under reconstruction, per issue [#371](https://github.com/Esri/solutions-geoprocessing-toolbox/issues/371)** 
 
 ### Running Verification Tests
 
-**This section is under reconstruction, per issue [#371](https://github.com/Esri/solutions-geoprocessing-toolbox/issues/371)**
+- Follow instructions in [Running tests for solutions-geoprocessing-toolbox](.utils/test/Readme.md)
+
+## Mature Support
+For information Esri support levels visit the [Esri Product Life Cycle](http://support.esri.com/other-resources/product-life-cycle) page. Toolboxes marked for Mature Support will be removed from this repository's *dev* and *master* branches in the future, but will still be availalbe from earlier [releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases).
 
 ## Resources
-
+* [GitHub Help](https://help.github.com/)
 * Learn more about [ArcGIS Solutions](http://solutions.arcgis.com/).
 * Learn more about [ArcGIS for the Military](http://solutions.arcgis.com/military/).
 * Learn more about [ArcGIS for Intelligence](http://solutions.arcgis.com/intelligence/).
@@ -152,56 +141,20 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.3 
 
 ## Issues
 
-* Find a bug or want to request a new feature?  Please let us know by submitting an issue.
+Find a bug or want to request a new feature?  Please let us know by submitting an [issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues).
+
+To submit an issue:
+
+1. Go to the [issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues) tab
+2. Click **New Issue**
+3. Fill out *all* of the relevant sections
+4. **Submit new issue** when completed
 
 ## Contributing
 
-Esri welcomes contributions from anyone and everyone through GitHub. Please see Esri's [guidelines for contributing](https://github.com/esri/contributing).
+When you contribute to this repository we ask that you follow the guidelines in the [repository-specific guidelines for contributing](./CONTRIBUTING.md). If you have questions, or you get stuck, please ask the [Repository Owner](#repository-owner). We are here to help! Thanks.
 
-When you contribute to this repository we ask that you follow the guidelines below. If you've got questions, or you get stuck, please ask the [Repository Owner](#repository-owner). We are here to help! Thanks.
-
-### Fork and Clone the Repo
-Start contributing to the solutions-geoprocessing-toolbox repo by making a fork and cloning it to your local machine.
-
-* Fork the **dev** branch from the repo on github.com with ![fork button](ForkButtonIcon.png)
-* Clone your remote onto your local system ![clone button](CloneInDesktopButtonIcon.png)
-* Get the *mdcs-py* submodule:
-	* `> git submodule init`
-	* `> git submodule update`
-
-### Set Your Upstream
-Setting the parent repo to get changes from.
-
-* `> git remote -v`
-
-if no *upstream* is listed continue with:
-
-* `> git remote add upstream https://github.com/Esri/solutions-geoprocessing-toolbox`
-* `> git remote set-url upstream --push no_push`
-
-check that an *upstream* is registered:
-
-* `> git remote -v`
-
-### Getting Changes from Upstream
-The solutions-geoprocessing-toolbox repo changes often, so make sure you are getting the latest updates often.
-
-* `> git fetch upstream`
-* `> git merge upstream/dev`
-*
-
-### Share Your Mods
-If you've made changes to the repo that you want to share with the community.
-
-* Commit your changes to your local
-* Sync local with your remote fork
-* Make a **Pull Request** from your remote fork on github.com ![New Pull Request](NewPullRequestButtonIcon.png)
-
-
-### Notes On Contributing
-* Always work in the **dev** branch, never in *master*. This helps us keep our releases clean.
-* Never merge Pull Requests. The [Repository Owner](#repository-owner) needs to test any updates to make sure the repo is stable.
-* Always log an [Issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues) for problems you find, though you should check through the existing issues to make sure it wasn't already logged. 
+Esri welcomes contributions from anyone and everyone through GitHub. Please see Esri's general [guidelines for contributing](https://github.com/esri/contributing).
 
 
 ## Credits
@@ -209,13 +162,13 @@ Mosaic Dataset Configuration Scripts (MDCS) is an Esri repo available at [https:
 
 ## Licensing
 
-Copyright 2015 Esri
+Copyright 2016 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+You may obtain a copy of the License at:
 
-   http://www.apache.org/licenses/LICENSE-2.0
+[http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

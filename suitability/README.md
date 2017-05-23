@@ -18,6 +18,7 @@ Determine areas most suitable for both friendly and adversarial operations.
 Tools included in this toolbox help analysts understand threats against operations in the maritime domain. Some of these geoprocessing tools help analysts understand the capabilities of submarines, such as where submarines can physically operate and areas where they have an advantage (such as in canyons). Other tools are more general in nature and can be used for understanding where a vessel can travel in an amount of time, as well as how far a vessel can see based off of height of the viewer.
 
 * Farthest On Circle
+* Farthest On Circle with Depth Limits
 * Find Submarine Canyons
 * Sub Depth Restriction Analysis
 * Sub Specifications Tool
@@ -26,6 +27,7 @@ Tools included in this toolbox help analysts understand threats against operatio
 ## Military Aspects Of Terrain Tools
 
 Contains tools used in the Military Aspects Of Terrain (MAoT) template. They are tools for doing terrain analysis as part of the Intelligence Preparation of the Battlefield process.
+Supports the [Military Aspects of Terrain](http://solutions.arcgis.com/defense/templates/maot/) template.
 
 * Cover and Concealment
   * Concealment from Aerial Detection
@@ -50,7 +52,8 @@ These tools are part of the [Military Aspects of Terrain template](http://www.ar
 
 ## Military Aspects of Weather Tools
 
-Tools for describing and importing weather data in GRIB and NetCDF format.
+Tools for describing and importing weather data in CRU CL2.0 and NetCDF format.
+Supports the [Miltiary Aspects of Weather](http://solutions.arcgis.com/defense/templates/maow/) template.
 
 * Import CRU Data
 	* Import CRU CL2.0 To Raster

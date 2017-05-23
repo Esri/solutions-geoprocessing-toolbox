@@ -109,7 +109,10 @@ try:
     
     # Open geoname file
     arcpy.AddMessage("- Opening geoname file " + geonameFilePath + "...")
-    fileGeoname = open(geonameFilePath, "r")
+    if sys.version_info[0] > 2:
+        fileGeoname = open(geonameFilePath, "r", encoding="utf8")
+    else:
+        fileGeoname = open(geonameFilePath, "r")
     
     # Get list of fields in geoname file
     for lineGeoname in fileGeoname:
@@ -168,10 +171,10 @@ try:
             fieldName = fileFieldList[fieldIndex].rstrip('\n')
             fieldValue = fieldValue.rstrip('\n')
             
-            if fieldValue <> '':
+            if fieldValue != '':
                 
                 # Format date value
-                if fieldName.upper() in ["MODIFY_DATE", "NM_MODIFY_DATE"]:
+                if fieldName.upper() in ["MODIFY_DATE", "NM_MODIFY_DATE", "F_EFCTV_DT", "F_TERM_DT"]:
                     fieldValue = fieldValue + " 00:00:00 AM"
                 
                 if fieldName.upper() == "CC1":
@@ -232,7 +235,7 @@ try:
             fieldIndex = fieldIndex + 1
         
         # Set CountryCode/First-order Administrative Class field value
-        if countryCode1 <> '' and adm1 <> '':
+        if countryCode1 != '' and adm1 != '':
             row.setValue("ADM1CODE", countryCode1 + adm1)
             
             # Populate primary admin field value
@@ -257,7 +260,7 @@ try:
                 adm1Name = adm1NameAll.split("/")[0].split("[")[0].strip()
                 row.setValue("ADM1NAME", adm1Name)
                 
-                userValue = "Principal Admin Division: " + adm1Name
+                userValue = "Primary Admin Division: " + adm1Name
                 
                 ## Populate Admin Division Class field (ADM1CLASS)
                 adm1ClassAll = admin1ClassDict.get(countryCode1 + adm1)
@@ -292,7 +295,7 @@ try:
                     row.setValue("USER_FLD", userValue)
                     
         # Set Feature Designation Name field value
-        if featDSGCode <> '':
+        if featDSGCode != '':
             
             featDSGName = featCodeDict.get(featDSGCode)
             

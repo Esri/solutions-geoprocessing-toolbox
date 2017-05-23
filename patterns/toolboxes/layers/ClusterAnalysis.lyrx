@@ -1,6 +1,7 @@
 {
   "type" : "CIMLayerDocument",
-  "version" : "1.0.0",
+  "version" : "1.4.0",
+  "build" : 7198,
   "layers" : [
     "CIMPATH=gp_arcpy_map/cluster_analysis.xml"
   ],
@@ -12,16 +13,19 @@
       "sourceModifiedTime" : {
         "type" : "TimeInstant"
       },
+      "metadataURI" : "CIMPATH=Metadata/95ba227ac3aa0d4c1bf488d9f5ccf516.xml",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "mapElevationID" : "{DEBAA02C-6E95-4392-84FE-6E503CC8DD02}"
+        "mapElevationID" : "{C57EE817-32A4-4173-86FD-6157EBA40993}"
       },
+      "expanded" : true,
       "layerType" : "Operational",
       "showLegends" : true,
       "visibility" : true,
       "displayCacheType" : "Permanent",
       "maxDisplayCacheAge" : 5,
       "showPopups" : true,
+      "serviceLayerID" : -1,
       "autoGenerateFeatureTemplates" : true,
       "featureTable" : {
         "type" : "CIMFeatureTable",
@@ -41,7 +45,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=..\\Results.gdb",
+          "workspaceConnectionString" : "DATABASE=D:\\GitHub\\solutions-geoprocessing-toolbox\\patterns\\toolboxes\\Results.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "ClusterAnalysis",
           "datasetType" : "esriDTFeatureClass"
@@ -65,7 +69,6 @@
             {
               "type" : "CIMVectorMarker",
               "enable" : true,
-              "colorLocked" : false,
               "anchorPointUnits" : "Relative",
               "dominantSizeAxis3D" : "Z",
               "size" : 8,
@@ -83,13 +86,13 @@
                     "curveRings" : [
                       [
                         [
-                          1.2246467991473532e-016,
+                          1.2246467991473532e-16,
                           2
                         ],
                         {
                           "a" : [
                             [
-                              1.2246467991473532e-016,
+                              1.2246467991473532e-16,
                               2
                             ],
                             [
@@ -107,35 +110,33 @@
                     "type" : "CIMPolygonSymbol",
                     "symbolLayers" : [
                       {
-                        "type" : "CIMFill",
+                        "type" : "CIMSolidFill",
                         "enable" : true,
-                        "colorLocked" : false,
-                        "pattern" : {
-                          "type" : "CIMSolidPattern",
-                          "color" : {
-                            "type" : "CIMRGBColor",
-                            "values" : [
-                              0,
-                              255,
-                              255,
-                              100
-                            ]
-                          }
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            0,
+                            255,
+                            255,
+                            100
+                          ]
                         }
                       }
                     ]
                   }
                 }
-              ]
+              ],
+              "respectFrame" : true
             }
           ],
           "haloSize" : 1,
-          "scaleX" : 1
+          "scaleX" : 1,
+          "angleAlignment" : "Display"
         },
         "symbolName" : "Symbol_133"
       },
-      "exclusionSet" : {
-      },
+      "featureCacheType" : "None",
+      "enableDisplayFilters" : true,
       "labelClasses" : [
         {
           "type" : "CIMLabelClass",
@@ -256,6 +257,45 @@
           },
           "name" : "Default",
           "priority" : 14,
+          "standardLabelPlacementProperties" : {
+            "type" : "CIMStandardLabelPlacementProperties",
+            "featureType" : "Line",
+            "featureWeight" : "Low",
+            "labelWeight" : "High",
+            "numLabelsOption" : "OneLabelPerName",
+            "lineLabelPosition" : {
+              "type" : "CIMStandardLineLabelPosition",
+              "above" : true,
+              "inLine" : true,
+              "parallel" : true
+            },
+            "lineLabelPriorities" : {
+              "type" : "CIMStandardLineLabelPriorities",
+              "aboveStart" : 3,
+              "aboveAlong" : 3,
+              "aboveEnd" : 3,
+              "centerStart" : 3,
+              "centerAlong" : 3,
+              "centerEnd" : 3,
+              "belowStart" : 3,
+              "belowAlong" : 3,
+              "belowEnd" : 3
+            },
+            "pointPlacementMethod" : "AroundPoint",
+            "pointPlacementPriorities" : {
+              "type" : "CIMStandardPointPlacementPriorities",
+              "aboveLeft" : 2,
+              "aboveCenter" : 2,
+              "aboveRight" : 1,
+              "centerLeft" : 3,
+              "centerRight" : 2,
+              "belowLeft" : 3,
+              "belowCenter" : 3,
+              "belowRight" : 2
+            },
+            "rotationType" : "Arithmetic",
+            "polygonPlacementMethod" : "AlwaysHorizontal"
+          },
           "textSymbol" : {
             "type" : "CIMSymbolReference",
             "symbol" : {
@@ -292,20 +332,16 @@
                 "type" : "CIMPolygonSymbol",
                 "symbolLayers" : [
                   {
-                    "type" : "CIMFill",
+                    "type" : "CIMSolidFill",
                     "enable" : true,
-                    "colorLocked" : false,
-                    "pattern" : {
-                      "type" : "CIMSolidPattern",
-                      "color" : {
-                        "type" : "CIMRGBColor",
-                        "values" : [
-                          0,
-                          0,
-                          0,
-                          100
-                        ]
-                      }
+                    "color" : {
+                      "type" : "CIMRGBColor",
+                      "values" : [
+                        0,
+                        0,
+                        0,
+                        100
+                      ]
                     }
                   }
                 ]
@@ -320,7 +356,8 @@
             "symbolName" : "Symbol_132"
           },
           "useCodedValue" : true,
-          "visibility" : true
+          "visibility" : true,
+          "iD" : -1
         }
       ],
       "labelVisibility" : true,
@@ -340,7 +377,6 @@
                   {
                     "type" : "CIMCharacterMarker",
                     "enable" : true,
-                    "colorLocked" : false,
                     "anchorPointUnits" : "Relative",
                     "dominantSizeAxis3D" : "Y",
                     "size" : 10.285714285714285,
@@ -348,29 +384,27 @@
                     "characterIndex" : 33,
                     "fontFamilyName" : "ESRI Default Marker",
                     "fontStyleName" : "Regular",
+                    "fontType" : "Unspecified",
                     "scaleX" : 1,
                     "symbol" : {
                       "type" : "CIMPolygonSymbol",
                       "symbolLayers" : [
                         {
-                          "type" : "CIMFill",
+                          "type" : "CIMSolidFill",
                           "enable" : true,
-                          "colorLocked" : false,
-                          "pattern" : {
-                            "type" : "CIMSolidPattern",
-                            "color" : {
-                              "type" : "CIMHSVColor",
-                              "values" : [
-                                0,
-                                62,
-                                87,
-                                100
-                              ]
-                            }
+                          "color" : {
+                            "type" : "CIMHSVColor",
+                            "values" : [
+                              0,
+                              62,
+                              87,
+                              100
+                            ]
                           }
                         }
                       ]
-                    }
+                    },
+                    "respectFrame" : true
                   },
                   {
                     "type" : "CIMCharacterMarker",
@@ -383,33 +417,32 @@
                     "characterIndex" : 33,
                     "fontFamilyName" : "ESRI Default Marker",
                     "fontStyleName" : "Regular",
+                    "fontType" : "Unspecified",
                     "scaleX" : 1,
                     "symbol" : {
                       "type" : "CIMPolygonSymbol",
                       "symbolLayers" : [
                         {
-                          "type" : "CIMFill",
+                          "type" : "CIMSolidFill",
                           "enable" : true,
-                          "colorLocked" : false,
-                          "pattern" : {
-                            "type" : "CIMSolidPattern",
-                            "color" : {
-                              "type" : "CIMRGBColor",
-                              "values" : [
-                                255,
-                                255,
-                                255,
-                                100
-                              ]
-                            }
+                          "color" : {
+                            "type" : "CIMRGBColor",
+                            "values" : [
+                              255,
+                              255,
+                              255,
+                              100
+                            ]
                           }
                         }
                       ]
-                    }
+                    },
+                    "respectFrame" : true
                   }
                 ],
                 "haloSize" : 1,
-                "scaleX" : 1
+                "scaleX" : 1,
+                "angleAlignment" : "Display"
               },
               "symbolName" : "Symbol_127"
             },
@@ -427,7 +460,6 @@
                   {
                     "type" : "CIMCharacterMarker",
                     "enable" : true,
-                    "colorLocked" : false,
                     "anchorPointUnits" : "Relative",
                     "dominantSizeAxis3D" : "Y",
                     "size" : 16.285714285714281,
@@ -435,29 +467,27 @@
                     "characterIndex" : 33,
                     "fontFamilyName" : "ESRI Default Marker",
                     "fontStyleName" : "Regular",
+                    "fontType" : "Unspecified",
                     "scaleX" : 1,
                     "symbol" : {
                       "type" : "CIMPolygonSymbol",
                       "symbolLayers" : [
                         {
-                          "type" : "CIMFill",
+                          "type" : "CIMSolidFill",
                           "enable" : true,
-                          "colorLocked" : false,
-                          "pattern" : {
-                            "type" : "CIMSolidPattern",
-                            "color" : {
-                              "type" : "CIMHSVColor",
-                              "values" : [
-                                0,
-                                62,
-                                87,
-                                100
-                              ]
-                            }
+                          "color" : {
+                            "type" : "CIMHSVColor",
+                            "values" : [
+                              0,
+                              62,
+                              87,
+                              100
+                            ]
                           }
                         }
                       ]
-                    }
+                    },
+                    "respectFrame" : true
                   },
                   {
                     "type" : "CIMCharacterMarker",
@@ -470,33 +500,32 @@
                     "characterIndex" : 33,
                     "fontFamilyName" : "ESRI Default Marker",
                     "fontStyleName" : "Regular",
+                    "fontType" : "Unspecified",
                     "scaleX" : 1,
                     "symbol" : {
                       "type" : "CIMPolygonSymbol",
                       "symbolLayers" : [
                         {
-                          "type" : "CIMFill",
+                          "type" : "CIMSolidFill",
                           "enable" : true,
-                          "colorLocked" : false,
-                          "pattern" : {
-                            "type" : "CIMSolidPattern",
-                            "color" : {
-                              "type" : "CIMRGBColor",
-                              "values" : [
-                                255,
-                                255,
-                                255,
-                                100
-                              ]
-                            }
+                          "color" : {
+                            "type" : "CIMRGBColor",
+                            "values" : [
+                              255,
+                              255,
+                              255,
+                              100
+                            ]
                           }
                         }
                       ]
-                    }
+                    },
+                    "respectFrame" : true
                   }
                 ],
                 "haloSize" : 1,
-                "scaleX" : 1
+                "scaleX" : 1,
+                "angleAlignment" : "Display"
               },
               "symbolName" : "Symbol_128"
             },
@@ -514,7 +543,6 @@
                   {
                     "type" : "CIMCharacterMarker",
                     "enable" : true,
-                    "colorLocked" : false,
                     "anchorPointUnits" : "Relative",
                     "dominantSizeAxis3D" : "Y",
                     "size" : 22.285714285714281,
@@ -522,29 +550,27 @@
                     "characterIndex" : 33,
                     "fontFamilyName" : "ESRI Default Marker",
                     "fontStyleName" : "Regular",
+                    "fontType" : "Unspecified",
                     "scaleX" : 1,
                     "symbol" : {
                       "type" : "CIMPolygonSymbol",
                       "symbolLayers" : [
                         {
-                          "type" : "CIMFill",
+                          "type" : "CIMSolidFill",
                           "enable" : true,
-                          "colorLocked" : false,
-                          "pattern" : {
-                            "type" : "CIMSolidPattern",
-                            "color" : {
-                              "type" : "CIMHSVColor",
-                              "values" : [
-                                0,
-                                62,
-                                87,
-                                100
-                              ]
-                            }
+                          "color" : {
+                            "type" : "CIMHSVColor",
+                            "values" : [
+                              0,
+                              62,
+                              87,
+                              100
+                            ]
                           }
                         }
                       ]
-                    }
+                    },
+                    "respectFrame" : true
                   },
                   {
                     "type" : "CIMCharacterMarker",
@@ -557,33 +583,32 @@
                     "characterIndex" : 33,
                     "fontFamilyName" : "ESRI Default Marker",
                     "fontStyleName" : "Regular",
+                    "fontType" : "Unspecified",
                     "scaleX" : 1,
                     "symbol" : {
                       "type" : "CIMPolygonSymbol",
                       "symbolLayers" : [
                         {
-                          "type" : "CIMFill",
+                          "type" : "CIMSolidFill",
                           "enable" : true,
-                          "colorLocked" : false,
-                          "pattern" : {
-                            "type" : "CIMSolidPattern",
-                            "color" : {
-                              "type" : "CIMRGBColor",
-                              "values" : [
-                                255,
-                                255,
-                                255,
-                                100
-                              ]
-                            }
+                          "color" : {
+                            "type" : "CIMRGBColor",
+                            "values" : [
+                              255,
+                              255,
+                              255,
+                              100
+                            ]
                           }
                         }
                       ]
-                    }
+                    },
+                    "respectFrame" : true
                   }
                 ],
                 "haloSize" : 1,
-                "scaleX" : 1
+                "scaleX" : 1,
+                "angleAlignment" : "Display"
               },
               "symbolName" : "Symbol_129"
             },
@@ -601,7 +626,6 @@
                   {
                     "type" : "CIMCharacterMarker",
                     "enable" : true,
-                    "colorLocked" : false,
                     "anchorPointUnits" : "Relative",
                     "dominantSizeAxis3D" : "Y",
                     "size" : 28.285714285714278,
@@ -609,29 +633,27 @@
                     "characterIndex" : 33,
                     "fontFamilyName" : "ESRI Default Marker",
                     "fontStyleName" : "Regular",
+                    "fontType" : "Unspecified",
                     "scaleX" : 1,
                     "symbol" : {
                       "type" : "CIMPolygonSymbol",
                       "symbolLayers" : [
                         {
-                          "type" : "CIMFill",
+                          "type" : "CIMSolidFill",
                           "enable" : true,
-                          "colorLocked" : false,
-                          "pattern" : {
-                            "type" : "CIMSolidPattern",
-                            "color" : {
-                              "type" : "CIMHSVColor",
-                              "values" : [
-                                0,
-                                62,
-                                87,
-                                100
-                              ]
-                            }
+                          "color" : {
+                            "type" : "CIMHSVColor",
+                            "values" : [
+                              0,
+                              62,
+                              87,
+                              100
+                            ]
                           }
                         }
                       ]
-                    }
+                    },
+                    "respectFrame" : true
                   },
                   {
                     "type" : "CIMCharacterMarker",
@@ -644,33 +666,32 @@
                     "characterIndex" : 33,
                     "fontFamilyName" : "ESRI Default Marker",
                     "fontStyleName" : "Regular",
+                    "fontType" : "Unspecified",
                     "scaleX" : 1,
                     "symbol" : {
                       "type" : "CIMPolygonSymbol",
                       "symbolLayers" : [
                         {
-                          "type" : "CIMFill",
+                          "type" : "CIMSolidFill",
                           "enable" : true,
-                          "colorLocked" : false,
-                          "pattern" : {
-                            "type" : "CIMSolidPattern",
-                            "color" : {
-                              "type" : "CIMRGBColor",
-                              "values" : [
-                                255,
-                                255,
-                                255,
-                                100
-                              ]
-                            }
+                          "color" : {
+                            "type" : "CIMRGBColor",
+                            "values" : [
+                              255,
+                              255,
+                              255,
+                              100
+                            ]
                           }
                         }
                       ]
-                    }
+                    },
+                    "respectFrame" : true
                   }
                 ],
                 "haloSize" : 1,
-                "scaleX" : 1
+                "scaleX" : 1,
+                "angleAlignment" : "Display"
               },
               "symbolName" : "Symbol_130"
             },
@@ -688,7 +709,6 @@
                   {
                     "type" : "CIMCharacterMarker",
                     "enable" : true,
-                    "colorLocked" : false,
                     "anchorPointUnits" : "Relative",
                     "dominantSizeAxis3D" : "Y",
                     "size" : 34.285714285714278,
@@ -696,29 +716,27 @@
                     "characterIndex" : 33,
                     "fontFamilyName" : "ESRI Default Marker",
                     "fontStyleName" : "Regular",
+                    "fontType" : "Unspecified",
                     "scaleX" : 1,
                     "symbol" : {
                       "type" : "CIMPolygonSymbol",
                       "symbolLayers" : [
                         {
-                          "type" : "CIMFill",
+                          "type" : "CIMSolidFill",
                           "enable" : true,
-                          "colorLocked" : false,
-                          "pattern" : {
-                            "type" : "CIMSolidPattern",
-                            "color" : {
-                              "type" : "CIMHSVColor",
-                              "values" : [
-                                0,
-                                62,
-                                87,
-                                100
-                              ]
-                            }
+                          "color" : {
+                            "type" : "CIMHSVColor",
+                            "values" : [
+                              0,
+                              62,
+                              87,
+                              100
+                            ]
                           }
                         }
                       ]
-                    }
+                    },
+                    "respectFrame" : true
                   },
                   {
                     "type" : "CIMCharacterMarker",
@@ -731,33 +749,32 @@
                     "characterIndex" : 33,
                     "fontFamilyName" : "ESRI Default Marker",
                     "fontStyleName" : "Regular",
+                    "fontType" : "Unspecified",
                     "scaleX" : 1,
                     "symbol" : {
                       "type" : "CIMPolygonSymbol",
                       "symbolLayers" : [
                         {
-                          "type" : "CIMFill",
+                          "type" : "CIMSolidFill",
                           "enable" : true,
-                          "colorLocked" : false,
-                          "pattern" : {
-                            "type" : "CIMSolidPattern",
-                            "color" : {
-                              "type" : "CIMRGBColor",
-                              "values" : [
-                                255,
-                                255,
-                                255,
-                                100
-                              ]
-                            }
+                          "color" : {
+                            "type" : "CIMRGBColor",
+                            "values" : [
+                              255,
+                              255,
+                              255,
+                              100
+                            ]
                           }
                         }
                       ]
-                    }
+                    },
+                    "respectFrame" : true
                   }
                 ],
                 "haloSize" : 1,
-                "scaleX" : 1
+                "scaleX" : 1,
+                "angleAlignment" : "Display"
               },
               "symbolName" : "Symbol_131"
             },
@@ -777,7 +794,7 @@
           "zeroPad" : true
         },
         "showInAscendingOrder" : true,
-        "heading" : "ICOUNT",
+        "heading" : "Incident Count",
         "sampleSize" : 10000,
         "useExclusionSymbol" : false,
         "normalizationTotal" : 1,
@@ -787,13 +804,30 @@
       "snappable" : true
     }
   ],
+  "binaryReferences" : [
+    {
+      "type" : "CIMBinaryReference",
+      "uRI" : "CIMPATH=Metadata/95ba227ac3aa0d4c1bf488d9f5ccf516.xml",
+      "data" : "<?xml version=\"1.0\"?>\r\n<metadata xml:lang=\"en\"><Esri><CreaDate>20170504</CreaDate><CreaTime>09383700</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce></Esri><dataIdInfo><idCitation><resTitle>Cluster Analysis</resTitle></idCitation><idAbs></idAbs><idPurp></idPurp><idCredit></idCredit><resConst><Consts><useLimit></useLimit></Consts></resConst></dataIdInfo></metadata>\r\n"
+    }
+  ],
   "elevationSurfaces" : [
     {
       "type" : "CIMMapElevationSurface",
       "elevationMode" : "BaseGlobeSurface",
       "name" : "Ground",
       "verticalExaggeration" : 1,
-      "mapElevationID" : "{DEBAA02C-6E95-4392-84FE-6E503CC8DD02}"
+      "mapElevationID" : "{C57EE817-32A4-4173-86FD-6157EBA40993}",
+      "color" : {
+        "type" : "CIMRGBColor",
+        "values" : [
+          255,
+          255,
+          255,
+          100
+        ]
+      },
+      "surfaceTINShadingMode" : "Smooth"
     }
   ]
 }

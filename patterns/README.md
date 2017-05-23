@@ -14,6 +14,7 @@ Find patterns and trends through statistical and visual analysis.
 ## Incident Analysis Tools
 
 These tools help you discover spatial patterns and trends in significant activity in your area of interest.
+Supports the [Incident Analysis](http://solutions.arcgis.com/defense/templates/incident-analysis/) template.
 
 * Cluster Analysis
 * Count Incidents By LOC
@@ -21,7 +22,6 @@ These tools help you discover spatial patterns and trends in significant activit
 * Hot Spots By Area
 * Incident Density
 * Incident Hot Spots
-* Incident Table To Point
 
 These tools are part of the [Incident Analysis Template](http://www.arcgis.com/home/item.html?id=fd6e2c3272c14826b9781e93580dacfe)
 

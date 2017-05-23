@@ -14,6 +14,7 @@ Create and visualize graphic products in support of operations.
 ## Clearing Operations Tools
 
 Tools for building gridded reference graphics (GRG) for marking buildings and structures for clearing operations.
+Supports the [Clearing Operations](http://solutions.arcgis.com/defense/templates/clearing-operations/) template.
 
 * Canvas Area GRG
 * Linear Line Of Sight
@@ -24,6 +25,8 @@ Tools for building gridded reference graphics (GRG) for marking buildings and st
 These tools are part of the [Clearing Operations](http://www.arcgis.com/home/item.html?id=b84edd236d4c48aba3f8406dd94ff13b) template.
 
 ## Range Card Tools
+
+> IMPORTANT: This toolbox is moving to Mature Support and will be removed in the future, but will be available from earlier [releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases).
 
 Tools to build range cards for defensive positions.
 

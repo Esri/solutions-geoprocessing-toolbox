@@ -1,33 +1,159 @@
 {
   "type" : "CIMLayerDocument",
-  "version" : "1.0.0",
+  "version" : "1.4.0",
+  "build" : 7198,
   "layers" : [
-    "CIMPATH=gp_arcpy_map/count_incidents_by_loc.xml"
+    "CIMPATH=roadwic_fix5.xml"
   ],
   "layerDefinitions" : [
     {
       "type" : "CIMFeatureLayer",
-      "name" : "Count Incidents by LOC",
-      "uRI" : "CIMPATH=gp_arcpy_map/count_incidents_by_loc.xml",
-      "sourceModifiedTime" : {
-        "type" : "TimeInstant"
-      },
-      "description" : "Jalalabad Road Hotspots - Count by LOC",
-      "layerElevation" : {
-        "type" : "CIMLayerElevationSurface",
-        "mapElevationID" : "{A56F15D5-996B-4A94-A31B-1D83EF964646}"
-      },
+      "name" : "RoadWIC_fix5",
+      "uRI" : "CIMPATH=roadwic_fix5.xml",
+      "attribution" : "Esri",
+      "description" : "Incident Fequency",
       "layerType" : "Operational",
       "showLegends" : true,
-      "visibility" : false,
+      "visibility" : true,
       "displayCacheType" : "Permanent",
       "maxDisplayCacheAge" : 5,
       "showPopups" : true,
+      "serviceLayerID" : -1,
       "autoGenerateFeatureTemplates" : true,
       "featureTable" : {
         "type" : "CIMFeatureTable",
-        "displayField" : "FID_roads",
+        "displayField" : "fcsubtype",
         "editable" : true,
+        "fieldDescriptions" : [
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "OBJECTID",
+            "fieldName" : "OBJECTID",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 12,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 0
+            },
+            "readOnly" : true,
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Shape",
+            "fieldName" : "shape",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Feature Code Subtype",
+            "fieldName" : "fcsubtype",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 12,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 0
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Feature Code",
+            "fieldName" : "f_code",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Length",
+            "fieldName" : "lzn",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 12,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Route Designation",
+            "fieldName" : "rtn",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Route Designation (route designation type)",
+            "fieldName" : "rtn_roi",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 12,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 0
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Width",
+            "fieldName" : "wid",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 12,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Geographic Name Information : Full Name",
+            "fieldName" : "zi005_fna",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "shape_Length",
+            "fieldName" : "shape_Length",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 12,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "readOnly" : true,
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "FREQUENCY",
+            "fieldName" : "FREQUENCY",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 12,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 0
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          }
+        ],
         "timeFields" : {
           "type" : "CIMTimeTableDefinition"
         },
@@ -42,9 +168,9 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=..\\Results.gdb",
+          "workspaceConnectionString" : "DATABASE=C:\\Users\\matt2542\\Documents\\ArcGIS\\scratch.gdb",
           "workspaceFactory" : "FileGDB",
-          "dataset" : "CountIncidentsbyLOC",
+          "dataset" : "RoadWIC_fix5",
           "datasetType" : "esriDTFeatureClass"
         },
         "studyAreaSpatialRel" : "esriSpatialRelUndefined",
@@ -66,7 +192,6 @@
             {
               "type" : "CIMSolidStroke",
               "enable" : true,
-              "colorLocked" : false,
               "capStyle" : "Round",
               "joinStyle" : "Round",
               "lineStyle3D" : "Strip",
@@ -84,25 +209,25 @@
             }
           ]
         },
-        "symbolName" : "Symbol_139"
+        "symbolName" : "Symbol_18"
       },
-      "exclusionSet" : {
-      },
+      "featureCacheType" : "None",
+      "enableDisplayFilters" : true,
       "labelClasses" : [
         {
           "type" : "CIMLabelClass",
-          "expression" : "[FID_roads]",
-          "expressionEngine" : "VBScript",
+          "expression" : "[f_code]",
+          "expressionEngine" : "Python",
           "featuresToLabel" : "AllVisibleFeatures",
           "maplexLabelPlacementProperties" : {
             "type" : "CIMMaplexLabelPlacementProperties",
-            "featureType" : "Point",
+            "featureType" : "Line",
             "avoidPolygonHoles" : true,
             "canOverrunFeature" : true,
             "canPlaceLabelOutsidePolygon" : true,
             "canRemoveOverlappingLabel" : true,
             "canStackLabel" : true,
-            "connectionType" : "MinimizeLabels",
+            "connectionType" : "Unambiguous",
             "constrainOffset" : "AboveLine",
             "contourAlignmentType" : "Page",
             "contourLadderType" : "Straight",
@@ -206,7 +331,7 @@
             "truncationPreferredCharacters" : "aeiou"
           },
           "name" : "Default",
-          "priority" : 10,
+          "priority" : 19,
           "textSymbol" : {
             "type" : "CIMSymbolReference",
             "symbol" : {
@@ -223,12 +348,12 @@
               "fontStyleName" : "Regular",
               "fontType" : "Unspecified",
               "haloSize" : 1,
-              "height" : 8,
+              "height" : 12,
               "hinting" : "Default",
-              "horizontalAlignment" : "Center",
+              "horizontalAlignment" : "Left",
               "kerning" : true,
               "letterWidth" : 100,
-              "ligatures" : false,
+              "ligatures" : true,
               "lineGapType" : "ExtraLeading",
               "shadowColor" : {
                 "type" : "CIMRGBColor",
@@ -243,35 +368,32 @@
                 "type" : "CIMPolygonSymbol",
                 "symbolLayers" : [
                   {
-                    "type" : "CIMFill",
+                    "type" : "CIMSolidFill",
                     "enable" : true,
-                    "colorLocked" : false,
-                    "pattern" : {
-                      "type" : "CIMSolidPattern",
-                      "color" : {
-                        "type" : "CIMRGBColor",
-                        "values" : [
-                          0,
-                          0,
-                          0,
-                          100
-                        ]
-                      }
+                    "color" : {
+                      "type" : "CIMRGBColor",
+                      "values" : [
+                        0,
+                        112,
+                        255,
+                        100
+                      ]
                     }
                   }
                 ]
               },
               "textCase" : "Normal",
               "textDirection" : "LTR",
-              "verticalAlignment" : "Bottom",
+              "verticalAlignment" : "Baseline",
               "verticalGlyphOrientation" : "Right",
               "wordSpacing" : 100,
               "billboardMode3D" : "FaceNearPlane"
             },
-            "symbolName" : "Symbol_138"
+            "symbolName" : "Symbol_17"
           },
           "useCodedValue" : true,
-          "visibility" : true
+          "visibility" : true,
+          "iD" : -1
         }
       ],
       "renderer" : {
@@ -290,7 +412,6 @@
                   {
                     "type" : "CIMSolidStroke",
                     "enable" : true,
-                    "colorLocked" : false,
                     "capStyle" : "Round",
                     "joinStyle" : "Round",
                     "lineStyle3D" : "Strip",
@@ -308,9 +429,9 @@
                   }
                 ]
               },
-              "symbolName" : "Symbol_134"
+              "symbolName" : "Symbol_13"
             },
-            "upperBound" : 10.011133839331503
+            "upperBound" : 10
           },
           {
             "type" : "CIMClassBreak",
@@ -324,7 +445,6 @@
                   {
                     "type" : "CIMSolidStroke",
                     "enable" : true,
-                    "colorLocked" : false,
                     "capStyle" : "Round",
                     "joinStyle" : "Round",
                     "lineStyle3D" : "Strip",
@@ -342,13 +462,13 @@
                   }
                 ]
               },
-              "symbolName" : "Symbol_135"
+              "symbolName" : "Symbol_14"
             },
-            "upperBound" : 20.992267478383116
+            "upperBound" : 21
           },
           {
             "type" : "CIMClassBreak",
-            "label" : "22 - 31",
+            "label" : "22 - 46",
             "patch" : "Default",
             "symbol" : {
               "type" : "CIMSymbolReference",
@@ -358,7 +478,6 @@
                   {
                     "type" : "CIMSolidStroke",
                     "enable" : true,
-                    "colorLocked" : false,
                     "capStyle" : "Round",
                     "joinStyle" : "Round",
                     "lineStyle3D" : "Strip",
@@ -376,13 +495,13 @@
                   }
                 ]
               },
-              "symbolName" : "Symbol_136"
+              "symbolName" : "Symbol_15"
             },
-            "upperBound" : 31
+            "upperBound" : 46
           },
           {
             "type" : "CIMClassBreak",
-            "label" : "32 - 76",
+            "label" : "47 - 85",
             "patch" : "Default",
             "symbol" : {
               "type" : "CIMSymbolReference",
@@ -392,7 +511,6 @@
                   {
                     "type" : "CIMSolidStroke",
                     "enable" : true,
-                    "colorLocked" : false,
                     "capStyle" : "Round",
                     "joinStyle" : "Round",
                     "lineStyle3D" : "Strip",
@@ -410,13 +528,13 @@
                   }
                 ]
               },
-              "symbolName" : "Symbol_137"
+              "symbolName" : "Symbol_16"
             },
-            "upperBound" : 76
+            "upperBound" : 85
           }
         ],
         "classBreakType" : "GraduatedColor",
-        "classificationMethod" : "Manual",
+        "classificationMethod" : "NaturalBreaks",
         "colorRamp" : {
           "type" : "CIMLinearContinuousColorRamp",
           "colorSpace" : {
@@ -443,7 +561,7 @@
           }
         },
         "field" : "FREQUENCY",
-        "minimumBreak" : 1,
+        "minimumBreak" : 5,
         "numberFormat" : {
           "type" : "CIMNumericFormat",
           "alignmentOption" : "esriAlignLeft",
@@ -453,24 +571,14 @@
           "zeroPad" : true
         },
         "showInAscendingOrder" : true,
-        "heading" : "FREQUENCY",
+        "heading" : "Incident Frequency",
         "sampleSize" : 10000,
-        "exclusionClause" : "FREQUENCY \u003c= 4",
         "useExclusionSymbol" : false,
         "normalizationTotal" : 1,
         "normalizationType" : "Nothing"
       },
       "scaleSymbols" : true,
       "snappable" : true
-    }
-  ],
-  "elevationSurfaces" : [
-    {
-      "type" : "CIMMapElevationSurface",
-      "elevationMode" : "BaseGlobeSurface",
-      "name" : "Ground",
-      "verticalExaggeration" : 1,
-      "mapElevationID" : "{A56F15D5-996B-4A94-A31B-1D83EF964646}"
     }
   ]
 }
