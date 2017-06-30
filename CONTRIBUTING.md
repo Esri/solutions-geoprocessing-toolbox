@@ -39,6 +39,16 @@ And *merge* the changes into the target branch:
 
 This will get your new branch from the repo.
 
+### Make some code
+
+The following guides are *strongly* suggested and encouraged:
+* [Python PEP8 - Style Guide for Python](https://www.python.org/dev/peps/pep-0008/)
+* [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
+* [Truthful Technology's Python Style Guide](https://github.com/TruthfulTechnology/style-guide/blob/master/python.rst)
+* [Python PEP257 - docstrings](https://www.python.org/dev/peps/pep-0257/)
+
+And of course [PEP20 - The Zen of Python](https://www.python.org/dev/peps/pep-0020/)
+
 ### Share Your Mods
 If you've made changes to the repo that you want to share with the community.
 
