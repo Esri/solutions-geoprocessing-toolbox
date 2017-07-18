@@ -37,9 +37,10 @@ They are named **[toolname]TestCase.py**
 ### Test Data
 The it is impossible to build a test without some kind of inputs. Some tests generate their own data internally (Check out the ERG tool tests as an example). But most will require some kind of output test data.
 
-* Test data **must** be stored in the *./data* folder. 
+* Test data **must** be stored on ArcGIS.com (owner:solutions_github). Contact repo owner to upload to this account.
 * Keep feature data in a file geodatabase. You should name it like your toolbox.
 * Any file data (CSV, TXT, XLSX, etc.) should be easy to identify which toolbox it belongs to.
+* Zip any data before uploading to ArcGIS.com (use type Desktop Application Template).
 
 ## Outline for writing tests
 ### 1. Make a separate branch from dev
