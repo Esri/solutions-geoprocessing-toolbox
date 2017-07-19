@@ -398,6 +398,9 @@ def main():
             extent = shape.extent
         pointExtents = str.split(str(extent))
 
+
+        ''' This seemed to be shifting the grid when it was not required so commented out
+ 
         # Shift the grid center point if the rows and/or columns are even.
         if (float(numberCellsHo)%2 == 0.0):
             hoShiftAmt = float(cellHeight) / 2.0
@@ -420,6 +423,8 @@ def main():
                 pointExtents[0] = str(float(pointExtents[0]) - vertShiftAmt)
             else:
                 pointExtents[0] = str(float(pointExtents[0]) + vertShiftAmt)
+
+        '''
 
         # From the template extent, get the origin, y axis, and opposite corner corrdinates
         rightCorner =  float(pointExtents[0]) + ((float(cellWidth) * float(numberCellsVert)) /2.0)
@@ -466,11 +471,11 @@ def main():
         #UPDATE
         toolboxPath = None
         if appEnvironment == "ARCGIS_PRO":
-            toolboxPath = os.path.join(os.path.dirname(sysPath), "Clearing Operations Tools.tbx")
+            toolboxPath = os.path.join(os.path.dirname(sysPath), "ClearingOperationsTools.tbx")
         else:
-            toolboxPath = os.path.join(os.path.dirname(sysPath), "Clearing Operations Tools_10.4.tbx")
+            toolboxPath = os.path.join(os.path.dirname(sysPath), "ClearingOperationsTools.tbx")
 
-        arcpy.ImportToolbox(toolboxPath)
+        arcpy.ImportToolbox(toolboxPath,"ClearingOperations")
         arcpy.AddMessage("Creating Fishnet Grid")
         arcpy.Fishnet_ClearingOperations(tempOutput, originCoordinate, yAxisCoordinate, 0, 0, str(numberCellsHo), str(numberCellsVert), oppCornerCoordinate, "NO_LABELS", fullExtent, "POLYGON")
 

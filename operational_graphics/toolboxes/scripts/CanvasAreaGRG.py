@@ -415,11 +415,11 @@ def main():
         #UPDATE
         toolboxPath = None
         if appEnvironment == "ARCGIS_PRO":
-            toolboxPath = os.path.join(os.path.dirname(sysPath), "Clearing Operations Tools.tbx")
+            toolboxPath = os.path.join(os.path.dirname(sysPath), "ClearingOperationsTools.tbx")
         else:
-            toolboxPath = os.path.join(os.path.dirname(sysPath), "Clearing Operations Tools_10.4.tbx")
+            toolboxPath = os.path.join(os.path.dirname(sysPath), "ClearingOperationsTools.tbx")
 
-        arcpy.ImportToolbox(toolboxPath)
+        arcpy.ImportToolbox(toolboxPath,"ClearingOperations")
         arcpy.AddMessage("Creating Fishnet Grid...")
         arcpy.Fishnet_ClearingOperations(tempOutput, originCoordinate, yAxisCoordinate, str(cellWidth), str(cellHeight), 0, 0, oppCornerCoordinate, "NO_LABELS", templateExtent, "POLYGON")
 
