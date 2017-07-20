@@ -91,8 +91,8 @@ Specialized geoprocessing models and tools for general defense and intelligence 
 
 ## A Tale of Two Toolboxes
 
-The solutions-geoprocessing-toolbox repo is now supporting toolboxes for both ArcMap/ArcCatalog/ArcGlobe/ArcScene (collectively called ArcGIS for Desktop) and also ArcGIS Pro. Toolboxes that are modified in ArcGIS Pro are not
-backwards compatible with other ArcGIS Desktop applications (ArcMap), so most toolboxes are duplicated for one or the other. The naming of these toolboxes is as follows:
+The solutions-geoprocessing-toolbox repo supports toolboxes for both ArcMap/ArcCatalog/ArcGlobe/ArcScene (collectively called ArcGIS for Desktop) and also ArcGIS Pro. Toolboxes that are modified in ArcGIS Pro are not
+backwards compatible (see **Compatibility** note below) with other ArcGIS Desktop applications (ArcMap), so most toolboxes are duplicated for one or the other. The naming of these toolboxes is as follows:
 
 * Toolboxes that are for ArcGIS Desktop 10.4 will include *_10.4* after the toolbox name. For example: **Visibility and Range Tools_10.4.tbx**
 * Toolboxes with a 'unversioned' name are for ArcGIS Pro 1.1. For example: **Visibility and Range Tools.tbx**
@@ -100,6 +100,7 @@ backwards compatible with other ArcGIS Desktop applications (ArcMap), so most to
 
 Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.4 only. These toolboxes will follow the above naming convention, but will not have a duplicate.
 
+* [Compatibility: ModelBuilder migration in Pro](http://pro.arcgis.com/en/pro-app/help/analysis/geoprocessing/modelbuilder/modelbuilder-changes-in-arcgis-pro.htm)
 * [Product info for ArcGIS Pro](http://www.esri.com/software/arcgis-pro)
 * [Help for ArcGIS Pro](http://pro.arcgis.com/en/pro-app/)
 
