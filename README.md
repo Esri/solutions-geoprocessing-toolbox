@@ -126,7 +126,7 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.4 
 
 ### Running Verification Tests
 
-- Follow instructions in [Running tests for solutions-geoprocessing-toolbox](.utils/test/Readme.md)
+- Follow instructions in [Running tests for solutions-geoprocessing-toolbox](./utils/test/Readme.md)
 
 ## Mature Support
 For information Esri support levels visit the [Esri Product Life Cycle](http://support.esri.com/other-resources/product-life-cycle) page. Toolboxes marked for Mature Support will be removed from this repository's *dev* and *master* branches in the future, but will still be availalbe from earlier [releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases).
@@ -162,7 +162,7 @@ Mosaic Dataset Configuration Scripts (MDCS) is an Esri repo available at [https:
 
 ## Licensing
 
-Copyright 2016 Esri
+Copyright 2016-2017 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -178,6 +178,3 @@ limitations under the License.
 
 A copy of the license is available in the repository's
 [license.txt](license.txt) file.
-
-[](Esri Tags: ArcGIS Defense and Intelligence Military Emergency Management National Security)
-[](Esri Language: Python)
