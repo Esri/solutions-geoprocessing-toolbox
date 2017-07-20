@@ -70,7 +70,12 @@ def main():
     
     result = runTestSuite()
     logTestResults(result)
-    print("END OF TEST =========================================\n")
+    if len(result.errors) > 0:
+        print("END OF TEST WITH ERRORS =========================================\n")
+        sys.exit(-1)
+    else:
+        print("END OF TEST WITH ZERO ERRORS =========================================\n")
+        sys.exit(0)
     return
 
 def logTestResults(result):
