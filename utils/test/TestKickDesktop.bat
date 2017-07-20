@@ -56,6 +56,8 @@ REM of Python 2.7. Modify the following line as necessary:
 REM check if Desktop for ArcGIS/Python 2.7 tests failed
 IF %ERRORLEVEL% NEQ 0 (
    ECHO 'One or more tests failed'
+) ELSE (
+   ECHO 'Tests passed'
 )
 REM === RUN DESKTOP VERSION ==========================
 

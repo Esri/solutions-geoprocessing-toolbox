@@ -69,24 +69,22 @@ def main():
     UnitTestUtilities.setUpLogFileHeader()
     
     result = runTestSuite()
+
     logTestResults(result)
-    if len(result.errors) > 0:
-        print("END OF TEST WITH ERRORS =========================================\n")
-        sys.exit(-1)
-    else:
-        print("END OF TEST WITH ZERO ERRORS =========================================\n")
-        sys.exit(0)
-    return
+
+    return result.wasSuccessful()
 
 def logTestResults(result):
     ''' Write the log file '''
     resultHead = resultsHeader(result)
     print(resultHead)
     Configuration.Logger.info(resultHead)
+    
     if len(result.errors) > 0:
         rError = resultsErrors(result)
         print(rError)
         Configuration.Logger.error(rError)
+        
     if len(result.failures) > 0:
         rFail = resultsFailures(result)
         print(rFail)
@@ -133,10 +131,10 @@ def runTestSuite():
         Configuration.Platform = "PRO"
     Configuration.Logger.info(Configuration.Platform + " =======================================")
 
-    testSuite.addTests(addCapabilitySuite())
+    # testSuite.addTests(addCapabilitySuite())
     testSuite.addTests(addPatternsSuite())
-    testSuite.addTests(addVisibilitySuite())
-    testSuite.addTests(addSuitabilitySuite())
+    # testSuite.addTests(addVisibilitySuite())
+    # testSuite.addTests(addSuitabilitySuite())
 
     #addDataManagementTests(logger, platform)
     #addOperationalGraphicsTests(logger, platform)
@@ -185,4 +183,8 @@ def addSuitabilitySuite():
 if __name__ == "__main__":
     if Configuration.DEBUG == True:
         print("TestRunner.py")
-    main()
+    exitAsCode = main()
+    if exitAsCode:
+        sys.exit(0)
+    else:
+        sys.exit(1)
