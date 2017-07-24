@@ -69,23 +69,26 @@ def main():
     UnitTestUtilities.setUpLogFileHeader()
     
     result = runTestSuite()
+
     logTestResults(result)
-    print("END OF TEST =========================================\n")
-    return
+
+    return result.wasSuccessful()
 
 def logTestResults(result):
     ''' Write the log file '''
     resultHead = resultsHeader(result)
-    print(resultHead)
-    Configuration.Logger.info(resultHead)
+    print(resultHead.encode("utf-8"))
+    Configuration.Logger.info(resultHead.encode("utf-8"))
+    
     if len(result.errors) > 0:
         rError = resultsErrors(result)
-        print(rError)
-        Configuration.Logger.error(rError)
+        print(rError.encode("utf-8"))
+        Configuration.Logger.error(rError.encode("utf-8"))
+        
     if len(result.failures) > 0:
         rFail = resultsFailures(result)
-        print(rFail)
-        Configuration.Logger.error(rFail)
+        print(rFail.encode("utf-8"))
+        Configuration.Logger.error(rFail.encode("utf-8"))
     Configuration.Logger.info("END OF TEST =========================================\n")
 
     return
@@ -180,4 +183,8 @@ def addSuitabilitySuite():
 if __name__ == "__main__":
     if Configuration.DEBUG == True:
         print("TestRunner.py")
-    main()
+    exitAsCode = main()
+    if exitAsCode:
+        sys.exit(0)
+    else:
+        sys.exit(1)
