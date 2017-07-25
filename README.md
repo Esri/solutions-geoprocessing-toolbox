@@ -1,9 +1,7 @@
 
 # solutions-geoprocessing-toolbox
 
-The ArcGIS Solutions Geoprocessing Toolbox is a collection of models, scripts, and tools for use in [ArcGIS for Desktop](http://www.esri.com/software/arcgis/arcgis-for-desktop) and [ArcGIS Pro](http://www.esri.com/en/software/arcgis-pro). These tools provide specialized processing, workflows, and analysis for defense, intelligence, emergency management, and other solutions domains. With these tools you can determine visibility from a specific viewpoint, create search grids, and analyze event data. They are included with many of Esri's [Solutions Templates](http://solutions.arcgis.com/), but developers can use this repository to download and contribute to the tool development process.
-
-![Image of the toolbox](./img/solutions-geoprocessing-toolbox_screenshot_14APR2016_824x400.png)
+The ArcGIS Solutions Geoprocessing Toolbox is a collection of models, scripts, and tools for use in [ArcGIS for Desktop](http://www.esri.com/software/arcgis/arcgis-for-desktop) and [ArcGIS Pro](http://www.esri.com/en/software/arcgis-pro). These tools provide specialized processing, workflows, and analysis for defense, intelligence, emergency management, and law enforcement. They are included in Esri's [Solutions Templates](http://solutions.arcgis.com/).
 
 
 ### Repository Owner: [Matt](https://github.com/mfunk)
@@ -76,12 +74,23 @@ Specialized geoprocessing models and tools for general defense and intelligence 
 
 ## Requirements
 
-* ArcGIS Desktop 10.3.1 or ArcGIS Pro 1.4
-    * Check [Releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases) for tools for previous versions of ArcGIS Desktop
-* Some tools require additional licenses (these tools will be disabled if license is unavailable), see READMEs for more information: 
-    * ArcGIS Desktop Advanced (ArcInfo)
+* ArcGIS Desktop 10.3.1 (or later)
+* ArcGIS Pro 1.4 (or later)
+
+NOTE: Check [Releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases) for tools for previous versions of ArcGIS Desktop
+
+* Some tools require additional licenses (these tools will be disabled if license is unavailable): 
+    * ArcGIS Desktop Advanced
+	    * Clearing Operations_arcmap
+	    * Clearing Operations_pro
     * ArcGIS Spatial Analyst Extension
+	    * Military Aspects of Terrain_pro
+	    * Military Aspects of Terrain_arcmap
+	    * Sun Position Analysis Tools_pro
+	    * Sun Position Analysis Tools_arcmap
     * ArcGIS 3D Analyst Extension
+	    * Military Aspects of Terrain_pro
+	    * Military Aspects of Terrain_arcmap
 
 ## A Tale of Two Toolboxes
 
@@ -111,8 +120,8 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop only.
 * Download the Github repository
     * If repository was downloaded as a zip, extract the zip file
     * Make note of this directory, the steps below assume it will be called "solutions-geoprocessing-toolbox"
-    * Open the toolboxes in the appropriate version of ArcMap or ArcGIS Pro listed in [requirements](#requirements).
-    * Questions about the tools? Start by reading the tool doc.
+    * Open the toolboxes in the appropriate version of ArcMap or ArcGIS Pro listed in [requirements](#requirements)
+    * Questions about the tools? Start by reading the tool doc
     * Tool doc doesn't make sense? Please log an [issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues) and let us know!
 
 ### Running Verification Tests
