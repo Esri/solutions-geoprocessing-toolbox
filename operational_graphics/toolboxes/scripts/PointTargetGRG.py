@@ -426,16 +426,16 @@ def main():
 
         '''
 
-        # From the template extent, get the origin, y axis, and opposite corner corrdinates
+        # From the template extent, get the origin, y axis, and opposite corner coordinates
         rightCorner =  float(pointExtents[0]) + ((float(cellWidth) * float(numberCellsVert)) /2.0)
         leftCorner = float(pointExtents[0]) - ((float(cellWidth) * float(numberCellsVert)) /2.0)
         topCorner = float(pointExtents[1]) + ((float(cellHeight) * float(numberCellsHo)) /2.0)
         bottomCorner = float(pointExtents[1]) - ((float(cellHeight) * float(numberCellsHo)) /2.0)
         originCoordinate = str(leftCorner) + " " + str(bottomCorner)
-        yAxisCoordinate = str(leftCorner) + " " + str(bottomCorner)
+        yAxisCoordinate = str(leftCorner) + " " + str(bottomCorner + 10)
         oppCornerCoordinate = str(rightCorner) + " " + str(topCorner)
         fullExtent = str(leftCorner) + " " + str(bottomCorner) + " " + str(rightCorner) + " " + str(topCorner)
-
+               
         # If grid size is drawn on the map, then calculate the rotation of the grid
         if inputExtentDrawnFromMap:
             # Find the highest two points in the inputExtentDrawnFromMap shape
@@ -466,18 +466,8 @@ def main():
         elif (labelStartPos == "Lower-Right"):
             startPos = "LR"
 
-        # Import the custom toolbox with the fishnet tool in it, and run this. This had to be added to a model,
-        # because of a bug, which will now allow you to pass variables to the Create Fishnet tool.
-        #UPDATE
-        toolboxPath = None
-        if appEnvironment == "ARCGIS_PRO":
-            toolboxPath = os.path.join(os.path.dirname(sysPath), "ClearingOperationsTools.tbx")
-        else:
-            toolboxPath = os.path.join(os.path.dirname(sysPath), "ClearingOperationsTools.tbx")
-
-        arcpy.ImportToolbox(toolboxPath,"ClearingOperations")
-        arcpy.AddMessage("Creating Fishnet Grid")
-        arcpy.Fishnet_ClearingOperations(tempOutput, originCoordinate, yAxisCoordinate, 0, 0, str(numberCellsHo), str(numberCellsVert), oppCornerCoordinate, "NO_LABELS", fullExtent, "POLYGON")
+        arcpy.AddMessage("Creating Fishnet Grid")        
+        arcpy.CreateFishnet_management(tempOutput, originCoordinate, yAxisCoordinate, 0, 0, str(numberCellsHo), str(numberCellsVert), oppCornerCoordinate, "NO_LABELS", fullExtent, "POLYGON")
 
         # Sort the grid upper left to lower right, and delete the in memory one
         arcpy.AddMessage("Sorting the grid for labeling")
