@@ -27,78 +27,72 @@ Additional information is available in the repository's [Wiki](https://github.co
 * [Instructions To Get Started](#instructions-to-get-started)
 	* [General Help](#general-help)
 	* [Getting Started with the tools](#getting-started-with-the-tools)
-	* [Downloading Test Data](#downloading-test-data)
 	* [Running Verification Tests](#running-verification-tests)
 * [Mature Support](#mature-support)
 * [Resources](#resources)
 * [Issues](#issues)
 * [Contributing](#contributing)
-* [Credits](#credits)
 * [Licensing](#licensing)
 
 ## Features
 
 Specialized geoprocessing models and tools for general defense and intelligence analysis tasks including:
- 
-* The [**capability**](./capability/README.md) folder contains:
-  * ERG (Emergency Resources Guide) Tools
-  * Helicopter Landing Zone Tools
-  * Point Of Origin Tools -- [This tool is moving to Mature Support](#mature-support)
 
-* The [**data_management**](./data_management/README.md) folder contains:
-  * Adjust Sample Data Dates Tools
-  * CADRG ECRG Tools -- [This tool is moving to Mature Support](#mature-support)
-  * CIB Tools -- [This tool is moving to Mature Support](#mature-support)
-  * Elevation Tools -- [This tool is moving to Mature Support](#mature-support)
-  * Geonames Tools
-  * Import and Conversion Tools - formerly Position Analysis Tools -- [This tool is moving to Mature Support](#mature-support)
-  * LiDAR Elevation Tools
-  * Network Data Preparation Tools -- [This tool is moving to Mature Support](#mature-support)
-  * Patrol Data Capture Tools -- [This tool is moving to Mature Support](#mature-support)
-  * Publishable Task Tools -- [This tool is moving to Mature Support](#mature-support)
+* The [**geonames**](./geonames) folder contains:
+	* Geonames Tools_pro
+	* Geonames Tools_arcmap
+	* [Geonames Locator Solutions Page](http://solutions.arcgis.com/defense/help/geonames-locator/)
 
-* The [**operational_graphics**](./operational_graphics/README.md) folder contains:
-  * Clearing Operations Tools
-  * Range Card Tools -- [This tool is moving to Mature Support](#mature-support)
-  
-* The [**patterns**](./patterns/README.md) folder contains:
-  * Incident Analysis Tools
-  * Movement Analysis Tools
 
-* The [**suitability**](./suitability/README.md) folder contains:
-  * Maritime Decision Aid Tools
-  * Military Aspects of Terrain Tools
-  * Military Aspects of Weather Tools
-  * Path Slope Tools
+* The [**clearing_operations**](./clearing_operations) folder contains:
+	* Clearing Operaitons Tools_pro
+	* Clearing Operations Tools_arcmap
+	* [Clearing Operations Solutions Page](http://solutions.arcgis.com/defense/help/clearing-operations/)
 
-* The [**visibility**](./visibility/README.md) folder contains:
-  * Sun Position Analysis Tools
-  * Visibility and Range Tools
-  * Visibility Data Prep Tools
+
+* The [**military_aspects_of_terrain**](./military_aspects_of_terrain) folder contains:
+	* Military Aspects of Terrain Tools_pro
+	* Military Aspects of Terrain Tools_arcmap
+	* [Military Aspects of Terrain Solutions Page](http://solutions.arcgis.com/defense/help/maot/)
+
+
+* The [**military_aspects_of_weather**](./military_aspects_of_weather) folder contains:
+	* Military Aspects of Weather Tools_arcmap
+	* [Military Aspects of Weather Solutions Page](http://solutions.arcgis.com/defense/help/maow/)
+
+
+* The [**sun_position_analysis**](./sun_position_analysis) folder contains:
+	* Sun Position Analysis Tools_pro
+	* Sun Position Analysis Tools_arcmap
+	* [Sun Position Analysis Solutions Page](http://solutions.arcgis.com/defense/help/sun-position-analysis/)
+
+
+* The [**incident_analysis**](./incident_analysis) folder contains:
+	* Incident Analysis Tools_pro
+	* Adjust Sample Data Dates Tools_pro
+	* Incident Analysis Tools_arcmap
+	* Adjust Sample Data Dates Tools_arcmap
+	* [Incident Analysis Solutions Page](http://solutions.arcgis.com/defense/help/incident-analysis/)
 
 ## Requirements
 
-* ArcGIS Desktop 10.4+ or ArcGIS Pro 1.1+
+* ArcGIS Desktop 10.3.1 or ArcGIS Pro 1.4
     * Check [Releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases) for tools for previous versions of ArcGIS Desktop
 * Some tools require additional licenses (these tools will be disabled if license is unavailable), see READMEs for more information: 
     * ArcGIS Desktop Advanced (ArcInfo)
     * ArcGIS Spatial Analyst Extension
     * ArcGIS 3D Analyst Extension
-    * ArcGIS Network Analyst Extension
-    * For example these tools require Desktop Advanced and Spatial Analyst:
-        * Path Slope Tools.tbx\Path Slope
-        * Visibility and Range Tools.tbx\Range Fan
 
 ## A Tale of Two Toolboxes
 
 The solutions-geoprocessing-toolbox repo supports toolboxes for both ArcMap/ArcCatalog/ArcGlobe/ArcScene (collectively called ArcGIS for Desktop) and also ArcGIS Pro. Toolboxes that are modified in ArcGIS Pro are not
 backwards compatible (see **Compatibility** note below) with other ArcGIS Desktop applications (ArcMap), so most toolboxes are duplicated for one or the other. The naming of these toolboxes is as follows:
 
-* Toolboxes that are for ArcGIS Desktop 10.4 will include *_10.4* after the toolbox name. For example: **Visibility and Range Tools_10.4.tbx**
-* Toolboxes with a 'unversioned' name are for ArcGIS Pro 1.1. For example: **Visibility and Range Tools.tbx**
+* Toolboxes that are for ArcGIS Desktop will include *arcmap* after the toolbox name. For example: **Geonames Tools__arcmap.tbx**
+* Toolboxes for ArcGIS Pro will include *pro*. For example: **Geonames Tools__pro.tbx**
 
 
-Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.4 only. These toolboxes will follow the above naming convention, but will not have a duplicate.
+Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop only. These toolboxes will follow the above naming convention, but will not have a duplicate.
 
 * [Compatibility: ModelBuilder migration in Pro](http://pro.arcgis.com/en/pro-app/help/analysis/geoprocessing/modelbuilder/modelbuilder-changes-in-arcgis-pro.htm)
 * [Product info for ArcGIS Pro](http://www.esri.com/software/arcgis-pro)
@@ -120,10 +114,6 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.4 
     * Open the toolboxes in the appropriate version of ArcMap or ArcGIS Pro listed in [requirements](#requirements).
     * Questions about the tools? Start by reading the tool doc.
     * Tool doc doesn't make sense? Please log an [issue](https://github.com/Esri/solutions-geoprocessing-toolbox/issues) and let us know!
-
-### Downloading Test Data
-
-**This section is under reconstruction, per issue [#371](https://github.com/Esri/solutions-geoprocessing-toolbox/issues/371)** 
 
 ### Running Verification Tests
 
@@ -156,10 +146,6 @@ To submit an issue:
 When you contribute to this repository we ask that you follow the guidelines in the [repository-specific guidelines for contributing](./CONTRIBUTING.md). If you have questions, or you get stuck, please ask the [Repository Owner](#repository-owner). We are here to help! Thanks.
 
 Esri welcomes contributions from anyone and everyone through GitHub. Please see Esri's general [guidelines for contributing](https://github.com/esri/contributing).
-
-
-## Credits
-Mosaic Dataset Configuration Scripts (MDCS) is an Esri repo available at [https://github.com/Esri/mdcs-py](https://github.com/Esri/mdcs-py) and [licensed](https://github.com/Esri/mdcs-py/blob/master/license.txt) under Apache License Version 2.0, January 2004.
 
 ## Licensing
 
