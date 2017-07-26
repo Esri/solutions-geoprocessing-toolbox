@@ -1,0 +1,16 @@
+Multidimension Supplemental Tools
+Version: 1.2
+
+This version requires ArcGIS 10.1 Service Pack 1. However, ArcGIS 10.2 is preferred.
+The Multidimensional Zonal Statistics tools require the Spatial Analyst Extension. 
+
+In addition to performance enhancements and bug fixes, Version 1.1 added the following
+tools to the toolbox:
+
+1.  Get Variable Statistics
+2.  Get Variable Statistics Over Dimension
+3.  Multidimensional Zonal Statistics
+4.  Multidimensional Zonal Statistics as Table
+
+Version 1.2 provides bug fixes, layer support, and performance improvements for the
+zonal tools.
