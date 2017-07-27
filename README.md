@@ -91,8 +91,8 @@ Specialized geoprocessing models and tools for general defense and intelligence 
 
 ## A Tale of Two Toolboxes
 
-The solutions-geoprocessing-toolbox repo is now supporting toolboxes for both ArcMap/ArcCatalog/ArcGlobe/ArcScene (collectively called ArcGIS for Desktop) and also ArcGIS Pro. Toolboxes that are modified in ArcGIS Pro are not
-backwards compatible with other ArcGIS Desktop applications (ArcMap), so most toolboxes are duplicated for one or the other. The naming of these toolboxes is as follows:
+The solutions-geoprocessing-toolbox repo supports toolboxes for both ArcMap/ArcCatalog/ArcGlobe/ArcScene (collectively called ArcGIS for Desktop) and also ArcGIS Pro. Toolboxes that are modified in ArcGIS Pro are not
+backwards compatible (see **Compatibility** note below) with other ArcGIS Desktop applications (ArcMap), so most toolboxes are duplicated for one or the other. The naming of these toolboxes is as follows:
 
 * Toolboxes that are for ArcGIS Desktop 10.4 will include *_10.4* after the toolbox name. For example: **Visibility and Range Tools_10.4.tbx**
 * Toolboxes with a 'unversioned' name are for ArcGIS Pro 1.1. For example: **Visibility and Range Tools.tbx**
@@ -100,6 +100,7 @@ backwards compatible with other ArcGIS Desktop applications (ArcMap), so most to
 
 Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.4 only. These toolboxes will follow the above naming convention, but will not have a duplicate.
 
+* [Compatibility: ModelBuilder migration in Pro](http://pro.arcgis.com/en/pro-app/help/analysis/geoprocessing/modelbuilder/modelbuilder-changes-in-arcgis-pro.htm)
 * [Product info for ArcGIS Pro](http://www.esri.com/software/arcgis-pro)
 * [Help for ArcGIS Pro](http://pro.arcgis.com/en/pro-app/)
 
@@ -126,7 +127,7 @@ Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop 10.4 
 
 ### Running Verification Tests
 
-- Follow instructions in [Running tests for solutions-geoprocessing-toolbox](.utils/test/Readme.md)
+- Follow instructions in [Running tests for solutions-geoprocessing-toolbox](./utils/test/Readme.md)
 
 ## Mature Support
 For information Esri support levels visit the [Esri Product Life Cycle](http://support.esri.com/other-resources/product-life-cycle) page. Toolboxes marked for Mature Support will be removed from this repository's *dev* and *master* branches in the future, but will still be availalbe from earlier [releases](https://github.com/Esri/solutions-geoprocessing-toolbox/releases).
@@ -162,7 +163,7 @@ Mosaic Dataset Configuration Scripts (MDCS) is an Esri repo available at [https:
 
 ## Licensing
 
-Copyright 2016 Esri
+Copyright 2016-2017 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -178,6 +179,3 @@ limitations under the License.
 
 A copy of the license is available in the repository's
 [license.txt](license.txt) file.
-
-[](Esri Tags: ArcGIS Defense and Intelligence Military Emergency Management National Security)
-[](Esri Language: Python)
