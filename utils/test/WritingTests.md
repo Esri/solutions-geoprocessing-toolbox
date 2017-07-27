@@ -13,12 +13,14 @@ The goal of this document is to give an overview of how the solutions-geoprocess
 
 ## The Test Structure
 
-### TestKickStart and TestRunner
-These two files, along with some supporting files, start the tests, and determine which platform the tests will run within.
+### TestKick* and TestRunner
+These three files, along with some supporting files, start the tests, and determine which platform the tests will run within.
 
-**TestKickStart.bat** is a simple .BAT file to run the tests under both Python 2.7 (ArcGIS Desktop) and Python 3.4 (ArcGIS Pro).
+- **TestKickDesktop.bat** is a simple .BAT file to run the tests under Python 2.7 for ArcGIS Desktop.
 
-**TestRunner.py** calls the test suites to run.
+- **TestKickPro.bat** is a simple .BAT file to run the tests under Python 3.x for ArcGIS Pro.
+
+- **TestRunner.py** organizes the test suites, runs the tests, and manages the results.
 
 ### Test Suites
 Test suites are collections of [Test Cases](#test-cases). There are two major levels of test suites. The top level are test suites for each of the six tool categories: capability, data_management, operational_graphics, patterns, suitability, visibility. 
@@ -37,9 +39,10 @@ They are named **[toolname]TestCase.py**
 ### Test Data
 The it is impossible to build a test without some kind of inputs. Some tests generate their own data internally (Check out the ERG tool tests as an example). But most will require some kind of output test data.
 
-* Test data **must** be stored in the *./data* folder. 
+* Test data **must** be stored on ArcGIS.com (owner:solutions_github). Contact repo owner to upload to this account.
 * Keep feature data in a file geodatabase. You should name it like your toolbox.
 * Any file data (CSV, TXT, XLSX, etc.) should be easy to identify which toolbox it belongs to.
+* Zip any data before uploading to ArcGIS.com (use type Desktop Application Template).
 
 ## Outline for writing tests
 ### 1. Make a separate branch from dev
