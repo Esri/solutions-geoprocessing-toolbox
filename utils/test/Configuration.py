@@ -44,6 +44,9 @@ DEBUG = True # this guy is a flag for extra messaging while debugging tests
 Logger = None
 Platform = None
 
+PLATFORM_PRO = "PRO"
+PLATFORM_DESKTOP = "DESKTOP"
+
 ''' Testing paths '''
 currentPath = os.path.dirname(__file__) # should go to .\solutions-geoprocessing-toolbox\utils\test
 repoPath = os.path.dirname(os.path.dirname(currentPath))
@@ -77,9 +80,8 @@ incidentDataPath = None
 incidentInputGDB = None
 incidentResultGDB = None
 incidentScratchGDB = None
-patterns_ToolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../patterns/toolboxes/"))
-patterns_ProToolboxPath = os.path.normpath(os.path.join(patterns_ToolboxesPath, "Incident Analysis Tools.tbx"))
-patterns_DesktopToolboxPath = os.path.normpath(os.path.join(patterns_ToolboxesPath, "Incident Analysis Tools_10.4.tbx"))
+incident_ToolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../incident_analysis/Incident Analysis Tools"))
+
 incidentURL = "http://www.arcgis.com/sharing/content/items/528faf6b23154b04a8268b33196fa9ad/data"
 incidentGDBName = "test_incident_analysis_tools.gdb"
 incidentResultGDBName = "test_incident_analysis_results.gdb"
@@ -103,5 +105,28 @@ pathSlopeURL = r"http://www.arcgis.com/sharing/content/items/cbb812326b6f4fb2b77
 visibilityPaths = os.path.normpath(os.path.join(currentPath, r"visibility_tests"))
 vis_ToolboxesPath = os.path.normpath(os.path.join(currentPath, r"../../visibility/toolboxes/"))
 
+def GetPlatform() :
 
+    global Platform 
 
+    if Platform is None :
+        
+        import arcpy
+
+        Platform = PLATFORM_DESKTOP
+        if arcpy.GetInstallInfo()['ProductName'] == 'ArcGISPro':
+            Platform = PLATFORM_PRO
+
+    return Platform
+
+def GetToolboxSuffix() :
+
+    platform = GetPlatform()
+
+    # default to ArcMap
+    suffix = "_arcmap.tbx"
+
+    if Platform == PLATFORM_PRO :
+        suffix = "_pro.tbx"
+
+    return suffix

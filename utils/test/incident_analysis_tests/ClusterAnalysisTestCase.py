@@ -35,6 +35,11 @@ history:
 import arcpy
 import os
 import unittest
+
+# Add parent folder to python path if running test case standalone
+import sys
+sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '..')))
+
 import UnitTestUtilities
 import Configuration
 import DataDownload
@@ -42,9 +47,18 @@ import DataDownload
 class ClusterAnalysisTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Cluster Analysis tool
     in the Incident Analysis toolbox'''
+
+    toolboxUnderTest = None # Set to Pro or ArcMap toolbox at runtime
+    toolboxUnderTestAlias = 'iaTools'
+
     inputPointsFeatures = None
 
     def setUp(self):
+
+        Configuration.GetPlatform()
+
+        toolboxUnderTest = Configuration.incident_ToolboxesPath + Configuration.GetToolboxSuffix()
+
         if Configuration.DEBUG == True: print(".....ClusterAnalysisTestCase.setUp")
         UnitTestUtilities.checkArcPy()
 
@@ -65,10 +79,10 @@ class ClusterAnalysisTestCase(unittest.TestCase):
         if Configuration.DEBUG == True: print(".....ClusterAnalysisTestCase.tearDown")
         UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
 
-    def test_cluster_analysis_pro(self):
+    def test_cluster_analysis(self):
         '''test_cluster_analysis_pro'''
         if Configuration.DEBUG == True: print(".....ClusterAnalysisTestCase.test_cluster_analysis_pro")
-        arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
+        arcpy.ImportToolbox(toolboxUnderTest, toolboxUnderTestAlias)
         outputClusterFeatures = os.path.join(Configuration.incidentScratchGDB, "outputClusters")
         runToolMessage = "Running tool (Cluster Analysis - Pro)"
         arcpy.AddMessage(runToolMessage)
@@ -81,18 +95,5 @@ class ClusterAnalysisTestCase(unittest.TestCase):
         clusterCount = int(arcpy.GetCount_management(outputClusterFeatures).getOutput(0))
         self.assertEqual(clusterCount, int(37))
 
-    def test_cluster_analysis_desktop(self):
-        '''test_cluster_analysis_desktop'''
-        if Configuration.DEBUG == True: print(".....ClusterAnalysisTestCase.test_cluster_analysis_desktop")
-        arcpy.ImportToolbox(Configuration.patterns_DesktopToolboxPath, "iaTools")
-        outputClusterFeatures = os.path.join(Configuration.incidentScratchGDB, "outputClusters")
-        runToolMessage = "Running tool (Cluster Analysis - Desktop)"
-        arcpy.AddMessage(runToolMessage)
-        Configuration.Logger.info(runToolMessage)
-        try:
-            arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, outputClusterFeatures)
-        except:
-            msg = arcpy.GetMessages(2)
-            self.fail('Exception in ClusterAnalysis_iaTools for Desktop toolbox \n' + msg )
-        clusterCount = int(arcpy.GetCount_management(outputClusterFeatures).getOutput(0))
-        self.assertEqual(clusterCount, int(37))
+if __name__ == "__main__":
+    unittest.main()

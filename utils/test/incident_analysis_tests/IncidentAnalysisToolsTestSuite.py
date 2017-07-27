@@ -44,93 +44,26 @@ import logging
 import unittest
 import Configuration
 
-''' Test suite for all test cases for the Incident Analysis Tools toolbox '''
-TestSuite = unittest.TestSuite()
+import ClusterAnalysisTestCase
 
-def getIncidentAnalysisTestSuite():
-    ''' Run the Incident Analysis tests as either Pro or Desktop'''
-        
-    cluster_desktopTests = ['test_cluster_analysis_desktop']
-    cluster_proTests = ['test_cluster_analysis_pro']
-    count_desktopTests = ['test_count_incidents_desktop']
-    count_proTests = ['test_count_incidents_pro']
-    density_desktopTests = ['test_incident_density_desktop']
-    density_proTests = ['test_incident_density_pro']
-    hotSpots_desktopTests = ['test_hot_spots_by_area_desktop']
-    hotSpots_proTests = ['test_hot_spots_by_area_pro']
-    incidentHotSpots_desktopTests = ['test_incident_hot_spots_desktop']
-    incidentHotSpots_proTests = ['test_incident_hot_spots_pro']
-    percentChange_desktopTests = ['test_percent_change_desktop']
-    percentChange_proTests = ['test_percent_change_pro']
-        
-    if Configuration.DEBUG == True: print("     IncidentAnalysisToolsTestSuite.getIncidentAnalysisTestSuite")
-        
-    if Configuration.Platform == "PRO":
-        Configuration.Logger.info("Incident Analysis Tools Pro tests")
-        addClusterTests(cluster_proTests)
-        addCountIncidentTests(count_proTests)
-        addIncidentDensityTests(density_proTests)
-        addHotSpotsByAreaTests(hotSpots_proTests)
-        addIncidentHotSpotsTests(incidentHotSpots_proTests)
-        addFindPercentChangeTests(percentChange_proTests)
-    else:
-        Configuration.Logger.info("Incident Analysis Tools Desktop tests")
-        addClusterTests(cluster_desktopTests)
-        addCountIncidentTests(count_desktopTests)
-        addIncidentDensityTests(density_desktopTests)
-        addHotSpotsByAreaTests(hotSpots_desktopTests)
-        addIncidentHotSpotsTests(incidentHotSpots_desktopTests)
-        addFindPercentChangeTests(percentChange_desktopTests)
+def getTestSuite():
 
-    return TestSuite
+    if Configuration.DEBUG == True: print("     IncidentAnalysisToolsTestSuite.getTestSuite")
 
+    ''' Test suite for all test cases for the Incident Analysis Tools toolbox '''
+    testSuite = unittest.TestSuite()
 
-def addClusterTests(inputTestList):
-    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addClusterTests")
-    from . import ClusterAnalysisTestCase
-    for test in inputTestList:
-        print("adding test: " + str(test))
-        Configuration.Logger.info(test)
-        TestSuite.addTest(ClusterAnalysisTestCase.ClusterAnalysisTestCase(test))
-    
-def addCountIncidentTests(inputTestList):
-    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addCountIncidentTests")
-    from . import CountIncidentsByLOCTestCase
-    for test in inputTestList:
-        print("adding test: " + str(test))
-        Configuration.Logger.info(test)
-        TestSuite.addTest(CountIncidentsByLOCTestCase.CountIncidentsByLOCTestCase(test))
-    
-def addIncidentDensityTests(inputTestList):
-    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addIncidentDensityTests")
-    from . import IncidentDensityTestCase
-    for test in inputTestList:
-        print("adding test: " + str(test))
-        Configuration.Logger.info(test)
-        TestSuite.addTest(IncidentDensityTestCase.IncidentDensityTestCase(test))
+    ''' Add the Incident Analysis tests '''
+ 
+    loader = unittest.TestLoader()
 
-def addHotSpotsByAreaTests(inputTestList):
-    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addHotSpotsByAreaTests")
-    from . import HotSpotsByAreaTestCase
-    for test in inputTestList:
-        print("adding test: " + str(test))
-        Configuration.Logger.info(test)
-        TestSuite.addTest(HotSpotsByAreaTestCase.HotSpotsByAreaTestCase(test))
-     
-def addIncidentHotSpotsTests(inputTestList):
-    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addIncidentHotSpotsTests")
-    from . import IncidentHotSpotsTestCase
-    for test in inputTestList:
-        print("adding test: " + str(test))
-        Configuration.Logger.info(test)
-        TestSuite.addTest(IncidentHotSpotsTestCase.IncidentHotSpotsTestCase(test))
+    testSuite.addTest(loader.loadTestsFromTestCase(ClusterAnalysisTestCase.ClusterAnalysisTestCase))
+    #testSuite.addTest(loader.loadTestsFromTestCase(CountIncidentsByLOCTestCase))
+    #testSuite.addTest(loader.loadTestsFromTestCase(IncidentDensityTestCase))
+    #testSuite.addTest(loader.loadTestsFromTestCase(HotSpotsByAreaTestCase))
+    #testSuite.addTest(loader.loadTestsFromTestCase(IncidentHotSpotsTestCase))
+    #testSuite.addTest(loader.loadTestsFromTestCase(FindPercentChangeTestCase))
 
-def addFindPercentChangeTests(inputTestList):
-    if Configuration.DEBUG == True: print("      IncidentAnalysisToolsTestSuite.addFindPercentChangeTests")
-    from . import FindPercentChangeTestCase
-    for test in inputTestList:
-        print("adding test: " + str(test))
-        Configuration.Logger.info(test)
-        TestSuite.addTest(FindPercentChangeTestCase.FindPercentChangeTestCase(test))
+    return testSuite
         
     

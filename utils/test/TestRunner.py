@@ -138,21 +138,20 @@ def runTestSuite():
     #TODO: MAoT Test Suite
     #TODO: MAoW Test Suite
     #TODO: Sun Position Analysis Test Suite
-    testSuite.addTests(addPatternsSuite())
-    testSuite.addTests(addVisibilitySuite())
-    testSuite.addTests(addSuitabilitySuite())
+    testSuite.addTests(addIncidentAnalysisSuite())
+    # testSuite.addTests(addVisibilitySuite())
+    # testSuite.addTests(addSuitabilitySuite())
 
     print("running " + str(testSuite.countTestCases()) + " tests...")
     testSuite.run(result)
     print("Test success: {0}".format(str(result.wasSuccessful())))
     return result
 
-def addPatternsSuite():
+def addIncidentAnalysisSuite():
     ''' Add all Patterns tests in the ./patterns_tests folder '''
     if Configuration.DEBUG == True: print("TestRunner.py - addPatternsSuite")
-    from patterns_tests import AllPatternsTestSuite
-    suite = unittest.TestSuite()
-    suite.addTest(AllPatternsTestSuite.getPatternsTestSuites())
+    from incident_analysis_tests import IncidentAnalysisToolsTestSuite
+    suite = IncidentAnalysisToolsTestSuite.getTestSuite()
     return suite
 
 def addVisibilitySuite():
