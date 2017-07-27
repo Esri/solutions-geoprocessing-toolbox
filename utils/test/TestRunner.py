@@ -1,7 +1,7 @@
 # coding: utf-8
 '''
 ------------------------------------------------------------------------------
- Copyright 2015 Esri
+ Copyright 2015 - 2017 Esri
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
@@ -32,6 +32,7 @@
  history:
  10/06/2015 - MF - placeholder
  10/30/2015 - MF - tests running
+ 17/25/2017 - MF - remove deprecated tool tests
 ==================================================
 '''
 
@@ -69,23 +70,26 @@ def main():
     UnitTestUtilities.setUpLogFileHeader()
     
     result = runTestSuite()
+
     logTestResults(result)
-    print("END OF TEST =========================================\n")
-    return
+
+    return result.wasSuccessful()
 
 def logTestResults(result):
     ''' Write the log file '''
     resultHead = resultsHeader(result)
-    print(resultHead)
-    Configuration.Logger.info(resultHead)
+    print(resultHead.encode("utf-8"))
+    Configuration.Logger.info(resultHead.encode("utf-8"))
+    
     if len(result.errors) > 0:
         rError = resultsErrors(result)
-        print(rError)
-        Configuration.Logger.error(rError)
+        print(rError.encode("utf-8"))
+        Configuration.Logger.error(rError.encode("utf-8"))
+        
     if len(result.failures) > 0:
         rFail = resultsFailures(result)
-        print(rFail)
-        Configuration.Logger.error(rFail)
+        print(rFail.encode("utf-8"))
+        Configuration.Logger.error(rFail.encode("utf-8"))
     Configuration.Logger.info("END OF TEST =========================================\n")
 
     return
@@ -128,29 +132,20 @@ def runTestSuite():
         Configuration.Platform = "PRO"
     Configuration.Logger.info(Configuration.Platform + " =======================================")
 
-    testSuite.addTests(addCapabilitySuite())
+    #TODO: Geonames Test Suite
+    #TODO: Clearing Operations Test Suite
+    #TODO: Incident Analysis Test Suite
+    #TODO: MAoT Test Suite
+    #TODO: MAoW Test Suite
+    #TODO: Sun Position Analysis Test Suite
     testSuite.addTests(addPatternsSuite())
     testSuite.addTests(addVisibilitySuite())
     testSuite.addTests(addSuitabilitySuite())
-
-    #addDataManagementTests(logger, platform)
-    #addOperationalGraphicsTests(logger, platform)
-    #addPatternsTests(logger, platform)
-    #addSuitabilityTests(logger, platform)
-    #testSuite.addTests(addVisibilityTests(logger, platform))
 
     print("running " + str(testSuite.countTestCases()) + " tests...")
     testSuite.run(result)
     print("Test success: {0}".format(str(result.wasSuccessful())))
     return result
-
-def addCapabilitySuite():
-    ''' Add all Capability tests in the ./capability_tests folder '''
-    if Configuration.DEBUG == True: print("TestRunner.py - addCapabilitySuite")
-    from capability_tests import AllCapabilityTestSuite
-    testSuite = unittest.TestSuite()
-    testSuite.addTests(AllCapabilityTestSuite.getCapabilityTestSuites())
-    return testSuite
 
 def addPatternsSuite():
     ''' Add all Patterns tests in the ./patterns_tests folder '''
@@ -180,4 +175,8 @@ def addSuitabilitySuite():
 if __name__ == "__main__":
     if Configuration.DEBUG == True:
         print("TestRunner.py")
-    main()
+    exitAsCode = main()
+    if exitAsCode:
+        sys.exit(0)
+    else:
+        sys.exit(1)
