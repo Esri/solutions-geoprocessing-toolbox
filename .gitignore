@@ -15,6 +15,9 @@ arc.dir
 *-sav.*
 *Copy.*
 *.log
+*.sav
+*.pyproj
+*.sln
 
 #############
 ## Python
