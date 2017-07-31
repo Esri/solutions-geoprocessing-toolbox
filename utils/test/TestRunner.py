@@ -46,7 +46,6 @@ import Configuration
 import UnitTestUtilities
 import DataDownload
 
-
 logFileFromBAT = None
 if len(sys.argv) > 1:
     logFileFromBAT = sys.argv[1] #if we have an explicit log file name passed in
@@ -126,11 +125,12 @@ def runTestSuite():
     testSuite = unittest.TestSuite()
     result = unittest.TestResult()
 
-    #What are we working with?
-    Configuration.Platform = "DESKTOP"
-    if arcpy.GetInstallInfo()['ProductName'] == 'ArcGISPro':
-        Configuration.Platform = "PRO"
+    #What Platform are we running on?
+    Configuration.GetPlatform()
     Configuration.Logger.info(Configuration.Platform + " =======================================")
+
+    testSuite.addTests(addIncidentAnalysisSuite())
+    testSuite.addTests(addSunPositionAnalysisSuite())
 
     #TODO: Geonames Test Suite
     #TODO: Clearing Operations Test Suite
@@ -138,37 +138,28 @@ def runTestSuite():
     #TODO: MAoT Test Suite
     #TODO: MAoW Test Suite
     #TODO: Sun Position Analysis Test Suite
-    testSuite.addTests(addPatternsSuite())
-    testSuite.addTests(addVisibilitySuite())
-    testSuite.addTests(addSuitabilitySuite())
 
     print("running " + str(testSuite.countTestCases()) + " tests...")
+
+    # Run all of the tests added above
     testSuite.run(result)
+
     print("Test success: {0}".format(str(result.wasSuccessful())))
+
     return result
 
-def addPatternsSuite():
-    ''' Add all Patterns tests in the ./patterns_tests folder '''
-    if Configuration.DEBUG == True: print("TestRunner.py - addPatternsSuite")
-    from patterns_tests import AllPatternsTestSuite
-    suite = unittest.TestSuite()
-    suite.addTest(AllPatternsTestSuite.getPatternsTestSuites())
+def addIncidentAnalysisSuite():
+    ''' Add all IncidentAnalysis tests  '''
+    if Configuration.DEBUG == True: print("TestRunner.py - addIncidentAnalysisSuite")
+    from incident_analysis_tests import IncidentAnalysisToolsTestSuite
+    suite = IncidentAnalysisToolsTestSuite.getTestSuite()
     return suite
 
-def addVisibilitySuite():
-    ''' Add all Visibility tests in the ./visibility_tests folder '''
-    if Configuration.DEBUG == True: print("TestRunner.py - addVisibilitySuite")
-    from visibility_tests import AllVisibilityTestSuite
-    suite = unittest.TestSuite()
-    suite.addTests(AllVisibilityTestSuite.getVisibilityTestSuites())
-    return suite
-
-def addSuitabilitySuite():
-    ''' Add all Suitability tests in the ./suitability_tests folder '''
-    if Configuration.DEBUG == True: print("TestRunner.py - addSuitabilitySuite")
-    from suitability_tests import AllSuitabilityTestSuite
-    suite = unittest.TestSuite()
-    suite.addTests(AllSuitabilityTestSuite.getSuitabilityTestSuites())
+def addSunPositionAnalysisSuite():
+    ''' Add all SunPositionAnalysis tests '''
+    if Configuration.DEBUG == True: print("TestRunner.py - addSunPositionAnalysisSuite")
+    from sun_position_analysis_tests import SunPositionAnalysisToolsTestSuite
+    suite = SunPositionAnalysisToolsTestSuite.getTestSuite()
     return suite
 
 # MAIN =============================================

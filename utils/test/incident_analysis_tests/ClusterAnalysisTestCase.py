@@ -1,4 +1,4 @@
-#coding: utf-8
+# coding: utf-8
 '''
 -----------------------------------------------------------------------------
 Copyright 2016 Esri
@@ -29,12 +29,18 @@ company: Esri
 history:
 12/16/2015 - JH - initial creation
 09/20/2016 - MF - Update to two method test pattern
+07/28/2017 - CM - Refactor
 ==================================================
 '''
 
 import arcpy
 import os
 import unittest
+
+# Add parent folder to python path if running test case standalone
+import sys
+sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '..')))
+
 import UnitTestUtilities
 import Configuration
 import DataDownload
@@ -42,57 +48,62 @@ import DataDownload
 class ClusterAnalysisTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Cluster Analysis tool
     in the Incident Analysis toolbox'''
+
+    toolboxUnderTest = None # Set to Pro or ArcMap toolbox at runtime
+    toolboxUnderTestAlias = 'iaTools'
+
+    incidentScratchGDB = None
+
     inputPointsFeatures = None
 
     def setUp(self):
+
         if Configuration.DEBUG == True: print(".....ClusterAnalysisTestCase.setUp")
+
+        ''' Initialization needed if running Test Case standalone '''
+        Configuration.GetLogger()
+        Configuration.GetPlatform()
+        ''' End standalone initialization '''
+
+        self.toolboxUnderTest = Configuration.incidentToolboxPath + Configuration.GetToolboxSuffix()
+
         UnitTestUtilities.checkArcPy()
 
-        Configuration.incidentDataPath = DataDownload.runDataDownload(Configuration.patternsPaths, Configuration.incidentGDBName, Configuration.incidentURL)
-        if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
-            Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
-        Configuration.incidentInputGDB = os.path.join(Configuration.incidentDataPath, Configuration.incidentGDBName)    
-
-        UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath,
-                                          Configuration.incidentInputGDB,
-                                          Configuration.patterns_ProToolboxPath,
-                                          Configuration.patterns_DesktopToolboxPath])
+        DataDownload.runDataDownload(Configuration.incidentAnalysisDataPath, Configuration.incidentInputGDB, Configuration.incidentURL)
+        if (self.incidentScratchGDB == None) or (not arcpy.Exists(self.incidentScratchGDB)):
+            self.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentAnalysisDataPath)
 
         # set up inputs
         self.inputPointsFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
 
+        arcpy.env.OverwriteOutputs = True
+
+        UnitTestUtilities.checkFilePaths([Configuration.incidentAnalysisDataPath])
+
+        UnitTestUtilities.checkGeoObjects([Configuration.incidentInputGDB, \
+                                           self.incidentScratchGDB, \
+                                           self.toolboxUnderTest, \
+                                           self.inputPointsFeatures])
+
     def tearDown(self):
         if Configuration.DEBUG == True: print(".....ClusterAnalysisTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
+        UnitTestUtilities.deleteScratch(self.incidentScratchGDB)
 
-    def test_cluster_analysis_pro(self):
-        '''test_cluster_analysis_pro'''
-        if Configuration.DEBUG == True: print(".....ClusterAnalysisTestCase.test_cluster_analysis_pro")
-        arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
-        outputClusterFeatures = os.path.join(Configuration.incidentScratchGDB, "outputClusters")
-        runToolMessage = "Running tool (Cluster Analysis - Pro)"
+    def test_cluster_analysis(self):
+        '''test_cluster_analysis'''
+        if Configuration.DEBUG == True: print(".....ClusterAnalysisTestCase.test_cluster_analysis")
+        arcpy.ImportToolbox(self.toolboxUnderTest, self.toolboxUnderTestAlias)
+        outputClusterFeatures = os.path.join(self.incidentScratchGDB, "outputClusters")
+        runToolMessage = "Running tool (Cluster Analysis)"
         arcpy.AddMessage(runToolMessage)
         Configuration.Logger.info(runToolMessage)
         try:
             arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, outputClusterFeatures)
         except:
             msg = arcpy.GetMessages(2)
-            self.fail('Exception in ClusterAnalysis_iaTools for Pro toolbox \n' + msg)
+            self.fail('Exception in ClusterAnalysis_iaTools toolbox \n' + msg)
         clusterCount = int(arcpy.GetCount_management(outputClusterFeatures).getOutput(0))
-        self.assertEqual(clusterCount, int(37))
+        self.assertGreater(clusterCount, int(10))
 
-    def test_cluster_analysis_desktop(self):
-        '''test_cluster_analysis_desktop'''
-        if Configuration.DEBUG == True: print(".....ClusterAnalysisTestCase.test_cluster_analysis_desktop")
-        arcpy.ImportToolbox(Configuration.patterns_DesktopToolboxPath, "iaTools")
-        outputClusterFeatures = os.path.join(Configuration.incidentScratchGDB, "outputClusters")
-        runToolMessage = "Running tool (Cluster Analysis - Desktop)"
-        arcpy.AddMessage(runToolMessage)
-        Configuration.Logger.info(runToolMessage)
-        try:
-            arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, outputClusterFeatures)
-        except:
-            msg = arcpy.GetMessages(2)
-            self.fail('Exception in ClusterAnalysis_iaTools for Desktop toolbox \n' + msg )
-        clusterCount = int(arcpy.GetCount_management(outputClusterFeatures).getOutput(0))
-        self.assertEqual(clusterCount, int(37))
+if __name__ == "__main__":
+    unittest.main()

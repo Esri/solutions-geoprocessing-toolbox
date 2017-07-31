@@ -188,6 +188,8 @@ def handleArcPyError():
     print(msgs)
     Configuration.Logger.error(msgs)
 
+    raise Exception('ArcPy Error')
+
 def handleGeneralError():
     ''' Basic error handler, errors printed to console and logger '''
     if Configuration.DEBUG == True: print("UnitTestUtilities - handleGeneralError")
@@ -204,6 +206,8 @@ def handleGeneralError():
     Configuration.Logger.error(pymsg)
     print(msgs)
     Configuration.Logger.error(msgs)
+
+    raise Exception('General Error')
     
 def geoObjectsExist(objects):
     ''' Return true if all of the input list of geo-objects exist, false otherwise '''

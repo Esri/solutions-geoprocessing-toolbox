@@ -1,0 +1,1 @@
+This folder is for temporary test data download

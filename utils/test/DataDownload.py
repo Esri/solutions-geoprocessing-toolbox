@@ -33,11 +33,10 @@ import UnitTestUtilities
 import Configuration
 
 def createDataFolder(path):
-    ''' If it doesn't already exist, create a 'data' sub-directory in the path '''
-    dataPath = os.path.normpath(os.path.join(path, r"data"))
-    if not os.path.exists(dataPath):
-        os.makedirs(dataPath)
-    return dataPath
+    ''' If it doesn't already exist, create directory '''
+    if not os.path.exists(path):
+        os.makedirs(path)
+    return path
 
 def createFGDB(gPath):
     ''' Create a file geodatabase from the input path. Path should include the file geodatabase name like:
@@ -72,10 +71,11 @@ def deleteZip(tempFile):
     ''' Delete the data zip file '''
     os.remove(tempFile)
     
-def runDataDownload(basePath, gdbName, url):
+def runDataDownload(dataPath, gdbPath, url):
     ''' Download and extract the geodatabase with specified gdbName from the given url to the basePath's data folder '''
-    dataPath = createDataFolder(basePath)
-    gdbPath = os.path.normpath(os.path.join(dataPath, gdbName))
+    createDataFolder(dataPath)
+    gdbName = os.path.basename(gdbPath)
+
     exists = UnitTestUtilities.folderPathsExist([gdbPath])
         
     if not exists:

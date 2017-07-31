@@ -25,12 +25,18 @@ company: Esri
 history:
 12/16/2015 - JH - initial creation
 09/20/2016 - MF - Update to two method test pattern 
+07/28/2017 - CM - Refactor
 ==================================================
 '''
 
 import unittest
 import arcpy
 import os
+
+# Add parent folder to python path if running test case standalone
+import sys
+sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '..')))
+
 import UnitTestUtilities
 import Configuration
 import DataDownload
@@ -38,36 +44,57 @@ import DataDownload
 class HotSpotsByAreaTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Hot Spots by Area tool
     in the Incident Analysis toolbox'''
-    
+ 
+    toolboxUnderTest = None # Set to Pro or ArcMap toolbox at runtime
+    toolboxUnderTestAlias = 'iaTools'
+
+    incidentScratchGDB = None
+
     inputAOIFeatures = None
     inputIncidents = None
     
     def setUp(self):
         if Configuration.DEBUG == True: print(".....HotSpotsByAreaTestCase.setUp")
+
+        ''' Initialization needed if running Test Case standalone '''
+        Configuration.GetLogger()
+        Configuration.GetPlatform()
+        ''' End standalone initialization '''
+
+        self.toolboxUnderTest = Configuration.incidentToolboxPath + Configuration.GetToolboxSuffix()
+
         UnitTestUtilities.checkArcPy()
         
-        Configuration.incidentDataPath = DataDownload.runDataDownload(Configuration.patternsPaths, Configuration.incidentGDBName, Configuration.incidentURL)
-        if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
-            Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
-        Configuration.incidentInputGDB = os.path.join(Configuration.incidentDataPath, Configuration.incidentGDBName)    
-        UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
+        DataDownload.runDataDownload(Configuration.incidentAnalysisDataPath, Configuration.incidentInputGDB, Configuration.incidentURL)
+        if (self.incidentScratchGDB == None) or (not arcpy.Exists(self.incidentScratchGDB)):
+            self.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentAnalysisDataPath)
         
         self.inputAOIFeatures = os.path.join(Configuration.incidentInputGDB, "Districts")
         self.inputIncidents = os.path.join(Configuration.incidentInputGDB, "Incidents")
+
+        UnitTestUtilities.checkFilePaths([Configuration.incidentAnalysisDataPath])
+
+        UnitTestUtilities.checkGeoObjects([Configuration.incidentInputGDB, \
+                                           self.incidentScratchGDB, \
+                                           self.toolboxUnderTest, \
+                                           self.inputAOIFeatures, \
+                                           self.inputIncidents])
         
     def tearDown(self):
         if Configuration.DEBUG == True: print(".....HotSpotsByAreaTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
+        UnitTestUtilities.deleteScratch(self.incidentScratchGDB)
         
-    def test_hot_spots_by_area_pro(self):
-        '''test_hot_spots_by_area_pro'''
-        if Configuration.DEBUG == True: print(".....HotSpotsByAreaTestCase.test_hot_spots_by_area_pro")  
-        arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
-        runToolMessage = "Running tool (Hot Spots By Area - Pro)"
+    def test_hot_spots_by_area(self):
+        '''test_hot_spots_by_area'''
+        if Configuration.DEBUG == True: print(".....HotSpotsByAreaTestCase.test_hot_spots_by_area")
+
+        arcpy.ImportToolbox(self.toolboxUnderTest, self.toolboxUnderTestAlias)
+
+        runToolMessage = "Running tool (Hot Spots By Area)"
         arcpy.AddMessage(runToolMessage)
         Configuration.Logger.info(runToolMessage)
         incidentFieldName = "district"
-        outputWorkspace = Configuration.incidentDataPath
+        outputWorkspace = Configuration.incidentAnalysisDataPath
         # second parameter: inputIncidents must be a Feature Layer
         arcpy.MakeFeatureLayer_management(self.inputIncidents, "incidentsLayer")
         try:
@@ -75,22 +102,9 @@ class HotSpotsByAreaTestCase(unittest.TestCase):
         except:
             msg = arcpy.GetMessages(2)
             self.fail('Exception in HotSpotsByArea_iaTools for Pro toolbox \n' + msg)
+
+        # TODO: Doesn't seem to test anything
         self.assertTrue(arcpy.Exists(outputWorkspace))
-    
-    def test_hot_spots_by_area_desktop(self):
-        '''test_hot_spots_by_area_desktop'''
-        if Configuration.DEBUG == True: print(".....HotSpotsByAreaTestCase.test_hot_spots_by_area_desktop")  
-        arcpy.ImportToolbox(Configuration.patterns_DesktopToolboxPath, "iaTools")
-        runToolMessage = "Running tool (Hot Spots By Area - Desktop)"
-        arcpy.AddMessage(runToolMessage)
-        Configuration.Logger.info(runToolMessage)
-        incidentFieldName = "district"
-        outputWorkspace = Configuration.incidentDataPath
-        # second parameter: inputIncidents must be a Feature Layer
-        arcpy.MakeFeatureLayer_management(self.inputIncidents, "incidentsLayer")
-        try:
-            arcpy.HotSpotsByArea_iaTools(self.inputAOIFeatures, "incidentsLayer", incidentFieldName, outputWorkspace)
-        except:
-            msg = arcpy.GetMessages(2)
-            self.fail('Exception in HotSpotsByArea_iaTools for Desktop toolbox \n' + msg)
-        self.assertTrue(arcpy.Exists(outputWorkspace))
+
+if __name__ == "__main__":
+    unittest.main()

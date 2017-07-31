@@ -26,12 +26,18 @@ history:
 12/16/2015 - JH - initial creation
 09/20/2016 - MF - Update to two method test pattern
 05/02/2017 - MF - Update test for new AOI parameter in the tool
+07/28/2017 - CM - Refactor
 ==================================================
 '''
 
 import arcpy
 import os
 import unittest
+
+# Add parent folder to python path if running test case standalone
+import sys
+sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '..')))
+
 import UnitTestUtilities
 import Configuration
 import DataDownload
@@ -40,38 +46,59 @@ import arcpyAssert
 class CountIncidentsByLOCTestCase(unittest.TestCase, arcpyAssert.FeatureClassAssertMixin):
     ''' Test all tools and methods related to the Count Incidents by LOC tool
     in the Incident Analysis toolbox'''
-    
+   
+    toolboxUnderTest = None # Set to Pro or ArcMap toolbox at runtime
+    toolboxUnderTestAlias = 'iaTools'
+
+    incidentScratchGDB = None    
+     
     inputPointsFeatures = None
     inputLinesFeatures = None
     
     def setUp(self):
         if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.setUp")  
+
+        ''' Initialization needed if running Test Case standalone '''
+        Configuration.GetLogger()
+        Configuration.GetPlatform()
+        ''' End standalone initialization '''
+
+        self.toolboxUnderTest = Configuration.incidentToolboxPath + Configuration.GetToolboxSuffix()
+
         UnitTestUtilities.checkArcPy()
         
-        Configuration.incidentDataPath = DataDownload.runDataDownload(Configuration.patternsPaths, Configuration.incidentGDBName, Configuration.incidentURL)
-        if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
-            Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
-        Configuration.incidentInputGDB = os.path.join(Configuration.incidentDataPath, Configuration.incidentGDBName)
-        Configuration.incidentResultGDB = os.path.join(Configuration.incidentDataPath, Configuration.incidentResultGDBName)
+        DataDownload.runDataDownload(Configuration.incidentAnalysisDataPath, Configuration.incidentInputGDB, Configuration.incidentURL)
+        if (self.incidentScratchGDB == None) or (not arcpy.Exists(self.incidentScratchGDB)):
+            self.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentAnalysisDataPath)
         
-        UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
-     
         # set up inputs    
         self.inputPointsFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
         self.inputLinesFeatures = os.path.join(Configuration.incidentInputGDB, "Roads")
         self.inputAOIFeatures = os.path.join(Configuration.incidentInputGDB, "Districts")
         self.resultCompareFeatures0001 = os.path.join(Configuration.incidentResultGDB, "resultsCountIncidentsByLOC_0001")
+
+        UnitTestUtilities.checkFilePaths([Configuration.incidentAnalysisDataPath])
+
+        UnitTestUtilities.checkGeoObjects([Configuration.incidentInputGDB, \
+                                           self.incidentScratchGDB, \
+                                           self.toolboxUnderTest, \
+                                           self.inputPointsFeatures, \
+                                           self.inputLinesFeatures,  \
+                                           self.inputAOIFeatures,  \
+                                           self.resultCompareFeatures0001])
             
     def tearDown(self):
         if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
-        
-    def test_count_incidents_pro(self):
-        '''test_count_incidents_pro'''
-        if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.test_count_incidents_pro")
-        arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
-        outputCountFeatures = os.path.join(Configuration.incidentScratchGDB, "outputCount")
-        runToolMsg = "Running tool (Count Incidents By LOC - Pro)"
+        UnitTestUtilities.deleteScratch(self.incidentScratchGDB)
+                
+    def test_count_incidents(self):
+        '''test_count_incidents'''
+        if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.test_count_incidents")
+
+        arcpy.ImportToolbox(self.toolboxUnderTest, self.toolboxUnderTestAlias)
+
+        outputCountFeatures = os.path.join(self.incidentScratchGDB, "outputCount")
+        runToolMsg = "Running tool (Count Incidents By LOC)"
         arcpy.AddMessage(runToolMsg)
         Configuration.Logger.info(runToolMsg)
         arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures,
@@ -80,18 +107,6 @@ class CountIncidentsByLOCTestCase(unittest.TestCase, arcpyAssert.FeatureClassAss
                                           outputCountFeatures,
                                           "50 Meters")
         self.assertFeatureClassEqual(self.resultCompareFeatures0001, outputCountFeatures, "OBJECTID")
-            
-    
-    def test_count_incidents_desktop(self):
-        if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.test_count_incidents_desktop")
-        arcpy.ImportToolbox(Configuration.patterns_DesktopToolboxPath, "iaTools")
-        outputCountFeatures = os.path.join(Configuration.incidentScratchGDB, "outputCount")
-        runToolMsg = "Running tool (Count Incidents By LOC - Desktop)"
-        arcpy.AddMessage(runToolMsg)
-        Configuration.Logger.info(runToolMsg)
-        arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures,
-                                          self.inputLinesFeatures,
-                                          self.inputAOIFeatures,
-                                          outputCountFeatures,
-                                          "50 Meters")
-        self.assertFeatureClassEqual(self.resultCompareFeatures0001,outputCountFeatures,"OBJECTID")
+
+if __name__ == "__main__":
+    unittest.main()

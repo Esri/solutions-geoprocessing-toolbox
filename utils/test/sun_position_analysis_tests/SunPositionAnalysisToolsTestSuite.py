@@ -32,42 +32,30 @@ Sun Position Analysis Tools toolboxes:
 ==================================================
 history:
 10/29/2015 - JH - wired up SunPositionAnalysisToolsTestSuite to run SunPositionAndHillshadeTestCase in Pro or Desktop
+07/28/2017 - CM - Refactor
 ==================================================
 '''
 
-import os
 import unittest
 import logging
-from . import SunPositionAndHillshadeTestCase
 import Configuration
+
+from . import SunPositionAndHillshadeTestCase
 
 ''' Test suite for all tools in the Sun Position Analysis Tools toolbox '''
     
-def getSunPositionTestSuite():
-        
-    desktopTestList = ["test_sun_position_analysis_desktop"]
-        
-    proTestList = ["test_sun_position_analysis_pro"]
+def getTestSuite():
         
     if Configuration.DEBUG == True:
-        print("      SunPositionAnalysisTestSuite.getSunPositionTestSuite")
+        print("      SunPositionAnalysisTestSuite.getSuite")
         
-    suite = unittest.TestSuite()
-    if Configuration.Platform == "PRO":
-        Configuration.Logger.info("Sun Position Analysis Tools Pro tests")
-        suite = addTests(suite, proTestList)
-    else:
-        Configuration.Logger.info("Sun Position Analysis Tools Desktop tests")
-        suite = addTests(suite, desktopTestList)
-    return suite
-    
-def addTests(suite, inputTestList):
-    ''' Add the list of tests to the test suite '''
-    if Configuration.DEBUG == True:
-            print("      SunPositionAnalysisTestSuite.addTests")
-    for test in inputTestList: 
-        print("adding test: " + str(test))
-        Configuration.Logger.info(test)
-        suite.addTest(SunPositionAndHillshadeTestCase.SunPositionAndHillshadeTestCase(test))
-    return suite
+    testSuite = unittest.TestSuite()
+
+    ''' Add the Sun Position tests '''
+ 
+    loader = unittest.TestLoader()
+
+    testSuite.addTest(loader.loadTestsFromTestCase(SunPositionAndHillshadeTestCase.SunPositionAndHillshadeTestCase))
+
+    return testSuite
     
