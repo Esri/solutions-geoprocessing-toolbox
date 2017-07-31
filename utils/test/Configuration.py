@@ -78,8 +78,9 @@ incidentResultGDB = os.path.join(incidentAnalysisDataPath, "test_incident_analys
 
 ''' Sun Position Analysis - Test Data/Paths ''' 
 sunPositionAnalysisToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../sun_position_analysis/Sun Position Analysis Tools"))
-sunPositionAnalysisPath = os.path.normpath(os.path.join(testDataPath, r"sun_position_analysis"))
+sunPositionAnalysisDataPath = os.path.normpath(os.path.join(testDataPath, r"sun_position_analysis"))
 sunPositionAnalysisURL = r"http://www.arcgis.com/sharing/content/items/bf6a04b4c9a3447b91e9c0b4074ca1e4/data"
+sunPositionInputGDB = os.path.join(sunPositionAnalysisDataPath, "test_sun_position.gdb")
 
 ''' MAoT - Test Data/Paths ''' 
 maotToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../military_aspects_of_terrain/Military Aspects of Terrain Tools"))

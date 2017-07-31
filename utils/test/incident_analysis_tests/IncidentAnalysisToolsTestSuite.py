@@ -37,14 +37,20 @@ This test suite collects all of the Incident Analysis Tools toolbox test cases:
 history:
 10/23/2015 - MF - intial coding started
 04/25/2017 - EL - removed IncidentTableToPointTestCase.py
+07/28/2017 - CM - Refactor
 ==================================================
 '''
 
-import logging
 import unittest
+import logging
 import Configuration
 
-import ClusterAnalysisTestCase
+from . import ClusterAnalysisTestCase
+from . import CountIncidentsByLOCTestCase
+from . import IncidentDensityTestCase
+from . import HotSpotsByAreaTestCase
+from . import IncidentHotSpotsTestCase
+from . import FindPercentChangeTestCase
 
 def getTestSuite():
 
@@ -58,11 +64,11 @@ def getTestSuite():
     loader = unittest.TestLoader()
 
     testSuite.addTest(loader.loadTestsFromTestCase(ClusterAnalysisTestCase.ClusterAnalysisTestCase))
-    #testSuite.addTest(loader.loadTestsFromTestCase(CountIncidentsByLOCTestCase))
-    #testSuite.addTest(loader.loadTestsFromTestCase(IncidentDensityTestCase))
-    #testSuite.addTest(loader.loadTestsFromTestCase(HotSpotsByAreaTestCase))
-    #testSuite.addTest(loader.loadTestsFromTestCase(IncidentHotSpotsTestCase))
-    #testSuite.addTest(loader.loadTestsFromTestCase(FindPercentChangeTestCase))
+    testSuite.addTest(loader.loadTestsFromTestCase(CountIncidentsByLOCTestCase.CountIncidentsByLOCTestCase))
+    testSuite.addTest(loader.loadTestsFromTestCase(IncidentDensityTestCase.IncidentDensityTestCase))
+    testSuite.addTest(loader.loadTestsFromTestCase(HotSpotsByAreaTestCase.HotSpotsByAreaTestCase))
+    testSuite.addTest(loader.loadTestsFromTestCase(IncidentHotSpotsTestCase.IncidentHotSpotsTestCase))
+    testSuite.addTest(loader.loadTestsFromTestCase(FindPercentChangeTestCase.FindPercentChangeTestCase))
 
     return testSuite
         
