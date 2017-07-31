@@ -25,12 +25,18 @@ company: Esri
 history:
 12/16/2015 - JH - initial creation
 09/20/2016 - MF - Update to two method test pattern
+07/28/2017 - CM - Refactor
 ==================================================
 '''
 
 import unittest
 import arcpy
 import os
+
+# Add parent folder to python path if running test case standalone
+import sys
+sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '..')))
+
 import UnitTestUtilities
 import Configuration
 import DataDownload
@@ -38,85 +44,66 @@ import DataDownload
 class FindPercentChangeTestCase(unittest.TestCase):
     ''' Test all tools and methods related to the Find Percent Change tool
     in the Incident Analysis toolbox'''
+ 
+    toolboxUnderTest = None # Set to Pro or ArcMap toolbox at runtime
+    toolboxUnderTestAlias = 'iaTools'
     
+    incidentScratchGDB = None
+           
     inputOldIncidents = None
     inputNewIncidents = None
     inputAOIFeatures = None
     
     def setUp(self):
         if Configuration.DEBUG == True: print(".....FindPercentChangeTestCase.setUp")
+        ''' Initialization needed if running Test Case standalone '''
+        Configuration.GetLogger()
+        Configuration.GetPlatform()
+        ''' End standalone initialization '''
+
+        self.toolboxUnderTest = Configuration.incidentToolboxPath + Configuration.GetToolboxSuffix()
+
         UnitTestUtilities.checkArcPy()
-        
-        Configuration.incidentDataPath = DataDownload.runDataDownload(Configuration.patternsPaths, Configuration.incidentGDBName, Configuration.incidentURL)
-        if (Configuration.incidentScratchGDB == None) or (not arcpy.Exists(Configuration.incidentScratchGDB)):
-            Configuration.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentDataPath)
-        Configuration.incidentInputGDB = os.path.join(Configuration.incidentDataPath, Configuration.incidentGDBName)
-        
-        UnitTestUtilities.checkFilePaths([Configuration.incidentDataPath, Configuration.incidentInputGDB, Configuration.patterns_ProToolboxPath, Configuration.patterns_DesktopToolboxPath])
-            
+
+        DataDownload.runDataDownload(Configuration.incidentAnalysisDataPath, Configuration.incidentInputGDB, Configuration.incidentURL)
+        if (self.incidentScratchGDB == None) or (not arcpy.Exists(self.incidentScratchGDB)):
+            self.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentAnalysisDataPath)
+
+        # set up inputs        
         self.inputOldIncidents = os.path.join(Configuration.incidentInputGDB, "Incidents2014")
         self.inputNewIncidents = os.path.join(Configuration.incidentInputGDB, "Incidents2015")
         self.inputAOIFeatures = os.path.join(Configuration.incidentInputGDB, "Districts")
-            
+
+        UnitTestUtilities.checkFilePaths([Configuration.incidentAnalysisDataPath])
+
+        UnitTestUtilities.checkGeoObjects([Configuration.incidentInputGDB, \
+                                           self.incidentScratchGDB, \
+                                           self.toolboxUnderTest, \
+                                           self.inputOldIncidents, \
+                                           self.inputNewIncidents, \
+                                           self.inputAOIFeatures])
+       
     def tearDown(self):
         if Configuration.DEBUG == True: print(".....FindPercentChangeTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(Configuration.incidentScratchGDB)
+        UnitTestUtilities.deleteScratch(self.incidentScratchGDB)
         
-    def test_percent_change_pro(self):
+    def test_percent_change(self):
         '''test_percent_change_pro'''
-        if Configuration.DEBUG == True: print(".....FindPercentChangeTestCase.test_percent_change_pro")
-        arcpy.ImportToolbox(Configuration.patterns_ProToolboxPath, "iaTools")
-        runToolMessage = "Running tool (Find Percent Change - Pro)"
+        if Configuration.DEBUG == True: print(".....FindPercentChangeTestCase.test_percent_change")
+        arcpy.ImportToolbox(self.toolboxUnderTest, self.toolboxUnderTestAlias)
+        runToolMessage = "Running tool (Find Percent Change)"
         arcpy.AddMessage(runToolMessage)
         Configuration.Logger.info(runToolMessage)
-        outputFeatures = os.path.join(Configuration.incidentScratchGDB, "outputPercentChange")
+        outputFeatures = os.path.join(self.incidentScratchGDB, "outputPercentChange")
         # Pro adds an extra parameter for output
         try:
             arcpy.FindPercentChange_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents, outputFeatures)
         except:
             msg = arcpy.GetMessages(2)
             self.fail('Exception in FindPercentChange_iaTools for Pro toolbox \n' + msg)
-        proResult = arcpy.GetCount_management(outputFeatures)
-        proCount = int(proResult.getOutput(0))
-        self.assertEqual(proCount, int(10))
-        
-    def test_percent_change_desktop(self):
-        '''test_percent_change_desktop'''
-        if Configuration.DEBUG == True: print(".....FindPercentChangeTestCase.test_percent_change_desktop")
-        arcpy.ImportToolbox(Configuration.patterns_DesktopToolboxPath, "iaTools")
-        runToolMessage = "Running tool (Find Percent Change)"
-        arcpy.AddMessage(runToolMessage)
-        Configuration.Logger.info(runToolMessage)
-        try:
-            result = arcpy.FindPercentChange_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents)
-        except:
-            msg = arcpy.GetMessages(2)
-            self.fail('Exception in FindPercentChange_iaTools for Desktop toolbox \n' + msg)
-        featureResult = arcpy.GetCount_management(result)
-        featureCount = int(featureResult.getOutput(0))
-        self.assertEqual(featureCount, int(10))
-        
-    # def test_percent_change(self, toolboxPath, platform):
-    #     try:
-    #         if Configuration.DEBUG == True: print("     FindPercentChangeTestCase.test_percent_change")
-    #         arcpy.ImportToolbox(toolboxPath, "iaTools")
-    #         runToolMessage = "Running tool (Find Percent Change)"
-    #         arcpy.AddMessage(runToolMessage)
-    #         Configuration.Logger.info(runToolMessage)
-    #         if platform == "Pro":
-    #             outputFeatures = os.path.join(Configuration.incidentScratchGDB, "outputPercentChange")
-    #             # Pro adds an extra parameter for output
-    #             arcpy.FindPercentChange_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents, outputFeatures)
-    #             proResult = arcpy.GetCount_management(outputFeatures)
-    #             proCount = int(proResult.getOutput(0))
-    #             self.assertEqual(proCount, int(10))
-    #         else:
-    #             result = arcpy.FindPercentChange_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents)
-    #             featureResult = arcpy.GetCount_management(result)
-    #             featureCount = int(featureResult.getOutput(0))
-    #             self.assertEqual(featureCount, int(10))
-    #     except arcpy.ExecuteError:
-    #         UnitTestUtilities.handleArcPyError()
-    #     except:
-    #         UnitTestUtilities.handleGeneralError()
-            
+        result = arcpy.GetCount_management(outputFeatures)
+        count = int(result.getOutput(0))
+        self.assertEqual(count, int(10))
+      
+if __name__ == "__main__":
+    unittest.main()

@@ -29,6 +29,7 @@ company: Esri
 history:
 12/16/2015 - JH - initial creation
 09/20/2016 - MF - Update to two method test pattern
+07/28/2017 - CM - Refactor
 ==================================================
 '''
 
@@ -52,9 +53,12 @@ class ClusterAnalysisTestCase(unittest.TestCase):
     toolboxUnderTestAlias = 'iaTools'
 
     incidentScratchGDB = None
+
     inputPointsFeatures = None
 
     def setUp(self):
+
+        if Configuration.DEBUG == True: print(".....ClusterAnalysisTestCase.setUp")
 
         ''' Initialization needed if running Test Case standalone '''
         Configuration.GetLogger()
@@ -63,7 +67,6 @@ class ClusterAnalysisTestCase(unittest.TestCase):
 
         self.toolboxUnderTest = Configuration.incidentToolboxPath + Configuration.GetToolboxSuffix()
 
-        if Configuration.DEBUG == True: print(".....ClusterAnalysisTestCase.setUp")
         UnitTestUtilities.checkArcPy()
 
         DataDownload.runDataDownload(Configuration.incidentAnalysisDataPath, Configuration.incidentInputGDB, Configuration.incidentURL)

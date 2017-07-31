@@ -20,6 +20,11 @@ import sys
 import traceback
 import datetime
 import os
+
+# Add parent folder to python path if running test case standalone
+import sys
+sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '..')))
+
 import unittest
 import Configuration
 import UnitTestUtilities
@@ -134,5 +139,7 @@ class SunPositionAndHillshadeTestCase(unittest.TestCase):
             
         finally:
             arcpy.CheckInExtension("Spatial")
-        
+
+if __name__ == "__main__":
+    unittest.main()        
         
