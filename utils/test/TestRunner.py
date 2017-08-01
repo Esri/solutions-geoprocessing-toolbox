@@ -131,8 +131,8 @@ def runTestSuite():
 
     testSuite.addTests(addIncidentAnalysisSuite())
     testSuite.addTests(addSunPositionAnalysisSuite())
+    testSuite.addTests(addGeoNamesSuite())
 
-    #TODO: Geonames Test Suite
     #TODO: Clearing Operations Test Suite
     #TODO: Incident Analysis Test Suite
     #TODO: MAoT Test Suite
@@ -160,6 +160,13 @@ def addSunPositionAnalysisSuite():
     if Configuration.DEBUG == True: print("TestRunner.py - addSunPositionAnalysisSuite")
     from sun_position_analysis_tests import SunPositionAnalysisToolsTestSuite
     suite = SunPositionAnalysisToolsTestSuite.getTestSuite()
+    return suite
+
+def addGeoNamesSuite():
+    ''' Add all SunPositionAnalysis tests '''
+    if Configuration.DEBUG == True: print("TestRunner.py - addGeoNamesSuite")
+    from geonames_tests import GeoNamesToolsTestSuite
+    suite = GeoNamesToolsTestSuite.getTestSuite()
     return suite
 
 # MAIN =============================================

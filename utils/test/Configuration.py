@@ -66,7 +66,8 @@ clearingOperationsURL = r"http://www.arcgis.com/sharing/content/items/198f01e263
 
 ''' Geonames - Test Data/Paths ''' 
 geonamesToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../geonames/Geonames Tools"))
-geonamesPath = os.path.normpath(os.path.join(testDataPath, r"geonames"))
+geonamesDataPath = os.path.normpath(os.path.join(testDataPath, r"geonames"))
+geonamesInputGDB = os.path.join(geonamesDataPath, "Geonames.gdb")
 geonamesURL = r"http://www.arcgis.com/sharing/content/items/afc766d5276648ab80aa85b819af1ffc/data"
 
 ''' Incident Analysis - Test Data/Paths '''
