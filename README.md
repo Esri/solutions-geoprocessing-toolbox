@@ -45,6 +45,9 @@ Specialized geoprocessing models and tools for general defense and intelligence 
 	* Clearing Operations Tools_pro
 	* Clearing Operations Tools_arcmap
 	* [Clearing Operations Solutions Page](http://solutions.arcgis.com/defense/help/clearing-operations/)
+	* Compound Map Tools_pro
+	* Compound Map Tools_arcmap
+	* [Compound Map Solutions Page](http://solutions.arcgis.com/defense/help/compound-map/)
 
 * The [**distance_to_assets**](./distance_to_assets) folder contains:
 	* Distance To Assets_pro
