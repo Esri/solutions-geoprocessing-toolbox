@@ -41,29 +41,29 @@ Specialized geoprocessing models and tools for general defense and intelligence 
 	* Geonames Tools_arcmap
 	* [Geonames Locator Solutions Page](http://solutions.arcgis.com/defense/help/geonames-locator/)
 
-
 * The [**clearing_operations**](./clearing_operations) folder contains:
-	* Clearing Operaitons Tools_pro
+	* Clearing Operations Tools_pro
 	* Clearing Operations Tools_arcmap
 	* [Clearing Operations Solutions Page](http://solutions.arcgis.com/defense/help/clearing-operations/)
 
-
+* The [**distance_to_assets**](./distance_to_assets) folder contains:
+	* Distance To Assets_pro
+	* Distance To Assets_arcmap
+	* [Distance to Assets Solutions Page](http://solutions.arcgis.com/defense/help/distance-to-assets/)
+  
 * The [**military_aspects_of_terrain**](./military_aspects_of_terrain) folder contains:
 	* Military Aspects of Terrain Tools_pro
 	* Military Aspects of Terrain Tools_arcmap
 	* [Military Aspects of Terrain Solutions Page](http://solutions.arcgis.com/defense/help/maot/)
 
-
 * The [**military_aspects_of_weather**](./military_aspects_of_weather) folder contains:
 	* Military Aspects of Weather Tools_arcmap
 	* [Military Aspects of Weather Solutions Page](http://solutions.arcgis.com/defense/help/maow/)
-
 
 * The [**sun_position_analysis**](./sun_position_analysis) folder contains:
 	* Sun Position Analysis Tools_pro
 	* Sun Position Analysis Tools_arcmap
 	* [Sun Position Analysis Solutions Page](http://solutions.arcgis.com/defense/help/sun-position-analysis/)
-
 
 * The [**incident_analysis**](./incident_analysis) folder contains:
 	* Incident Analysis Tools_pro
@@ -91,6 +91,9 @@ NOTE: Check [Releases](https://github.com/Esri/solutions-geoprocessing-toolbox/r
     * ArcGIS 3D Analyst Extension
 	    * Military Aspects of Terrain_pro
 	    * Military Aspects of Terrain_arcmap
+    * Access to ArcGIS Organization Account
+	    * Distance To Assets_pro
+      * Distance To Assets_arcmap  
 
 ## A Tale of Two Toolboxes
 
