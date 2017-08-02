@@ -77,18 +77,18 @@ def main():
 def logTestResults(result):
     ''' Write the log file '''
     resultHead = resultsHeader(result)
-    print(resultHead.encode("utf-8"))
-    Configuration.Logger.info(resultHead.encode("utf-8"))
+    print(resultHead)
+    Configuration.Logger.info(resultHead)
     
     if len(result.errors) > 0:
         rError = resultsErrors(result)
-        print(rError.encode("utf-8"))
-        Configuration.Logger.error(rError.encode("utf-8"))
+        print(rError)
+        Configuration.Logger.error(rError)
         
     if len(result.failures) > 0:
         rFail = resultsFailures(result)
-        print(rFail.encode("utf-8"))
-        Configuration.Logger.error(rFail.encode("utf-8"))
+        print(rFail)
+        Configuration.Logger.error(rFail)
     Configuration.Logger.info("END OF TEST =========================================\n")
 
     return
