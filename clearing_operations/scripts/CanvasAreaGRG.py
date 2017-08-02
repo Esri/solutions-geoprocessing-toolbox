@@ -325,19 +325,43 @@ def main():
         #UPDATE
         targetLayerName = os.path.basename(outputFeatureClass)
         if appEnvironment == "ARCGIS_PRO":
-            results = arcpy.MakeFeatureLayer_management(outputFeatureClass, targetLayerName).getOutput(0)
-            mapList.addLayer(results, "AUTO_ARRANGE")
-            layer = findLayerByName(targetLayerName)
-            if(layer):
-                labelFeatures(layer, gridField)
+            #params = arcpy.GetParameterInfo()
+            ## get the symbology from the GRG.lyr
+            ##scriptPath = sys.path[0]
+            # layerFilePath = os.path.join(scriptPath,r"commondata\userdata\GRG.lyrx")
+            #arcpy.AddMessage("Applying Symbology from {0}".format(layerFilePath))
+            #params[6].symbology = layerFilePath
+            
+            arcpy.AddMessage("Do not apply symbology it will be done in the next task step")
+            
         elif appEnvironment == "ARCMAP":
-            layerToAdd = arcpy.mapping.Layer(outputFeatureClass)
-            arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
-            targetLayerName = os.path.basename(outputFeatureClass)
-            layer = findLayerByName(targetLayerName)
-            if(layer):
-                arcpy.AddMessage("Labeling grids")
-                labelFeatures(layer, gridField)
+                           
+            arcpy.AddMessage("Adding features to map (" + str(targetLayerName) + ")...")
+            
+            arcpy.MakeFeatureLayer_management(outputFeatureClass, targetLayerName)
+            
+            # create a layer object
+            layer = arcpy.mapping.Layer(targetLayerName)            
+            
+            # get the symbology from the NumberedStructures.lyr
+            layerFilePath = os.path.join(os.getcwd(),"data\Layers\GRG.lyr")
+            
+            # apply the symbology to the layer
+            arcpy.ApplySymbologyFromLayer_management(layer, layerFilePath)
+            
+            # add layer to map
+            arcpy.mapping.AddLayer(df, layer, "AUTO_ARRANGE")
+            
+            # find the target layer in the map
+            mapLyr = arcpy.mapping.ListLayers(mxd, targetLayerName)[0]  
+
+            arcpy.AddMessage("Labeling output features (" + str(targetLayerName) + ")...")
+            # Work around needed as ApplySymbologyFromLayer_management does not honour labels
+            labelLyr = arcpy.mapping.Layer(layerFilePath)
+            # copy the label info from the source to the map layer
+            mapLyr.labelClasses = labelLyr.labelClasses
+            # turn labels on
+            mapLyr.showLabels = True
         else:
             arcpy.AddMessage("Non-map environment, skipping labeling...")
 
@@ -375,3 +399,5 @@ def main():
 # MAIN =============================================
 if __name__ == "__main__":
     main()
+
+

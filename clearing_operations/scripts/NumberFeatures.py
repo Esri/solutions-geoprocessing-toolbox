@@ -1,4 +1,12 @@
 # coding: utf-8
+#
+
+# Esri start of added variables
+g_ESRI_variable_1 = r'%scratchGDB%\tempSortedPoints'
+# Esri end of added variables
+
+#
+
 #------------------------------------------------------------------------------
 # Copyright 2015 Esri
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -53,7 +61,7 @@ def labelFeatures(layer, field):
         if layer.supports("SHOWLABELS"):
             for lblclass in layer.listLabelClasses():
                 lblclass.visible = True
-                lblclass.expression = " [" + str(field) + "]"
+                lblclass.expression = "$feature.Number"
             layer.showLabels = True
     elif appEnvironment == "ARCMAP":
         if layer.supports("LABELCLASSES"):
@@ -169,7 +177,7 @@ def main():
         overwriteFC = False
         global outputFeatureClass
         if outputFeatureClass == "":
-            outputFeatureClass = "tempSortedPoints"
+            outputFeatureClass = g_ESRI_variable_1
             overwriteFC = True;
         arcpy.AddMessage("Sorting the selected points geographically, right to left, top to bottom")
         arcpy.Sort_management(selectionLayer, outputFeatureClass, [["Shape", "ASCENDING"]])
@@ -220,20 +228,45 @@ def main():
 
         # Get and label the output feature
         if appEnvironment == "ARCGIS_PRO":
-            results = arcpy.MakeFeatureLayer_management(outputFeatureClass, targetLayerName).getOutput(0)
-            mapList.addLayer(results, "AUTO_ARRANGE")
-            layer = findLayerByName(targetLayerName)
-            if(layer):
-                labelFeatures(layer, numberingField)
+            
+            #params = arcpy.GetParameterInfo()
+            ##get the symbology from the NumberedStructures.lyr
+            #scriptPath = sys.path[0]
+            #arcpy.AddMessage(scriptPath)
+            #layerFilePath = os.path.join(scriptPath,r"commondata\userdata\NumberedStructures.lyrx")            
+            #params[3].symbology = layerFilePath
+            #arcpy.AddMessage("Applying Symbology from {0}".format(layerFilePath))
+            
+            arcpy.AddMessage("Do not apply symbology it will be done in the next task step")
+           
         elif appEnvironment == "ARCMAP":
             arcpy.AddMessage("Adding features to map (" + str(targetLayerName) + ")...")
+            
             arcpy.MakeFeatureLayer_management(outputFeatureClass, targetLayerName)
-            layer = arcpy.mapping.Layer(targetLayerName)
+            
+            # create a layer object
+            layer = arcpy.mapping.Layer(targetLayerName)            
+            
+            # get the symbology from the NumberedStructures.lyr
+            layerFilePath = os.path.join(os.getcwd(),r"data\Layers\NumberedStructures.lyr")
+            
+            # apply the symbology to the layer
+            arcpy.ApplySymbologyFromLayer_management(layer, layerFilePath)
+            
+            # add layer to map
             arcpy.mapping.AddLayer(df, layer, "AUTO_ARRANGE")
+            
+            # find the target layer in the map
+            mapLyr = arcpy.mapping.ListLayers(mxd, targetLayerName)[0]  
+
             arcpy.AddMessage("Labeling output features (" + str(targetLayerName) + ")...")
-            layer = findLayerByName(targetLayerName)
-            if (layer):
-                labelFeatures(layer, numberingField)
+            # Work around needed as ApplySymbologyFromLayer_management does not honour labels
+            labelLyr = arcpy.mapping.Layer(layerFilePath)
+            # copy the label info from the source to the map layer
+            mapLyr.labelClasses = labelLyr.labelClasses
+            # turn labels on
+            mapLyr.showLabels = True
+            
         else:
             arcpy.AddMessage("Non-map application, skipping labeling...")
 
@@ -267,3 +300,5 @@ def main():
 # MAIN =============================================
 if __name__ == "__main__":
     main()
+
+
