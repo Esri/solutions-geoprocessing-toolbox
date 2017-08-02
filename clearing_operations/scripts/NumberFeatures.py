@@ -248,7 +248,8 @@ def main():
             layer = arcpy.mapping.Layer(targetLayerName)            
             
             # get the symbology from the NumberedStructures.lyr
-            layerFilePath = os.path.join(os.getcwd(),r"data\Layers\NumberedStructures.lyr")
+            #layerFilePath = os.path.join(os.getcwd(),r"data\Layers\NumberedStructures.lyr")
+            layerFilePath = os.path.join(os.path.dirname(os.path.dirname(__file__)),"layers\NumberedStructures.lyr")
             
             # apply the symbology to the layer
             arcpy.ApplySymbologyFromLayer_management(layer, layerFilePath)
