@@ -101,7 +101,7 @@ class IncidentHotSpotsTestCase(unittest.TestCase):
             arcpy.IncidentHotSpots_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputFeatures)
         except:
             msg = arcpy.GetMessages(2)
-            self.fail('Exception in IncidentHotSpots_iaTools for Pro toolbox \n' + msg)
+            self.fail('Exception in IncidentHotSpots_iaTools toolbox \n' + msg)
 
         result = arcpy.GetCount_management(outputFeatures)
         featureCount = int(result.getOutput(0))

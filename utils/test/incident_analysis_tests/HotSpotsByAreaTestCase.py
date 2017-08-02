@@ -101,7 +101,7 @@ class HotSpotsByAreaTestCase(unittest.TestCase):
             arcpy.HotSpotsByArea_iaTools(self.inputAOIFeatures, "incidentsLayer", incidentFieldName, outputWorkspace)
         except:
             msg = arcpy.GetMessages(2)
-            self.fail('Exception in HotSpotsByArea_iaTools for Pro toolbox \n' + msg)
+            self.fail('Exception in HotSpotsByArea_iaTools toolbox \n' + msg)
 
         # TODO: Doesn't seem to test anything
         self.assertTrue(arcpy.Exists(outputWorkspace))
