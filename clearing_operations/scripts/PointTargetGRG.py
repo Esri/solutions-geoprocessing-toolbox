@@ -1,4 +1,18 @@
 # coding: utf-8
+#
+
+# Esri start of added imports
+import sys, os, arcpy
+# Esri end of added imports
+
+# Esri start of added variables
+g_ESRI_variable_1 = 'lyrFC'
+g_ESRI_variable_2 = 'lyrTmp'
+g_ESRI_variable_3 = 'ID'
+g_ESRI_variable_4 = 'lyrOut'
+g_ESRI_variable_5 = ';'
+# Esri end of added variables
+
 #------------------------------------------------------------------------------
 # Copyright 2014 Esri
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -172,7 +186,7 @@ def RotateFeatureClass(inputFC, outputFC,
         arcpy.ClearEnvironment("outputCoordinateSystem")
 
         # get feature class properties
-        lyrFC = "lyrFC"
+        lyrFC = g_ESRI_variable_1
         arcpy.MakeFeatureLayer_management(inputFC, lyrFC)
         dFC = arcpy.Describe(lyrFC)
         shpField = dFC.shapeFieldName
@@ -184,13 +198,13 @@ def RotateFeatureClass(inputFC, outputFC,
         arcpy.CreateFeatureclass_management(os.path.dirname(tmpFC),
                                             os.path.basename(tmpFC),
                                             shpType)
-        lyrTmp = "lyrTmp"
+        lyrTmp = g_ESRI_variable_2
         arcpy.MakeFeatureLayer_management(tmpFC, lyrTmp)
 
         # set up id field (used to join later)
         TFID = "XXXX_FID"
         arcpy.AddField_management(lyrTmp, TFID, "LONG")
-        arcpy.DeleteField_management(lyrTmp, "ID")
+        arcpy.DeleteField_management(lyrTmp, g_ESRI_variable_3)
 
         # rotate the feature class coordinates
         # only points, polylines, and polygons are supported
@@ -257,11 +271,11 @@ def RotateFeatureClass(inputFC, outputFC,
         arcpy.AddJoin_management(lyrTmp, TFID, lyrFC, FID)
         env.qualifiedFieldNames = False
         arcpy.Merge_management(lyrTmp, outputFC)
-        lyrOut = "lyrOut"
+        lyrOut = g_ESRI_variable_4
         arcpy.MakeFeatureLayer_management(outputFC, lyrOut)
         # drop temp fields 2,3 (TFID, FID)
         fnames = [f.name for f in arcpy.ListFields(lyrOut)]
-        dropList = ";".join(fnames[2:4])
+        dropList = g_ESRI_variable_5.join(fnames[2:4])
         arcpy.DeleteField_management(lyrOut, dropList)
 
     #except MsgError, xmsg: #UPDATE
@@ -524,12 +538,15 @@ def main():
         #UPDATE
         targetLayerName = os.path.basename(outputFeatureClass)
         if appEnvironment == "ARCGIS_PRO":
-            results = arcpy.MakeFeatureLayer_management(outputFeatureClass, targetLayerName).getOutput(0)
-            mapList.addLayer(results, "AUTO_ARRANGE")
-            layer = findLayerByName(targetLayerName)
-            if (layer):
-                arcpy.AddMessage("Labeling grids")
-                labelFeatures(layer, gridField)
+            #params = arcpy.GetParameterInfo()
+            ## get the symbology from the GRG.lyr
+            #scriptPath = sys.path[0]
+            #layerFilePath = os.path.join(scriptPath,r"commondata\userdata\GRG.lyrx")
+            #arcpy.AddMessage("Applying Symbology from {0}".format(layerFilePath))
+            #params[8].symbology = layerFilePath
+            
+            arcpy.AddMessage("Do not apply symbology it will be done in the next task step")
+            
         elif appEnvironment == "ARCMAP":
             layerToAdd = arcpy.mapping.Layer(outputFeatureClass)
             arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
@@ -575,3 +592,4 @@ def main():
 # MAIN =============================================
 if __name__ == "__main__":
     main()
+
