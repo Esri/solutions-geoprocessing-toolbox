@@ -38,6 +38,7 @@ history:
 '''
 
 import os
+import sys
 
 DEBUG = True # this guy is a flag for extra messaging while debugging tests
 
@@ -93,6 +94,35 @@ maowToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../military_as
 maowPath = os.path.normpath(os.path.join(testDataPath, r"maow"))
 maowURL = "http://www.arcgis.com/sharing/content/items/74eeb356c7dd4422bf52f36f38bb8a9b/data"
 
+def checkTokenizeWorkaround() :
+    #################################################
+    # WORKAROUND: for Python 3 choking on reading some binary files (with nulls)
+    # For example in ArcPy when loading a toolbox when run from command line
+    # Get error like: detect_encoding...tokenize.py...find_cookie...raise SyntaxError(msg)  
+    # ...SyntaxError: invalid or missing encoding declaration for '...XXXX.tbx' 
+    # Workaround borrowed/used from:
+    # https://github.com/habnabit/passacre/commit/2ea05ba94eab2d26951ae7b4b51abf53132b20f0
+
+    # Code should work with Python 2, but only do workaround for Python 3
+    # Workaround needed in Versions 3.0 - 3.5.2
+    if sys.version_info >= (3, 0) and sys.version_info < (3, 5, 3):
+        import tokenize 
+
+        try: 
+            _detect_encoding = tokenize.detect_encoding 
+        except AttributeError: 
+            pass 
+        else: 
+            def detect_encoding(readline): 
+                try: 
+                    return _detect_encoding(readline) 
+                except SyntaxError: 
+                    return 'latin-1', [] 
+ 
+            tokenize.detect_encoding = detect_encoding 
+    ## END WORKAROUND
+    #################################################
+
 def GetLogger() :
 
     global Logger 
@@ -113,8 +143,10 @@ def GetPlatform() :
         import arcpy
 
         Platform = PLATFORM_DESKTOP
-        if arcpy.GetInstallInfo()['ProductName'] == 'ArcGISPro':
+        installInfo = arcpy.GetInstallInfo()
+        if installInfo['ProductName'] == 'ArcGISPro':
             Platform = PLATFORM_PRO
+            checkTokenizeWorkaround()
 
     return Platform
 
