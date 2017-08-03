@@ -153,6 +153,18 @@ To submit an issue:
 3. Fill out *all* of the relevant sections
 4. **Submit new issue** when completed
 
+Tips:
+* Include a FULL description of the problem or enhancement or idea. Include:
+   * What happened (details)?
+   * What did you expect to happen?
+   * What is different between what happened and what you expected?
+   * What versions of the software are you working on?
+   * Include the text of any error messages.
+* Include steps to reproduce the problem. We can't solve it if we can't see what's wrong.
+   * Use a numbered list of steps.
+   * DETAILS: Be explicit. More is better, than little, which is better than nothing. Never assume we know what you're talking about (assume we don't know).
+* Include screenshots to support the info above, but NEVER replace a good description with a screenshot.
+
 ## Contributing
 
 When you contribute to this repository we ask that you follow the guidelines in the [repository-specific guidelines for contributing](./CONTRIBUTING.md). If you have questions, or you get stuck, please ask the [Repository Owner](#repository-owner). We are here to help! Thanks.
