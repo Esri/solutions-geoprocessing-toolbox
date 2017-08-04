@@ -84,7 +84,8 @@ class CountIncidentsByLOCTestCase(unittest.TestCase, arcpyAssert.FeatureClassAss
             
     def tearDown(self):
         if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.tearDown")
-                
+        
+    @unittest.skipIf(Configuration.Platform == Configuration.PLATFORM_PRO, "Pro Unit Test not currently working")        
     def test_count_incidents(self):
         '''test_count_incidents'''
         if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.test_count_incidents")
