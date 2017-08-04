@@ -88,7 +88,7 @@ class FindPercentChangeTestCase(unittest.TestCase):
         UnitTestUtilities.deleteScratch(self.incidentScratchGDB)
         
     def test_percent_change(self):
-        '''test_percent_change_pro'''
+        '''test_percent_change'''
         if Configuration.DEBUG == True: print(".....FindPercentChangeTestCase.test_percent_change")
         arcpy.ImportToolbox(self.toolboxUnderTest, self.toolboxUnderTestAlias)
         runToolMessage = "Running tool (Find Percent Change)"
@@ -100,7 +100,7 @@ class FindPercentChangeTestCase(unittest.TestCase):
             arcpy.FindPercentChange_iaTools(self.inputOldIncidents, self.inputAOIFeatures, self.inputNewIncidents, outputFeatures)
         except:
             msg = arcpy.GetMessages(2)
-            self.fail('Exception in FindPercentChange_iaTools for Pro toolbox \n' + msg)
+            self.fail('Exception in FindPercentChange_iaTools toolbox \n' + msg)
         result = arcpy.GetCount_management(outputFeatures)
         count = int(result.getOutput(0))
         self.assertEqual(count, int(10))

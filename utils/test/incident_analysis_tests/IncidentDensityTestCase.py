@@ -101,7 +101,7 @@ class IncidentDensityTestCase(unittest.TestCase):
             arcpy.IncidentDensity_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputDensity)
         except:
             msg = arcpy.GetMessages(2)
-            self.fail('Exception in IncidentDensity_iaTools for Pro toolbox \n' + msg)
+            self.fail('Exception in IncidentDensity_iaTools toolbox \n' + msg)
 
         self.assertTrue(arcpy.Exists(outputDensity))
 
