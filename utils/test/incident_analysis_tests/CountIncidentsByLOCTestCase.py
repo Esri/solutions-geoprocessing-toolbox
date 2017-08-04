@@ -49,8 +49,6 @@ class CountIncidentsByLOCTestCase(unittest.TestCase, arcpyAssert.FeatureClassAss
    
     toolboxUnderTest = None # Set to Pro or ArcMap toolbox at runtime
     toolboxUnderTestAlias = 'iaTools'
-
-    incidentScratchGDB = None    
      
     inputPointsFeatures = None
     inputLinesFeatures = None
@@ -68,8 +66,6 @@ class CountIncidentsByLOCTestCase(unittest.TestCase, arcpyAssert.FeatureClassAss
         UnitTestUtilities.checkArcPy()
         
         DataDownload.runDataDownload(Configuration.incidentAnalysisDataPath, Configuration.incidentInputGDB, Configuration.incidentURL)
-        if (self.incidentScratchGDB == None) or (not arcpy.Exists(self.incidentScratchGDB)):
-            self.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentAnalysisDataPath)
         
         # set up inputs    
         self.inputPointsFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
@@ -80,7 +76,6 @@ class CountIncidentsByLOCTestCase(unittest.TestCase, arcpyAssert.FeatureClassAss
         UnitTestUtilities.checkFilePaths([Configuration.incidentAnalysisDataPath])
 
         UnitTestUtilities.checkGeoObjects([Configuration.incidentInputGDB, \
-                                           self.incidentScratchGDB, \
                                            self.toolboxUnderTest, \
                                            self.inputPointsFeatures, \
                                            self.inputLinesFeatures,  \
@@ -89,23 +84,43 @@ class CountIncidentsByLOCTestCase(unittest.TestCase, arcpyAssert.FeatureClassAss
             
     def tearDown(self):
         if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(self.incidentScratchGDB)
                 
     def test_count_incidents(self):
         '''test_count_incidents'''
         if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.test_count_incidents")
 
+        outputCountFeatures = os.path.join(Configuration.incidentResultGDB, "outputCount")
+
+        # Delete the feature class used to load if already exists
+        if arcpy.Exists(outputCountFeatures) :
+            arcpy.Delete_management(outputCountFeatures)
+
         arcpy.ImportToolbox(self.toolboxUnderTest, self.toolboxUnderTestAlias)
 
-        outputCountFeatures = os.path.join(self.incidentScratchGDB, "outputCount")
         runToolMsg = "Running tool (Count Incidents By LOC)"
         arcpy.AddMessage(runToolMsg)
         Configuration.Logger.info(runToolMsg)
-        arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures,
-                                          self.inputLinesFeatures,
-                                          self.inputAOIFeatures,
-                                          outputCountFeatures,
-                                          "50 Meters")
+
+        # IMPORTANT: Parameters are different between ArcMap and Pro, differences:
+        # 1. Parameter order in Pro ?!
+        # 2. Pro *only* takes a feature layer because of differences in behavior 
+        #    of Select Layer By Location tool in ArcMap/Pro
+        if Configuration.Platform == Configuration.PLATFORM_PRO :
+
+            linesLayer = arcpy.MakeFeatureLayer_management(self.inputLinesFeatures)
+            arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures,
+                                              linesLayer,
+                                              # self.inputLinesFeatures,
+                                              self.inputAOIFeatures,
+                                              "50 Meters",
+                                              outputCountFeatures)
+        else:
+            arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures,
+                                              self.inputLinesFeatures,
+                                              self.inputAOIFeatures,
+                                              outputCountFeatures,
+                                              "50 Meters")
+
         self.assertFeatureClassEqual(self.resultCompareFeatures0001, outputCountFeatures, "OBJECTID")
 
 if __name__ == "__main__":
