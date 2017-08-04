@@ -1,22 +1,22 @@
 {
   "type" : "CIMLayerDocument",
-  "version" : "2.0.0",
-  "build" : 8933,
+  "version" : "1.4.0",
+  "build" : 7198,
   "layers" : [
-    "CIMPATH=clearing_operations/numberedstructuressample.xml"
+    "CIMPATH=map/sadfsadfasd.xml"
   ],
   "layerDefinitions" : [
     {
       "type" : "CIMFeatureLayer",
-      "name" : "Numbered Buildings Sample",
-      "uRI" : "CIMPATH=clearing_operations/numberedstructuressample.xml",
+      "name" : "sadfsadfasd",
+      "uRI" : "CIMPATH=map/sadfsadfasd.xml",
       "sourceModifiedTime" : {
         "type" : "TimeInstant"
       },
-      "description" : "NumberedStructuresSample",
+      "description" : "sadfsadfasd",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "mapElevationID" : "fe6aed9024a846c88e63bea40ea33888"
+        "mapElevationID" : "{4582EB88-7DF5-4BA4-B112-9DC27E4D1D60}"
       },
       "expanded" : true,
       "layerType" : "Operational",
@@ -26,40 +26,26 @@
       "maxDisplayCacheAge" : 5,
       "showPopups" : true,
       "serviceLayerID" : -1,
-      "refreshRate" : -1,
-      "refreshRateUnit" : "esriTimeUnitsSeconds",
       "autoGenerateFeatureTemplates" : true,
+      "featureElevationExpression" : "0",
       "featureTable" : {
         "type" : "CIMFeatureTable",
-        "displayField" : "Number",
+        "displayField" : "Purpose",
         "editable" : true,
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=..\\..\\clearingoperations.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\Documents\\ArcGIS\\Projects\\MyProject\\MyProject.gdb",
           "workspaceFactory" : "FileGDB",
-          "dataset" : "NumberedStructuresSample",
+          "dataset" : "sadfsadfasd",
           "datasetType" : "esriDTFeatureClass"
         },
         "studyAreaSpatialRel" : "esriSpatialRelUndefined",
         "searchOrder" : "esriSearchOrderSpatial"
       },
-      "featureTemplates" : [
-        {
-          "type" : "CIMFeatureTemplate",
-          "name" : "Numbered Buildings Sample",
-          "tags" : "Point",
-          "toolProgID" : "2a8b3331-5238-4025-972e-452a69535b06"
-        }
-      ],
       "htmlPopupEnabled" : true,
-      "htmlPopupFormat" : {
-        "type" : "CIMHtmlPopupFormat",
-        "htmlUseCodedDomainValues" : true,
-        "htmlPresentationStyle" : "TwoColumnTable"
-      },
-      "isFlattened" : true,
       "selectable" : true,
       "featureCacheType" : "None",
+      "enableDisplayFilters" : true,
       "labelClasses" : [
         {
           "type" : "CIMLabelClass",
@@ -69,28 +55,26 @@
           "maplexLabelPlacementProperties" : {
             "type" : "CIMMaplexLabelPlacementProperties",
             "featureType" : "Point",
-            "avoidPolygonHoles" : true,
-            "canOverrunFeature" : true,
-            "canPlaceLabelOutsidePolygon" : true,
-            "canRemoveOverlappingLabel" : true,
+            "avoidPolygonHoles" : false,
+            "canOverrunFeature" : false,
+            "canPlaceLabelOutsidePolygon" : false,
+            "canRemoveOverlappingLabel" : false,
             "canStackLabel" : true,
-            "connectionType" : "Unambiguous",
+            "connectionType" : "MinimizeLabels",
             "constrainOffset" : "NoConstraint",
-            "contourAlignmentType" : "Page",
-            "contourLadderType" : "Straight",
-            "contourMaximumAngle" : 90,
-            "enableConnection" : true,
-            "enablePointPlacementPriorities" : true,
-            "featureWeight" : 0,
-            "fontHeightReductionLimit" : 4,
-            "fontHeightReductionStep" : 0.5,
-            "fontWidthReductionLimit" : 90,
-            "fontWidthReductionStep" : 5,
+            "contourAlignmentType" : "Uphill",
+            "contourLadderType" : "None",
+            "contourMaximumAngle" : 0,
+            "enableConnection" : false,
+            "featureWeight" : 100,
+            "fontHeightReductionLimit" : 0,
+            "fontHeightReductionStep" : 0,
+            "fontWidthReductionLimit" : 0,
+            "fontWidthReductionStep" : 0,
             "graticuleAlignmentType" : "Straight",
-            "keyNumberGroupName" : "Default",
             "labelBuffer" : 15,
-            "labelLargestPolygon" : true,
-            "labelPriority" : -1,
+            "labelLargestPolygon" : false,
+            "labelPriority" : 0,
             "labelStackingProperties" : {
               "type" : "CIMMaplexLabelStackingProperties",
               "stackAlignment" : "ChooseBest",
@@ -112,11 +96,11 @@
               ]
             },
             "lineFeatureType" : "General",
-            "linePlacementMethod" : "OffsetCurvedFromLine",
-            "maximumLabelOverrun" : 36,
-            "maximumLabelOverrunUnit" : "Point",
+            "linePlacementMethod" : "CenteredHorizontalOnLine",
+            "maximumLabelOverrun" : 0,
+            "maximumLabelOverrunUnit" : "Map",
             "minimumFeatureSizeUnit" : "Map",
-            "multiPartOption" : "OneLabelPerPart",
+            "multiPartOption" : "OneLabelPerFeature",
             "neverRemoveLabel" : true,
             "offsetAlongLineProperties" : {
               "type" : "CIMMaplexOffsetAlongLineProperties",
@@ -155,17 +139,17 @@
               "type" : "CIMMaplexInternalZonePriorities",
               "center" : 1
             },
-            "polygonPlacementMethod" : "CurvedInPolygon",
-            "primaryOffset" : 1,
-            "primaryOffsetUnit" : "Point",
-            "removeExtraWhiteSpace" : true,
+            "polygonPlacementMethod" : "HorizontalInPolygon",
+            "primaryOffset" : 0,
+            "primaryOffsetUnit" : "Map",
+            "removeExtraWhiteSpace" : false,
             "repetitionIntervalUnit" : "Map",
             "rotationProperties" : {
               "type" : "CIMMaplexRotationProperties",
               "rotationType" : "Arithmetic",
               "alignmentType" : "Straight"
             },
-            "secondaryOffset" : 100,
+            "secondaryOffset" : 0,
             "strategyPriorities" : {
               "type" : "CIMMaplexStrategyPriorities",
               "stacking" : 1,
@@ -174,9 +158,9 @@
               "fontReduction" : 4,
               "abbreviation" : 5
             },
-            "thinningDistanceUnit" : "Point",
+            "thinningDistanceUnit" : "Map",
             "truncationMarkerCharacter" : ".",
-            "truncationMinimumLength" : 1,
+            "truncationMinimumLength" : 0,
             "truncationPreferredCharacters" : "aeiou"
           },
           "name" : "Class 1",
@@ -225,20 +209,22 @@
             "symbol" : {
               "type" : "CIMTextSymbol",
               "blockProgression" : "TTB",
-              "depth3D" : 1,
-              "extrapolateBaselines" : true,
+              "depth3D" : 0,
+              "extrapolateBaselines" : false,
+              "flipAngle" : 90,
               "fontEffects" : "Normal",
               "fontEncoding" : "Unicode",
-              "fontFamilyName" : "Arial",
+              "fontFamilyName" : "Constantia",
               "fontStyleName" : "Bold Italic",
               "fontType" : "TTOpenType",
-              "haloSize" : 1,
-              "height" : 10,
+              "haloSize" : 0,
+              "height" : 8,
               "hinting" : "Default",
               "horizontalAlignment" : "Left",
               "kerning" : true,
+              "letterSpacing" : 10,
               "letterWidth" : 100,
-              "ligatures" : true,
+              "ligatures" : false,
               "lineGapType" : "ExtraLeading",
               "symbol" : {
                 "type" : "CIMPolygonSymbol",
@@ -261,16 +247,16 @@
               "symbol3DProperties" : {
                 "type" : "CIM3DSymbolProperties",
                 "dominantSizeAxis3D" : "Z",
-                "rotationOrder3D" : "YXZ",
-                "scaleZ" : 1,
-                "scaleY" : 1
+                "rotationOrder3D" : "XYZ",
+                "scaleZ" : 0,
+                "scaleY" : 0
               },
               "textCase" : "Normal",
               "textDirection" : "LTR",
-              "verticalAlignment" : "Bottom",
+              "verticalAlignment" : "Baseline",
               "verticalGlyphOrientation" : "Right",
               "wordSpacing" : 100,
-              "billboardMode3D" : "FaceNearPlane"
+              "billboardMode3D" : "None"
             }
           },
           "useCodedValue" : true,
@@ -297,7 +283,7 @@
                 },
                 "anchorPointUnits" : "Relative",
                 "dominantSizeAxis3D" : "Y",
-                "size" : 12,
+                "size" : 9,
                 "billboardMode3D" : "FaceNearPlane",
                 "frame" : {
                   "xmin" : 0,
@@ -392,14 +378,14 @@
       "elevationMode" : "BaseGlobeSurface",
       "name" : "Ground",
       "verticalExaggeration" : 1,
-      "mapElevationID" : "fe6aed9024a846c88e63bea40ea33888",
+      "mapElevationID" : "{4582EB88-7DF5-4BA4-B112-9DC27E4D1D60}",
       "color" : {
         "type" : "CIMRGBColor",
         "values" : [
           255,
           255,
           255,
-          0
+          100
         ]
       },
       "surfaceTINShadingMode" : "Smooth"

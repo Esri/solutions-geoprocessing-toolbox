@@ -1,23 +1,23 @@
 {
   "type" : "CIMLayerDocument",
-  "version" : "2.0.0",
-  "build" : 8933,
+  "version" : "1.4.0",
+  "build" : 7198,
   "layers" : [
-    "CIMPATH=clearing_operations/grgcanvas.xml"
+    "CIMPATH=map/grgpointtargetsample.xml"
   ],
   "layerDefinitions" : [
     {
       "type" : "CIMFeatureLayer",
-      "name" : "GRG Canvas Sample",
-      "uRI" : "CIMPATH=clearing_operations/grgcanvas.xml",
+      "name" : "GRGPointTargetSample",
+      "uRI" : "CIMPATH=map/grgpointtargetsample.xml",
       "sourceModifiedTime" : {
         "type" : "TimeInstant"
       },
-      "metadataURI" : "CIMPATH=Metadata/cd67d67b205369dec59658050b8154fa.xml",
-      "description" : "GRGCanvas",
+      "metadataURI" : "CIMPATH=Metadata/0c3edcbf8642a6951f5937bbae5298e4.xml",
+      "description" : "GRGPointTargetSample",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "mapElevationID" : "fe6aed9024a846c88e63bea40ea33888"
+        "mapElevationID" : "{4582EB88-7DF5-4BA4-B112-9DC27E4D1D60}"
       },
       "expanded" : true,
       "layerType" : "Operational",
@@ -27,8 +27,6 @@
       "maxDisplayCacheAge" : 5,
       "showPopups" : true,
       "serviceLayerID" : -1,
-      "refreshRate" : -1,
-      "refreshRateUnit" : "esriTimeUnitsSeconds",
       "autoGenerateFeatureTemplates" : true,
       "featureElevationExpression" : "0",
       "featureTable" : {
@@ -37,25 +35,18 @@
         "editable" : true,
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=..\\..\\clearingoperations.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\..\\..\\Templates\\Results.gdb",
           "workspaceFactory" : "FileGDB",
-          "dataset" : "GRGCanvas",
+          "dataset" : "GRGPointTargetSample",
           "datasetType" : "esriDTFeatureClass"
         },
         "studyAreaSpatialRel" : "esriSpatialRelUndefined",
         "searchOrder" : "esriSearchOrderSpatial"
       },
-      "featureTemplates" : [
-        {
-          "type" : "CIMFeatureTemplate",
-          "name" : "GRG Canvas Sample",
-          "tags" : "Polygon",
-          "toolProgID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921"
-        }
-      ],
       "htmlPopupEnabled" : true,
       "selectable" : true,
       "featureCacheType" : "None",
+      "enableDisplayFilters" : true,
       "labelClasses" : [
         {
           "type" : "CIMLabelClass",
@@ -67,7 +58,7 @@
             "featureType" : "Polygon",
             "avoidPolygonHoles" : true,
             "canOverrunFeature" : true,
-            "canPlaceLabelOutsidePolygon" : false,
+            "canPlaceLabelOutsidePolygon" : true,
             "canRemoveOverlappingLabel" : true,
             "canStackLabel" : true,
             "connectionType" : "Unambiguous",
@@ -76,7 +67,6 @@
             "contourLadderType" : "Straight",
             "contourMaximumAngle" : 90,
             "enableConnection" : true,
-            "enablePolygonFixedPosition" : true,
             "featureWeight" : 0,
             "fontHeightReductionLimit" : 4,
             "fontHeightReductionStep" : 0.5,
@@ -221,13 +211,14 @@
             "symbol" : {
               "type" : "CIMTextSymbol",
               "blockProgression" : "TTB",
-              "depth3D" : 1,
-              "extrapolateBaselines" : true,
+              "depth3D" : 0,
+              "extrapolateBaselines" : false,
+              "flipAngle" : 90,
               "fontEffects" : "Normal",
               "fontEncoding" : "Unicode",
-              "fontFamilyName" : "Tahoma",
-              "fontStyleName" : "Bold",
-              "fontType" : "Unspecified",
+              "fontFamilyName" : "Corbel",
+              "fontStyleName" : "Bold Italic",
+              "fontType" : "TrueType",
               "haloSize" : 1,
               "haloSymbol" : {
                 "type" : "CIMPolygonSymbol",
@@ -251,8 +242,9 @@
               "hinting" : "Default",
               "horizontalAlignment" : "Left",
               "kerning" : true,
+              "letterSpacing" : 10,
               "letterWidth" : 100,
-              "ligatures" : true,
+              "ligatures" : false,
               "lineGapType" : "ExtraLeading",
               "symbol" : {
                 "type" : "CIMPolygonSymbol",
@@ -275,16 +267,16 @@
               "symbol3DProperties" : {
                 "type" : "CIM3DSymbolProperties",
                 "dominantSizeAxis3D" : "Z",
-                "rotationOrder3D" : "YXZ",
-                "scaleZ" : 1,
-                "scaleY" : 1
+                "rotationOrder3D" : "XYZ",
+                "scaleZ" : 0,
+                "scaleY" : 0
               },
               "textCase" : "Normal",
               "textDirection" : "LTR",
-              "verticalAlignment" : "Bottom",
+              "verticalAlignment" : "Baseline",
               "verticalGlyphOrientation" : "Right",
               "wordSpacing" : 100,
-              "billboardMode3D" : "FaceNearPlane"
+              "billboardMode3D" : "None"
             }
           },
           "useCodedValue" : true,
@@ -308,7 +300,7 @@
                 "joinStyle" : "Round",
                 "lineStyle3D" : "Strip",
                 "miterLimit" : 10,
-                "width" : 2,
+                "width" : 0.75,
                 "color" : {
                   "type" : "CIMRGBColor",
                   "values" : [
@@ -325,9 +317,9 @@
                 "color" : {
                   "type" : "CIMRGBColor",
                   "values" : [
-                    202.40855407714844,
-                    224.40077209472656,
-                    114.44358062744141,
+                    114.93385314941406,
+                    93.634239196777344,
+                    137.70037841796875,
                     0
                   ]
                 }
@@ -343,8 +335,8 @@
   "binaryReferences" : [
     {
       "type" : "CIMBinaryReference",
-      "uRI" : "CIMPATH=Metadata/cd67d67b205369dec59658050b8154fa.xml",
-      "data" : "<metadata xml:lang=\"en\"><Esri><CreaDate>20170726</CreaDate><CreaTime>04290300</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce><DataProperties><lineage><Process ToolSource=\"c:\\program files (x86)\\arcgis\\desktop10.4\\ArcToolbox\\Toolboxes\\Data Management Tools.tbx\\Merge\" Date=\"20160330\" Time=\"145207\">Merge lyrTmp C:\\Users\\joe7503\\Documents\\ArcGIS\\Templates\\ClearingOperations5.0.0\\data\\Results.gdb\\GRGCanvas \"Shape_Length \"Shape_Length\" false true true 8 Double 0 0 ,First,#,lyrTmp,xxfc0.Shape_Length,-1,-1;Shape_Area \"Shape_Area\" false true true 8 Double 0 0 ,First,#,lyrTmp,xxfc0.Shape_Area,-1,-1;XXXX_FID \"XXXX_FID\" true true false 4 Long 0 0 ,First,#,lyrTmp,xxfc0.XXXX_FID,-1,-1;OID \"OID\" false true false 4 Long 0 9 ,First,#,lyrTmp,tempSort.OID,-1,-1;Grid \"Grid\" true true false 0 Text 0 0 ,First,#,lyrTmp,tempSort.Grid,-1,-1\"</Process><Process ToolSource=\"c:\\program files (x86)\\arcgis\\desktop10.4\\ArcToolbox\\Toolboxes\\Data Management Tools.tbx\\DeleteField\" Date=\"20160330\" Time=\"145207\">DeleteField lyrOut XXXX_FID;OID_1</Process><Process Name=\"Canvas Area GRG Script\" ToolSource=\"C:\\Users\\joe7503\\Documents\\ArcGIS\\Templates\\ClearingOperations5.0.0\\toolboxes\\Clearing Operations Tools_10.4.tbx\\CanvasAreaGRGScript\" Date=\"20160330\" Time=\"145209\">CanvasAreaGRGScript \"-13540737.0366 4396587.9095 -13539166.4945 4397776.2664\" 0 0 Meters \"Feature Set\" Alpha-Numeric C:\\Users\\joe7503\\Documents\\ArcGIS\\Templates\\ClearingOperations5.0.0\\data\\Results.gdb\\GRGCanvas Lower-Left</Process></lineage><itemProps><itemLocation><linkage Sync=\"TRUE\">file://\\\\SOLCONT01\\C$\\Users\\cont_anthony\\Documents\\ArcGIS\\Projects\\ClearingOperations\\ClearingOperations.gdb</linkage><protocol Sync=\"TRUE\">Local Area Network</protocol></itemLocation></itemProps></DataProperties></Esri></metadata>\r\n"
+      "uRI" : "CIMPATH=Metadata/0c3edcbf8642a6951f5937bbae5298e4.xml",
+      "data" : "<metadata xml:lang=\"en\"><Esri><CreaDate>20160330</CreaDate><CreaTime>14542100</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>FALSE</SyncOnce><DataProperties><itemProps><itemName Sync=\"TRUE\">GRGPointTarget</itemName><imsContentType Sync=\"TRUE\">002</imsContentType><itemLocation><linkage Sync=\"TRUE\">file://\\\\JOEB2\\C$\\Users\\joe7503\\Documents\\ArcGIS\\Templates\\ClearingOperations5.0.0\\data\\Results.gdb</linkage><protocol Sync=\"TRUE\">Local Area Network</protocol></itemLocation></itemProps><lineage><Process ToolSource=\"c:\\program files (x86)\\arcgis\\desktop10.4\\ArcToolbox\\Toolboxes\\Data Management Tools.tbx\\CopyFeatures\" Date=\"20160330\" Time=\"145421\">CopyFeatures in_memory\\tempSort C:\\Users\\joe7503\\Documents\\ArcGIS\\Templates\\ClearingOperations5.0.0\\data\\Results.gdb\\GRGPointTarget # 0 0 0</Process><Process Name=\"Point Target GRG Script\" ToolSource=\"C:\\Users\\joe7503\\Documents\\ArcGIS\\Templates\\ClearingOperations5.0.0\\toolboxes\\Clearing Operations Tools_10.4.tbx\\PointTargetGRGScript\" Date=\"20160330\" Time=\"145421\">PointTargetGRGScript \"Feature Set\" 10 10 200 200 Meters \"Feature Set\" Alpha-Numeric C:\\Users\\joe7503\\Documents\\ArcGIS\\Templates\\ClearingOperations5.0.0\\data\\Results.gdb\\GRGPointTarget Lower-Left</Process></lineage></DataProperties><SyncDate>20160330</SyncDate><SyncTime>14542100</SyncTime><ModDate>20160330</ModDate><ModTime>14542100</ModTime></Esri><dataIdInfo><envirDesc Sync=\"TRUE\"> Version 6.2 (Build 9200) ; Esri ArcGIS 10.4.0.5524</envirDesc><dataLang><languageCode value=\"eng\" Sync=\"TRUE\"></languageCode><countryCode value=\"USA\" Sync=\"TRUE\"></countryCode></dataLang><idCitation><resTitle Sync=\"TRUE\">GRGPointTarget</resTitle><presForm><PresFormCd value=\"005\" Sync=\"TRUE\"></PresFormCd></presForm></idCitation><spatRpType><SpatRepTypCd value=\"001\" Sync=\"TRUE\"></SpatRepTypCd></spatRpType></dataIdInfo><mdLang><languageCode value=\"eng\" Sync=\"TRUE\"></languageCode><countryCode value=\"USA\" Sync=\"TRUE\"></countryCode></mdLang><mdChar><CharSetCd value=\"004\" Sync=\"TRUE\"></CharSetCd></mdChar><distInfo><distFormat><formatName Sync=\"TRUE\">File Geodatabase Feature Class</formatName></distFormat></distInfo><mdHrLv><ScopeCd value=\"005\" Sync=\"TRUE\"></ScopeCd></mdHrLv><mdHrLvName Sync=\"TRUE\">dataset</mdHrLvName><spatRepInfo><VectSpatRep><geometObjs Name=\"GRGPointTarget\"><geoObjTyp><GeoObjTypCd value=\"002\" Sync=\"TRUE\"></GeoObjTypCd></geoObjTyp><geoObjCnt Sync=\"TRUE\">0</geoObjCnt></geometObjs><topLvl><TopoLevCd value=\"001\" Sync=\"TRUE\"></TopoLevCd></topLvl></VectSpatRep></spatRepInfo><spdoinfo><ptvctinf><esriterm Name=\"GRGPointTarget\"><efeatyp Sync=\"TRUE\">Simple</efeatyp><efeageom code=\"4\" Sync=\"TRUE\"></efeageom><esritopo Sync=\"TRUE\">FALSE</esritopo><efeacnt Sync=\"TRUE\">0</efeacnt><spindex Sync=\"TRUE\">TRUE</spindex><linrefer Sync=\"TRUE\">FALSE</linrefer></esriterm></ptvctinf></spdoinfo><eainfo><detailed Name=\"GRGPointTarget\"><enttyp><enttypl Sync=\"TRUE\">GRGPointTarget</enttypl><enttypt Sync=\"TRUE\">Feature Class</enttypt><enttypc Sync=\"TRUE\">0</enttypc></enttyp><attr><attrlabl Sync=\"TRUE\">OBJECTID</attrlabl><attalias Sync=\"TRUE\">OID</attalias><attrtype Sync=\"TRUE\">OID</attrtype><attwidth Sync=\"TRUE\">4</attwidth><atprecis Sync=\"TRUE\">0</atprecis><attscale Sync=\"TRUE\">0</attscale><attrdef Sync=\"TRUE\">Internal feature number.</attrdef><attrdefs Sync=\"TRUE\">Esri</attrdefs><attrdomv><udom Sync=\"TRUE\">Sequential unique whole numbers that are automatically generated.</udom></attrdomv></attr><attr><attrlabl Sync=\"TRUE\">Shape</attrlabl><attalias Sync=\"TRUE\">Shape</attalias><attrtype Sync=\"TRUE\">Geometry</attrtype><attwidth Sync=\"TRUE\">0</attwidth><atprecis Sync=\"TRUE\">0</atprecis><attscale Sync=\"TRUE\">0</attscale><attrdef Sync=\"TRUE\">Feature geometry.</attrdef><attrdefs Sync=\"TRUE\">Esri</attrdefs><attrdomv><udom Sync=\"TRUE\">Coordinates defining the features.</udom></attrdomv></attr><attr><attrlabl Sync=\"TRUE\">Grid</attrlabl><attalias Sync=\"TRUE\">Grid</attalias><attrtype Sync=\"TRUE\">String</attrtype><attwidth Sync=\"TRUE\">255</attwidth><atprecis Sync=\"TRUE\">0</atprecis><attscale Sync=\"TRUE\">0</attscale></attr><attr><attrlabl Sync=\"TRUE\">Shape_Length</attrlabl><attalias Sync=\"TRUE\">Shape_Length</attalias><attrtype Sync=\"TRUE\">Double</attrtype><attwidth Sync=\"TRUE\">8</attwidth><atprecis Sync=\"TRUE\">0</atprecis><attscale Sync=\"TRUE\">0</attscale><attrdef Sync=\"TRUE\">Length of feature in internal units.</attrdef><attrdefs Sync=\"TRUE\">Esri</attrdefs><attrdomv><udom Sync=\"TRUE\">Positive real numbers that are automatically generated.</udom></attrdomv></attr><attr><attrlabl Sync=\"TRUE\">Shape_Area</attrlabl><attalias Sync=\"TRUE\">Shape_Area</attalias><attrtype Sync=\"TRUE\">Double</attrtype><attwidth Sync=\"TRUE\">8</attwidth><atprecis Sync=\"TRUE\">0</atprecis><attscale Sync=\"TRUE\">0</attscale><attrdef Sync=\"TRUE\">Area of feature in internal units squared.</attrdef><attrdefs Sync=\"TRUE\">Esri</attrdefs><attrdomv><udom Sync=\"TRUE\">Positive real numbers that are automatically generated.</udom></attrdomv></attr></detailed></eainfo><mdDateSt Sync=\"TRUE\">20160330</mdDateSt></metadata>\r\n"
     }
   ],
   "elevationSurfaces" : [
@@ -353,14 +345,14 @@
       "elevationMode" : "BaseGlobeSurface",
       "name" : "Ground",
       "verticalExaggeration" : 1,
-      "mapElevationID" : "fe6aed9024a846c88e63bea40ea33888",
+      "mapElevationID" : "{4582EB88-7DF5-4BA4-B112-9DC27E4D1D60}",
       "color" : {
         "type" : "CIMRGBColor",
         "values" : [
           255,
           255,
           255,
-          0
+          100
         ]
       },
       "surfaceTINShadingMode" : "Smooth"
