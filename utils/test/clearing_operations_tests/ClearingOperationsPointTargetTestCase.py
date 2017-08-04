@@ -94,13 +94,13 @@ class ClearingOperationsPointTargetTestCase(unittest.TestCase):
         arcpy.AddMessage(runToolMsg)
         Configuration.Logger.info(runToolMsg)
 
-        try:
+        #try:
 
-            arcpy.PointTargetGRG_ClearingOperations(self.pointTarget, numCellsH, numCellsV, cellWidth, cellHeight, "Meters", None, labelStart, labelStyle, output)
-        except arcpy.ExecuteError:
-            UnitTestUtilities.handleArcPyError()
-        except:
-            UnitTestUtilities.handleGeneralError()
+        arcpy.PointTargetGRG_ClearingOperations(self.pointTarget, numCellsH, numCellsV, cellWidth, cellHeight, "Meters", None, labelStart, labelStyle, output)
+        #except arcpy.ExecuteError:
+            #UnitTestUtilities.handleArcPyError()
+        #except:
+            #UnitTestUtilities.handleGeneralError()
 
         result = arcpy.GetCount_management(output)
         count = int(result.getOutput(0))

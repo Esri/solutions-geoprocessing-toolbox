@@ -61,7 +61,7 @@ testDataPath = os.path.normpath(os.path.join(currentPath, r"test_data")) # shoul
 logPath = os.path.normpath(os.path.join(currentPath, r"log")) # should go to .\solutions-geoprocessing-toolbox\utils\test\log
 
 ''' Clearing Operations - Test Data/Paths '''
-clearingOperationsToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../clearing_operations/ClearingOperationsTools"))
+clearingOperationsToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../clearing_operations_and_compound_map/ClearingOperationsTools"))
 clearingOperationsPath = os.path.normpath(os.path.join(testDataPath, r"clearing_operations"))
 clearingOperationsURL = r"http://www.arcgis.com/sharing/content/items/198f01e263474c209198c9c3c3586287/data"
 clearingOperationsInputGDB = os.path.join(clearingOperationsPath, "test_clearing_operations.gdb")
@@ -100,27 +100,27 @@ def checkTokenizeWorkaround() :
     # WORKAROUND: for Python 3 choking on reading some binary files (with nulls)
     # For example in ArcPy when loading a toolbox when run from command line
     # Get error like: detect_encoding...tokenize.py...find_cookie...raise SyntaxError(msg)  
-    # ...SyntaxError: invalid or missing encoding declaration for '...XXXX.tbx' 
+    # ...SyntaxError: invalid or missing encoding declaration for '...XXXX.tbx'
     # Workaround borrowed/used from:
     # https://github.com/habnabit/passacre/commit/2ea05ba94eab2d26951ae7b4b51abf53132b20f0
 
     # Code should work with Python 2, but only do workaround for Python 3
     # Workaround needed in Versions 3.0 - 3.5.2
     if sys.version_info >= (3, 0) and sys.version_info < (3, 5, 3):
-        import tokenize 
+        import tokenize
 
-        try: 
-            _detect_encoding = tokenize.detect_encoding 
-        except AttributeError: 
-            pass 
-        else: 
-            def detect_encoding(readline): 
-                try: 
-                    return _detect_encoding(readline) 
-                except SyntaxError: 
-                    return 'latin-1', [] 
- 
-            tokenize.detect_encoding = detect_encoding 
+        try:
+            _detect_encoding = tokenize.detect_encoding
+        except AttributeError:
+            pass
+        else:
+            def detect_encoding(readline):
+                try:
+                    return _detect_encoding(readline)
+                except SyntaxError:
+                    return 'latin-1', []
+
+            tokenize.detect_encoding = detect_encoding
     ## END WORKAROUND
     #################################################
 
