@@ -127,10 +127,12 @@ def GetLogger() :
 
     global Logger 
 
-    import UnitTestUtilities
+    if Logger is None:
 
-    logName = UnitTestUtilities.getLoggerName()
-    Logger = UnitTestUtilities.initializeLogger(logName)
+        import UnitTestUtilities
+
+        logName = UnitTestUtilities.getLoggerName()
+        Logger = UnitTestUtilities.initializeLogger(logName)
 
     return Logger
 

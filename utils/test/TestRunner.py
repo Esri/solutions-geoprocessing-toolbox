@@ -36,12 +36,14 @@
 ==================================================
 '''
 
-import os
-import sys
 import datetime
 import logging
+import os
+import sys
 import unittest
+
 import arcpy
+
 import Configuration
 import UnitTestUtilities
 import DataDownload
@@ -79,45 +81,61 @@ def logTestResults(result):
     resultHead = resultsHeader(result)
     print(resultHead)
     Configuration.Logger.info(resultHead)
-    
-    if len(result.errors) > 0:
-        rError = resultsErrors(result)
-        print(rError)
-        Configuration.Logger.error(rError)
-        
-    if len(result.failures) > 0:
-        rFail = resultsFailures(result)
-        print(rFail)
-        Configuration.Logger.error(rFail)
-    Configuration.Logger.info("END OF TEST =========================================\n")
+   
+    errorLogLines = getErrorResultsAsList(result)
+    for errorLogLine in errorLogLines :
+        # strip unicode chars so they don't mess up print/log file
+        line = errorLogLine.encode('ascii','ignore').decode('ascii') 
+        print(line)
+        Configuration.Logger.error(line)
+
+    endOfTestMsg = "END OF TEST ========================================="
+    print(endOfTestMsg)
+    Configuration.Logger.info(endOfTestMsg)
 
     return
 
 def resultsHeader(result):
+
+    if result is None:
+        return
+
     ''' Generic header for the results in the log file '''
-    msg = "RESULTS =================================================\n\n"
+    errorCount   = len(result.errors)
+    failureCount = len(result.failures)
+    skippedCount = len(result.skipped)
+    nonPassedCount = errorCount + failureCount 
+    passedCount  = result.testsRun - nonPassedCount
+    # testsRun should be > 0 , but just in case
+    percentPassed = ((passedCount / result.testsRun) * 100.0) if (result.testsRun > 0) else 0.0
+
+    msg = "\nRESULTS =================================================\n"
     msg += "Number of tests run: " + str(result.testsRun) + "\n"
-    msg += "Number of errors: " + str(len(result.errors)) + "\n"
-    msg += "Number of failures: " + str(len(result.failures)) + "\n"
+    msg += "Number succeeded: " + str(passedCount) + "\n"
+    msg += "Number of errors: " + str(errorCount) + "\n"
+    msg += "Number of failures: " + str(failureCount) + "\n"
+    msg += "Percent passing: %3.1f" % (percentPassed) + "\n"
+    msg += "=========================================================\n"
     return msg
 
-def resultsErrors(result):
-    ''' Error results formatting '''
-    msg = "ERRORS =================================================\n\n"
-    for i in result.errors:
-        for j in i:
-            msg += str(j)
-        msg += "\n"
-    return msg
+def getErrorResultsAsList(result):
+    results = []
+    if len(result.errors) > 0:
+        results.append("ERRORS ==================================================")
+        for test in result.errors:
+            for error in test:
+                strError = str(error)
+                # For errors containing newlines, break these up so they are more readable
+                results += strError.strip().splitlines()
 
-def resultsFailures(result):
-    ''' Assert failures formatting '''
-    msg = "FAILURES ===============================================\n\n"
-    for i in result.failures:
-        for j in i:
-            msg += str(j)
-        msg += "\n"
-    return msg
+    if len(result.failures) > 0:
+        results.append("FAILURES ================================================")
+        for test in result.failures:
+            for failure in test:
+                strFailure = str(failure)
+                results += strFailure.strip().splitlines()
+
+    return results
 
 def runTestSuite():
     ''' collect all test suites before running them '''
