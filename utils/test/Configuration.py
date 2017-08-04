@@ -63,8 +63,9 @@ logPath = os.path.normpath(os.path.join(currentPath, r"log")) # should go to .\s
 clearingOperationsToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../clearing_operations/ClearingOperationsTools"))
 clearingOperationsPath = os.path.normpath(os.path.join(testDataPath, r"clearing_operations"))
 clearingOperationsURL = r"http://www.arcgis.com/sharing/content/items/198f01e263474c209198c9c3c3586287/data"
+clearingOperationsInputGDB = os.path.join(clearingOperationsPath, "test_clearing_operations.gdb")
 
-''' Geonames - Test Data/Paths ''' 
+''' Geonames - Test Data/Paths '''
 geonamesToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../geonames/Geonames Tools"))
 geonamesDataPath = os.path.normpath(os.path.join(testDataPath, r"geonames"))
 geonamesInputGDB = os.path.join(geonamesDataPath, "Geonames.gdb")
@@ -77,25 +78,25 @@ incidentURL = "http://www.arcgis.com/sharing/content/items/528faf6b23154b04a8268
 incidentInputGDB = os.path.join(incidentAnalysisDataPath, "test_incident_analysis_tools.gdb")
 incidentResultGDB = os.path.join(incidentAnalysisDataPath, "test_incident_analysis_results.gdb")
 
-''' Sun Position Analysis - Test Data/Paths ''' 
+''' Sun Position Analysis - Test Data/Paths '''
 sunPositionAnalysisToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../sun_position_analysis/Sun Position Analysis Tools"))
 sunPositionAnalysisDataPath = os.path.normpath(os.path.join(testDataPath, r"sun_position_analysis"))
 sunPositionAnalysisURL = r"http://www.arcgis.com/sharing/content/items/bf6a04b4c9a3447b91e9c0b4074ca1e4/data"
 sunPositionInputGDB = os.path.join(sunPositionAnalysisDataPath, "test_sun_position.gdb")
 
-''' MAoT - Test Data/Paths ''' 
+''' MAoT - Test Data/Paths '''
 maotToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../military_aspects_of_terrain/Military Aspects of Terrain Tools"))
 maotPath = os.path.normpath(os.path.join(testDataPath, r"maot"))
 maotURL = r"http://www.arcgis.com/sharing/content/items/127bff2341694342a6df884aaa51237e/data"
 
-''' MAoW - Test Data/Paths ''' 
+''' MAoW - Test Data/Paths '''
 maowToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../military_aspects_of_weather/Military Aspects of Weather Tools"))
 maowPath = os.path.normpath(os.path.join(testDataPath, r"maow"))
 maowURL = "http://www.arcgis.com/sharing/content/items/74eeb356c7dd4422bf52f36f38bb8a9b/data"
 
 def GetLogger() :
 
-    global Logger 
+    global Logger
 
     import UnitTestUtilities
 
@@ -106,10 +107,10 @@ def GetLogger() :
 
 def GetPlatform() :
 
-    global Platform 
+    global Platform
 
     if Platform is None :
-        
+
         import arcpy
 
         Platform = PLATFORM_DESKTOP
