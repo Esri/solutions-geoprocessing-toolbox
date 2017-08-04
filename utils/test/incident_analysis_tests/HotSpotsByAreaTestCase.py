@@ -84,7 +84,6 @@ class HotSpotsByAreaTestCase(unittest.TestCase):
         if Configuration.DEBUG == True: print(".....HotSpotsByAreaTestCase.tearDown")
         UnitTestUtilities.deleteScratch(self.incidentScratchGDB)
         
-    @unittest.skipIf(Configuration.Platform == Configuration.PLATFORM_DESKTOP, "ArcMap Unit Test not currently working")        
     def test_hot_spots_by_area(self):
         '''test_hot_spots_by_area'''
         if Configuration.DEBUG == True: print(".....HotSpotsByAreaTestCase.test_hot_spots_by_area")
@@ -112,7 +111,12 @@ class HotSpotsByAreaTestCase(unittest.TestCase):
                 results = arcpy.HotSpotsByArea_iaTools(self.inputAOIFeatures, layerName, \
                     incidentFieldName, outputWorkspace)
             else: 
-                # ArcMap test/tool not currently running, outputWorkspace being ignored by the tool
+                # WORKAROUND:
+                # ArcMap version of tool ignores outputWorkspace parameter
+                arcpy.env.scratchWorkspace = outputWorkspace
+                arcpy.env.workspace = outputWorkspace
+                # End WORKAROUNG 
+
                 results = arcpy.HotSpotsbyArea_iaTools(self.inputAOIFeatures, layerName, \
                     incidentFieldName, outputWorkspace)
 
