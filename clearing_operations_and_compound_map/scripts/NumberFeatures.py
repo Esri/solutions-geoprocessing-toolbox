@@ -237,37 +237,37 @@ def main():
             #params[3].symbology = layerFilePath
             #arcpy.AddMessage("Applying Symbology from {0}".format(layerFilePath))
             
-            arcpy.AddMessage("Do not apply symbology it will be done in the next task step")
+            arcpy.AddMessage("Applying symbology on the script tool based on best practice")
            
         elif appEnvironment == "ARCMAP":
-            arcpy.AddMessage("Adding features to map (" + str(targetLayerName) + ")...")
+            #arcpy.AddMessage("Adding features to map (" + str(targetLayerName) + ")...")
             
-            arcpy.MakeFeatureLayer_management(outputFeatureClass, targetLayerName)
+            #arcpy.MakeFeatureLayer_management(outputFeatureClass, targetLayerName)
             
             # create a layer object
-            layer = arcpy.mapping.Layer(targetLayerName)            
+            #layer = arcpy.mapping.Layer(targetLayerName)            
             
             # get the symbology from the NumberedStructures.lyr
             #layerFilePath = os.path.join(os.getcwd(),r"data\Layers\NumberedStructures.lyr")
-            layerFilePath = os.path.join(os.path.dirname(os.path.dirname(__file__)),r"layers\NumberedStructures.lyr")
+            #layerFilePath = os.path.join(os.path.dirname(os.path.dirname(__file__)),r"layers\NumberedStructures.lyr")
             
             # apply the symbology to the layer
-            arcpy.ApplySymbologyFromLayer_management(layer, layerFilePath)
+            #arcpy.ApplySymbologyFromLayer_management(layer, layerFilePath)
             
             # add layer to map
-            arcpy.mapping.AddLayer(df, layer, "AUTO_ARRANGE")
+            #arcpy.mapping.AddLayer(df, layer, "AUTO_ARRANGE")
             
             # find the target layer in the map
-            mapLyr = arcpy.mapping.ListLayers(mxd, targetLayerName)[0]  
+            #mapLyr = arcpy.mapping.ListLayers(mxd, targetLayerName)[0]  
 
-            arcpy.AddMessage("Labeling output features (" + str(targetLayerName) + ")...")
+            #arcpy.AddMessage("Labeling output features (" + str(targetLayerName) + ")...")
             # Work around needed as ApplySymbologyFromLayer_management does not honour labels
-            labelLyr = arcpy.mapping.Layer(layerFilePath)
+            #labelLyr = arcpy.mapping.Layer(layerFilePath)
             # copy the label info from the source to the map layer
-            mapLyr.labelClasses = labelLyr.labelClasses
+            #mapLyr.labelClasses = labelLyr.labelClasses
             # turn labels on
-            mapLyr.showLabels = True
-            
+            #mapLyr.showLabels = True
+            arcpy.AddMessage("Applying symbology on the script tool based on best practice")
         else:
             arcpy.AddMessage("Non-map application, skipping labeling...")
 
