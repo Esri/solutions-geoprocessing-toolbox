@@ -96,12 +96,20 @@ class ClusterAnalysisTestCase(unittest.TestCase):
         outputClusterFeatures = os.path.join(self.incidentScratchGDB, "outputClusters")
         runToolMessage = "Running tool (Cluster Analysis)"
         arcpy.AddMessage(runToolMessage)
-        Configuration.Logger.info(runToolMessage)
+        Configuration.Logger.info(runToolMessage)        
+        distance = "500 Meters"
+
         try:
-            arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, outputClusterFeatures)
-        except:
-            msg = arcpy.GetMessages(2)
-            self.fail('Exception in ClusterAnalysis_iaTools toolbox \n' + msg)
+            # Tools have different parameter order in Pro vs. ArcMap
+            if Configuration.Platform == Configuration.PLATFORM_PRO :
+                arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, distance, outputClusterFeatures)
+            else:
+                arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, outputClusterFeatures, distance)
+        except arcpy.ExecuteError:
+            UnitTestUtilities.handleArcPyError()
+        except Exception as e:
+            UnitTestUtilities.handleGeneralError(e)
+
         clusterCount = int(arcpy.GetCount_management(outputClusterFeatures).getOutput(0))
         self.assertGreater(clusterCount, int(10))
 

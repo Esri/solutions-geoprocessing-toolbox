@@ -97,8 +97,16 @@ class IncidentDensityTestCase(unittest.TestCase):
 
         arcpy.CheckOutExtension("Spatial")     
 
+        sr = arcpy.SpatialReference(3857) # 'WGS 1984 Web Mercator Auxiliary Sphere'
+
         try:
-            arcpy.IncidentDensity_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, outputDensity)
+            # Tools have different parameter order in Pro vs. ArcMap
+            if Configuration.Platform == Configuration.PLATFORM_PRO :
+                arcpy.IncidentDensity_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, \
+                    sr, outputDensity)
+            else:
+                arcpy.IncidentDensity_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, \
+                    outputDensity, sr)
         except:
             msg = arcpy.GetMessages(2)
             self.fail('Exception in IncidentDensity_iaTools toolbox \n' + msg)
