@@ -47,9 +47,9 @@ class IncidentDensityTestCase(unittest.TestCase):
   
     toolboxUnderTest = None # Set to Pro or ArcMap toolbox at runtime
     toolboxUnderTestAlias = 'iaTools'
-
-    incidentScratchGDB = None
        
+    incidentScratchGDB = None
+
     inputPointFeatures = None
     inputBoundaryFeatures = None
     
@@ -66,16 +66,17 @@ class IncidentDensityTestCase(unittest.TestCase):
         UnitTestUtilities.checkArcPy()
         
         DataDownload.runDataDownload(Configuration.incidentAnalysisDataPath, Configuration.incidentInputGDB, Configuration.incidentURL)
+      
         if (self.incidentScratchGDB == None) or (not arcpy.Exists(self.incidentScratchGDB)):
             self.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentAnalysisDataPath)
-       
+         
         self.inputPointFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
         self.inputBoundaryFeatures = os.path.join(Configuration.incidentInputGDB, "Districts")
 
         UnitTestUtilities.checkFilePaths([Configuration.incidentAnalysisDataPath])
 
         UnitTestUtilities.checkGeoObjects([Configuration.incidentInputGDB, \
-                                           self.incidentScratchGDB, \
+                                           Configuration.incidentResultGDB, \
                                            self.toolboxUnderTest, \
                                            self.inputPointFeatures, \
                                            self.inputBoundaryFeatures])
@@ -93,7 +94,19 @@ class IncidentDensityTestCase(unittest.TestCase):
         runToolMsg = "Running tool (Incident Density)"
         arcpy.AddMessage(runToolMsg)
         Configuration.Logger.info(runToolMsg)
-        outputDensity = os.path.join(self.incidentScratchGDB, "outputDensity")
+
+        outputDensity = os.path.join(Configuration.incidentResultGDB, "outputDensity")
+
+        # Delete the feature class used to load if already exists
+        if arcpy.Exists(outputDensity) :
+            arcpy.Delete_management(outputDensity)
+
+        # WORKAROUND: Model/Tool uses scratch GDB that may have previous outputs
+        arcpy.env.scratchWorkspace = self.incidentScratchGDB
+        workaround = os.path.join(self.incidentScratchGDB, 'IncidentDensitySurface_Output')
+        if arcpy.Exists(workaround) :
+            arcpy.Delete_management(workaround)
+        # END WORKAROUND
 
         arcpy.CheckOutExtension("Spatial")     
 
@@ -107,9 +120,10 @@ class IncidentDensityTestCase(unittest.TestCase):
             else:
                 arcpy.IncidentDensity_iaTools(self.inputPointFeatures, self.inputBoundaryFeatures, \
                     outputDensity, sr)
-        except:
-            msg = arcpy.GetMessages(2)
-            self.fail('Exception in IncidentDensity_iaTools toolbox \n' + msg)
+        except arcpy.ExecuteError:
+            UnitTestUtilities.handleArcPyError()
+        except Exception as e:
+            UnitTestUtilities.handleGeneralError(e)
 
         self.assertTrue(arcpy.Exists(outputDensity))
 
