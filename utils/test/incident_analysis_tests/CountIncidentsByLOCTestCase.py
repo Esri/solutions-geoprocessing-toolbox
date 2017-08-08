@@ -76,6 +76,7 @@ class CountIncidentsByLOCTestCase(unittest.TestCase, arcpyAssert.FeatureClassAss
         UnitTestUtilities.checkFilePaths([Configuration.incidentAnalysisDataPath])
 
         UnitTestUtilities.checkGeoObjects([Configuration.incidentInputGDB, \
+                                           Configuration.incidentResultGDB, \
                                            self.toolboxUnderTest, \
                                            self.inputPointsFeatures, \
                                            self.inputLinesFeatures,  \
@@ -85,7 +86,6 @@ class CountIncidentsByLOCTestCase(unittest.TestCase, arcpyAssert.FeatureClassAss
     def tearDown(self):
         if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.tearDown")
         
-    @unittest.skipIf(Configuration.Platform == Configuration.PLATFORM_PRO, "Pro Unit Test not currently working")        
     def test_count_incidents(self):
         '''test_count_incidents'''
         if Configuration.DEBUG == True: print(".....CountIncidentsByLOCTestCase.test_count_incidents")
@@ -115,14 +115,19 @@ class CountIncidentsByLOCTestCase(unittest.TestCase, arcpyAssert.FeatureClassAss
                                               self.inputAOIFeatures,
                                               "50 Meters",
                                               outputCountFeatures)
+            # Note: Pro and ArcMap returning different results so will test Pro differently            result = arcpy.GetCount_management(outputCountFeatures)
+            featureCount = int(arcpy.GetCount_management(outputCountFeatures).getOutput(0))
+            print("Number of features in output: " + str(featureCount))
+            self.assertGreater(featureCount, int(2000))
+
         else:
+
             arcpy.CountIncidentsByLOC_iaTools(self.inputPointsFeatures,
                                               self.inputLinesFeatures,
                                               self.inputAOIFeatures,
                                               outputCountFeatures,
                                               "50 Meters")
-
-        self.assertFeatureClassEqual(self.resultCompareFeatures0001, outputCountFeatures, "OBJECTID")
+            self.assertFeatureClassEqual(self.resultCompareFeatures0001, outputCountFeatures, "OBJECTID")
 
 if __name__ == "__main__":
     unittest.main()
