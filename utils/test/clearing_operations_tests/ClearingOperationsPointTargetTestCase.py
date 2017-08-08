@@ -85,10 +85,6 @@ class ClearingOperationsPointTargetTestCase(unittest.TestCase):
         labelStyle = "Alpha-Numeric"
         output = os.path.join(self.scratchGDB, "ptTarget")
 
-        sr=arcpy.Describe(self.pointTarget).spatialReference
-        print("Projecting output...")
-        #arcpy.DefineProjection_management(output,  sr)
-
         #Testing
         runToolMsg="Running tool (Point Target)"
         arcpy.AddMessage(runToolMsg)

@@ -98,7 +98,7 @@ class ClearingOperationsNumberFeaturesTestCase(unittest.TestCase):
         row = cursor.next()
         val = row.getValue(fieldToNumber)
         print("Field number first row: " + str(val) + " should not be null")
-        #self.assertIsInstance(val)
+
         self.assertIsNotNone(val)
 
         print("number features: " + str(count))
