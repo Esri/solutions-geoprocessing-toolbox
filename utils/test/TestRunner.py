@@ -69,7 +69,7 @@ def main():
         Configuration.Logger = UnitTestUtilities.initializeLogger(logName)
     print("Logging results to: " + str(logName))
     UnitTestUtilities.setUpLogFileHeader()
-    
+
     result = runTestSuite()
 
     logTestResults(result)
@@ -79,6 +79,7 @@ def main():
 def logTestResults(result):
     ''' Write the log file '''
     resultHead = resultsHeader(result)
+
     print(resultHead)
     Configuration.Logger.info(resultHead)
    
@@ -92,6 +93,7 @@ def logTestResults(result):
     endOfTestMsg = "END OF TEST ========================================="
     print(endOfTestMsg)
     Configuration.Logger.info(endOfTestMsg)
+
 
     return
 
@@ -150,6 +152,7 @@ def runTestSuite():
     testSuite.addTests(addIncidentAnalysisSuite())
     testSuite.addTests(addSunPositionAnalysisSuite())
     testSuite.addTests(addGeoNamesSuite())
+    testSuite.addTests(addClearingOperationsSuite())
 
     #TODO: Clearing Operations Test Suite
     #TODO: Incident Analysis Test Suite
@@ -186,6 +189,14 @@ def addGeoNamesSuite():
     from geonames_tests import GeoNamesToolsTestSuite
     suite = GeoNamesToolsTestSuite.getTestSuite()
     return suite
+
+def addClearingOperationsSuite():
+    '''Add all Clearing operations Tests'''
+    if Configuration.DEBUG == True: print("TestRunner.py - addClearingOperationsSuite")
+    from clearing_operations_tests import ClearingOperationsTestSuite
+    suite = ClearingOperationsTestSuite.getTestSuite()
+    return suite
+
 
 # MAIN =============================================
 if __name__ == "__main__":
