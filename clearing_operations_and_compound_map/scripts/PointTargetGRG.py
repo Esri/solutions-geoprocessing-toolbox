@@ -578,7 +578,7 @@ def main():
             #mapLyr.labelClasses = labelLyr.labelClasses
             # turn labels on
             #mapLyr.showLabels = True
-			arcpy.AddMessage("Non-map environment, skipping labeling based on best practices")
+            arcpy.AddMessage("Non-map environment, skipping labeling based on best practices")
         else:
             arcpy.AddMessage("Non-map environment, skipping labeling...")
 
