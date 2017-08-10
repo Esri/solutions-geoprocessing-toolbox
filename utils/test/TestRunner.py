@@ -151,6 +151,7 @@ def runTestSuite():
     testSuite.addTests(addIncidentAnalysisSuite())
     testSuite.addTests(addSunPositionAnalysisSuite())
     testSuite.addTests(addGeoNamesSuite())
+    testSuite.addTests(addClearingOperationsSuite())
 
     #TODO: Clearing Operations Test Suite
     #TODO: Incident Analysis Test Suite
@@ -166,6 +167,14 @@ def runTestSuite():
     print("Test success: {0}".format(str(result.wasSuccessful())))
 
     return result
+
+def addClearingOperationsSuite():
+
+    '''Add all Clearing operations Tests'''
+    if Configuration.DEBUG == True: print("TestRunner.py - addClearingOperationsSuite")
+    from clearing_operations_tests import ClearingOperationsTestSuite
+    suite = ClearingOperationsTestSuite.getTestSuite()
+    return suite
 
 def addIncidentAnalysisSuite():
     ''' Add all IncidentAnalysis tests  '''

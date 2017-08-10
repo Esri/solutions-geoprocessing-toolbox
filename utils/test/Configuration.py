@@ -61,9 +61,10 @@ testDataPath = os.path.normpath(os.path.join(currentPath, r"test_data")) # shoul
 logPath = os.path.normpath(os.path.join(currentPath, r"log")) # should go to .\solutions-geoprocessing-toolbox\utils\test\log
 
 ''' Clearing Operations - Test Data/Paths '''
-clearingOperationsToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../clearing_operations/ClearingOperationsTools"))
+clearingOperationsToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../clearing_operations_and_compound_map/ClearingOperationsTools"))
 clearingOperationsPath = os.path.normpath(os.path.join(testDataPath, r"clearing_operations"))
 clearingOperationsURL = r"http://www.arcgis.com/sharing/content/items/198f01e263474c209198c9c3c3586287/data"
+clearingOperationsInputGDB = os.path.join(clearingOperationsPath, "test_clearing_operations.gdb")
 
 ''' Geonames - Test Data/Paths ''' 
 geonamesToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../geonames/Geonames Tools"))

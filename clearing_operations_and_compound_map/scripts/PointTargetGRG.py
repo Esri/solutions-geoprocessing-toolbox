@@ -57,9 +57,11 @@ cellWidth = arcpy.GetParameterAsText(3)
 cellHeight = arcpy.GetParameterAsText(4)
 cellUnits = arcpy.GetParameterAsText(5)
 gridSize = arcpy.GetParameterAsText(6)
-labelStyle = arcpy.GetParameterAsText(7)
-outputFeatureClass = arcpy.GetParameterAsText(8)
-labelStartPos = arcpy.GetParameterAsText(9)
+labelStartPos = arcpy.GetParameterAsText(7)
+labelStyle = arcpy.GetParameterAsText(8)
+outputFeatureClass = arcpy.GetParameterAsText(9)
+
+
 tempOutput = os.path.join("in_memory", "tempFishnetGrid")
 sysPath = sys.path[0]
 
@@ -576,7 +578,7 @@ def main():
             #mapLyr.labelClasses = labelLyr.labelClasses
             # turn labels on
             #mapLyr.showLabels = True
-			arcpy.AddMessage("Non-map environment, skipping labeling based on best practices")
+            arcpy.AddMessage("Non-map environment, skipping labeling based on best practices")
         else:
             arcpy.AddMessage("Non-map environment, skipping labeling...")
 
