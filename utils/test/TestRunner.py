@@ -104,7 +104,7 @@ def resultsHeader(result):
     errorCount   = len(result.errors)
     failureCount = len(result.failures)
     skippedCount = len(result.skipped)
-    nonPassedCount = errorCount + failureCount 
+    nonPassedCount = errorCount + failureCount + skippedCount
     passedCount  = result.testsRun - nonPassedCount
     # testsRun should be > 0 , but just in case
     percentPassed = ((passedCount / result.testsRun) * 100.0) if (result.testsRun > 0) else 0.0
@@ -114,6 +114,7 @@ def resultsHeader(result):
     msg += "Number succeeded: " + str(passedCount) + "\n"
     msg += "Number of errors: " + str(errorCount) + "\n"
     msg += "Number of failures: " + str(failureCount) + "\n"
+    msg += "Number of tests skipped: " + str(skippedCount) + "\n"
     msg += "Percent passing: %3.1f" % (percentPassed) + "\n"
     msg += "=========================================================\n"
     return msg

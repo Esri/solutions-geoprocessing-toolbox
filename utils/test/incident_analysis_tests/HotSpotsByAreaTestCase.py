@@ -88,23 +88,47 @@ class HotSpotsByAreaTestCase(unittest.TestCase):
         '''test_hot_spots_by_area'''
         if Configuration.DEBUG == True: print(".....HotSpotsByAreaTestCase.test_hot_spots_by_area")
 
+        arcpy.env.overwriteOutput = True
+
         arcpy.ImportToolbox(self.toolboxUnderTest, self.toolboxUnderTestAlias)
 
         runToolMessage = "Running tool (Hot Spots By Area)"
         arcpy.AddMessage(runToolMessage)
         Configuration.Logger.info(runToolMessage)
         incidentFieldName = "district"
-        outputWorkspace = Configuration.incidentAnalysisDataPath
-        # second parameter: inputIncidents must be a Feature Layer
-        arcpy.MakeFeatureLayer_management(self.inputIncidents, "incidentsLayer")
-        try:
-            arcpy.HotSpotsByArea_iaTools(self.inputAOIFeatures, "incidentsLayer", incidentFieldName, outputWorkspace)
-        except:
-            msg = arcpy.GetMessages(2)
-            self.fail('Exception in HotSpotsByArea_iaTools toolbox \n' + msg)
+        outputWorkspace = self.incidentScratchGDB
 
-        # TODO: Doesn't seem to test anything
-        self.assertTrue(arcpy.Exists(outputWorkspace))
+        results = None
+
+        try:
+
+            # second parameter: inputIncidents must be a Feature Layer
+            layerName = "incidentsLayer"
+            arcpy.MakeFeatureLayer_management(self.inputIncidents, layerName)
+
+            # Tools have slightly different names in Pro vs. ArcMap ("By" vs. "by")
+            if Configuration.Platform == Configuration.PLATFORM_PRO :
+                results = arcpy.HotSpotsByArea_iaTools(self.inputAOIFeatures, layerName, \
+                    incidentFieldName, outputWorkspace)
+            else: 
+                # WORKAROUND:
+                # ArcMap version of tool ignores outputWorkspace parameter
+                arcpy.env.scratchWorkspace = outputWorkspace
+                arcpy.env.workspace = outputWorkspace
+                # End WORKAROUNG 
+
+                results = arcpy.HotSpotsbyArea_iaTools(self.inputAOIFeatures, layerName, \
+                    incidentFieldName, outputWorkspace)
+
+        except arcpy.ExecuteError:
+            UnitTestUtilities.handleArcPyError()
+        except Exception as e:
+            UnitTestUtilities.handleGeneralError(e)
+
+        self.assertIsNotNone(results)
+        outputFeatureClasses = results[0].split(';')
+        for outputFeatureClass in outputFeatureClasses:
+            self.assertTrue(arcpy.Exists(outputFeatureClass))
 
 if __name__ == "__main__":
     unittest.main()
