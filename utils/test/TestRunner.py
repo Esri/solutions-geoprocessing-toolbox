@@ -148,16 +148,13 @@ def runTestSuite():
     Configuration.GetPlatform()
     Configuration.Logger.info(Configuration.Platform + " =======================================")
 
+    testSuite.addTests(addClearingOperationsSuite())
+    testSuite.addTests(addGeoNamesSuite())
     testSuite.addTests(addIncidentAnalysisSuite())
     testSuite.addTests(addSunPositionAnalysisSuite())
-    testSuite.addTests(addGeoNamesSuite())
-    testSuite.addTests(addClearingOperationsSuite())
 
-    #TODO: Clearing Operations Test Suite
-    #TODO: Incident Analysis Test Suite
     #TODO: MAoT Test Suite
     #TODO: MAoW Test Suite
-    #TODO: Sun Position Analysis Test Suite
 
     print("running " + str(testSuite.countTestCases()) + " tests...")
 
