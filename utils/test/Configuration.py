@@ -72,6 +72,12 @@ geonamesDataPath = os.path.normpath(os.path.join(testDataPath, r"geonames"))
 geonamesInputGDB = os.path.join(geonamesDataPath, "Geonames.gdb")
 geonamesURL = r"http://www.arcgis.com/sharing/content/items/afc766d5276648ab80aa85b819af1ffc/data"
 
+''' Military Features - Test Data/Paths '''
+militaryFeaturesToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../military_features/Military Features Tools"))
+militaryFeaturesDataPath = os.path.normpath(os.path.join(testDataPath, r"military_features"))
+militaryFeaturesInputGDB = os.path.join(militaryFeaturesDataPath, r"data/mil2525c/testdata/geodatabases/test_inputs.gdb")
+militaryFeaturesURL = r"http://www.arcgis.com/sharing/content/items/3a18f91b34d14a5aa72aa67f32c97497/data"
+
 ''' Incident Analysis - Test Data/Paths '''
 incidentToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../incident_analysis/Incident Analysis Tools"))
 incidentAnalysisDataPath = os.path.normpath(os.path.join(testDataPath, r"incident_analysis"))
