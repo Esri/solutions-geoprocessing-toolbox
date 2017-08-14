@@ -60,12 +60,19 @@ testDataPath = os.path.normpath(os.path.join(currentPath, r"test_data")) # shoul
 ''' Log Path: the folder where the log files go wild and multiply '''
 logPath = os.path.normpath(os.path.join(currentPath, r"log")) # should go to .\solutions-geoprocessing-toolbox\utils\test\log
 
+'''Distance To Assets paths'''
+distancetoAssetsToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../distance_to_assets/Distance To Assets"))
+distanceToAssetsDataPath = os.path.normpath(os.path.join(testDataPath, r"DistanceToAssets"))
+distanceToAssetsInputGDB = os.path.join(distanceToAssetsDataPath, "DistancetoAssetsTestData/DistanceToAssets.gdb")
+distanceToAssetsInputNDGDB=os.path.join(distanceToAssetsDataPath, "DistancetoAssetsTestData/SanFrancisco.gdb")
+distanceToAssetsURL = r"http://www.arcgis.com/sharing/content/items/700e44eb3e114c098818ea71f7ad72b6/data"
+
 ''' Clearing Operations - Test Data/Paths '''
 clearingOperationsToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../clearing_operations/ClearingOperationsTools"))
 clearingOperationsPath = os.path.normpath(os.path.join(testDataPath, r"clearing_operations"))
 clearingOperationsURL = r"http://www.arcgis.com/sharing/content/items/198f01e263474c209198c9c3c3586287/data"
 
-''' Geonames - Test Data/Paths ''' 
+''' Geonames - Test Data/Paths '''
 geonamesToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../geonames/Geonames Tools"))
 geonamesDataPath = os.path.normpath(os.path.join(testDataPath, r"geonames"))
 geonamesInputGDB = os.path.join(geonamesDataPath, "Geonames.gdb")
@@ -78,18 +85,18 @@ incidentURL = "http://www.arcgis.com/sharing/content/items/528faf6b23154b04a8268
 incidentInputGDB = os.path.join(incidentAnalysisDataPath, "test_incident_analysis_tools.gdb")
 incidentResultGDB = os.path.join(incidentAnalysisDataPath, "test_incident_analysis_results.gdb")
 
-''' Sun Position Analysis - Test Data/Paths ''' 
+''' Sun Position Analysis - Test Data/Paths '''
 sunPositionAnalysisToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../sun_position_analysis/Sun Position Analysis Tools"))
 sunPositionAnalysisDataPath = os.path.normpath(os.path.join(testDataPath, r"sun_position_analysis"))
 sunPositionAnalysisURL = r"http://www.arcgis.com/sharing/content/items/bf6a04b4c9a3447b91e9c0b4074ca1e4/data"
 sunPositionInputGDB = os.path.join(sunPositionAnalysisDataPath, "test_sun_position.gdb")
 
-''' MAoT - Test Data/Paths ''' 
+''' MAoT - Test Data/Paths '''
 maotToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../military_aspects_of_terrain/Military Aspects of Terrain Tools"))
 maotPath = os.path.normpath(os.path.join(testDataPath, r"maot"))
 maotURL = r"http://www.arcgis.com/sharing/content/items/127bff2341694342a6df884aaa51237e/data"
 
-''' MAoW - Test Data/Paths ''' 
+''' MAoW - Test Data/Paths '''
 maowToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../military_aspects_of_weather/Military Aspects of Weather Tools"))
 maowPath = os.path.normpath(os.path.join(testDataPath, r"maow"))
 maowURL = "http://www.arcgis.com/sharing/content/items/74eeb356c7dd4422bf52f36f38bb8a9b/data"
@@ -99,33 +106,33 @@ def checkTokenizeWorkaround() :
     # WORKAROUND: for Python 3 choking on reading some binary files (with nulls)
     # For example in ArcPy when loading a toolbox when run from command line
     # Get error like: detect_encoding...tokenize.py...find_cookie...raise SyntaxError(msg)  
-    # ...SyntaxError: invalid or missing encoding declaration for '...XXXX.tbx' 
+    # ...SyntaxError: invalid or missing encoding declaration for '...XXXX.tbx'
     # Workaround borrowed/used from:
     # https://github.com/habnabit/passacre/commit/2ea05ba94eab2d26951ae7b4b51abf53132b20f0
 
     # Code should work with Python 2, but only do workaround for Python 3
     # Workaround needed in Versions 3.0 - 3.5.2
     if sys.version_info >= (3, 0) and sys.version_info < (3, 5, 3):
-        import tokenize 
+        import tokenize
 
-        try: 
-            _detect_encoding = tokenize.detect_encoding 
-        except AttributeError: 
-            pass 
-        else: 
-            def detect_encoding(readline): 
-                try: 
-                    return _detect_encoding(readline) 
-                except SyntaxError: 
-                    return 'latin-1', [] 
- 
-            tokenize.detect_encoding = detect_encoding 
+        try:
+            _detect_encoding = tokenize.detect_encoding
+        except AttributeError:
+            pass
+        else:
+            def detect_encoding(readline):
+                try:
+                    return _detect_encoding(readline)
+                except SyntaxError:
+                    return 'latin-1', []
+
+            tokenize.detect_encoding = detect_encoding
     ## END WORKAROUND
     #################################################
 
 def GetLogger() :
 
-    global Logger 
+    global Logger
 
     if Logger is None:
 
@@ -138,10 +145,10 @@ def GetLogger() :
 
 def GetPlatform() :
 
-    global Platform 
+    global Platform
 
     if Platform is None :
-        
+
         import arcpy
 
         Platform = PLATFORM_DESKTOP

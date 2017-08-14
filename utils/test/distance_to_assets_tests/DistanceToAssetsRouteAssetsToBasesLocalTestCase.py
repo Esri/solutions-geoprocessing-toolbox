@@ -1,0 +1,83 @@
+#------------------------------------------------------------------------------
+# Copyright 2015 Esri
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#------------------------------------------------------------------------------
+
+import logging
+import arcpy
+from arcpy.sa import *
+import sys
+import traceback
+import os
+
+sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '..')))
+
+import unittest
+import Configuration
+import UnitTestUtilities
+import DataDownload
+
+class DistanceToAssetsRouteAssetsToBasesLocalTestCase(unittest.TestCase):
+    toolboxUnderTest = None # Set to Pro or ArcMap toolbox at runtime
+
+    scratchGDB = None
+    def setUp(self):
+        if Configuration.DEBUG == True: print("         DistanceToAssetsTestCase.setUp")
+
+        ''' Initialization needed if running Test Case standalone '''
+        Configuration.GetLogger()
+        Configuration.GetPlatform()
+        ''' End standalone initialization '''
+        self.toolboxUnderTest = Configuration.distancetoAssetsToolboxPath + \
+            Configuration.GetToolboxSuffix()
+
+        UnitTestUtilities.checkArcPy()
+        DataDownload.runDataDownload(Configuration.distanceToAssetsDataPath, \
+           Configuration.distanceToAssetsInputGDB, Configuration.distanceToAssetsURL)
+
+        self.inputND = os.path.join(Configuration.distanceToAssetsInputNDGDB, "Transportation/Streets_ND")
+        self.inputAssets = os.path.join(Configuration.distanceToAssetsInputGDB, "AssetsGeocoded_SF")
+        self.inputBases = os.path.join(Configuration.distanceToAssetsInputGDB, "BasesGeocoded_SF")
+
+        if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
+            self.scratchGDB = UnitTestUtilities.createScratch(Configuration.distanceToAssetsDataPath)
+
+
+        UnitTestUtilities.checkFilePaths([Configuration.distanceToAssetsDataPath])
+
+        UnitTestUtilities.checkGeoObjects([Configuration.distanceToAssetsInputGDB, self.toolboxUnderTest, self.scratchGDB, self.inputAssets, self.inputBases, self.inputND])
+
+    def tearDown(self):
+        if Configuration.DEBUG == True: print("         DistanceToAssets.tearDown")
+        UnitTestUtilities.deleteScratch(self.scratchGDB)
+
+    def testRouteAssetsToBasesLocal(self):
+        if Configuration.DEBUG == True:print(".....DistanceToAssetsRouteAssetsToBasesLocalTestCase.testRouteAssetsToBasesLocal")
+        print("Importing toolbox...")
+        arcpy.ImportToolbox(self.toolboxUnderTest)
+        arcpy.env.overwriteOutput = True
+
+
+        arcpy.DistanceFromAssetToBase23_DistanceToAssets(self.inputND, self.inputAssets, self.inputBases)
+
+        assetsToBase1 = os.path.join(Configuration.distanceToAssetsInputGDB, "Assets_to_Base_1" )
+        assetsToBase2 = os.path.join(Configuration.distanceToAssetsInputGDB, "Assets_to_Base_2" )
+
+        result1 = arcpy.GetCount_management(assetsToBase1)
+        count1 = int(result1.getOutput(0))
+        result2 = arcpy.GetCount_management(assetsToBase2)
+        count2 = int(result1.getOutput(0))
+
+        self.assertEqual(count1, 1)
+        self.assertEqual(count2, 1)
+
