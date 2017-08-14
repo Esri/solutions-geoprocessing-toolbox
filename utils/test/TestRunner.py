@@ -69,7 +69,7 @@ def main():
         Configuration.Logger = UnitTestUtilities.initializeLogger(logName)
     print("Logging results to: " + str(logName))
     UnitTestUtilities.setUpLogFileHeader()
-    
+
     result = runTestSuite()
 
     logTestResults(result)
@@ -81,11 +81,11 @@ def logTestResults(result):
     resultHead = resultsHeader(result)
     print(resultHead)
     Configuration.Logger.info(resultHead)
-   
+
     errorLogLines = getErrorResultsAsList(result)
     for errorLogLine in errorLogLines :
         # strip unicode chars so they don't mess up print/log file
-        line = errorLogLine.encode('ascii','ignore').decode('ascii') 
+        line = errorLogLine.encode('ascii','ignore').decode('ascii')
         print(line)
         Configuration.Logger.error(line)
 
@@ -104,7 +104,7 @@ def resultsHeader(result):
     errorCount   = len(result.errors)
     failureCount = len(result.failures)
     skippedCount = len(result.skipped)
-    nonPassedCount = errorCount + failureCount 
+    nonPassedCount = errorCount + failureCount
     passedCount  = result.testsRun - nonPassedCount
     # testsRun should be > 0 , but just in case
     percentPassed = ((passedCount / result.testsRun) * 100.0) if (result.testsRun > 0) else 0.0
@@ -150,7 +150,7 @@ def runTestSuite():
     testSuite.addTests(addIncidentAnalysisSuite())
     testSuite.addTests(addSunPositionAnalysisSuite())
     testSuite.addTests(addGeoNamesSuite())
-
+    testSuite.addTests(addDistanceToAssetsSuite())
     #TODO: Clearing Operations Test Suite
     #TODO: Incident Analysis Test Suite
     #TODO: MAoT Test Suite
@@ -185,6 +185,13 @@ def addGeoNamesSuite():
     if Configuration.DEBUG == True: print("TestRunner.py - addGeoNamesSuite")
     from geonames_tests import GeoNamesToolsTestSuite
     suite = GeoNamesToolsTestSuite.getTestSuite()
+    return suite
+
+def addDistanceToAssetsSuite():
+    ''' Add all SunPositionAnalysis tests '''
+    if Configuration.DEBUG == True: print("TestRunner.py - addDistanceToAssetsSuite")
+    from distance_to_assets_tests import DistanceToAssetsTestSuite
+    suite = DistanceToAssetsTestSuite.getTestSuite()
     return suite
 
 # MAIN =============================================
