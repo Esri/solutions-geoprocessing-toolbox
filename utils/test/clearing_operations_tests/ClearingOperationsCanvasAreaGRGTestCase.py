@@ -74,6 +74,7 @@ class ClearingOperationsCanvasAreaGRGTestCase(unittest.TestCase):
         arcpy.ImportToolbox(self.toolboxUnderTest)
         arcpy.env.overwriteOutput = True
 
+		
         #inputs
         cellWidth = 100
         cellHeight = 100
