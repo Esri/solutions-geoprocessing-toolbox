@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright 2015 Esri
+# Copyright 2015-2017 Esri
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,13 +13,13 @@
 # limitations under the License.
 #------------------------------------------------------------------------------
 
-import logging
-import arcpy
-from arcpy.sa import *
-import sys
-import traceback
 import datetime
 import os
+import sys
+import traceback
+
+import arcpy
+from arcpy.sa import * #IMPORTANT: requires Spatial Analyst for raster diff below
 
 # Add parent folder to python path if running test case standalone
 import sys
@@ -62,7 +62,7 @@ class SunPositionAndHillshadeTestCase(unittest.TestCase):
         # set up inputs
         self.inputArea = os.path.join(Configuration.sunPositionInputGDB, r"inputArea")
         self.inputSurface = os.path.join(Configuration.sunPositionInputGDB, r"Jbad_SRTM_USGS_EROS")
-        self.compareResults = os.path.join(Configuration.sunPositionInputGDB, r"compareResults")
+        self.compareResults = os.path.join(Configuration.sunPositionInputGDB, r"compareResults_2017_8_10_16_30_00")
 
         UnitTestUtilities.checkFilePaths([Configuration.sunPositionAnalysisDataPath])
 
@@ -87,9 +87,9 @@ class SunPositionAndHillshadeTestCase(unittest.TestCase):
         print("Setting up inputs... ")
         # '''
         # Tool comparison is based on static dataset in Web Mercator
-        # over Afghanistan, for 7/30/2015 at 14:28:36.
+        # over Afghanistan, for 8/10/2017 at 16:30
         # '''
-        dtCompare = datetime.datetime(2015, 7, 30, 14, 28, 36)
+        dtCompare = datetime.datetime(2017, 8, 10, 16, 30, 30)
         print("Set date...")
         utcAfghanistan = r'(UTC+4:30) Afghanistan'
         print("Set UTCAfg...")
@@ -103,9 +103,8 @@ class SunPositionAndHillshadeTestCase(unittest.TestCase):
         Configuration.Logger.info(runToolMsg)
 
         try:
-
-            arcpy.SunPositionAnalysis_sunpos(self.inputArea, self.inputSurface, dtCompare, utcAfghanistan, outHillshade)
-
+            arcpy.SunPositionAnalysis_sunpos(self.inputArea, self.inputSurface, \
+                dtCompare, utcAfghanistan, outHillshade)
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()
         except:
@@ -115,35 +114,44 @@ class SunPositionAndHillshadeTestCase(unittest.TestCase):
         Configuration.Logger.info(compareMessage)
         compareResults = self.compareResults
 
-        arcpy.CheckOutExtension("Spatial")
+        # Diff requires Spatial Analyst extension
+        requiredExtension = "Spatial"
+        if arcpy.CheckExtension(requiredExtension) == "Available":
+            arcpy.CheckOutExtension(requiredExtension)
+        else:
+            raise Exception(requiredExtension + " license is not available.")
 
+        # Results Testing Method:
+        # Run a diff on the result surface above and a known good previous run
+        # There should be no differences between the raster datasets
+        # No differences -> max diff = min diff = 0, unique values = 1
         diff = Minus(Raster(outHillshade),Raster(compareResults))
         diff.save(os.path.join(self.scratchGDB, "diff"))
         arcpy.CalculateStatistics_management(diff)
-        rasMinimum = float(arcpy.GetRasterProperties_management(diff,"MINIMUM").getOutput(0))
-        rasMaximum = float(arcpy.GetRasterProperties_management(diff,"MAXIMUM").getOutput(0))
+        rasMinimum = abs(float(arcpy.GetRasterProperties_management(diff,"MINIMUM").getOutput(0)))
+        rasMaximum = abs(float(arcpy.GetRasterProperties_management(diff,"MAXIMUM").getOutput(0)))
         rasMean = float(arcpy.GetRasterProperties_management(diff,"MEAN").getOutput(0))
         rasSTD = float(arcpy.GetRasterProperties_management(diff,"STD").getOutput(0))
         rasUnique = int(arcpy.GetRasterProperties_management(diff,"UNIQUEVALUECOUNT").getOutput(0))
 
-        self.assertEqual(rasMaximum, float(0))
-        self.assertEqual(rasMinimum, float(0))
-        self.assertEqual(rasUnique, int(1))
+        arcpy.CheckInExtension(requiredExtension)
 
-        # if (rasMaximum == float(0)) and (rasMinimum == float(0)) and (rasUnique == int(1)):
-            # print("No differences between tool output and expected results.")
-            # print("Test Passed")
-        # else:
-            # msg = "ERROR IN TOOL RESULTS: \n"\
-                # + "Difference between tool output and expected results found:\n"\
-                # + "Difference Minimum: " + str(rasMinimum) + "\n"\
-                # + "Difference Maximum: " + str(rasMaximum) + "\n"\
-                # + "Difference Mean: " + str(rasMean) + "\n"\
-                # + "Difference Std. Deviation: " + str(rasSTD) + "\n"\
-                # + "Difference Number of Unique Values: " + str(rasUnique) + "\n"
-            # raise ValueDifferenceError(msg)            
+        tolerance = 3 # allow this much variation in the outputs (ArcMap and Pro vary a tiny bit) 
+        if (rasMaximum <= float(tolerance)) and (rasMinimum <= float(tolerance)) and (rasUnique <= int(tolerance)):
+            Configuration.Logger.info("No differences between tool output and expected results.")
+        else:
+             msg = "ERROR IN TOOL RESULTS: \n"\
+                 + "Difference between tool output and expected results found:\n"\
+                 + "Difference Minimum: " + str(rasMinimum) + "\n"\
+                 + "Difference Maximum: " + str(rasMaximum) + "\n"\
+                 + "Difference Mean: " + str(rasMean) + "\n"\
+                 + "Difference Std. Deviation: " + str(rasSTD) + "\n"\
+                 + "Difference Number of Unique Values: " + str(rasUnique) + "\n"
+             Configuration.Logger.error(msg)
 
-        arcpy.CheckInExtension("Spatial")
+        self.assertLessEqual(rasMaximum, float(tolerance))
+        self.assertLessEqual(rasMinimum, float(tolerance))
+        self.assertLessEqual(rasUnique, int(tolerance))
 
 if __name__ == "__main__":
     unittest.main()        

@@ -104,7 +104,8 @@ def resultsHeader(result):
     errorCount   = len(result.errors)
     failureCount = len(result.failures)
     skippedCount = len(result.skipped)
-    nonPassedCount = errorCount + failureCount
+    nonPassedCount = errorCount + failureCount + skippedCount
+
     passedCount  = result.testsRun - nonPassedCount
     # testsRun should be > 0 , but just in case
     percentPassed = ((passedCount / result.testsRun) * 100.0) if (result.testsRun > 0) else 0.0
@@ -114,6 +115,7 @@ def resultsHeader(result):
     msg += "Number succeeded: " + str(passedCount) + "\n"
     msg += "Number of errors: " + str(errorCount) + "\n"
     msg += "Number of failures: " + str(failureCount) + "\n"
+    msg += "Number of tests skipped: " + str(skippedCount) + "\n"
     msg += "Percent passing: %3.1f" % (percentPassed) + "\n"
     msg += "=========================================================\n"
     return msg
@@ -147,15 +149,14 @@ def runTestSuite():
     Configuration.GetPlatform()
     Configuration.Logger.info(Configuration.Platform + " =======================================")
 
+    testSuite.addTests(addClearingOperationsSuite())
+    testSuite.addTests(addGeoNamesSuite())
     testSuite.addTests(addIncidentAnalysisSuite())
     testSuite.addTests(addSunPositionAnalysisSuite())
-    testSuite.addTests(addGeoNamesSuite())
     testSuite.addTests(addDistanceToAssetsSuite())
-    #TODO: Clearing Operations Test Suite
-    #TODO: Incident Analysis Test Suite
+
     #TODO: MAoT Test Suite
     #TODO: MAoW Test Suite
-    #TODO: Sun Position Analysis Test Suite
 
     print("running " + str(testSuite.countTestCases()) + " tests...")
 
@@ -165,6 +166,14 @@ def runTestSuite():
     print("Test success: {0}".format(str(result.wasSuccessful())))
 
     return result
+
+def addClearingOperationsSuite():
+
+    '''Add all Clearing operations Tests'''
+    if Configuration.DEBUG == True: print("TestRunner.py - addClearingOperationsSuite")
+    from clearing_operations_tests import ClearingOperationsTestSuite
+    suite = ClearingOperationsTestSuite.getTestSuite()
+    return suite
 
 def addIncidentAnalysisSuite():
     ''' Add all IncidentAnalysis tests  '''

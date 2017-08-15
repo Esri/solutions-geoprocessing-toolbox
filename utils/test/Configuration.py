@@ -68,9 +68,10 @@ distanceToAssetsInputNDGDB=os.path.join(distanceToAssetsDataPath, "DistancetoAss
 distanceToAssetsURL = r"http://www.arcgis.com/sharing/content/items/700e44eb3e114c098818ea71f7ad72b6/data"
 
 ''' Clearing Operations - Test Data/Paths '''
-clearingOperationsToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../clearing_operations/ClearingOperationsTools"))
+clearingOperationsToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../clearing_operations_and_compound_map/ClearingOperationsTools"))
 clearingOperationsPath = os.path.normpath(os.path.join(testDataPath, r"clearing_operations"))
 clearingOperationsURL = r"http://www.arcgis.com/sharing/content/items/198f01e263474c209198c9c3c3586287/data"
+clearingOperationsInputGDB = os.path.join(clearingOperationsPath, "test_clearing_operations.gdb")
 
 ''' Geonames - Test Data/Paths '''
 geonamesToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../geonames/Geonames Tools"))

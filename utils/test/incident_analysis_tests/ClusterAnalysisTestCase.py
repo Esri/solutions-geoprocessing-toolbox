@@ -52,8 +52,6 @@ class ClusterAnalysisTestCase(unittest.TestCase):
     toolboxUnderTest = None # Set to Pro or ArcMap toolbox at runtime
     toolboxUnderTestAlias = 'iaTools'
 
-    incidentScratchGDB = None
-
     inputPointsFeatures = None
 
     def setUp(self):
@@ -70,8 +68,6 @@ class ClusterAnalysisTestCase(unittest.TestCase):
         UnitTestUtilities.checkArcPy()
 
         DataDownload.runDataDownload(Configuration.incidentAnalysisDataPath, Configuration.incidentInputGDB, Configuration.incidentURL)
-        if (self.incidentScratchGDB == None) or (not arcpy.Exists(self.incidentScratchGDB)):
-            self.incidentScratchGDB = UnitTestUtilities.createScratch(Configuration.incidentAnalysisDataPath)
 
         # set up inputs
         self.inputPointsFeatures = os.path.join(Configuration.incidentInputGDB, "Incidents")
@@ -81,29 +77,42 @@ class ClusterAnalysisTestCase(unittest.TestCase):
         UnitTestUtilities.checkFilePaths([Configuration.incidentAnalysisDataPath])
 
         UnitTestUtilities.checkGeoObjects([Configuration.incidentInputGDB, \
-                                           self.incidentScratchGDB, \
+                                           Configuration.incidentResultGDB, \
                                            self.toolboxUnderTest, \
                                            self.inputPointsFeatures])
 
     def tearDown(self):
         if Configuration.DEBUG == True: print(".....ClusterAnalysisTestCase.tearDown")
-        UnitTestUtilities.deleteScratch(self.incidentScratchGDB)
 
     def test_cluster_analysis(self):
         '''test_cluster_analysis'''
         if Configuration.DEBUG == True: print(".....ClusterAnalysisTestCase.test_cluster_analysis")
         arcpy.ImportToolbox(self.toolboxUnderTest, self.toolboxUnderTestAlias)
-        outputClusterFeatures = os.path.join(self.incidentScratchGDB, "outputClusters")
+
+        outputClusterFeatures = os.path.join(Configuration.incidentResultGDB, "outputClusters")
+
+        # Delete the feature class used to load if already exists
+        if arcpy.Exists(outputClusterFeatures) :
+            arcpy.Delete_management(outputClusterFeatures)
+
         runToolMessage = "Running tool (Cluster Analysis)"
         arcpy.AddMessage(runToolMessage)
-        Configuration.Logger.info(runToolMessage)
+        Configuration.Logger.info(runToolMessage)        
+        distance = "500 Meters"
+
         try:
-            arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, outputClusterFeatures)
-        except:
-            msg = arcpy.GetMessages(2)
-            self.fail('Exception in ClusterAnalysis_iaTools toolbox \n' + msg)
+            # Tools have different parameter order in Pro vs. ArcMap
+            if Configuration.Platform == Configuration.PLATFORM_PRO :
+                arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, distance, outputClusterFeatures)
+            else:
+                arcpy.ClusterAnalysis_iaTools(self.inputPointsFeatures, outputClusterFeatures, distance)
+        except arcpy.ExecuteError:
+            UnitTestUtilities.handleArcPyError()
+        except Exception as e:
+            UnitTestUtilities.handleGeneralError(e)
+
         clusterCount = int(arcpy.GetCount_management(outputClusterFeatures).getOutput(0))
-        self.assertGreater(clusterCount, int(10))
+        self.assertGreaterEqual(clusterCount, int(10))
 
 if __name__ == "__main__":
     unittest.main()

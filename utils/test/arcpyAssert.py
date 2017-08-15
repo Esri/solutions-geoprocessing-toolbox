@@ -37,6 +37,8 @@ import os
 import tempfile
 import unittest
 
+import Configuration
+
 class FeatureClassAssertMixin(object):
     """
     Mixin for supporting the compare or assertion of two feature classes.
@@ -97,7 +99,9 @@ class FeatureClassAssertMixin(object):
         with open(compare_file[1], 'r') as f:
             #[print(l.rstrip()) for l in f.readlines()] # syntax error here
             for l in f.readlines():
-                print(l.rstrip()) 
+                diff_line = l.rstrip()
+                print(diff_line) 
+                Configuration.Logger.info(diff_line)
         os.remove(compare_file[1])
 
         # set the assertion message.
