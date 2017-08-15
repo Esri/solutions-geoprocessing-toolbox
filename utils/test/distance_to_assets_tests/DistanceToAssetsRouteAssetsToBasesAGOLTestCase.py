@@ -45,8 +45,12 @@ class DistanceToAssetsRouteAssetsToBasesAGOLTestCase(unittest.TestCase):
         DataDownload.runDataDownload(Configuration.distanceToAssetsDataPath, \
            Configuration.distanceToAssetsInputGDB, Configuration.distanceToAssetsURL)
 
+        self.suffix = Configuration.GetToolboxSuffix()
+
         self.inputAssets = os.path.join(Configuration.distanceToAssetsInputGDB, "AssetsGeocoded")
         self.inputBases = os.path.join(Configuration.distanceToAssetsInputGDB, "BasesGeocoded")
+        self.inputAssetsPro = os.path.join(Configuration.distanceToAssetsInputGDB, "AssetsGeocoded_pro")
+        self.inputBasesPro = os.path.join(Configuration.distanceToAssetsInputGDB, "BasesGeocoded_pro")
 
         if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
             self.scratchGDB = UnitTestUtilities.createScratch(Configuration.distanceToAssetsDataPath)
@@ -66,8 +70,10 @@ class DistanceToAssetsRouteAssetsToBasesAGOLTestCase(unittest.TestCase):
         arcpy.ImportToolbox(self.toolboxUnderTest)
         arcpy.env.overwriteOutput = True
 
-
-        arcpy.DistanceFromAssetToBase222_DistanceToAssets(self.inputAssets, self.inputBases)
+        if(self.suffix == "_pro.tbx"):
+            arcpy.DistanceFromAssetToBase222_DistanceToAssets(self.inputAssetsPro, self.inputBasesPro)
+        else:
+            arcpy.DistanceFromAssetToBase222_DistanceToAssets(self.inputAssets, self.inputBases)
 
         assetsToBase1 = os.path.join(Configuration.distanceToAssetsInputGDB, "Assets_to_Base_1" )
         assetsToBase2 = os.path.join(Configuration.distanceToAssetsInputGDB, "Assets_to_Base_2" )

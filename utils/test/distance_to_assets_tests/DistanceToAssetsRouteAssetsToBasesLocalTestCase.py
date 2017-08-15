@@ -45,8 +45,12 @@ class DistanceToAssetsRouteAssetsToBasesLocalTestCase(unittest.TestCase):
         DataDownload.runDataDownload(Configuration.distanceToAssetsDataPath, \
            Configuration.distanceToAssetsInputGDB, Configuration.distanceToAssetsURL)
 
+        self.suffix = Configuration.GetToolboxSuffix()
+
         self.inputND = os.path.join(Configuration.distanceToAssetsInputNDGDB, "Transportation/Streets_ND")
+        self.inputAssetsPro = os.path.join(Configuration.distanceToAssetsInputGDB, "AssetsGeocoded_pro_SF")
         self.inputAssets = os.path.join(Configuration.distanceToAssetsInputGDB, "AssetsGeocoded_SF")
+        self.inputBasesPro = os.path.join(Configuration.distanceToAssetsInputGDB, "BasesGeocoded_pro_SF")
         self.inputBases = os.path.join(Configuration.distanceToAssetsInputGDB, "BasesGeocoded_SF")
 
         if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
@@ -67,8 +71,13 @@ class DistanceToAssetsRouteAssetsToBasesLocalTestCase(unittest.TestCase):
         arcpy.ImportToolbox(self.toolboxUnderTest)
         arcpy.env.overwriteOutput = True
 
+        arcpy.CheckOutExtension("Network")
 
-        arcpy.DistanceFromAssetToBase23_DistanceToAssets(self.inputND, self.inputAssets, self.inputBases)
+
+        if(self.suffix == "_pro.tbx"):
+            arcpy.DistanceFromAssetToBase23_DistanceToAssets(self.inputND, self.inputAssetsPro, self.inputBasesPro)
+        else:
+            arcpy.DistanceFromAssetToBase23_DistanceToAssets(self.inputND, self.inputAssets, self.inputBases)
 
         assetsToBase1 = os.path.join(Configuration.distanceToAssetsInputGDB, "Assets_to_Base_1" )
         assetsToBase2 = os.path.join(Configuration.distanceToAssetsInputGDB, "Assets_to_Base_2" )
@@ -81,3 +90,4 @@ class DistanceToAssetsRouteAssetsToBasesLocalTestCase(unittest.TestCase):
         self.assertEqual(count1, 1)
         self.assertEqual(count2, 1)
 
+        arcpy.CheckInExtension("Network")

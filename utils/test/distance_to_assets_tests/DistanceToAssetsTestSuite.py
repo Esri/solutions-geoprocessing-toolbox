@@ -17,7 +17,9 @@ import unittest
 import logging
 import Configuration
 
+from . import DistanceToAssetsCodeAssetsToBasesTestCase
 from . import DistanceToAssetsCopyGeolocatedLocationsTestCase
+from . import DistanceToAssetsRouteAssetsToBasesLocalTestCase
 from . import DistanceToAssetsRouteAssetsToBasesAGOLTestCase
 from . import DistanceToAssetsSummarizeTestCase
 
@@ -34,7 +36,9 @@ def getTestSuite():
 
     loader = unittest.TestLoader()
 
+    testSuite.addTest(loader.loadTestsFromTestCase(DistanceToAssetsCodeAssetsToBasesTestCase.DistanceToAssetsCodeAssetsToBasesTestCase))
     testSuite.addTest(loader.loadTestsFromTestCase(DistanceToAssetsCopyGeolocatedLocationsTestCase.DistanceToAssetsCopyGeolocatedLocationsTestCase))
+    testSuite.addTest(loader.loadTestsFromTestCase(DistanceToAssetsRouteAssetsToBasesLocalTestCase.DistanceToAssetsRouteAssetsToBasesLocalTestCase))
     testSuite.addTest(loader.loadTestsFromTestCase(DistanceToAssetsRouteAssetsToBasesAGOLTestCase.DistanceToAssetsRouteAssetsToBasesAGOLTestCase))
     testSuite.addTest(loader.loadTestsFromTestCase(DistanceToAssetsSummarizeTestCase.DistanceToAssetsSummarizeTestCase))
 
