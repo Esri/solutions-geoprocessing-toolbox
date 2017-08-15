@@ -88,7 +88,7 @@ class ClearingOperationsCanvasAreaGRGTestCase(unittest.TestCase):
         Configuration.Logger.info(runToolMsg)
 
         try:
-			# Calling the CanvasAreaGRGS_ClearingOperations Script Tool
+			# Calling the CanvasAreaGRG_ClearingOperations Script Tool
             arcpy.CanvasAreaGRG_ClearingOperations(self.inputArea, cellWidth, cellHeight, cellunits, labelStart, labelStyle, output)
 			
         except arcpy.ExecuteError:
