@@ -85,6 +85,7 @@ class ClearingOperationsNumberFeaturesTestCase(unittest.TestCase):
         Configuration.Logger.info(runToolMsg)
 
         try:
+			#Calling the NumberFeatures_ClearingOperations Script Tool
             arcpy.NumberFeatures_ClearingOperations(self.inputArea, self.pointFeatures, fieldToNumber, output)
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()

@@ -92,6 +92,7 @@ class ClearingOperationsPointTargetTestCase(unittest.TestCase):
         Configuration.Logger.info(runToolMsg)
 
         try:
+			# Calling the PointTargetGRG_ClearingOperations Script Tool
             arcpy.PointTargetGRG_ClearingOperations(self.pointTarget, numCellsH, numCellsV, cellWidth, cellHeight, \
                 "Meters", None, labelStart, labelStyle, output)
         except arcpy.ExecuteError:
