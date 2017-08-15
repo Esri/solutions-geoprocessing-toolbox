@@ -69,7 +69,7 @@ def main():
         Configuration.Logger = UnitTestUtilities.initializeLogger(logName)
     print("Logging results to: " + str(logName))
     UnitTestUtilities.setUpLogFileHeader()
-    
+
     result = runTestSuite()
 
     logTestResults(result)
@@ -81,11 +81,11 @@ def logTestResults(result):
     resultHead = resultsHeader(result)
     print(resultHead)
     Configuration.Logger.info(resultHead)
-   
+
     errorLogLines = getErrorResultsAsList(result)
     for errorLogLine in errorLogLines :
         # strip unicode chars so they don't mess up print/log file
-        line = errorLogLine.encode('ascii','ignore').decode('ascii') 
+        line = errorLogLine.encode('ascii','ignore').decode('ascii')
         print(line)
         Configuration.Logger.error(line)
 
@@ -149,9 +149,9 @@ def runTestSuite():
     Configuration.Logger.info(Configuration.Platform + " =======================================")
 
     testSuite.addTests(addClearingOperationsSuite())
-    testSuite.addTests(addGeoNamesSuite())
-    testSuite.addTests(addIncidentAnalysisSuite())
-    testSuite.addTests(addSunPositionAnalysisSuite())
+    #testSuite.addTests(addGeoNamesSuite())
+    #testSuite.addTests(addIncidentAnalysisSuite())
+    #testSuite.addTests(addSunPositionAnalysisSuite())
 
     #TODO: MAoT Test Suite
     #TODO: MAoW Test Suite
