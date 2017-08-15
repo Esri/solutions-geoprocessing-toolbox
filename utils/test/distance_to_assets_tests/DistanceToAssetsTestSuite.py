@@ -38,7 +38,7 @@ def getTestSuite():
 
     testSuite.addTest(loader.loadTestsFromTestCase(DistanceToAssetsCodeAssetsToBasesTestCase.DistanceToAssetsCodeAssetsToBasesTestCase))
     testSuite.addTest(loader.loadTestsFromTestCase(DistanceToAssetsCopyGeolocatedLocationsTestCase.DistanceToAssetsCopyGeolocatedLocationsTestCase))
-    testSuite.addTest(loader.loadTestsFromTestCase(DistanceToAssetsRouteAssetsToBasesLocalTestCase.DistanceToAssetsRouteAssetsToBasesLocalTestCase))
+    #testSuite.addTest(loader.loadTestsFromTestCase(DistanceToAssetsRouteAssetsToBasesLocalTestCase.DistanceToAssetsRouteAssetsToBasesLocalTestCase))
     testSuite.addTest(loader.loadTestsFromTestCase(DistanceToAssetsRouteAssetsToBasesAGOLTestCase.DistanceToAssetsRouteAssetsToBasesAGOLTestCase))
     testSuite.addTest(loader.loadTestsFromTestCase(DistanceToAssetsSummarizeTestCase.DistanceToAssetsSummarizeTestCase))
 
