@@ -149,9 +149,9 @@ def runTestSuite():
     Configuration.Logger.info(Configuration.Platform + " =======================================")
 
     testSuite.addTests(addClearingOperationsSuite())
-    #testSuite.addTests(addGeoNamesSuite())
-    #testSuite.addTests(addIncidentAnalysisSuite())
-    #testSuite.addTests(addSunPositionAnalysisSuite())
+    testSuite.addTests(addGeoNamesSuite())
+    testSuite.addTests(addIncidentAnalysisSuite())
+    testSuite.addTests(addSunPositionAnalysisSuite())
 
     #TODO: MAoT Test Suite
     #TODO: MAoW Test Suite
