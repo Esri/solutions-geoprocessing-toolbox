@@ -64,6 +64,7 @@ logPath = os.path.normpath(os.path.join(currentPath, r"log")) # should go to .\s
 distancetoAssetsToolboxPath = os.path.normpath(os.path.join(currentPath, r"../../distance_to_assets/Distance To Assets"))
 distanceToAssetsDataPath = os.path.normpath(os.path.join(testDataPath, r"DistanceToAssets"))
 distanceToAssetsInputGDB = os.path.join(distanceToAssetsDataPath, "DistancetoAssetsTestData/DistanceToAssets.gdb")
+distanceToAssetsOutputGDB = os.path.join(currentPath, r"../../distance_to_assets/DistanceToAssets.gdb")
 distanceToAssetsInputNDGDB=os.path.join(distanceToAssetsDataPath, "DistancetoAssetsTestData/SanFrancisco.gdb")
 distanceToAssetsURL = r"http://www.arcgis.com/sharing/content/items/700e44eb3e114c098818ea71f7ad72b6/data"
 

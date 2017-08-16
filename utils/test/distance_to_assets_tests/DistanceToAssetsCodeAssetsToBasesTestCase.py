@@ -42,6 +42,7 @@ class DistanceToAssetsCodeAssetsToBasesTestCase(unittest.TestCase):
         self.toolboxUnderTest = Configuration.distancetoAssetsToolboxPath + \
             Configuration.GetToolboxSuffix()
 
+        self.suffix = Configuration.GetToolboxSuffix()
         UnitTestUtilities.checkArcPy()
         DataDownload.runDataDownload(Configuration.distanceToAssetsDataPath, \
            Configuration.distanceToAssetsInputGDB, Configuration.distanceToAssetsURL)
@@ -77,6 +78,7 @@ class DistanceToAssetsCodeAssetsToBasesTestCase(unittest.TestCase):
         outAssets = os.path.join(self.scratchGDB, "geocodedassets")
         outBases = os.path.join(self.scratchGDB, "geocodedbases")
 
+
         arcpy.GeocodeAssetsAndBases_DistanceToAssets(self.inputLocator,newAssets,assetMapping,newBases,baseMapping,outAssets,outBases)
 
         result1 = arcpy.GetCount_management(outAssets)
@@ -86,3 +88,11 @@ class DistanceToAssetsCodeAssetsToBasesTestCase(unittest.TestCase):
 
         self.assertGreater(count1, 0)
         self.assertGreater(count2, 0)
+
+        assetsNotGeocoded = os.path.join(Configuration.distanceToAssetsDataPath, "DistanceToAssetsTestData/Sample Locations/AssetsNotGeocoded.shp")
+        basesNotGeocoded = os.path.join(Configuration.distanceToAssetsDataPath, "DistanceToAssetsTestData/Sample Locations/BasesNotGeocoded.shp")
+
+        if(self.suffix == "_pro.tbx"):
+            arcpy.Delete_management(assetsNotGeocoded)
+            arcpy.Delete_management(basesNotGeocoded)
+

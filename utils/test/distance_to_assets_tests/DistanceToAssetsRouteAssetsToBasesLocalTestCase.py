@@ -26,8 +26,9 @@ import unittest
 import Configuration
 import UnitTestUtilities
 import DataDownload
+import arcpyAssert
 
-class DistanceToAssetsRouteAssetsToBasesLocalTestCase(unittest.TestCase):
+class DistanceToAssetsRouteAssetsToBasesLocalTestCase(unittest.TestCase, arcpyAssert.FeatureClassAssertMixin):
     toolboxUnderTest = None # Set to Pro or ArcMap toolbox at runtime
 
     scratchGDB = None
@@ -47,7 +48,8 @@ class DistanceToAssetsRouteAssetsToBasesLocalTestCase(unittest.TestCase):
 
         self.suffix = Configuration.GetToolboxSuffix()
 
-        self.inputND = os.path.join(Configuration.distanceToAssetsInputNDGDB, "Transportation/Streets_ND")
+        #self.inputND = os.path.join(Configuration.distanceToAssetsInputNDGDB, "Transportation/Streets_ND")
+        self.inputND=r"\\redarchive2\disl\Development\Commercial\TestData\DistanceToAssets\SanFrancisco.gdb\Transportation\Streets_ND"
         self.inputAssetsPro = os.path.join(Configuration.distanceToAssetsInputGDB, "AssetsGeocoded_pro_SF")
         self.inputAssets = os.path.join(Configuration.distanceToAssetsInputGDB, "AssetsGeocoded_SF")
         self.inputBasesPro = os.path.join(Configuration.distanceToAssetsInputGDB, "BasesGeocoded_pro_SF")
@@ -79,15 +81,17 @@ class DistanceToAssetsRouteAssetsToBasesLocalTestCase(unittest.TestCase):
         else:
             arcpy.DistanceFromAssetToBase23_DistanceToAssets(self.inputND, self.inputAssets, self.inputBases)
 
-        assetsToBase1 = os.path.join(Configuration.distanceToAssetsInputGDB, "Assets_to_Base_1" )
-        assetsToBase2 = os.path.join(Configuration.distanceToAssetsInputGDB, "Assets_to_Base_2" )
+        assetsToBase1am = os.path.join(Configuration.distanceToAssetsOutputGDB, "Assets_to_Base_1" )
+        assetsToBase1pro = os.path.join(Configuration.distanceToAssetsInputGDB, "Assets_to_Base_1" )
 
-        result1 = arcpy.GetCount_management(assetsToBase1)
-        count1 = int(result1.getOutput(0))
-        result2 = arcpy.GetCount_management(assetsToBase2)
-        count2 = int(result1.getOutput(0))
+        if(self.suffix == "_pro.tbx"):
+            result1 = arcpy.GetCount_management(assetsToBase1pro)
+            count1 = int(result1.getOutput(0))
+        else:
+            result1 = arcpy.GetCount_management(assetsToBase1am)
+            count1 = int(result1.getOutput(0))
 
         self.assertEqual(count1, 1)
-        self.assertEqual(count2, 1)
+
 
         arcpy.CheckInExtension("Network")

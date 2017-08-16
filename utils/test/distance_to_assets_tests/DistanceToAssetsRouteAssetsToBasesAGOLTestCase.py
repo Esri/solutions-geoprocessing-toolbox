@@ -26,8 +26,9 @@ import unittest
 import Configuration
 import UnitTestUtilities
 import DataDownload
+import arcpyAssert
 
-class DistanceToAssetsRouteAssetsToBasesAGOLTestCase(unittest.TestCase):
+class DistanceToAssetsRouteAssetsToBasesAGOLTestCase(unittest.TestCase, arcpyAssert.FeatureClassAssertMixin):
     toolboxUnderTest = None # Set to Pro or ArcMap toolbox at runtime
 
     scratchGDB = None
@@ -75,13 +76,30 @@ class DistanceToAssetsRouteAssetsToBasesAGOLTestCase(unittest.TestCase):
         else:
             arcpy.DistanceFromAssetToBase222_DistanceToAssets(self.inputAssets, self.inputBases)
 
-        assetsToBase1 = os.path.join(Configuration.distanceToAssetsInputGDB, "Assets_to_Base_1" )
-        assetsToBase2 = os.path.join(Configuration.distanceToAssetsInputGDB, "Assets_to_Base_2" )
+        assetsToBase1pro = os.path.join(Configuration.distanceToAssetsInputGDB, "Assets_to_Base_1" )
+        assetsToBase2pro = os.path.join(Configuration.distanceToAssetsInputGDB, "Assets_to_Base_2" )
+        assetsToBase1am = os.path.join(Configuration.distanceToAssetsOutputGDB, "Assets_to_Base_1" )
+        assetsToBase2am = os.path.join(Configuration.distanceToAssetsOutputGDB, "Assets_to_Base_2" )
 
-        result1 = arcpy.GetCount_management(assetsToBase1)
-        count1 = int(result1.getOutput(0))
-        result2 = arcpy.GetCount_management(assetsToBase2)
-        count2 = int(result1.getOutput(0))
+        if(self.suffix=="_pro.tbx"):
+
+            result1 = arcpy.GetCount_management(assetsToBase1pro)
+            count1 = int(result1.getOutput(0))
+            result2 = arcpy.GetCount_management(assetsToBase2pro)
+            count2 = int(result1.getOutput(0))
+        else:
+            result1 = arcpy.GetCount_management(assetsToBase1am)
+            count1 = int(result1.getOutput(0))
+            result2 = arcpy.GetCount_management(assetsToBase2am)
+            count2 = int(result1.getOutput(0))
 
         self.assertEqual(count1, 1)
         self.assertEqual(count2, 1)
+
+        assetsToBaseTemplate1am = os.path.join(Configuration.distanceToAssetsInputGDB, "Assets_to_Base_1_am")
+        assetsToBaseTemplate1pro = os.path.join(Configuration.distanceToAssetsInputGDB, "Assets_to_Base_1_pro")
+
+        if(self.suffix == "_pro.tbx"):
+            self.assertFeatureClassEqual(assetsToBase1pro, assetsToBaseTemplate1pro, "OBJECTID")
+        else:
+            self.assertFeatureClassEqual(assetsToBase1am, assetsToBaseTemplate1am, "OBJECTID")

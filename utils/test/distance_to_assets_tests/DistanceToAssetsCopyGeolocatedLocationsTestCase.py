@@ -26,8 +26,9 @@ import unittest
 import Configuration
 import UnitTestUtilities
 import DataDownload
+import arcpyAssert
 
-class DistanceToAssetsCopyGeolocatedLocationsTestCase(unittest.TestCase):
+class DistanceToAssetsCopyGeolocatedLocationsTestCase(unittest.TestCase, arcpyAssert.FeatureClassAssertMixin):
     toolboxUnderTest = None # Set to Pro or ArcMap toolbox at runtime
 
     scratchGDB = None
@@ -51,7 +52,7 @@ class DistanceToAssetsCopyGeolocatedLocationsTestCase(unittest.TestCase):
         if (self.scratchGDB == None) or (not arcpy.Exists(self.scratchGDB)):
             self.scratchGDB = UnitTestUtilities.createScratch(Configuration.distanceToAssetsDataPath)
 
-
+        self.suffix = Configuration.GetToolboxSuffix()
         UnitTestUtilities.checkFilePaths([Configuration.distanceToAssetsDataPath])
 
         UnitTestUtilities.checkGeoObjects([Configuration.distanceToAssetsInputGDB, self.toolboxUnderTest, self.scratchGDB, self.inputAssets, self.inputBases])
@@ -77,3 +78,16 @@ class DistanceToAssetsCopyGeolocatedLocationsTestCase(unittest.TestCase):
         count2 = int(result2.getOutput(0))
         self.assertGreater(count1, 0)
         self.assertGreater(count2, 0)
+
+        goldAssetsTemplatePro = os.path.join(Configuration.distanceToAssetsInputGDB, "GoldCopyAssets_pro")
+        goldBasesTemplatePro = os.path.join(Configuration.distanceToAssetsInputGDB, "GoldCopyBases_pro")
+        goldAssetsTemplateAm = os.path.join(Configuration.distanceToAssetsInputGDB, "GoldCopyAssets_am")
+        goldBasesTemplateAm = os.path.join(Configuration.distanceToAssetsInputGDB, "GoldCopyBases_am")
+
+        if (self.suffix == "_pro.tbx"):
+            self.assertFeatureClassEqual(outputGoldAssets, goldAssetsTemplatePro, "OBJECTID")
+            self.assertFeatureClassEqual(outputGoldBases, goldBasesTemplatePro, "OBJECTID")
+        else:
+            self.assertFeatureClassEqual(outputGoldAssets, goldAssetsTemplateAm, "OBJECTID")
+            self.assertFeatureClassEqual(outputGoldBases, goldBasesTemplateAm, "OBJECTID")
+
