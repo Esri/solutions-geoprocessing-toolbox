@@ -105,6 +105,7 @@ def resultsHeader(result):
     failureCount = len(result.failures)
     skippedCount = len(result.skipped)
     nonPassedCount = errorCount + failureCount + skippedCount
+
     passedCount  = result.testsRun - nonPassedCount
     # testsRun should be > 0 , but just in case
     percentPassed = ((passedCount / result.testsRun) * 100.0) if (result.testsRun > 0) else 0.0
@@ -152,6 +153,7 @@ def runTestSuite():
     testSuite.addTests(addGeoNamesSuite())
     testSuite.addTests(addIncidentAnalysisSuite())
     testSuite.addTests(addSunPositionAnalysisSuite())
+    testSuite.addTests(addDistanceToAssetsSuite())
 
     #TODO: MAoT Test Suite
     #TODO: MAoW Test Suite
@@ -192,6 +194,13 @@ def addGeoNamesSuite():
     if Configuration.DEBUG == True: print("TestRunner.py - addGeoNamesSuite")
     from geonames_tests import GeoNamesToolsTestSuite
     suite = GeoNamesToolsTestSuite.getTestSuite()
+    return suite
+
+def addDistanceToAssetsSuite():
+    ''' Add all SunPositionAnalysis tests '''
+    if Configuration.DEBUG == True: print("TestRunner.py - addDistanceToAssetsSuite")
+    from distance_to_assets_tests import DistanceToAssetsTestSuite
+    suite = DistanceToAssetsTestSuite.getTestSuite()
     return suite
 
 # MAIN =============================================
