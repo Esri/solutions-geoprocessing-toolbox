@@ -202,8 +202,11 @@ def main():
         targetLayerName = ""
         if (overwriteFC):
             arcpy.AddMessage("Copying the features to the input, and then deleting the temporary feature class")
-            desc = arcpy.Describe(pointFeatureName)
-            overwriteFC = os.path.join(os.path.sep, desc.path, pointFeatureName)
+            desc = arcpy.Describe(pointFeatures)
+            if hasattr(desc, "layer"):
+              overwriteFC = desc.layer.catalogPath
+            else:
+              overwriteFC = desc.catalogPath
             fields = (numberingField, "SHAPE@")
             overwriteCursor = arcpy.da.UpdateCursor(overwriteFC, fields)
             for overwriteRow in overwriteCursor:
@@ -272,7 +275,7 @@ def main():
             arcpy.AddMessage("Non-map application, skipping labeling...")
 
 
-        arcpy.SetParameter(3, outputFeatureClass)
+        #arcpy.SetParameter(3, outputFeatureClass)
 
 
     except arcpy.ExecuteError:
