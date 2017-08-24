@@ -275,7 +275,7 @@ def main():
             arcpy.AddMessage("Non-map application, skipping labeling...")
 
 
-        #arcpy.SetParameter(3, outputFeatureClass)
+        arcpy.SetParameter(3, outputFeatureClass)
 
 
     except arcpy.ExecuteError:
