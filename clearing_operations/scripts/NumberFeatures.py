@@ -183,6 +183,13 @@ def main():
         arcpy.Sort_management(selectionLayer, outputFeatureClass, [["Shape", "ASCENDING"]])
 
 
+        #Add field
+        try:
+            numberingField
+        except NameError:
+            arcpy.AddField_management(outputFeatureClass,"Number","String")
+	    numberingField = "Number"
+        
         # Number the fields
         arcpy.AddMessage("Numbering the fields")
         i = 1
