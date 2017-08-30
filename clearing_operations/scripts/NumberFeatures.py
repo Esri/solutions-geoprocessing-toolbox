@@ -1,12 +1,3 @@
-# coding: utf-8
-#
-
-# Esri start of added variables
-g_ESRI_variable_1 = r'%scratchGDB%\tempSortedPoints'
-# Esri end of added variables
-
-#
-
 #------------------------------------------------------------------------------
 # Copyright 2015 Esri
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,8 +26,15 @@ g_ESRI_variable_1 = r'%scratchGDB%\tempSortedPoints'
 # HISTORY:
 #
 # 8/25/2015 - mf - Needed to update script for non-ArcMap/Pro testing environment
-#
+# 8/30/2017 - -lw - Removed functions that were not being called in the main
+# 8/30/2017 - lw - Added the ability to have a user not have to have a field for numbering features
 # ==================================================
+# coding: utf-8
+#
+
+# Esri start of added variables
+g_ESRI_variable_1 = r'%scratchGDB%\tempSortedPoints'
+# Esri end of added variables
 
 import os, sys, math, traceback
 import arcpy
@@ -54,66 +52,6 @@ DEBUG = True
 appEnvironment = None
 mxd, df, aprx, mp, mapList = None, None, None, None, None
 
-def labelFeatures(layer, field):
-
-    ''' set up labeling for layer '''
-    if appEnvironment == "ARCGIS_PRO":
-        if layer.supports("SHOWLABELS"):
-            for lblclass in layer.listLabelClasses():
-                lblclass.visible = True
-                lblclass.expression = "$feature.Number"
-            layer.showLabels = True
-    elif appEnvironment == "ARCMAP":
-        if layer.supports("LABELCLASSES"):
-            for lblclass in layer.labelClasses:
-                lblclass.showClassLabels = True
-                lblclass.expression = " [" + str(field) + "]"
-            layer.showLabels = True
-            arcpy.RefreshActiveView()
-    else:
-        pass # if returns "OTHER"
-
-def findLayerByName(layerName):
-    #UPDATE
-    if appEnvironment == "ARCGIS_PRO":
-    #if gisVersion == "1.0": #Pro:
-        if DEBUG == True:
-            arcpy.AddMessage("Pro labeling for " + layerName + "...")
-        for layer in mapList.listLayers():
-            if layer.name == layerName:
-                arcpy.AddMessage("Found matching layer [" + layer.name + "]")
-                return layer
-            else:
-                arcpy.AddMessage("Incorrect layer: [" + layer.name + "]")
-
-    #else:
-    elif appEnvironment == "ARCMAP":
-        if DEBUG == True: arcpy.AddMessage("Map labeling for " + layerName + "...")
-
-        for layer in arcpy.mapping.ListLayers(mxd):
-            if layer.name == layerName:
-                arcpy.AddMessage("Found matching layer [" + layer.name + "]")
-                return layer
-            else:
-                arcpy.AddMessage("Incorrect layer: [" + layer.name + "]")
-    else:
-        arcpy.AddMessage("Non-map environment, no layers to find...")
-
-
-def GetApplication():
-    '''Return app environment as ARCMAP, ARCGIS_PRO, OTHER'''
-    try:
-        from arcpy import mp
-        return "ARCGIS_PRO"
-    except ImportError:
-        try:
-            from arcpy import mapping
-            mxd = arcpy.mapping.MapDocument("CURRENT")
-            return "ARCMAP"
-        except:
-            return "OTHER"
-
-
 
 def main():
     ''' main '''
@@ -121,6 +59,7 @@ def main():
     # Create a feature layer from the input point features if it is not one already
     #df = arcpy.mapping.ListDataFrames(mxd)[0]
     pointFeatureName = os.path.basename(pointFeatures)
+    #arcpy.AddMessage("base path is: " + os.path.basename(pointFeatures))
     layerExists = False
 
     try:
@@ -130,12 +69,14 @@ def main():
         arcpy.AddMessage("Shape type: " + str(areaGeom))
         if (descArea.shapeType != "Polygon"):
             raise Exception("ERROR: The area to number must be a polygon.")
-
+        
+        #Checking the version of the Desktop Application
         gisVersion = arcpy.GetInstallInfo()["Version"]
         global appEnvironment
         appEnvironment = Utilities.GetApplication()
         if DEBUG == True: arcpy.AddMessage("App environment: " + appEnvironment)
 
+        #Getting the layer name from the Table of Contents
         global mxd
         global df
         global aprx
@@ -179,16 +120,15 @@ def main():
         if outputFeatureClass == "":
             outputFeatureClass = g_ESRI_variable_1
             overwriteFC = True;
-        arcpy.AddMessage("Sorting the selected points geographically, right to left, top to bottom")
+
+            
+        arcpy.AddMessage("Sorting the selected points geographically, left to right, top to bottom")
         arcpy.Sort_management(selectionLayer, outputFeatureClass, [["Shape", "ASCENDING"]])
-
-
-        #Add field
-        try:
-            numberingField
-        except NameError:
+        global numberingField
+        if numberingField == "":
+            arcpy.AddMessage("Adding Number field because no input field was given")
             arcpy.AddField_management(outputFeatureClass,"Number","String")
-	    numberingField = "Number"
+            numberingField = "Number"
         
         # Number the fields
         arcpy.AddMessage("Numbering the fields")
@@ -198,11 +138,11 @@ def main():
             row.setValue(numberingField, i)
             cursor.updateRow(row)
             i += 1
-
-
         # Clear the selection
         arcpy.AddMessage("Clearing the selection")
         arcpy.SelectLayerByAttribute_management(pointFeatureName, "CLEAR_SELECTION")
+
+        
 
 
         # Overwrite the Input Point Features, and then delete the temporary output feature class
@@ -212,9 +152,20 @@ def main():
             desc = arcpy.Describe(pointFeatures)
             if hasattr(desc, "layer"):
               overwriteFC = desc.layer.catalogPath
+              
             else:
               overwriteFC = desc.catalogPath
+              
+            
+            arcpy.AddMessage("what is the numberingField: " + numberingField)
+            
+            if numberingField == "Number":
+                arcpy.AddMessage("Adding Number field to overwriteFC due to no input field")
+                arcpy.AddField_management(overwriteFC,"Number","String")
+                arcpy.AddMessage("Added Number field to overwriteFC")
+                
             fields = (numberingField, "SHAPE@")
+            
             overwriteCursor = arcpy.da.UpdateCursor(overwriteFC, fields)
             for overwriteRow in overwriteCursor:
                 sortedPointsCursor = arcpy.da.SearchCursor(outputFeatureClass, fields)
@@ -223,65 +174,13 @@ def main():
                         overwriteRow[0] = sortedRow[0]
                 overwriteCursor.updateRow(overwriteRow)
             arcpy.Delete_management(outputFeatureClass)
-
-            #UPDATE
-            #if layerExists == False:
-                #layerToAdd = arcpy.mapping.Layer(pointFeatureName)
-                #arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
             targetLayerName = pointFeatureName
         else:
-            #UPDATE
-            #layerToAdd = arcpy.mapping.Layer(outputFeatureClass)
-            #arcpy.mapping.AddLayer(df, layerToAdd, "AUTO_ARRANGE")
             targetLayerName = os.path.basename(outputFeatureClass)
-
-
-        # Get and label the output feature
-        if appEnvironment == "ARCGIS_PRO":
             
-            #params = arcpy.GetParameterInfo()
-            ##get the symbology from the NumberedStructures.lyr
-            #scriptPath = sys.path[0]
-            #arcpy.AddMessage(scriptPath)
-            #layerFilePath = os.path.join(scriptPath,r"commondata\userdata\NumberedStructures.lyrx")            
-            #params[3].symbology = layerFilePath
-            #arcpy.AddMessage("Applying Symbology from {0}".format(layerFilePath))
-            
-            arcpy.AddMessage("Applying symbology on the script tool based on best practice")
-           
-        elif appEnvironment == "ARCMAP":
-            #arcpy.AddMessage("Adding features to map (" + str(targetLayerName) + ")...")
-            
-            #arcpy.MakeFeatureLayer_management(outputFeatureClass, targetLayerName)
-            
-            # create a layer object
-            #layer = arcpy.mapping.Layer(targetLayerName)            
-            
-            # get the symbology from the NumberedStructures.lyr
-            #layerFilePath = os.path.join(os.getcwd(),r"data\Layers\NumberedStructures.lyr")
-            #layerFilePath = os.path.join(os.path.dirname(os.path.dirname(__file__)),r"layers\NumberedStructures.lyr")
-            
-            # apply the symbology to the layer
-            #arcpy.ApplySymbologyFromLayer_management(layer, layerFilePath)
-            
-            # add layer to map
-            #arcpy.mapping.AddLayer(df, layer, "AUTO_ARRANGE")
-            
-            # find the target layer in the map
-            #mapLyr = arcpy.mapping.ListLayers(mxd, targetLayerName)[0]  
-
-            #arcpy.AddMessage("Labeling output features (" + str(targetLayerName) + ")...")
-            # Work around needed as ApplySymbologyFromLayer_management does not honour labels
-            #labelLyr = arcpy.mapping.Layer(layerFilePath)
-            # copy the label info from the source to the map layer
-            #mapLyr.labelClasses = labelLyr.labelClasses
-            # turn labels on
-            #mapLyr.showLabels = True
-            arcpy.AddMessage("Applying symbology on the script tool based on best practice")
-        else:
-            arcpy.AddMessage("Non-map application, skipping labeling...")
-
-
+        
+        
+        #Setting the correct output for the file feature class
         arcpy.SetParameter(3, outputFeatureClass)
 
 
