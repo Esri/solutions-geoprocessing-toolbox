@@ -33,7 +33,6 @@ from scripts.GRGTools import *
 class Toolbox(object):
     '''
     GRG Toolbox class container.
-    Tools imported from .\scripts\GRGTools.py
     '''
 
     def __init__(self):

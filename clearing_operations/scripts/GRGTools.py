@@ -20,8 +20,8 @@
  contact: support@esri.com
  company: Esri
  ==================================================
- description: 
- GRG Tool logic module. 
+ description:
+ GRG Tool logic module.
  Supports GRGTools.pyt and uses GRGUtilities.py
  ==================================================
  history:

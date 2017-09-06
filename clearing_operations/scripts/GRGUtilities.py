@@ -35,8 +35,6 @@ import os, sys, math, traceback, inspect
 import arcpy
 from arcpy import env
 import Utilities
-
-
 DEBUG = True
 
 def labelFeatures(layer, field):
@@ -56,6 +54,7 @@ def labelFeatures(layer, field):
             arcpy.RefreshActiveView()
     else:
         pass # if returns "OTHER"
+
 
 def findLayerByName(layerName):
     '''  '''
@@ -81,6 +80,7 @@ def findLayerByName(layerName):
     else:
         arcpy.AddWarning("Non-map environment")
 
+
 def ColIdxToXlName(index):
     ''' Converts an index into a letter, labeled like excel columns, A to Z, AA to ZZ, etc.'''
     ordA = ord('A')
@@ -91,6 +91,7 @@ def ColIdxToXlName(index):
         s = chr(int(index) % len + ordA) + s
         index = math.floor(int(index) / len) - 1
     return s
+
 
 def GRGFromArea(AOI,
                 cellWidth,
@@ -293,12 +294,12 @@ def GRGFromArea(AOI,
         ' Copy features to output feature class
         '''
         arcpy.CopyFeatures_management(fishnet, outputFeatureClass)
-        
+
         '''
         ' remove the temp feature classes
-        '''        
+        '''
         arcpy.Delete_management(fishnet)
-        
+
         # Get and label the output feature
         #TODO: Update once applying symbology in Pro is fixed.
         #UPDATE
@@ -310,28 +311,28 @@ def GRGFromArea(AOI,
             # layerFilePath = os.path.join(scriptPath,r"commondata\userdata\GRG.lyrx")
             #arcpy.AddMessage("Applying Symbology from {0}".format(layerFilePath))
             #params[6].symbology = layerFilePath
-            
+
             arcpy.AddMessage("Do not apply symbology it will be done in the next task step")
-            
+
         elif appEnvironment == "ARCMAP":
-                           
+
             #arcpy.AddMessage("Adding features to map (" + str(targetLayerName) + ")...")
-            
+
             #arcpy.MakeFeatureLayer_management(outputFeatureClass, targetLayerName)
-            
+
             # create a layer object
-            #layer = arcpy.mapping.Layer(targetLayerName)            
-            
+            #layer = arcpy.mapping.Layer(targetLayerName)
+
             # get the symbology from the NumberedStructures.lyr
             #layerFilePath = os.path.join(os.getcwd(),"data\Layers\GRG.lyr")
             #layerFilePath = os.path.join(os.path.dirname(os.path.dirname(__file__)),"layers\GRG.lyr")
-            
+
             # apply the symbology to the layer
             #arcpy.ApplySymbologyFromLayer_management(layer, layerFilePath)
-            
+
             # add layer to map
             #arcpy.mapping.AddLayer(df, layer, "AUTO_ARRANGE")
-            
+
             # find the target layer in the map
             #mapLyr = arcpy.mapping.ListLayers(mxd, targetLayerName)[0]  
 
@@ -354,7 +355,7 @@ def GRGFromArea(AOI,
         ###symbologyPath = os.path.dirname(workspace) + "\\Layers\GRG.lyr"
         ###arcpy.ApplySymbologyFromLayer_management(layer, symbologyPath)
 
-    except arcpy.ExecuteError: 
+    except arcpy.ExecuteError:
         # Get the tool error messages
         msgs = arcpy.GetMessages()
         arcpy.AddError(msgs)

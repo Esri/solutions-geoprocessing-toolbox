@@ -34,7 +34,6 @@ from scripts.NumberFeatures_new import *
 class Toolbox(object):
     '''
     Clearing Operations Toolbox class container.
-    Tools imported from GRGTools.py, NumberFeatures.py
     '''
 
     def __init__(self):
