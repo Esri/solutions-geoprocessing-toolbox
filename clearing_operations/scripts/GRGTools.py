@@ -57,17 +57,17 @@ class CreateGRGFromArea(object):
                                               datatype='GPFeatureRecordSetLayer',
                                               parameterType='Required',
                                               enabled=True,
-                                              multiValue=False
+                                              multiValue=False)
         # input_area_features.value = setInputFeatureSetPolygon()
 
-        fc = arcpy.CreateFeatureclass_management("in_memory",
-                                                "temp_poly",
-                                                "POLYGON",
-                                                "#",
-                                                "#",
-                                                "#",
-                                                arcpy.SpatialReference(54032)).getOutput(0)
-        input_area_features.value = arcpy.FeatureSet().load(fc)
+        # fc = arcpy.CreateFeatureclass_management("in_memory",
+        #                                         "temp_poly",
+        #                                         "POLYGON",
+        #                                         "#",
+        #                                         "#",
+        #                                         "#",
+        #                                         arcpy.SpatialReference(54032)).getOutput(0)
+        # input_area_features.value = arcpy.FeatureSet().load(fc)
 
         cell_width = arcpy.Parameter(name='cell_width',
                                      displayName='Cell Width',
