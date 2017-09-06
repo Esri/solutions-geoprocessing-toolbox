@@ -13,20 +13,21 @@
  limitations under the License.
 ------------------------------------------------------------------------------
  ==================================================
- GRG.py
+ GRGTools.py
  --------------------------------------------------
  requirements: ArcGIS X.X, Python 2.7 or Python 3.x
  author: ArcGIS Solutions
  contact: support@esri.com
  company: Esri
  ==================================================
- description: <Description>
+ description: 
+ GRG Tool logic module. 
+ Supports GRGTools.pyt and uses GRGUtilities.py
  ==================================================
  history:
- <date> - <initals> - <modifications>
+ 9/1/2017 - mf - original coding
  ==================================================
 '''
-
 
 import os
 import sys
@@ -35,26 +36,29 @@ import arcpy
 from arcpy import env
 import GRGUtilities
 
-class CanvasAreaGRG(object):
+class CreateGRGFromArea(object):
     '''
     '''
     def __init__(self):
         '''
         '''
-        self.label = "Canvas Area GRG"
+        self.label = "Create GRG from Area"
         self.description = "Create a Gridded Reference Graphic (GRG) from an selected area on the map."
 
     def getParameterInfo(self):
         '''
         Define parameter definitions
         '''
+
+        # TODO: Set input as Feature Set from method
         input_area_features = arcpy.Parameter(name='input_canvas_area',
                                               displayName='Input Canvas Area',
                                               direction='Input',
                                               datatype='GPFeatureRecordSetLayer',
                                               parameterType='Required',
                                               enabled=True,
-                                              multiValue=False)
+                                              multiValue=False
+        # input_area_features.value = setInputFeatureSetPolygon()
 
         fc = arcpy.CreateFeatureclass_management("in_memory",
                                                 "temp_poly",
@@ -121,6 +125,7 @@ class CanvasAreaGRG(object):
                                    'NUMERIC-NUMERIC']
         label_style.value = label_style.filter.list[0]
 
+        # TODO: define output schema as method
         output_features= arcpy.Parameter(name='output_grg-features',
                                          displayName='Output GRG Features',
                                          direction='Output',
@@ -128,7 +133,7 @@ class CanvasAreaGRG(object):
                                          parameterType='Required',
                                          enabled=True,
                                          multiValue=False)
-        output_features.value = r"%scratchGDB%/canvasgrg"
+        output_features.value = r"%scratchGDB%/area_grg"
 
         return [input_area_features,
                 cell_width,
@@ -164,18 +169,20 @@ class CanvasAreaGRG(object):
                                            outputFeatureClass=parameters[6])
         return out_grg
 
-class PointTargetGRG(object):
+    def setInputFeatureSetPolygon(self):
+        ''' return polygon featureset in WAZED '''
+        # TODO: featureset logic for input_area_features
+        return None
+
+class CreateGRGFromPoint(object):
     '''
     '''
     def __init__(self):
         ''' Point Target GRG constructor '''
-        self.label = "Point Target GRG"
+        self.label = "Create GRG from Point"
         self.description = "Create a Gridded Reference Graphic (GRG) from an selected location on the map."
 
-class NumberFeatures(object):
-    '''
-    '''
-    def __init__(self):
-        ''' Number Features constructor '''
-        self.label = "Number Features"
-        self.description = "Number input point features within a selected area."
+def outputGRGSchema():
+    ''' '''
+    # TODO: implement output schema for all GRG features
+    return None

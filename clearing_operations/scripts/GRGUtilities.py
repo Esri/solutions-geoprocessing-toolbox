@@ -20,10 +20,11 @@
  contact: support@esri.com
  company: Esri
  ==================================================
- description: <Description>
+ description: 
+ GRG objects module.
  ==================================================
  history:
- <date> - <initals> - <modifications>
+ 9/1/2017 - mf - original transfer from Clearing Ops tools
  ==================================================
 '''
 
@@ -375,3 +376,12 @@ def GRGFromArea(AOI,
         # Print Python error messages for use in Python / Python Window
         print(pymsg + "\n")
         print(msgs)
+
+
+def GRGFromPoint():
+    ''' Create Gridded Reference Graphic (GRG) from point input.'''
+    return
+
+def NumberFeatures():
+    ''' '''
+    return

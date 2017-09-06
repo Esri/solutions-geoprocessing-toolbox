@@ -13,7 +13,7 @@
  limitations under the License.
 ------------------------------------------------------------------------------
  ==================================================
- ClearingOperationsTools.pyt
+ GriddedReferenceGraphicTools.pyt
  --------------------------------------------------
  requirements: ArcGIS 10.3.1+, ArcGIS Pro 1.4+
  author: ArcGIS Solutions
@@ -21,29 +21,26 @@
  company: Esri
  ==================================================
  description: 
- Python toolbox container for Clearing Operations tools.
+ Python toolbox container for Gridded Reference Graphic (GRG) tools.
  ==================================================
  history:
- 09/06/2017 - mf - original coding
+ 09/01/2017 - mf - original coding
  ==================================================
 '''
 
 from scripts.GRGTools import *
-from scripts.NumberFeatures_new import *
 
 class Toolbox(object):
     '''
-    Clearing Operations Toolbox class container.
-    Tools imported from .\scripts\GRGTools.py, .\scripts\NumberFeatures.py
+    GRG Toolbox class container.
+    Tools imported from .\scripts\GRGTools.py
     '''
 
     def __init__(self):
         ''' constructor '''
-        self.label = "Clearing Operations Tools"
-        self.alias = "clrops"
+        self.label = "Gridded Reference Graphic Tools"
+        self.alias = "grg"
         self.description = r'''The Gridded Reference Graphic Tools supports area mapping operations 
-                           with tools to systematically number structures and create custom 
-                           Gridded Reference Graphics (GRG).'''
+                           with tools to create custom Gridded Reference Graphics (GRG).'''
         self.tools = [CreateGRGFromArea,
-                      CreateGRGFromPoint,
-                      NumberFeatures]
+                      CreateGRGFromPoint]

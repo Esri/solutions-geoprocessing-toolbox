@@ -13,37 +13,34 @@
  limitations under the License.
 ------------------------------------------------------------------------------
  ==================================================
- ClearingOperationsTools.pyt
+ NumberFeatures_new.py
  --------------------------------------------------
- requirements: ArcGIS 10.3.1+, ArcGIS Pro 1.4+
+ requirements: ArcGIS X.X, Python 2.7 or Python 3.x
  author: ArcGIS Solutions
  contact: support@esri.com
  company: Esri
  ==================================================
  description: 
- Python toolbox container for Clearing Operations tools.
+ GRG Tool logic module. 
+ Supports ClearingOperationsTools.pyt
  ==================================================
  history:
- 09/06/2017 - mf - original coding
+ 9/6/2017 - mf - original coding
  ==================================================
 '''
 
-from scripts.GRGTools import *
-from scripts.NumberFeatures_new import *
 
-class Toolbox(object):
-    '''
-    Clearing Operations Toolbox class container.
-    Tools imported from .\scripts\GRGTools.py, .\scripts\NumberFeatures.py
-    '''
+import os
+import sys
+import traceback
+import arcpy
+from arcpy import env
+import Utilities
 
+class NumberFeatures(object):
+    '''
+    '''
     def __init__(self):
-        ''' constructor '''
-        self.label = "Clearing Operations Tools"
-        self.alias = "clrops"
-        self.description = r'''The Gridded Reference Graphic Tools supports area mapping operations 
-                           with tools to systematically number structures and create custom 
-                           Gridded Reference Graphics (GRG).'''
-        self.tools = [CreateGRGFromArea,
-                      CreateGRGFromPoint,
-                      NumberFeatures]
+        ''' Number Features constructor '''
+        self.label = "Number Features"
+        self.description = "Number input point features within a selected area."
