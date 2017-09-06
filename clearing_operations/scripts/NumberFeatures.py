@@ -124,11 +124,22 @@ def main():
             
         arcpy.AddMessage("Sorting the selected points geographically, left to right, top to bottom")
         arcpy.Sort_management(selectionLayer, outputFeatureClass, [["Shape", "ASCENDING"]])
+
+
+            
+        
         global numberingField
         if numberingField == "":
-            arcpy.AddMessage("Adding Number field because no input field was given")
-            arcpy.AddField_management(outputFeatureClass,"Number","String")
-            numberingField = "Number"
+            fnames = [field.name for field in arcpy.ListFields(outputFeatureClass)]
+            addfield = "Number"
+            if addfield in fnames:
+                arcpy.AddMessage("Number field is already used")
+                numberingField = "Number"
+            else:
+                arcpy.AddMessage("Add One")
+                arcpy.AddMessage("Adding Number field because no input field was given")
+                arcpy.AddField_management(outputFeatureClass,"Number","String")
+                numberingField = "Number"
         
         # Number the fields
         arcpy.AddMessage("Numbering the fields")
@@ -158,10 +169,15 @@ def main():
               
             
             arcpy.AddMessage("what is the numberingField: " + numberingField)
-            
-            if numberingField == "Number":
+            addfield = "Number"
+            fnames1 = [field.name for field in arcpy.ListFields(overwriteFC)]
+            if addfield in fnames1:
+                arcpy.AddMessage("Number field is already used")
+                
+            #else numberingField == "Number":
+            else:
                 arcpy.AddMessage("Adding Number field to overwriteFC due to no input field")
-                arcpy.AddField_management(overwriteFC,"Number","String")
+                arcpy.AddField_management(overwriteFC,"Number")
                 arcpy.AddMessage("Added Number field to overwriteFC")
                 
             fields = (numberingField, "SHAPE@")
