@@ -41,9 +41,11 @@ class Toolbox(object):
         ''' constructor '''
         self.label = "Clearing Operations Tools"
         self.alias = "clrops"
-        self.description = r'''The Gridded Reference Graphic Tools supports area mapping operations 
+        self.description = r'''
+                           The Clearing Operations Tools supports area mapping operations 
                            with tools to systematically number structures and create custom 
-                           Gridded Reference Graphics (GRG).'''
+                           Gridded Reference Graphics (GRG).
+                           '''
         self.tools = [CreateGRGFromArea,
                       CreateGRGFromPoint,
                       NumberFeatures]

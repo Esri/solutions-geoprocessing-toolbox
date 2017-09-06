@@ -44,3 +44,5 @@ class NumberFeatures(object):
         ''' Number Features constructor '''
         self.label = "Number Features"
         self.description = "Number input point features within a selected area."
+
+    

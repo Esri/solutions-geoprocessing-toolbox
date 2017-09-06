@@ -40,7 +40,9 @@ class Toolbox(object):
         ''' constructor '''
         self.label = "Gridded Reference Graphic Tools"
         self.alias = "grg"
-        self.description = r'''The Gridded Reference Graphic Tools supports area mapping operations 
-                           with tools to create custom Gridded Reference Graphics (GRG).'''
+        self.description = r'''
+                           The Gridded Reference Graphic Tools supports area mapping operations 
+                           with tools to create custom Gridded Reference Graphics (GRG).
+                           '''
         self.tools = [CreateGRGFromArea,
                       CreateGRGFromPoint]

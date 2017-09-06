@@ -372,16 +372,21 @@ def GRGFromArea(AOI,
         # Return python error messages for use in script tool or Python Window
         arcpy.AddError(pymsg)
         arcpy.AddError(msgs)
-    
+
         # Print Python error messages for use in Python / Python Window
         print(pymsg + "\n")
         print(msgs)
 
 
-def GRGFromPoint():
+def GRGFromPoint(starting_point,
+                 horizontal_cells,
+                 vertical_cells,
+                 cell_width,
+                 cell_height,
+                 cell_units,
+                 label_start_position,
+                 label_style,
+                 output_feature_class):
     ''' Create Gridded Reference Graphic (GRG) from point input.'''
-    return
-
-def NumberFeatures():
-    ''' '''
+    arcpy.AddError("Not Implemented Yet.")
     return
