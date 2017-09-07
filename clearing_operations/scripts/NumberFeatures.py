@@ -138,7 +138,7 @@ def main():
             else:
                 arcpy.AddMessage("Add One")
                 arcpy.AddMessage("Adding Number field because no input field was given")
-                arcpy.AddField_management(outputFeatureClass,"Number","String")
+                arcpy.AddField_management(outputFeatureClass,"Number","SHORT")
                 numberingField = "Number"
         
         # Number the fields
