@@ -53,22 +53,14 @@ class CreateGRGFromArea(object):
 
         # TODO: Set input as Feature Set from method
         input_area_features = arcpy.Parameter(name='input_canvas_area',
-                                              displayName='Input Canvas Area',
+                                              displayName='Input GRG Area',
                                               direction='Input',
                                               datatype='GPFeatureRecordSetLayer',
                                               parameterType='Required',
                                               enabled=True,
                                               multiValue=False)
-        # input_area_features.value = setInputFeatureSetPolygon()
-
-        # fc = arcpy.CreateFeatureclass_management("in_memory",
-        #                                         "temp_poly",
-        #                                         "POLYGON",
-        #                                         "#",
-        #                                         "#",
-        #                                         "#",
-        #                                         arcpy.SpatialReference(54032)).getOutput(0)
-        # input_area_features.value = arcpy.FeatureSet().load(fc)
+        input_area_features.value = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                                 "layers","GRGInputArea.lyr")
 
         cell_width = arcpy.Parameter(name='cell_width',
                                      displayName='Cell Width',
@@ -160,19 +152,14 @@ class CreateGRGFromArea(object):
     def execute(self, parameters, messages):
         ''' execute for toolbox'''
         #arcpy.AddError("Not built yet.")
-        out_grg = GRGUtilities.GRGFromArea(AOI=parameters[0],
-                                           cellWidth=parameters[1],
-                                           cellHeight=parameters[2],
-                                           cellUnits=parameters[3],
-                                           labelStartPos=parameters[4],
-                                           labelStyle=parameters[5],
-                                           outputFeatureClass=parameters[6])
+        out_grg = GRGUtilities.GRGFromArea(parameters[0].value,
+                                           parameters[1].value,
+                                           parameters[2].value,
+                                           parameters[3].value,
+                                           parameters[4].value,
+                                           parameters[5].value,
+                                           parameters[6].value)
         return out_grg
-
-    def _setInputFeatureSetPolygon(self):
-        ''' return polygon featureset in WAZED '''
-        # TODO: featureset logic for input_area_features
-        return None
 
 class CreateGRGFromPoint(object):
     '''
@@ -196,16 +183,8 @@ class CreateGRGFromPoint(object):
                                               parameterType='Required',
                                               enabled=True,
                                               multiValue=False)
-        # input_start_location.value = setInputFeatureSetPolygon()
-
-        # fc = arcpy.CreateFeatureclass_management("in_memory",
-        #                                         "temp_poly",
-        #                                         "POLYGON",
-        #                                         "#",
-        #                                         "#",
-        #                                         "#",
-        #                                         arcpy.SpatialReference(54032)).getOutput(0)
-        # input_start_location.value = arcpy.FeatureSet().load(fc)
+        input_start_location.value = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                                 "layers","GRGInputPoint.lyr")
 
         horizontal_cells = arcpy.Parameter(name='horizontal_cells',
                                      displayName='Number of Horizontal Grid Cells',

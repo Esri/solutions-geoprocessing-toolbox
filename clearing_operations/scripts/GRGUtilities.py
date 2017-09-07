@@ -108,6 +108,7 @@ def GRGFromArea(AOI,
         if DEBUG == True: arcpy.AddMessage("App environment: " + appEnvironment)
         isPro = False
         fc = os.path.join("in_memory", "AOI")
+        fishnet = os.path.join("in_memory", "fishnet")
         arcpy.CopyFeatures_management(AOI, fc)
 
         #if gisVersion == "1.0": #Pro: #Update for automated test
