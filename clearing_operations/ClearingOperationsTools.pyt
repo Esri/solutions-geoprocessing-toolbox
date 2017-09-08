@@ -29,7 +29,7 @@
 '''
 
 from scripts.GRGTools import *
-from scripts.NumberFeatures_new import *
+from scripts.NumberFeaturesTool import *
 
 class Toolbox(object):
     '''

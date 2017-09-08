@@ -22,7 +22,6 @@
  ==================================================
  description:
  GRG Tool logic module.
- Supports GRGTools.pyt and uses GRGUtilities.py
  ==================================================
  history:
  9/1/2017 - mf - original coding
@@ -52,7 +51,6 @@ class CreateGRGFromArea(object):
         Define parameter definitions
         '''
 
-        # TODO: Set input as Feature Set from method
         input_area_features = arcpy.Parameter(name='input_canvas_area',
                                               displayName='Input GRG Area',
                                               direction='Input',
@@ -105,10 +103,10 @@ class CreateGRGFromArea(object):
         #                                     'LOWER_LEFT',
         #                                     'UPPER_RIGHT',
         #                                     'LOWER_RIGHT']
-        label_start_position.filter.list = ['Upper-Right',
+        label_start_position.filter.list = ['Upper-Left',
                                             'Lower-Left',
-                                            'Upper-Left',
-                                            'Lower-Left']
+                                            'Upper-Right',
+                                            'Lower-Right']
         label_start_position.value = label_start_position.filter.list[0]
 
         label_style = arcpy.Parameter(name='label_style',
@@ -128,7 +126,7 @@ class CreateGRGFromArea(object):
         label_style.value = label_style.filter.list[0]
 
         # TODO: define output schema as method
-        output_features= arcpy.Parameter(name='output_grg-features',
+        output_features= arcpy.Parameter(name='output_grg_features',
                                          displayName='Output GRG Features',
                                          direction='Output',
                                          datatype='DEFeatureClass',
@@ -290,7 +288,7 @@ class CreateGRGFromPoint(object):
                                    'Numeric']
         label_style.value = label_style.filter.list[0]
 
-        output_features= arcpy.Parameter(name='output_grg-features',
+        output_features= arcpy.Parameter(name='output_grg_features',
                                          displayName='Output GRG Features',
                                          direction='Output',
                                          datatype='DEFeatureClass',
