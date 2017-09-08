@@ -36,6 +36,7 @@ import arcpy
 from arcpy import env
 import GRGUtilities
 
+
 class CreateGRGFromArea(object):
     '''
     Create a Gridded Reference Graphic (GRG) from an selected area on the map.
@@ -60,7 +61,7 @@ class CreateGRGFromArea(object):
                                               enabled=True,
                                               multiValue=False)
         input_area_features.value = os.path.join(os.path.dirname(os.path.dirname(__file__)),
-                                                 "layers","GRGInputArea.lyr")
+                                                 "layers", "GRGInputArea.lyr")
 
         cell_width = arcpy.Parameter(name='cell_width',
                                      displayName='Cell Width',
@@ -88,7 +89,8 @@ class CreateGRGFromArea(object):
                                      enabled=True,
                                      multiValue=False)
         cell_units.filter.type = 'ValueList'
-        cell_units.filter.list = ['METERS', 'FEET']
+        # cell_units.filter.list = ['METERS', 'FEET']
+        cell_units.filter.list = ['Meters', 'Feet']
         cell_units.value = cell_units.filter.list[0]
 
         label_start_position = arcpy.Parameter(name='label_start_position',
@@ -99,10 +101,14 @@ class CreateGRGFromArea(object):
                                                enabled=True,
                                                multiValue=False)
         label_start_position.filter.type = 'ValueList'
-        label_start_position.filter.list = ['UPPER_RIGHT',
-                                            'LOWER_RIGHT',
-                                            'UPPER_LEFT',
-                                            'LOWER_LEFT']
+        # label_start_position.filter.list = ['UPPER_LEFT',
+        #                                     'LOWER_LEFT',
+        #                                     'UPPER_RIGHT',
+        #                                     'LOWER_RIGHT']
+        label_start_position.filter.list = ['Upper-Right',
+                                            'Lower-Left',
+                                            'Upper-Left',
+                                            'Lower-Left']
         label_start_position.value = label_start_position.filter.list[0]
 
         label_style = arcpy.Parameter(name='label_style',
@@ -113,9 +119,12 @@ class CreateGRGFromArea(object):
                                       enabled=True,
                                       multiValue=False)
         label_style.filter.type = 'ValueList'
-        label_style.filter.list = ['ALPHA-ALPHA',
-                                   'ALPHA-NUMERIC',
-                                   'NUMERIC-NUMERIC']
+        # label_style.filter.list = ['ALPHA-NUMERIC',
+        #                            'ALPHA-ALPHA',
+        #                            'NUMERIC']
+        label_style.filter.list = ['Alpha-Numeric',
+                                   'Alpha-Alpha',
+                                   'Numeric']
         label_style.value = label_style.filter.list[0]
 
         # TODO: define output schema as method
@@ -127,6 +136,8 @@ class CreateGRGFromArea(object):
                                          enabled=True,
                                          multiValue=False)
         output_features.value = r"%scratchGDB%/area_grg"
+        output_features.symbology = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                                 "layers", "GRG.lyr")
 
         return [input_area_features,
                 cell_width,
@@ -175,24 +186,23 @@ class CreateGRGFromPoint(object):
         Define parameter definitions
         '''
 
-        # TODO: Set input as Feature Set from method
         input_start_location = arcpy.Parameter(name='input_start_location',
-                                              displayName='Input Start Location',
-                                              direction='Input',
-                                              datatype='GPFeatureRecordSetLayer',
-                                              parameterType='Required',
-                                              enabled=True,
-                                              multiValue=False)
+                                               displayName='Input Start Location',
+                                               direction='Input',
+                                               datatype='GPFeatureRecordSetLayer',
+                                               parameterType='Required',
+                                               enabled=True,
+                                               multiValue=False)
         input_start_location.value = os.path.join(os.path.dirname(os.path.dirname(__file__)),
-                                                 "layers","GRGInputPoint.lyr")
+                                                  "layers","GRGInputPoint.lyr")
 
         horizontal_cells = arcpy.Parameter(name='horizontal_cells',
-                                     displayName='Number of Horizontal Grid Cells',
-                                     direction='Input',
-                                     datatype='GPDouble',
-                                     parameterType='Required',
-                                     enabled=True,
-                                     multiValue=False)
+                                           displayName='Number of Horizontal Grid Cells',
+                                           direction='Input',
+                                           datatype='GPDouble',
+                                           parameterType='Required',
+                                           enabled=True,
+                                           multiValue=False)
         horizontal_cells.value = 10
 
         vertical_cells = arcpy.Parameter(name='vertical_cells',
@@ -211,7 +221,7 @@ class CreateGRGFromPoint(object):
                                      parameterType='Required',
                                      enabled=True,
                                      multiValue=False)
-        cell_width.value = 100.0
+        cell_width.value = 250.0
 
         cell_height = arcpy.Parameter(name='cell_height',
                                       displayName='Cell Height',
@@ -220,7 +230,7 @@ class CreateGRGFromPoint(object):
                                       parameterType='Required',
                                       enabled=True,
                                       multiValue=False)
-        cell_height.value = 100.0
+        cell_height.value = 250.0
 
         cell_units = arcpy.Parameter(name='cell_units',
                                      displayName='Cell Units',
@@ -230,37 +240,56 @@ class CreateGRGFromPoint(object):
                                      enabled=True,
                                      multiValue=False)
         cell_units.filter.type = 'ValueList'
-        cell_units.filter.list = ['METERS', 'FEET']
+        # cell_units.filter.list = ['METERS', 'FEET']
+        cell_units.filter.list = ['Meters', 'Feet']
         cell_units.value = cell_units.filter.list[0]
 
+        # TODO: Are we really ever expecting a user to 'draw' a cell size? Doesn't make sense.
+        grid_size_feature_set = arcpy.Parameter(name='grid_size_feature_set',
+                                                displayName='Grid Size',
+                                                direction='Input',
+                                                datatype='GPFeatureRecordSetLayer',
+                                                parameterType='Optional',
+                                                enabled=True,
+                                                multiValue=False)
+        grid_size_feature_set.value = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                                   "layers","GRGInputArea.lyr")
+
+
         label_start_position = arcpy.Parameter(name='label_start_position',
-                                               displayName='Label Start Position',
+                                               displayName='Labeling Start Position',
                                                direction='Input',
                                                datatype='GPString',
                                                parameterType='Required',
                                                enabled=True,
                                                multiValue=False)
         label_start_position.filter.type = 'ValueList'
-        label_start_position.filter.list = ['UPPER_RIGHT',
-                                            'LOWER_RIGHT',
-                                            'UPPER_LEFT',
-                                            'LOWER_LEFT']
+        # label_start_position.filter.list = ['UPPER_LEFT',
+        #                                     'LOWER_LEFT',
+        #                                     'UPPER_RIGHT',
+        #                                     'LOWER_RIGHT']
+        label_start_position.filter.list = ['Upper-Left',
+                                            'Lower-Left',
+                                            'Upper-Right',
+                                            'Lower-Right']
         label_start_position.value = label_start_position.filter.list[0]
 
         label_style = arcpy.Parameter(name='label_style',
-                                      displayName='Label Style',
+                                      displayName='Labeling Style',
                                       direction='Input',
                                       datatype='GPString',
                                       parameterType='Required',
                                       enabled=True,
                                       multiValue=False)
         label_style.filter.type = 'ValueList'
-        label_style.filter.list = ['ALPHA-ALPHA',
-                                   'ALPHA-NUMERIC',
-                                   'NUMERIC-NUMERIC']
+        # label_style.filter.list = ['ALPHA-NUMERIC',
+        #                            'ALPHA-ALPHA',
+        #                            'NUMERIC']
+        label_style.filter.list = ['Alpha-Numeric',
+                                   'Alpha-Alpha',
+                                   'Numeric']
         label_style.value = label_style.filter.list[0]
 
-        # TODO: define output schema as method
         output_features= arcpy.Parameter(name='output_grg-features',
                                          displayName='Output GRG Features',
                                          direction='Output',
@@ -269,6 +298,8 @@ class CreateGRGFromPoint(object):
                                          enabled=True,
                                          multiValue=False)
         output_features.value = r"%scratchGDB%/point_grg"
+        output_features.symbology = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                                 "layers", "GRG.lyr")
 
         return [input_start_location,
                 horizontal_cells,
@@ -276,6 +307,7 @@ class CreateGRGFromPoint(object):
                 cell_width,
                 cell_height,
                 cell_units,
+                grid_size_feature_set,
                 label_start_position,
                 label_style,
                 output_features]
@@ -295,20 +327,24 @@ class CreateGRGFromPoint(object):
 
     def execute(self, parameters, messages):
         ''' execute for toolbox'''
-        arcpy.AddError("Not built yet.")
 
-        # out_grg = GRGUtilities.GRGFromPoint(starting_point=parameters[0],
-        #                                     horizontal_cells=parameters[1],
-        #                                     vertical_cells=parameters[2],
-        #                                     cell_width=parameters[3],
-        #                                     cell_height=parameters[4],
-        #                                     cell_units=parameters[5],
-        #                                     label_start_position=parameters[6],
-        #                                     label_style=parameters[7],
-        #                                     output_feature_class=parameters[8])
-        return #out_grg
+        out_grg = GRGUtilities.GRGFromPoint(parameters[0].value,
+                                            parameters[1].value,
+                                            parameters[2].value,
+                                            parameters[3].value,
+                                            parameters[4].value,
+                                            parameters[5].value,
+                                            parameters[6].value,
+                                            parameters[7].value,
+                                            parameters[8].value,
+                                            parameters[9].value)
+        return out_grg
 
 def _outputGRGSchema():
     ''' '''
     # TODO: implement output schema for all GRG features
+    # * has Grid field (name: Grid, Alias: Grid, data type: Text, Length: 255)
+    # * Polygon feature class,
+    # * Coodinate system: <Undefined> AAAAAAAAHHHHHHH!!!!!!
+    # * 
     return None
