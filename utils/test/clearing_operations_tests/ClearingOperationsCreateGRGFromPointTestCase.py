@@ -92,7 +92,7 @@ class ClearingOperationsCreateGRGFromPointTestCase(unittest.TestCase):
 
         #try:
         # Calling the PointTargetGRG_ClearingOperations Script Tool
-        arcpy.CreateGRGfromPoint_clrops(self.pointTarget, numCellsH, numCellsV,
+        arcpy.CreateGRGFromPoint_clrops(self.pointTarget, numCellsH, numCellsV,
                                         cellWidth, cellHeight, "Meters", None,
                                         labelStart, labelStyle, output)
         # except arcpy.ExecuteError:
