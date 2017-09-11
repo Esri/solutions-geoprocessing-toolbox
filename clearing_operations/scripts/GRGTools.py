@@ -33,7 +33,7 @@ import sys
 import traceback
 import arcpy
 from arcpy import env
-import GRGUtilities
+from . import GRGUtilities
 
 
 class CreateGRGFromArea(object):

@@ -29,13 +29,11 @@
 '''
 
 import arcpy
-import Utilities
 import os, sys, math, traceback, inspect
 import arcpy
 from arcpy import env
-import Utilities
-import imp
-imp.reload(Utilities)
+from . import Utilities
+
 DEBUG = True
 
 def labelFeatures(layer, field):

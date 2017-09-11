@@ -34,7 +34,7 @@ import os, sys, math, traceback
 import arcpy
 from arcpy import env
 from arcpy import sa
-import Utilities
+from . import Utilities
 
 class NumberFeatures(object):
     '''
