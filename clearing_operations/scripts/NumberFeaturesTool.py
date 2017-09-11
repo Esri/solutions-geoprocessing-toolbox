@@ -144,10 +144,11 @@ class NumberFeatures(object):
 
         # pointFeatureName = os.path.basename(pointFeatures) # TypeError: object of type 'geoprocessing Layer object' has no len()
         # pointFeatureName = pointFeatures.name # AttributeError: ValueObject: Get attribute name does not exist
-        if pointFeatures:
+        try:
             pointFeatureName = pointFeatures.name
-        else:
-            pointFeatureName = os.path.basename(pointFeatures)
+        except AttributeError:
+            arcpy.AddWarning("AttributeError trying to access '.name' on {}".format(pointFeatures))
+            pointFeatureName = os.path.basename(str(pointFeatures))
         
         #arcpy.AddMessage("base path is: " + os.path.basename(pointFeatures))
         layerExists = False

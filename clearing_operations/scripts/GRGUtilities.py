@@ -106,6 +106,7 @@ def ColIdxToXlName_PointTargetGRG(index):
         else:
             return chr(index + ord('A') - 1) + result
 
+
 def RotateFeatureClass(inputFC, outputFC,
                        angle=0, pivot_point=None):
     """Rotate Feature Class
@@ -119,6 +120,7 @@ def RotateFeatureClass(inputFC, outputFC,
     As the output feature class no longer has a "real" xy locations,
     after rotation, it no coordinate system defined.
     """
+
 
     def RotateXY(x, y, xc=0, yc=0, angle=0, units="DEGREES"):
         """Rotate an xy cooordinate about a specified origin
@@ -138,6 +140,7 @@ def RotateFeatureClass(inputFC, outputFC,
         xr = (x * math.cos(angle)) - (y * math.sin(angle)) + xc
         yr = (x * math.sin(angle)) + (y * math.cos(angle)) + yc
         return xr, yr
+
 
     # temp names for cleanup
     env_file = None
