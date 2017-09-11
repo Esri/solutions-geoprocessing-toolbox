@@ -146,7 +146,7 @@ class NumberFeatures(object):
         # pointFeatureName = pointFeatures.name # AttributeError: ValueObject: Get attribute name does not exist
         if pointFeatures:
             pointFeatureName = pointFeatures.name
-        else
+        else:
             pointFeatureName = os.path.basename(pointFeatures)
         
         #arcpy.AddMessage("base path is: " + os.path.basename(pointFeatures))
