@@ -144,11 +144,7 @@ class NumberFeatures(object):
 
         # pointFeatureName = os.path.basename(pointFeatures) # TypeError: object of type 'geoprocessing Layer object' has no len()
         # pointFeatureName = pointFeatures.name # AttributeError: ValueObject: Get attribute name does not exist
-        try:
-            pointFeatureName = pointFeatures.name
-        except AttributeError:
-            arcpy.AddWarning("AttributeError trying to access '.name' on {}".format(pointFeatures))
-            pointFeatureName = os.path.basename(str(pointFeatures))
+        pointFeatureName = os.path.basename(str(pointFeatures))
         
         #arcpy.AddMessage("base path is: " + os.path.basename(pointFeatures))
         layerExists = False
@@ -283,7 +279,7 @@ class NumberFeatures(object):
                 arcpy.Delete_management(outputFeatureClass)
                 targetLayerName = pointFeatureName
             else:
-                targetLayerName = os.path.basename(outputFeatureClass)
+                targetLayerName = os.path.basename(str(outputFeatureClass))
 
             #Setting the correct output for the file feature class
             arcpy.SetParameter(3, outputFeatureClass)
