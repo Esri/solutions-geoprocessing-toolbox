@@ -21,11 +21,11 @@
  company: Esri
  ==================================================
  description: 
- GRG Tool logic module. 
+ Number Features Tool logic module. 
  Supports ClearingOperationsTools.pyt
  ==================================================
  history:
- 9/6/2017 - mf - original coding
+ 9/6/2017 - mf - original coding/transfer from NumberFeatures.py
  ==================================================
 '''
 
@@ -142,8 +142,12 @@ class NumberFeatures(object):
         # Create a feature layer from the input point features if it is not one already
         #df = arcpy.mapping.ListDataFrames(mxd)[0]
 
-        #pointFeatureName = os.path.basename(pointFeatures) # TypeError: object of type 'geoprocessing Layer object' has no len()
-        pointFeatureName = pointFeatures.name
+        # pointFeatureName = os.path.basename(pointFeatures) # TypeError: object of type 'geoprocessing Layer object' has no len()
+        # pointFeatureName = pointFeatures.name # AttributeError: ValueObject: Get attribute name does not exist
+        if pointFeatures:
+            pointFeatureName = pointFeatures.name
+        else
+            pointFeatureName = os.path.basename(pointFeatures)
         
         #arcpy.AddMessage("base path is: " + os.path.basename(pointFeatures))
         layerExists = False

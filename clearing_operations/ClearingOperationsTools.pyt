@@ -20,7 +20,7 @@
  contact: support@esri.com
  company: Esri
  ==================================================
- description: 
+ description:
  Python toolbox container for Clearing Operations tools.
  ==================================================
  history:

@@ -30,26 +30,23 @@ import Configuration
 import UnitTestUtilities
 import DataDownload
 
-class ClearingOperationsPointTargetTestCase(unittest.TestCase):
+class ClearingOperationsCreateGRGFromAreaTestCase(unittest.TestCase):
 
     toolboxUnderTest = None # Set to Pro or ArcMap toolbox at runtime
 
-    pointTarget = None
     inputArea = None
     output = None
 
 
     scratchGDB = None
     def setUp(self):
-        if Configuration.DEBUG == True: print("         ClearingOperationsPointTargetTestCase.setUp")
+        if Configuration.DEBUG == True: print("         ClearingOperationsCreateGRGFromAreaTestCase.setUp")
 
         ''' Initialization needed if running Test Case standalone '''
         Configuration.GetLogger()
         Configuration.GetPlatform()
         ''' End standalone initialization '''
-
-        self.toolboxUnderTest = Configuration.clearingOperationsToolboxPath + \
-            Configuration.GetToolboxSuffix()
+        self.toolboxUnderTest = Configuration.clearingOperationsToolboxPath
 
         UnitTestUtilities.checkArcPy()
         DataDownload.runDataDownload(Configuration.clearingOperationsPath, \
@@ -59,42 +56,41 @@ class ClearingOperationsPointTargetTestCase(unittest.TestCase):
             self.scratchGDB = UnitTestUtilities.createScratch(Configuration.clearingOperationsPath)
 
         # set up inputs
-        self.pointTarget = os.path.join(Configuration.clearingOperationsInputGDB, r"CenterPoint")
         self.inputArea = os.path.join(Configuration.clearingOperationsInputGDB, r"AO")
+
 
         UnitTestUtilities.checkFilePaths([Configuration.clearingOperationsPath])
 
-        UnitTestUtilities.checkGeoObjects([Configuration.clearingOperationsInputGDB, self.toolboxUnderTest, self.scratchGDB, self.pointTarget, self.inputArea])
+        UnitTestUtilities.checkGeoObjects([Configuration.clearingOperationsInputGDB, self.toolboxUnderTest, self.scratchGDB, self.inputArea])
 
     def tearDown(self):
-        if Configuration.DEBUG == True: print("         ClearingOperationsPointTargetTestCase.tearDown")
+        if Configuration.DEBUG == True: print("         ClearingOperationsTestCase.tearDown")
         UnitTestUtilities.deleteScratch(self.scratchGDB)
 
-    def testClearingOperationsPointTarget(self):
-        if Configuration.DEBUG == True:print(".....ClearingOperationsPointTargetTestCase.testClearingOperationsPointTarget")
+    def testClearingOperationsAreaGRG(self):
+        if Configuration.DEBUG == True:print(".....ClearingOperationsCreateGRGFromAreaTestCase.testClearingOperationsAreaGRG")
         print("Importing toolbox...")
         arcpy.ImportToolbox(self.toolboxUnderTest)
         arcpy.env.overwriteOutput = True
 
+
         #inputs
-        numCellsH = 9
-        numCellsV = 9
         cellWidth = 100
         cellHeight = 100
-        cellUnits = "Meters"
+        cellunits = "Meters"
         labelStart = "Lower-Left"
         labelStyle = "Alpha-Numeric"
-        output = os.path.join(self.scratchGDB, "ptTarget")
+        output = os.path.join(self.scratchGDB, "grg")
 
         #Testing
-        runToolMsg="Running tool (Point Target)"
+        runToolMsg="Running tool (Canvas Area GRG)"
         arcpy.AddMessage(runToolMsg)
         Configuration.Logger.info(runToolMsg)
 
         try:
-			# Calling the PointTargetGRG_ClearingOperations Script Tool
-            arcpy.PointTargetGRG_ClearingOperations(self.pointTarget, numCellsH, numCellsV, cellWidth, cellHeight, \
-                "Meters", None, labelStart, labelStyle, output)
+            # Calling the Create GRG From Area script tool
+            arcpy.CreateGRGFromArea_clrops(self.inputArea, cellWidth, cellHeight, cellunits, labelStart, labelStyle, output)
+
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()
         except:
@@ -103,22 +99,7 @@ class ClearingOperationsPointTargetTestCase(unittest.TestCase):
         result = arcpy.GetCount_management(output)
         count = int(result.getOutput(0))
         print("number features: " + str(count))
-        self.assertGreaterEqual(count, 80)
-
-        #TODO: determine if should be added back in
-        #cursor = arcpy.da.SearchCursor(output, 'SHAPE@')
-        #cursor2 = arcpy.da.SearchCursor(self.pointTarget, 'SHAPE@')
-        #ptRow = cursor2.next()
-        #ptGeo = ptRow[0]
-        #intersect = False
-        #for row in cursor:
-        #    intersectFeat= row[0].touches(ptGeo)
-        #    #print(str(intersectFeat))
-        #    if intersectFeat == True:
-        #        intersect = True
-        #self.assertTrue(intersect)
+        self.assertEqual(count, 40)
 
 if __name__ == "__main__":
     unittest.main()       
-
-
