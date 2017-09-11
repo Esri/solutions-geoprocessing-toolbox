@@ -69,7 +69,7 @@ def main():
         Configuration.Logger = UnitTestUtilities.initializeLogger(logName)
     print("Logging results to: " + str(logName))
     UnitTestUtilities.setUpLogFileHeader()
-    
+
     result = runTestSuite()
 
     logTestResults(result)
@@ -81,11 +81,11 @@ def logTestResults(result):
     resultHead = resultsHeader(result)
     print(resultHead)
     Configuration.Logger.info(resultHead)
-   
+
     errorLogLines = getErrorResultsAsList(result)
     for errorLogLine in errorLogLines :
         # strip unicode chars so they don't mess up print/log file
-        line = errorLogLine.encode('ascii','ignore').decode('ascii') 
+        line = errorLogLine.encode('ascii','ignore').decode('ascii')
         print(line)
         Configuration.Logger.error(line)
 
@@ -105,6 +105,7 @@ def resultsHeader(result):
     failureCount = len(result.failures)
     skippedCount = len(result.skipped)
     nonPassedCount = errorCount + failureCount + skippedCount
+
     passedCount  = result.testsRun - nonPassedCount
     # testsRun should be > 0 , but just in case
     percentPassed = ((passedCount / result.testsRun) * 100.0) if (result.testsRun > 0) else 0.0
@@ -153,6 +154,7 @@ def runTestSuite():
     testSuite.addTests(addIncidentAnalysisSuite())
     testSuite.addTests(addMilitaryFeaturesSuite())
     testSuite.addTests(addSunPositionAnalysisSuite())
+    testSuite.addTests(addDistanceToAssetsSuite())
 
     #TODO: MAoT Test Suite
     #TODO: MAoW Test Suite
@@ -194,6 +196,13 @@ def addGeoNamesSuite():
     suite = GeoNamesToolsTestSuite.getTestSuite()
     return suite
 
+def addDistanceToAssetsSuite():
+    ''' Add all DistanceToAssets tests '''
+    if Configuration.DEBUG == True: print("TestRunner.py - addDistanceToAssetsSuite")
+    from distance_to_assets_tests import DistanceToAssetsTestSuite
+    suite = DistanceToAssetsTestSuite.getTestSuite()
+    return suite
+    
 def addMilitaryFeaturesSuite():
     ''' Add all MilitaryFeatures tests '''
     if Configuration.DEBUG == True: print("TestRunner.py - addMilitaryFeaturesSuite")

@@ -74,6 +74,7 @@ class ClearingOperationsCanvasAreaGRGTestCase(unittest.TestCase):
         arcpy.ImportToolbox(self.toolboxUnderTest)
         arcpy.env.overwriteOutput = True
 
+		
         #inputs
         cellWidth = 100
         cellHeight = 100
@@ -88,7 +89,9 @@ class ClearingOperationsCanvasAreaGRGTestCase(unittest.TestCase):
         Configuration.Logger.info(runToolMsg)
 
         try:
+			# Calling the CanvasAreaGRG_ClearingOperations Script Tool
             arcpy.CanvasAreaGRG_ClearingOperations(self.inputArea, cellWidth, cellHeight, cellunits, labelStart, labelStyle, output)
+			
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()
         except:
