@@ -91,10 +91,10 @@ class ClearingOperationsCreateGRGFromAreaTestCase(unittest.TestCase):
         # Calling the Create GRG From Area script tool
         arcpy.CreateGRGFromArea_clrops(self.inputArea, cellWidth, cellHeight, cellunits, labelStart, labelStyle, output)
 
-        # except arcpy.ExecuteError:
-        #     UnitTestUtilities.handleArcPyError()
-        # except:
-        #     UnitTestUtilities.handleGeneralError()
+        except arcpy.ExecuteError:
+            UnitTestUtilities.handleArcPyError()
+        except:
+            UnitTestUtilities.handleGeneralError()
 
         result = arcpy.GetCount_management(output)
         count = int(result.getOutput(0))

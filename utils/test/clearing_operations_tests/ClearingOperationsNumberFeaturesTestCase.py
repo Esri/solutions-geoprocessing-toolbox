@@ -86,10 +86,10 @@ class ClearingOperationsNumberFeaturesTestCase(unittest.TestCase):
         #try:
         #Calling the NumberFeatures_ClearingOperations Script Tool
         arcpy.NumberFeatures_clrops(self.inputArea, self.pointFeatures, fieldToNumber, output)
-        # except arcpy.ExecuteError:
-        #     UnitTestUtilities.handleArcPyError()
-        # except:
-        #     UnitTestUtilities.handleGeneralError()
+        except arcpy.ExecuteError:
+            UnitTestUtilities.handleArcPyError()
+        except:
+            UnitTestUtilities.handleGeneralError()
 
         result = arcpy.GetCount_management(output)
         count = int(result.getOutput(0))
