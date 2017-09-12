@@ -51,7 +51,7 @@ class CreateGRGFromArea(object):
         Define parameter definitions
         '''
 
-        input_area_features = arcpy.Parameter(name='input_canvas_area',
+        input_area_features = arcpy.Parameter(name='input_grg_area',
                                               displayName='Input GRG Area',
                                               direction='Input',
                                               datatype='GPFeatureRecordSetLayer',
