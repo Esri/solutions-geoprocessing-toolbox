@@ -29,10 +29,7 @@
 '''
 
 import os
-import sys
-import traceback
 import arcpy
-from arcpy import env
 from . import GRGUtilities
 
 

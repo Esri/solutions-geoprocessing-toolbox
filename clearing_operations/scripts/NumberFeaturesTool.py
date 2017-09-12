@@ -30,14 +30,15 @@
 '''
 
 
-import os, sys, math, traceback
+import os
+import sys
+import traceback
 import arcpy
-from arcpy import env
-from arcpy import sa
 from . import Utilities
 
 class NumberFeatures(object):
     '''
+    Number input features within a specified area.
     '''
     def __init__(self):
         '''
@@ -59,7 +60,7 @@ class NumberFeatures(object):
                                               multiValue=False)
         input_area_features.value = os.path.join(os.path.dirname(os.path.dirname(__file__)),
                                                  "layers", "NumberFeaturesAreaInput.lyr")
-        
+
         input_number_features = arcpy.Parameter(name='input_point_features',
                                                displayName='Features to Number',
                                                direction='Input',
@@ -77,7 +78,7 @@ class NumberFeatures(object):
                                           multiValue=False)
         field_to_number.filter.list = ['Short', 'Long', 'Double', 'Single']
         field_to_number.parameterDependencies = [input_number_features.name]
-        
+
         output_features= arcpy.Parameter(name='output_features',
                                          displayName='Output Numbered Features',
                                          direction='Output',
@@ -88,7 +89,7 @@ class NumberFeatures(object):
         #output_features.value = r"%scratchGDB%/numbered_features"
         output_features.symbology = os.path.join(os.path.dirname(os.path.dirname(__file__)),
                                                  "layers", "NumberedStructures.lyr")
-        
+
         return [input_area_features,
                 input_number_features,
                 field_to_number,
@@ -126,11 +127,7 @@ class NumberFeatures(object):
                        outputFeatureClass):
         ''' copied and modified from original NumberFeatures.py '''
         g_ESRI_variable_1 = r'%scratchGDB%\tempSortedPoints'
-        # areaToNumber = arcpy.GetParameterAsText(0)
-        # pointFeatures = arcpy.GetParameterAsText(1)
-        # numberingField = arcpy.GetParameterAsText(2)
-        # outputFeatureClass = arcpy.GetParameterAsText(3)
-        
+
         arcpy.CopyFeatures_management(areaToNumber, os.path.join("in_memory","areaToNumber"))
         areaToNumber = os.path.join("in_memory","areaToNumber")
         arcpy.AddMessage("outputFeatureClass: {0}".format(outputFeatureClass))
@@ -138,17 +135,8 @@ class NumberFeatures(object):
         DEBUG = True
         appEnvironment = None
         mxd, df, aprx, mp, mapList = None, None, None, None, None
-        #UPDATE
-        # Create a feature layer from the input point features if it is not one already
-        #df = arcpy.mapping.ListDataFrames(mxd)[0]
-
-        # pointFeatureName = os.path.basename(pointFeatures) # TypeError: object of type 'geoprocessing Layer object' has no len()
-        # pointFeatureName = pointFeatures.name # AttributeError: ValueObject: Get attribute name does not exist
         pointFeatureName = os.path.basename(str(pointFeatures))
-        
-        #arcpy.AddMessage("base path is: " + os.path.basename(pointFeatures))
         layerExists = False
-
         try:
             # Check that area to number is a polygon
             descArea = arcpy.Describe(areaToNumber)
@@ -158,19 +146,10 @@ class NumberFeatures(object):
                 raise Exception("ERROR: The area to number must be a polygon.")
 
             #Checking the version of the Desktop Application
-            gisVersion = arcpy.GetInstallInfo()["Version"]
-            # global appEnvironment
             appEnvironment = Utilities.GetApplication()
             if DEBUG == True: arcpy.AddMessage("App environment: " + appEnvironment)
 
             #Getting the layer name from the Table of Contents
-            # global mxd
-            # global df
-            # global aprx
-            # global mp
-            # global mapList
-            # mxd, df, aprx, mp = None, None, None, None
-            #if gisVersion == "1.0": #Pro:
             if appEnvironment == "ARCGIS_PRO":
                 from arcpy import mp
                 aprx = arcpy.mp.ArcGISProject("CURRENT")
@@ -206,18 +185,14 @@ class NumberFeatures(object):
             # If no output FC is specified, then set it a temporary one, as this will be copied to the input and then deleted.
             # Sort layer by upper right across and then down spatially,
             overwriteFC = False
-            #global outputFeatureClass
-            #if outputFeatureClass == "":
             if not outputFeatureClass:
                 outputFeatureClass = g_ESRI_variable_1
-                overwriteFC = True;
+                overwriteFC = True
 
             arcpy.AddMessage("Sorting the selected points geographically, left to right, top to bottom")
-            #arcpy.Sort_management(selectionLayer, outputFeatureClass, [["Shape", "ASCENDING"]])
             arcpy.Sort_management(pointFeatureName, outputFeatureClass, [["Shape", "ASCENDING"]])
-    
+
             #global numberingField
-            # if numberingField == "":
             if numberingField is None or numberingField == "":
                 fnames = [field.name for field in arcpy.ListFields(outputFeatureClass)]
                 addfield = "Number"
@@ -250,18 +225,15 @@ class NumberFeatures(object):
                 arcpy.AddMessage("Copying the features to the input, and then deleting the temporary feature class")
                 desc = arcpy.Describe(pointFeatures)
                 if hasattr(desc, "layer"):
-                  overwriteFC = desc.layer.catalogPath
-
+                    overwriteFC = desc.layer.catalogPath
                 else:
-                  overwriteFC = desc.catalogPath
+                    overwriteFC = desc.catalogPath
 
                 arcpy.AddMessage("what is the numberingField: " + numberingField)
                 addfield = "Number"
                 fnames1 = [field.name for field in arcpy.ListFields(overwriteFC)]
                 if addfield in fnames1:
                     arcpy.AddMessage("Number field is already used")
-
-                #else numberingField == "Number":
                 else:
                     arcpy.AddMessage("Adding Number field to overwriteFC due to no input field")
                     arcpy.AddField_management(overwriteFC,"Number")

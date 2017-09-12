@@ -28,16 +28,21 @@
  ==================================================
 '''
 
-import arcpy
-import os, sys, math, traceback, inspect
+
+import os
+import sys
+import math
+import traceback
 import arcpy
 from arcpy import env
 from . import Utilities
 
 DEBUG = True
+appEnvironment = None
 
 def labelFeatures(layer, field):
     ''' set up labeling for layer '''
+    global appEnvironment
     if appEnvironment == "ARCGIS_PRO":
         if layer.supports("SHOWLABELS"):
             for lblclass in layer.listLabelClasses():
@@ -59,8 +64,8 @@ def findLayerByName(layerName):
     '''  '''
     global mapList
     global mxd
+    global appEnvironment
     #UPDATE
-    #if isPro: #Update for automated test
     if appEnvironment == "ARCGIS_PRO":
         for layer in mapList.listLayers():
             if layer.name == layerName:
@@ -84,7 +89,7 @@ def ColIdxToXlName_CanvasAreaGRG(index):
     ''' Converts an index into a letter, labeled like excel columns, A to Z, AA to ZZ, etc.'''
     ordA = ord('A')
     ordZ = ord('Z')
-    len = ordZ - ordA + 1          
+    len = ordZ - ordA + 1
     s = ""
     while(int(index) >= 0):
         s = chr(int(index) % len + ordA) + s
@@ -128,7 +133,6 @@ def RotateFeatureClass(inputFC, outputFC,
         angle   angle
         units    "DEGREES" (default) or "RADIANS"
         """
-        import math
         x = x - xc
         y = y - yc
         # make angle clockwise (like Rotate_management)
@@ -182,7 +186,7 @@ def RotateFeatureClass(inputFC, outputFC,
         arcpy.ClearEnvironment("outputCoordinateSystem")
 
         # get feature class properties
-        lyrFC = g_ESRI_variable_1
+        lyrFC = 'lyrFC' #g_ESRI_variable_1
         arcpy.MakeFeatureLayer_management(inputFC, lyrFC)
         dFC = arcpy.Describe(lyrFC)
         shpField = dFC.shapeFieldName
@@ -194,13 +198,13 @@ def RotateFeatureClass(inputFC, outputFC,
         arcpy.CreateFeatureclass_management(os.path.dirname(tmpFC),
                                             os.path.basename(tmpFC),
                                             shpType)
-        lyrTmp = g_ESRI_variable_2
+        lyrTmp = 'lyrTmp' #g_ESRI_variable_2
         arcpy.MakeFeatureLayer_management(tmpFC, lyrTmp)
 
         # set up id field (used to join later)
         TFID = "XXXX_FID"
         arcpy.AddField_management(lyrTmp, TFID, "LONG")
-        arcpy.DeleteField_management(lyrTmp, g_ESRI_variable_3)
+        arcpy.DeleteField_management(lyrTmp, 'ID') # g_ESRI_variable_3 = 'ID'
 
         # rotate the feature class coordinates
         # only points, polylines, and polygons are supported
@@ -257,7 +261,6 @@ def RotateFeatureClass(inputFC, outputFC,
                 oRow.setValue(TFID,Row.getValue(FID))
                 oRows.insertRow(oRow)
         else:
-            #raise Exception, "Shape type {0} is not supported".format(shpType) #UPDATE
             raise Exception("Shape type {0} is not supported".format(shpType))
 
         del oRow, oRows # close write cursor (ensure buffer written)
@@ -267,14 +270,13 @@ def RotateFeatureClass(inputFC, outputFC,
         arcpy.AddJoin_management(lyrTmp, TFID, lyrFC, FID)
         env.qualifiedFieldNames = False
         arcpy.Merge_management(lyrTmp, outputFC)
-        lyrOut = g_ESRI_variable_4
+        lyrOut = 'lyrOut' #g_ESRI_variable_4
         arcpy.MakeFeatureLayer_management(outputFC, lyrOut)
         # drop temp fields 2,3 (TFID, FID)
         fnames = [f.name for f in arcpy.ListFields(lyrOut)]
-        dropList = g_ESRI_variable_5.join(fnames[2:4])
+        dropList = ';'.join(fnames[2:4]) #g_ESRI_variable_5 = ';'
         arcpy.DeleteField_management(lyrOut, dropList)
 
-    #except MsgError, xmsg: #UPDATE
     except MsgError as xmsg:
         arcpy.AddError(str(xmsg))
     except arcpy.ExecuteError:
@@ -284,7 +286,6 @@ def RotateFeatureClass(inputFC, outputFC,
         numMsg = arcpy.GetMessageCount()
         for i in range(0, numMsg):
             arcpy.AddReturnMessage(i)
-    #except Exception, xmsg: #UPDATE
     except Exception as xmsg:
         tbinfo = traceback.format_tb(sys.exc_info()[2])[0]
         arcpy.AddError(tbinfo + str(xmsg))
@@ -321,14 +322,6 @@ def GRGFromArea(AOI,
                 outputFeatureClass):
     '''Create Gridded Reference Graphic (GRG) from area input.'''
 
-    # AOI = arcpy.GetParameterAsText(0)
-    # cellWidth = arcpy.GetParameterAsText(1)
-    # cellHeight = arcpy.GetParameterAsText(2)
-    # cellUnits = arcpy.GetParameterAsText(3)
-    # labelStartPos = arcpy.GetParameterAsText(4)
-    # labelStyle = arcpy.GetParameterAsText(5)
-    # outputFeatureClass = arcpy.GetParameterAsText(6)
-
     fishnet = os.path.join("in_memory", "fishnet")
     DEBUG = True
     # GLOBALS
@@ -339,26 +332,21 @@ def GRGFromArea(AOI,
 
     try:
         #UPDATE
-        gisVersion = arcpy.GetInstallInfo()["Version"]
         appEnvironment = Utilities.GetApplication()
         if DEBUG == True: arcpy.AddMessage("App environment: " + appEnvironment)
 
-        isPro = False
         fc = os.path.join("in_memory", "AOI")
         arcpy.CopyFeatures_management(AOI, fc)
 
-        #if gisVersion == "1.0": #Pro: #Update for automated test
         if appEnvironment == "ARCGIS_PRO":
             from arcpy import mp
             aprx = arcpy.mp.ArcGISProject("CURRENT")
             mapList = aprx.listMaps()[0]
-            isPro = True
         #else: #Update for automated test
         if appEnvironment == "ARCMAP":
             from arcpy import mapping
             mxd = arcpy.mapping.MapDocument('CURRENT')
             df = arcpy.mapping.ListDataFrames(mxd)[0]
-            isPro = False
 
         # From the template extent, create a polygon that we can project into a localized World Azimuthal Equidistan
         if DEBUG == True: arcpy.AddMessage("Getting extent info...")
@@ -531,72 +519,24 @@ def GRGFromArea(AOI,
                         secondLetterIndex = -1
                         if labelStyle != 'Numeric':
                             labelNumber = 0
-
-        '''
-        ' Copy features to output feature class
-        '''
+                            
         arcpy.CopyFeatures_management(fishnet, outputFeatureClass)
-
-        '''
-        ' remove the temp feature classes
-        '''
         arcpy.Delete_management(fishnet)
 
         # Get and label the output feature
         #TODO: Update once applying symbology in Pro is fixed.
-        #UPDATE
         targetLayerName = os.path.basename(outputFeatureClass.value)
 
         if appEnvironment == "ARCGIS_PRO":
-            #params = arcpy.GetParameterInfo()
-            ## get the symbology from the GRG.lyr
-            ##scriptPath = sys.path[0]
-            # layerFilePath = os.path.join(scriptPath,r"commondata\userdata\GRG.lyrx")
-            #arcpy.AddMessage("Applying Symbology from {0}".format(layerFilePath))
-            #params[6].symbology = layerFilePath
-
             arcpy.AddMessage("Do not apply symbology it will be done in the next task step")
 
         elif appEnvironment == "ARCMAP":
-
-            #arcpy.AddMessage("Adding features to map (" + str(targetLayerName) + ")...")
-
-            #arcpy.MakeFeatureLayer_management(outputFeatureClass, targetLayerName)
-
-            # create a layer object
-            #layer = arcpy.mapping.Layer(targetLayerName)
-
-            # get the symbology from the NumberedStructures.lyr
-            #layerFilePath = os.path.join(os.getcwd(),"data\Layers\GRG.lyr")
-            #layerFilePath = os.path.join(os.path.dirname(os.path.dirname(__file__)),"layers\GRG.lyr")
-
-            # apply the symbology to the layer
-            #arcpy.ApplySymbologyFromLayer_management(layer, layerFilePath)
-
-            # add layer to map
-            #arcpy.mapping.AddLayer(df, layer, "AUTO_ARRANGE")
-
-            # find the target layer in the map
-            #mapLyr = arcpy.mapping.ListLayers(mxd, targetLayerName)[0]
-
-            #arcpy.AddMessage("Labeling output features (" + str(targetLayerName) + ")...")
-            # Work around needed as ApplySymbologyFromLayer_management does not honour labels
-            #labelLyr = arcpy.mapping.Layer(layerFilePath)
-            # copy the label info from the source to the map layer
-            #mapLyr.labelClasses = labelLyr.labelClasses
-            # turn labels on
-            #mapLyr.showLabels = True
             arcpy.AddMessage("Non-map environment, skipping labeling based on best practices")
         else:
             arcpy.AddMessage("Non-map environment, skipping labeling...")
 
         # Set tool output
         arcpy.SetParameter(6, outputFeatureClass)
-
-        ### Apply symbology to the GRG layer
-        ###UPDATE
-        ###symbologyPath = os.path.dirname(workspace) + "\\Layers\GRG.lyr"
-        ###arcpy.ApplySymbologyFromLayer_management(layer, symbologyPath)
 
     except arcpy.ExecuteError: 
         # Get the tool error messages
@@ -646,38 +586,30 @@ def GRGFromPoint(starting_point,
     labelStartPos = label_start_position #arcpy.GetParameterAsText(7)
     labelStyle = label_style #arcpy.GetParameterAsText(8)
     outputFeatureClass = output_feature_class #arcpy.GetParameterAsText(9)
-    g_ESRI_variable_1 = 'lyrFC'
-    g_ESRI_variable_2 = 'lyrTmp'
-    g_ESRI_variable_3 = 'ID'
-    g_ESRI_variable_4 = 'lyrOut'
-    g_ESRI_variable_5 = ';'
+    #g_ESRI_variable_1 = 'lyrFC'
+    #g_ESRI_variable_2 = 'lyrTmp'
+    #g_ESRI_variable_3 = 'ID'
+    #g_ESRI_variable_4 = 'lyrOut'
+    #g_ESRI_variable_5 = ';'
     tempOutput = os.path.join("in_memory", "tempFishnetGrid")
-    sysPath = sys.path[0]
-    appEnvironment = None
     DEBUG = True
     mxd = None
-    mapList = None
     df, aprx = None, None
 
 
     try:
         #UPDATE
-        gisVersion = arcpy.GetInstallInfo()["Version"]
         appEnvironment = Utilities.GetApplication()
         if DEBUG == True: arcpy.AddMessage("App environment: " + appEnvironment)
 
-
-        isPro = False
         if appEnvironment == "ARCGIS_PRO":
             from arcpy import mp
             aprx = arcpy.mp.ArcGISProject("CURRENT")
             mapList = aprx.listMaps()[0]
-            isPro = True
         elif appEnvironment == "ARCMAP":
             from arcpy import mapping
             mxd = arcpy.mapping.MapDocument('CURRENT')
             df = arcpy.mapping.ListDataFrames(mxd)[0]
-            isPro = False
         else:
             if DEBUG == True: arcpy.AddMessage("Non-map application...")
 
@@ -859,52 +791,11 @@ def GRGFromPoint(starting_point,
         #UPDATE
         targetLayerName = os.path.basename(outputFeatureClass.value)
         if appEnvironment == "ARCGIS_PRO":
-            #params = arcpy.GetParameterInfo()
-            ## get the symbology from the GRG.lyr
-            #scriptPath = sys.path[0]
-            #layerFilePath = os.path.join(scriptPath,r"commondata\userdata\GRG.lyrx")
-            #arcpy.AddMessage("Applying Symbology from {0}".format(layerFilePath))
-            #params[8].symbology = layerFilePath
-
             arcpy.AddMessage("Do not apply symbology it will be done in the next task step")
-
         elif appEnvironment == "ARCMAP":
-
-            #arcpy.AddMessage("Adding features to map (" + str(targetLayerName) + ")...")
-
-            #arcpy.MakeFeatureLayer_management(outputFeatureClass, targetLayerName)
-
-            # create a layer object
-            #layer = arcpy.mapping.Layer(targetLayerName)
-
-            # get the symbology from the NumberedStructures.lyr
-            #layerFilePath = os.path.join(os.getcwd(),"data\Layers\GRG.lyr")
-            #layerFilePath = os.path.join(os.path.dirname(os.path.dirname(__file__)),"layers\GRG.lyr")
-
-            # apply the symbology to the layer
-            #arcpy.ApplySymbologyFromLayer_management(layer, layerFilePath)
-
-            # add layer to map
-            #arcpy.mapping.AddLayer(df, layer, "AUTO_ARRANGE")
-
-            # find the target layer in the map
-            #mapLyr = arcpy.mapping.ListLayers(mxd, targetLayerName)[0]
-
-            #arcpy.AddMessage("Labeling output features (" + str(targetLayerName) + ")...")
-            # Work around needed as ApplySymbologyFromLayer_management does not honour labels
-            #labelLyr = arcpy.mapping.Layer(layerFilePath)
-            # copy the label info from the source to the map layer
-            #mapLyr.labelClasses = labelLyr.labelClasses
-            # turn labels on
-            #mapLyr.showLabels = True
             arcpy.AddMessage("Non-map environment, skipping labeling based on best practices")
         else:
             arcpy.AddMessage("Non-map environment, skipping labeling...")
-
-        # Apply symbology to the GRG layer
-        #UPDATE
-        #symbologyPath = os.path.dirname(workspace) + "\\Layers\GRG.lyr"
-        #arcpy.ApplySymbologyFromLayer_management(layer, symbologyPath)
 
         # Set tool output
         arcpy.SetParameter(8, outputFeatureClass)
