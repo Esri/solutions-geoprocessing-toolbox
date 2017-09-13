@@ -87,9 +87,9 @@ class ClearingOperationsCreateGRGFromAreaTestCase(unittest.TestCase):
         arcpy.AddMessage(runToolMsg)
         Configuration.Logger.info(runToolMsg)
 
-        # try:
+        try:
         # Calling the Create GRG From Area script tool
-        arcpy.CreateGRGFromArea_clrops(self.inputArea, cellWidth, cellHeight, cellunits, labelStart, labelStyle, output)
+            arcpy.CreateGRGFromArea_clrops(self.inputArea, cellWidth, cellHeight, cellunits, labelStart, labelStyle, output)
 
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()

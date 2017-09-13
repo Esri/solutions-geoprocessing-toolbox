@@ -90,11 +90,11 @@ class ClearingOperationsCreateGRGFromPointTestCase(unittest.TestCase):
         arcpy.AddMessage(runToolMsg)
         Configuration.Logger.info(runToolMsg)
 
-        #try:
+        try:
         # Calling the PointTargetGRG_ClearingOperations Script Tool
-        arcpy.CreateGRGFromPoint_clrops(self.pointTarget, numCellsH, numCellsV,
-                                        cellWidth, cellHeight, "Meters", None,
-                                        labelStart, labelStyle, output)
+            arcpy.CreateGRGFromPoint_clrops(self.pointTarget, numCellsH, numCellsV,
+                                            cellWidth, cellHeight, "Meters", None,
+                                            labelStart, labelStyle, output)
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()
         except:
