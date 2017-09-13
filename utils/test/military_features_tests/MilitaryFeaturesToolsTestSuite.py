@@ -19,6 +19,7 @@ import logging
 import Configuration
 
 from . import AppendMilitaryFeaturesTestCase
+from . import AppendMessageFileTestCase
 
 ''' Test suite for all tools in the toolbox '''
     
@@ -31,12 +32,14 @@ def getTestSuite():
 
     # IMPORTANT: this toolbox/suite does not run under Pro (ArcMap only)
     if Configuration.Platform == Configuration.PLATFORM_PRO :
+        print('Skipping MilitaryFeatures Tests for Pro (ArcMap Only Tools)')
         return testSuite
 
     loader = unittest.TestLoader()
 
     ''' Add all the tests '''
     testSuite.addTest(loader.loadTestsFromTestCase(AppendMilitaryFeaturesTestCase.AppendMilitaryFeaturesTestCase))
+    testSuite.addTest(loader.loadTestsFromTestCase(AppendMessageFileTestCase.AppendMessageFileTestCase))
 
     return testSuite
     

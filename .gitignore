@@ -1,5 +1,4 @@
 # Defense Template specific ignores
-data/
 maps/
 scratch/
 log/
@@ -17,6 +16,7 @@ arc.dir
 *.sav
 *.pyproj
 *.sln
+log*.txt
 
 #############
 ## Python
