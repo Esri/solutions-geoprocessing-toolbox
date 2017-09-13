@@ -28,6 +28,9 @@ import DictionaryConstants
 # All Paths used/shared by the scripts are here:
 currentPath = os.path.dirname(__file__)
 dataPath = os.path.normpath(os.path.join(currentPath, r"../../data/"))
+if not os.path.exists(dataPath):
+    dataPath = os.path.normpath(os.path.join(currentPath, r"../data/"))
+
 # IMPORTANT: assumes Mil2525C.dat is at ../../data/dictionary
 dictionaryPath2525 = os.path.normpath(os.path.join(dataPath, r"mil2525c/dictionary/"))
 dictionaryPathApp6 = os.path.normpath(os.path.join(dataPath, r"app6b/dictionary/"))
