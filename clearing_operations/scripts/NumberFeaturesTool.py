@@ -231,7 +231,7 @@ class NumberFeatures(object):
                 else:
                     overwriteFC = desc.catalogPath
 
-                arcpy.AddMessage("what is the numberingField: " + numberingField)
+                arcpy.AddMessage("what is the numberingField: " + str(numberingField))
                 addfield = "Number"
                 fnames1 = [field.name for field in arcpy.ListFields(overwriteFC)]
                 if addfield in fnames1:
@@ -241,7 +241,7 @@ class NumberFeatures(object):
                     arcpy.AddField_management(overwriteFC,"Number")
                     arcpy.AddMessage("Added Number field to overwriteFC")
 
-                fields = (numberingField, "SHAPE@")
+                fields = (str(numberingField), "SHAPE@")
 
                 overwriteCursor = arcpy.da.UpdateCursor(overwriteFC, fields)
                 for overwriteRow in overwriteCursor:
