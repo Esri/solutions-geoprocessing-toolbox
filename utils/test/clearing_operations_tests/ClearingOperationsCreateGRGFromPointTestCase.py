@@ -30,7 +30,7 @@ import Configuration
 import UnitTestUtilities
 import DataDownload
 
-class ClearingOperationsPointTargetTestCase(unittest.TestCase):
+class ClearingOperationsCreateGRGFromPointTestCase(unittest.TestCase):
 
     toolboxUnderTest = None # Set to Pro or ArcMap toolbox at runtime
 
@@ -41,15 +41,14 @@ class ClearingOperationsPointTargetTestCase(unittest.TestCase):
 
     scratchGDB = None
     def setUp(self):
-        if Configuration.DEBUG == True: print("         ClearingOperationsPointTargetTestCase.setUp")
+        if Configuration.DEBUG == True: print("         ClearingOperationsCreateGRGFromPointTestCase.setUp")
 
         ''' Initialization needed if running Test Case standalone '''
         Configuration.GetLogger()
         Configuration.GetPlatform()
         ''' End standalone initialization '''
 
-        self.toolboxUnderTest = Configuration.clearingOperationsToolboxPath + \
-            Configuration.GetToolboxSuffix()
+        self.toolboxUnderTest = Configuration.clearingOperationsToolboxPath
 
         UnitTestUtilities.checkArcPy()
         DataDownload.runDataDownload(Configuration.clearingOperationsPath, \
@@ -67,11 +66,11 @@ class ClearingOperationsPointTargetTestCase(unittest.TestCase):
         UnitTestUtilities.checkGeoObjects([Configuration.clearingOperationsInputGDB, self.toolboxUnderTest, self.scratchGDB, self.pointTarget, self.inputArea])
 
     def tearDown(self):
-        if Configuration.DEBUG == True: print("         ClearingOperationsPointTargetTestCase.tearDown")
+        if Configuration.DEBUG == True: print("         ClearingOperationsCreateGRGFromPointTestCase.tearDown")
         UnitTestUtilities.deleteScratch(self.scratchGDB)
 
     def testClearingOperationsPointTarget(self):
-        if Configuration.DEBUG == True:print(".....ClearingOperationsPointTargetTestCase.testClearingOperationsPointTarget")
+        if Configuration.DEBUG == True:print(".....ClearingOperationsCreateGRGFromPointTestCase.testClearingOperationsPointTarget")
         print("Importing toolbox...")
         arcpy.ImportToolbox(self.toolboxUnderTest)
         arcpy.env.overwriteOutput = True
@@ -92,9 +91,10 @@ class ClearingOperationsPointTargetTestCase(unittest.TestCase):
         Configuration.Logger.info(runToolMsg)
 
         try:
-			# Calling the PointTargetGRG_ClearingOperations Script Tool
-            arcpy.PointTargetGRG_ClearingOperations(self.pointTarget, numCellsH, numCellsV, cellWidth, cellHeight, \
-                "Meters", None, labelStart, labelStyle, output)
+        # Calling the PointTargetGRG_ClearingOperations Script Tool
+            arcpy.CreateGRGFromPoint_clrops(self.pointTarget, numCellsH, numCellsV,
+                                            cellWidth, cellHeight, "Meters", None,
+                                            labelStart, labelStyle, output)
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()
         except:
@@ -120,5 +120,3 @@ class ClearingOperationsPointTargetTestCase(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()       
-
-

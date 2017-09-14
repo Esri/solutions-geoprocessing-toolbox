@@ -47,8 +47,7 @@ class ClearingOperationsNumberFeaturesTestCase(unittest.TestCase):
         Configuration.GetLogger()
         Configuration.GetPlatform()
         ''' End standalone initialization '''
-        self.toolboxUnderTest = Configuration.clearingOperationsToolboxPath + \
-            Configuration.GetToolboxSuffix()
+        self.toolboxUnderTest = Configuration.clearingOperationsToolboxPath
 
         UnitTestUtilities.checkArcPy()
         DataDownload.runDataDownload(Configuration.clearingOperationsPath, \
@@ -85,8 +84,8 @@ class ClearingOperationsNumberFeaturesTestCase(unittest.TestCase):
         Configuration.Logger.info(runToolMsg)
 
         try:
-			#Calling the NumberFeatures_ClearingOperations Script Tool
-            arcpy.NumberFeatures_ClearingOperations(self.inputArea, self.pointFeatures, fieldToNumber, output)
+        #Calling the NumberFeatures_ClearingOperations Script Tool
+            arcpy.NumberFeatures_clrops(self.inputArea, self.pointFeatures, fieldToNumber, output)
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()
         except:

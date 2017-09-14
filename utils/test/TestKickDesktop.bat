@@ -52,7 +52,7 @@ REM ==================================================
 ECHO Python 2.7 Tests ================================
 REM The location of python.exe will depend upon your installation
 REM of Python 2.7. Modify the following line as necessary:
-"C:\Python27\ArcGIS10.5\python.exe" TestRunner.py %LOG%
+"C:\Python27\ArcGIS10.3\python.exe" TestRunner.py %LOG%
 REM check if Desktop for ArcGIS/Python 2.7 tests failed
 IF %ERRORLEVEL% NEQ 0 (
    ECHO 'One or more tests failed'
