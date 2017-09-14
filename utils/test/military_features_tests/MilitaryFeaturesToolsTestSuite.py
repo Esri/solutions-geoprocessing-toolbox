@@ -20,6 +20,9 @@ import Configuration
 
 from . import AppendMilitaryFeaturesTestCase
 from . import AppendMessageFileTestCase
+from . import CalculateRepRuleTestCase
+from . import CalculateSidcTestCase
+from . import WriteMessageFileTestCase
 
 ''' Test suite for all tools in the toolbox '''
     
@@ -40,8 +43,9 @@ def getTestSuite():
     ''' Add all the tests '''
     testSuite.addTest(loader.loadTestsFromTestCase(AppendMilitaryFeaturesTestCase.AppendMilitaryFeaturesTestCase))
     testSuite.addTest(loader.loadTestsFromTestCase(AppendMessageFileTestCase.AppendMessageFileTestCase))
-    testSuite.addTest(loader.loadTestsFromTestCase(AppendMessageFileTestCase.AppendMessageFileTestCase))
-    testSuite.addTest(loader.loadTestsFromTestCase(AppendMessageFileTestCase.AppendMessageFileTestCase))
+    testSuite.addTest(loader.loadTestsFromTestCase(CalculateRepRuleTestCase.CalculateRepRuleTestCase))
+    testSuite.addTest(loader.loadTestsFromTestCase(CalculateSidcTestCase.CalculateSidcTestCase))
+    testSuite.addTest(loader.loadTestsFromTestCase(WriteMessageFileTestCase.WriteMessageFileTestCase))
 
     return testSuite
     
