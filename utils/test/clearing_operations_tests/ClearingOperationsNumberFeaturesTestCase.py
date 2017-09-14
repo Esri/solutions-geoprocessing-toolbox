@@ -76,7 +76,7 @@ class ClearingOperationsNumberFeaturesTestCase(unittest.TestCase):
         arcpy.env.overwriteOutput = True
 
         #inputs
-        fieldToNumber = "number"
+        fieldToNumber = "Number"
         output = os.path.join(self.scratchGDB, "numFields")
         #Testing
         runToolMsg="Running tool (Number Features)"
@@ -99,6 +99,40 @@ class ClearingOperationsNumberFeaturesTestCase(unittest.TestCase):
         val = row.getValue(fieldToNumber)
         print("Field number first row: " + str(val) + " should not be null")
 
+        self.assertIsNotNone(val)
+
+        print("number features: " + str(count))
+        self.assertEqual(count, 90)
+
+    def testClearingOperationsNumberFeatures_NoField(self):
+        if Configuration.DEBUG == True:print(".....ClearingOperationsNumberFeaturesTestCase.testClearingOperationsNumberFeatures")
+        print("Importing toolbox...")
+        arcpy.ImportToolbox(self.toolboxUnderTest)
+        arcpy.env.overwriteOutput = True
+
+        #inputs
+        fieldToNumber = None
+        output = os.path.join(self.scratchGDB, "numFields")
+        #Testing
+        runToolMsg="Running tool (Number Features)"
+        arcpy.AddMessage(runToolMsg)
+        Configuration.Logger.info(runToolMsg)
+
+        try:
+        #Calling the NumberFeatures_ClearingOperations Script Tool
+            arcpy.NumberFeatures_clrops(self.inputArea, self.pointFeatures, fieldToNumber, output)
+        except arcpy.ExecuteError:
+            UnitTestUtilities.handleArcPyError()
+        except:
+            UnitTestUtilities.handleGeneralError()
+
+        result = arcpy.GetCount_management(output)
+        count = int(result.getOutput(0))
+
+        cursor = arcpy.SearchCursor(output)
+        row = cursor.next()
+        val = row.getValue("Number") #default field will still be 'Number'
+        print("Field number first row: " + str(val) + " should not be null")
         self.assertIsNotNone(val)
 
         print("number features: " + str(count))
