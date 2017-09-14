@@ -32,8 +32,6 @@ import os
 import arcpy
 
 from . import GRGUtilities
-from . import Utilities
-
 
 class CreateGRGFromArea(object):
     '''
@@ -61,14 +59,6 @@ class CreateGRGFromArea(object):
         input_layer_file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),
                                              "layers",
                                              "RelativeGRGInputArea.lyr")
-        # featureset_data_source_gdb = os.path.join(os.path.dirname(os.path.dirname(__file__)),
-        #                                           "layers",
-        #                                           "featuresetsWebMerc.gdb"
-        #                                           "InputArea")
-        # # Because PYTs dynamically read feature set schema from LYR we need to reset the
-        # # path to the LYR data source.
-        # input_layer_file_path = Utilities.resetLayerPaths(input_layer_file_path,
-        #                                                   featureset_data_source_gdb)
         input_area_features.value = input_layer_file_path
 
         cell_width = arcpy.Parameter(name='cell_width',
@@ -205,14 +195,6 @@ class CreateGRGFromPoint(object):
         input_layer_file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),
                                              "layers",
                                              "RelativeGRGInputPoint.lyr")
-        # featureset_data_source_gdb = os.path.join(os.path.dirname(os.path.dirname(__file__)),
-        #                                           "layers",
-        #                                           "featuresetsWebMerc.gdb"
-        #                                           "InputStartLocation")
-        # # Because PYTs dynamically read feature set schema from LYR we need to reset the
-        # # path to the LYR data source.
-        # input_layer_file_path = Utilities.resetLayerPaths(input_layer_file_path,
-        #                                                   featureset_data_source_gdb)
         input_start_location.value = input_layer_file_path
 
         horizontal_cells = arcpy.Parameter(name='horizontal_cells',
