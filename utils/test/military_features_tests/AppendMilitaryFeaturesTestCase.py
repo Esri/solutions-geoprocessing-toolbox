@@ -64,7 +64,7 @@ class AppendMilitaryFeaturesTestCase(unittest.TestCase, arcpyAssert.FeatureClass
         if Configuration.DEBUG == True: print("         AppendMilitaryFeaturesTestCase.tearDown")
 
     def test_append_military_features(self):
-        if Configuration.DEBUG == True: print(".....AppendMilitaryFeaturesTestCase.test_load_militaryFeatures")
+        if Configuration.DEBUG == True: print(".....AppendMilitaryFeaturesTestCase.test_append_military_features")
 
         ########################################################
         # Test steps:

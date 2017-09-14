@@ -20,22 +20,21 @@ import os
 import sys
 sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '..')))
 
-import shutil
-import unittest
 import arcpy
+import unittest
 import Configuration
 import UnitTestUtilities
 import DataDownload
 import arcpyAssert
 
-class AppendMessageFileTestCase(unittest.TestCase, arcpyAssert.FeatureClassAssertMixin):
+class CalculateRepRuleTestCase(unittest.TestCase, arcpyAssert.FeatureClassAssertMixin):
 
     toolboxUnderTest = None # Set to Pro or ArcMap toolbox at runtime
 
     inputPointsFC = None
 
     def setUp(self):
-        if Configuration.DEBUG == True: print("         AppendMessageFileTestCase.setUp")
+        if Configuration.DEBUG == True: print("         CalculateRepRuleTestCase.setUp")
 
         ''' Initialization needed if running Test Case standalone '''
         Configuration.GetLogger()
@@ -53,59 +52,78 @@ class AppendMessageFileTestCase(unittest.TestCase, arcpyAssert.FeatureClassAsser
         self.inputPointsFC = os.path.join(Configuration.militaryFeaturesInputGDB, \
                                           r"FriendlyOperations/FriendlyUnits")
 
-        UnitTestUtilities.checkFilePaths([Configuration.militaryFeaturesDataPath, \
-                                          Configuration.militaryFeaturesMessagesPath])
+        UnitTestUtilities.checkFilePaths([Configuration.militaryFeaturesDataPath])
 
         UnitTestUtilities.checkGeoObjects([self.toolboxUnderTest, \
             self.inputPointsFC])
 
     def tearDown(self):
-        if Configuration.DEBUG == True: print("         AppendMessageFileTestCase.tearDown")
+        if Configuration.DEBUG == True: print("         CalculateRepRuleTestCase.tearDown")
 
-    def test_append_military_message_file(self):
-        if Configuration.DEBUG == True: print(".....AppendMessageFileTestCase.test_append_military_message_file")
+    def test_calculate_rep_rule(self):
+        if Configuration.DEBUG == True: print(".....CalculateRepRuleTestCase.test_calculate_rep_rule")
 
         ########################################################
         # Test steps:
-        # 1. Copy a file with sample messages to a new output file
-        # 2. Import/Append Military Features into this new output file
-        # 3. Check that the output file is valid and size has increased
+        # 1. Copy a known good Military Features feature class
+        # 2. Clear the rep rules field for this feature class
+        # 3. Run the tool to calculate the rep rule field
+        # 4. Verify the rep rules have been (re)calculated
         ########################################################
 
         arcpy.env.overwriteOutput = True
         arcpy.ImportToolbox(self.toolboxUnderTest)
 
-        sampleMessageFile = os.path.join(Configuration.militaryFeaturesMessagesPath, \
-            r"GeoMessageSmall.xml")                   
+        outputWorkspace = os.path.join(Configuration.militaryFeaturesGeodatabasesPath, \
+            "test_outputs_temp.gdb")
 
-        outputMessageFile =  os.path.join(Configuration.militaryFeaturesMessagesPath, \
-            r"Test-AppendMessageFileFromMilitaryFeatures.xml")    
+        # Delete the output temp GDB if already exists (from prior run)
+        if arcpy.Exists(outputWorkspace) :
+            arcpy.Delete_management(outputWorkspace)
 
-        shutil.copyfile(sampleMessageFile, outputMessageFile)
+        # Copy Blank Workspace to Temp GDB
+        arcpy.Copy_management(Configuration.militaryFeaturesBlankMilFeaturesGDB, \
+            outputWorkspace)
 
-        # Check file exists
-        self.assertTrue(os.path.isfile(outputMessageFile))
-        
-        startOutputFileSize= os.path.getsize(outputMessageFile)
+        inputRepRuleFC = os.path.join(outputWorkspace, r"FriendlyUnitsTemp")    
 
+        # Make a copy of the input FC into the output GDB
+        arcpy.Copy_management(self.inputPointsFC, inputRepRuleFC)   
+
+        # Check test feature class was created
+        self.assertTrue(arcpy.Exists(inputRepRuleFC))
+
+        repRuleField = "symbolrule"
+                     
+        # The zero out (or '-1'-out) the SymbolRule field (so we can see if it gets set later)
+        arcpy.CalculateField_management(inputRepRuleFC, repRuleField, '-1')
+
+        sidcField = "sic"
         standard = "2525"
 
         ########################################################
         # Execute tool under test               
-        toolOutput = arcpy.AppendMessageFileFromMilitaryFeatures_MFT(self.inputPointsFC, \
-            outputMessageFile, standard)
+        toolOutput = arcpy.CalculateRepresentationRuleField_MFT(inputRepRuleFC, \
+            sidcField, standard)
         ########################################################
 
         # Verify the results:
         
         # 1: Check the expected return value
         returnedValue = toolOutput.getOutput(0)
-        self.assertEqual(returnedValue, outputMessageFile)     
+        self.assertEqual(returnedValue, inputRepRuleFC)     
         
-        #2: Check that Output File is larger that the previous version
-        #   ie. that it did get appended to
-        finishOutputFileSize = os.path.getsize(outputMessageFile)
-        self.assertGreater(finishOutputFileSize, startOutputFileSize) 
+        #2: Check that Output Feature class has no rows without the Rep Rule field set
+        outputSidcsLayer = "SidcNull_layer"             
+        
+        arcpy.MakeFeatureLayer_management(inputRepRuleFC, outputSidcsLayer)
+        query = '(' + repRuleField + ' is NULL)' + ' or (' + repRuleField + '=-1)'
+        
+        arcpy.SelectLayerByAttribute_management(outputSidcsLayer, "NEW_SELECTION", query)
+        
+        badRecordCount = int(arcpy.GetCount_management(outputSidcsLayer).getOutput(0))
+       
+        self.assertEqual(badRecordCount, int(0))
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main()        

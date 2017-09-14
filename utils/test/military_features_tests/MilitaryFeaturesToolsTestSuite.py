@@ -40,6 +40,8 @@ def getTestSuite():
     ''' Add all the tests '''
     testSuite.addTest(loader.loadTestsFromTestCase(AppendMilitaryFeaturesTestCase.AppendMilitaryFeaturesTestCase))
     testSuite.addTest(loader.loadTestsFromTestCase(AppendMessageFileTestCase.AppendMessageFileTestCase))
+    testSuite.addTest(loader.loadTestsFromTestCase(AppendMessageFileTestCase.AppendMessageFileTestCase))
+    testSuite.addTest(loader.loadTestsFromTestCase(AppendMessageFileTestCase.AppendMessageFileTestCase))
 
     return testSuite
     
