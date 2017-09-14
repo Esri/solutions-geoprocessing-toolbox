@@ -272,7 +272,8 @@ class CreateGRGFromPoint(object):
                                                 enabled=True,
                                                 multiValue=False)
         grid_size_feature_set.value = os.path.join(os.path.dirname(os.path.dirname(__file__)),
-                                                   "layers","GRGInputArea.lyr")
+                                                   "layers",
+                                                   "RelativeGRGInputArea.lyr")
 
 
         label_start_position = arcpy.Parameter(name='label_start_position',
