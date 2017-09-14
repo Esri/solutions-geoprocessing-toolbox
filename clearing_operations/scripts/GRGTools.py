@@ -30,7 +30,9 @@
 
 import os
 import arcpy
+
 from . import GRGUtilities
+from . import Utilities
 
 
 class CreateGRGFromArea(object):
@@ -39,6 +41,7 @@ class CreateGRGFromArea(object):
     '''
     def __init__(self):
         '''
+        Create GRG From Area tool constructor method
         '''
         self.label = "Create GRG from Area"
         self.description = "Create a Gridded Reference Graphic (GRG) from an selected area on the map."
@@ -55,8 +58,18 @@ class CreateGRGFromArea(object):
                                               parameterType='Required',
                                               enabled=True,
                                               multiValue=False)
-        input_area_features.value = os.path.join(os.path.dirname(os.path.dirname(__file__)),
-                                                 "layers", "GRGInputArea.lyr")
+        input_layer_file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                             "layers",
+                                             "RelativeGRGInputArea.lyr")
+        # featureset_data_source_gdb = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+        #                                           "layers",
+        #                                           "featuresetsWebMerc.gdb"
+        #                                           "InputArea")
+        # # Because PYTs dynamically read feature set schema from LYR we need to reset the
+        # # path to the LYR data source.
+        # input_layer_file_path = Utilities.resetLayerPaths(input_layer_file_path,
+        #                                                   featureset_data_source_gdb)
+        input_area_features.value = input_layer_file_path
 
         cell_width = arcpy.Parameter(name='cell_width',
                                      displayName='Cell Width',
@@ -188,8 +201,19 @@ class CreateGRGFromPoint(object):
                                                parameterType='Required',
                                                enabled=True,
                                                multiValue=False)
-        input_start_location.value = os.path.join(os.path.dirname(os.path.dirname(__file__)),
-                                                  "layers","GRGInputPoint.lyr")
+
+        input_layer_file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                             "layers",
+                                             "RelativeGRGInputPoint.lyr")
+        # featureset_data_source_gdb = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+        #                                           "layers",
+        #                                           "featuresetsWebMerc.gdb"
+        #                                           "InputStartLocation")
+        # # Because PYTs dynamically read feature set schema from LYR we need to reset the
+        # # path to the LYR data source.
+        # input_layer_file_path = Utilities.resetLayerPaths(input_layer_file_path,
+        #                                                   featureset_data_source_gdb)
+        input_start_location.value = input_layer_file_path
 
         horizontal_cells = arcpy.Parameter(name='horizontal_cells',
                                            displayName='Number of Horizontal Grid Cells',
@@ -341,5 +365,7 @@ def _outputGRGSchema():
     # * has Grid field (name: Grid, Alias: Grid, data type: Text, Length: 255)
     # * Polygon feature class,
     # * Coodinate system: <Undefined> AAAAAAAAHHHHHHH!!!!!!
-    # * 
+    # *
     return None
+
+

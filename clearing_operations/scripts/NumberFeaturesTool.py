@@ -58,8 +58,18 @@ class NumberFeatures(object):
                                               parameterType='Required',
                                               enabled=True,
                                               multiValue=False)
-        input_area_features.value = os.path.join(os.path.dirname(os.path.dirname(__file__)),
-                                                 "layers", "NumberFeaturesAreaInput.lyr")
+        input_layer_file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                             "layers",
+                                             "RelativeNumberFeaturesAreaInput.lyr")
+        # featureset_data_source_gdb = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+        #                                           "layers",
+        #                                           "featuresetsWebMerc.gdb"
+        #                                           "InputArea")
+        # # Because PYTs dynamically read feature set schema from LYR we need to reset the
+        # # path to the LYR data source.
+        # input_layer_file_path = Utilities.resetLayerPaths(input_layer_file_path,
+        #                                                   featureset_data_source_gdb)
+        input_area_features.value = input_layer_file_path
 
         input_number_features = arcpy.Parameter(name='input_point_features',
                                                displayName='Features to Number',
