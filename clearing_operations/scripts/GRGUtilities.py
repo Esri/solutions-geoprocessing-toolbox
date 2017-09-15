@@ -1,78 +1,48 @@
 # coding: utf-8
-#
+'''
+------------------------------------------------------------------------------
+ Copyright 2017 Esri
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+   http://www.apache.org/licenses/LICENSE-2.0
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+------------------------------------------------------------------------------
+ ==================================================
+ GRGUtilities.py
+ --------------------------------------------------
+ requirements: ArcGIS X.X, Python 2.7 or Python 3.x
+ author: ArcGIS Solutions
+ contact: support@esri.com
+ company: Esri
+ ==================================================
+ description: 
+ GRG objects module.
+ ==================================================
+ history:
+ 9/1/2017 - mf - original transfer from Clearing Ops tools
+ ==================================================
+'''
 
-# Esri start of added imports
-import sys, os, arcpy
-# Esri end of added imports
 
-# Esri start of added variables
-g_ESRI_variable_1 = 'lyrFC'
-g_ESRI_variable_2 = 'lyrTmp'
-g_ESRI_variable_3 = 'ID'
-g_ESRI_variable_4 = 'lyrOut'
-g_ESRI_variable_5 = ';'
-# Esri end of added variables
-
-#------------------------------------------------------------------------------
-# Copyright 2014 Esri
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#------------------------------------------------------------------------------
-#
-# ==================================================
-# PointTargetGRG.py
-# --------------------------------------------------
-# Built on ArcGIS
-# ==================================================
-#
-# Creates a Gridded Reference Graphic
-#
-#
-# ==================================================
-# HISTORY:
-#
-# 8/25/2015 - mf - Needed to update script for non-ArcMap/Pro testing environment
-#
-# ==================================================
-
-import os, sys, math, traceback
+import os
+import sys
+import math
+import traceback
 import arcpy
 from arcpy import env
-import Utilities
+from . import Utilities
 
-# Read in the parameters
-targetPointOrigin = arcpy.GetParameterAsText(0)
-numberCellsHo = arcpy.GetParameterAsText(1)
-numberCellsVert = arcpy.GetParameterAsText(2)
-cellWidth = arcpy.GetParameterAsText(3)
-cellHeight = arcpy.GetParameterAsText(4)
-cellUnits = arcpy.GetParameterAsText(5)
-gridSize = arcpy.GetParameterAsText(6)
-labelStartPos = arcpy.GetParameterAsText(7)
-labelStyle = arcpy.GetParameterAsText(8)
-outputFeatureClass = arcpy.GetParameterAsText(9)
-
-
-tempOutput = os.path.join("in_memory", "tempFishnetGrid")
-sysPath = sys.path[0]
-
-appEnvironment = None
 DEBUG = True
-mxd = None
-mapList = None
-df, aprx = None, None
+appEnvironment = None
 
 def labelFeatures(layer, field):
     ''' set up labeling for layer '''
+    global appEnvironment
     if appEnvironment == "ARCGIS_PRO":
         if layer.supports("SHOWLABELS"):
             for lblclass in layer.listLabelClasses():
@@ -89,12 +59,13 @@ def labelFeatures(layer, field):
     else:
         pass # if returns "OTHER"
 
+
 def findLayerByName(layerName):
-    ''' find layer in app '''
+    '''  '''
     global mapList
     global mxd
+    global appEnvironment
     #UPDATE
-    # if isPro:
     if appEnvironment == "ARCGIS_PRO":
         for layer in mapList.listLayers():
             if layer.name == layerName:
@@ -102,7 +73,7 @@ def findLayerByName(layerName):
                 return layer
             else:
                 arcpy.AddMessage("Incorrect layer: [" + layer.name + "]")
-    # else:
+    #else: #Update for automated test
     elif appEnvironment == "ARCMAP":
         for layer in arcpy.mapping.ListLayers(mxd):
             if layer.name == layerName:
@@ -111,7 +82,33 @@ def findLayerByName(layerName):
             else:
                 arcpy.AddMessage("Incorrect layer: [" + layer.name + "]")
     else:
-        arcpy.AddMessage("Non-map application (ArcCatalog, stand-alone test, etc.")
+        arcpy.AddWarning("Non-map environment")
+
+
+def ColIdxToXlName_CanvasAreaGRG(index):
+    ''' Converts an index into a letter, labeled like excel columns, A to Z, AA to ZZ, etc.'''
+    ordA = ord('A')
+    ordZ = ord('Z')
+    len = ordZ - ordA + 1
+    s = ""
+    while(int(index) >= 0):
+        s = chr(int(index) % len + ordA) + s
+        index = math.floor(int(index) / len) - 1
+    return s
+
+
+def ColIdxToXlName_PointTargetGRG(index):
+    ''' Converts an index into a letter, labeled like excel columns, A to Z, AA to ZZ, etc. '''
+    if index < 1:
+        raise ValueError("Index is too small")
+    result = ""
+    while True:
+        if index > 26:
+            index, r = divmod(index - 1, 26)
+            result = chr(r + ord('A')) + result
+        else:
+            return chr(index + ord('A') - 1) + result
+
 
 def RotateFeatureClass(inputFC, outputFC,
                        angle=0, pivot_point=None):
@@ -127,6 +124,7 @@ def RotateFeatureClass(inputFC, outputFC,
     after rotation, it no coordinate system defined.
     """
 
+
     def RotateXY(x, y, xc=0, yc=0, angle=0, units="DEGREES"):
         """Rotate an xy cooordinate about a specified origin
 
@@ -135,7 +133,6 @@ def RotateFeatureClass(inputFC, outputFC,
         angle   angle
         units    "DEGREES" (default) or "RADIANS"
         """
-        import math
         x = x - xc
         y = y - yc
         # make angle clockwise (like Rotate_management)
@@ -145,6 +142,7 @@ def RotateFeatureClass(inputFC, outputFC,
         xr = (x * math.cos(angle)) - (y * math.sin(angle)) + xc
         yr = (x * math.sin(angle)) + (y * math.cos(angle)) + yc
         return xr, yr
+
 
     # temp names for cleanup
     env_file = None
@@ -188,7 +186,7 @@ def RotateFeatureClass(inputFC, outputFC,
         arcpy.ClearEnvironment("outputCoordinateSystem")
 
         # get feature class properties
-        lyrFC = g_ESRI_variable_1
+        lyrFC = 'lyrFC' #g_ESRI_variable_1
         arcpy.MakeFeatureLayer_management(inputFC, lyrFC)
         dFC = arcpy.Describe(lyrFC)
         shpField = dFC.shapeFieldName
@@ -200,13 +198,13 @@ def RotateFeatureClass(inputFC, outputFC,
         arcpy.CreateFeatureclass_management(os.path.dirname(tmpFC),
                                             os.path.basename(tmpFC),
                                             shpType)
-        lyrTmp = g_ESRI_variable_2
+        lyrTmp = 'lyrTmp' #g_ESRI_variable_2
         arcpy.MakeFeatureLayer_management(tmpFC, lyrTmp)
 
         # set up id field (used to join later)
         TFID = "XXXX_FID"
         arcpy.AddField_management(lyrTmp, TFID, "LONG")
-        arcpy.DeleteField_management(lyrTmp, g_ESRI_variable_3)
+        arcpy.DeleteField_management(lyrTmp, 'ID') # g_ESRI_variable_3 = 'ID'
 
         # rotate the feature class coordinates
         # only points, polylines, and polygons are supported
@@ -263,7 +261,6 @@ def RotateFeatureClass(inputFC, outputFC,
                 oRow.setValue(TFID,Row.getValue(FID))
                 oRows.insertRow(oRow)
         else:
-            #raise Exception, "Shape type {0} is not supported".format(shpType) #UPDATE
             raise Exception("Shape type {0} is not supported".format(shpType))
 
         del oRow, oRows # close write cursor (ensure buffer written)
@@ -273,14 +270,13 @@ def RotateFeatureClass(inputFC, outputFC,
         arcpy.AddJoin_management(lyrTmp, TFID, lyrFC, FID)
         env.qualifiedFieldNames = False
         arcpy.Merge_management(lyrTmp, outputFC)
-        lyrOut = g_ESRI_variable_4
+        lyrOut = 'lyrOut' #g_ESRI_variable_4
         arcpy.MakeFeatureLayer_management(outputFC, lyrOut)
         # drop temp fields 2,3 (TFID, FID)
         fnames = [f.name for f in arcpy.ListFields(lyrOut)]
-        dropList = g_ESRI_variable_5.join(fnames[2:4])
+        dropList = ';'.join(fnames[2:4]) #g_ESRI_variable_5 = ';'
         arcpy.DeleteField_management(lyrOut, dropList)
 
-    #except MsgError, xmsg: #UPDATE
     except MsgError as xmsg:
         arcpy.AddError(str(xmsg))
     except arcpy.ExecuteError:
@@ -290,7 +286,6 @@ def RotateFeatureClass(inputFC, outputFC,
         numMsg = arcpy.GetMessageCount()
         for i in range(0, numMsg):
             arcpy.AddReturnMessage(i)
-    #except Exception, xmsg: #UPDATE
     except Exception as xmsg:
         tbinfo = traceback.format_tb(sys.exc_info()[2])[0]
         arcpy.AddError(tbinfo + str(xmsg))
@@ -317,45 +312,304 @@ def RotateFeatureClass(inputFC, outputFC,
 
         return pivot_point
 
-def ColIdxToXlName(index):
-    ''' Converts an index into a letter, labeled like excel columns, A to Z, AA to ZZ, etc. '''
-    if index < 1:
-        raise ValueError("Index is too small")
-    result = ""
-    while True:
-        if index > 26:
-            index, r = divmod(index - 1, 26)
-            result = chr(r + ord('A')) + result
-        else:
-            return chr(index + ord('A') - 1) + result
 
-def main():
-    ''' main method '''
+def GRGFromArea(AOI,
+                cellWidth,
+                cellHeight,
+                cellUnits,
+                labelStartPos,
+                labelStyle,
+                outputFeatureClass):
+    '''Create Gridded Reference Graphic (GRG) from area input.'''
+
+    fishnet = os.path.join("in_memory", "fishnet")
+    DEBUG = True
+    # GLOBALS
+    mxd = None
+    df = None
+    aprx = None
+    mapList = None
+
     try:
         #UPDATE
-        gisVersion = arcpy.GetInstallInfo()["Version"]
-        global appEnvironment
         appEnvironment = Utilities.GetApplication()
         if DEBUG == True: arcpy.AddMessage("App environment: " + appEnvironment)
 
-        global aprx
-        global mapList
-        global mxd
-        global df
+        fc = os.path.join("in_memory", "AOI")
+        arcpy.CopyFeatures_management(AOI, fc)
 
-        isPro = False
-        #if gisVersion == "1.0": #Pro:
         if appEnvironment == "ARCGIS_PRO":
             from arcpy import mp
             aprx = arcpy.mp.ArcGISProject("CURRENT")
             mapList = aprx.listMaps()[0]
-            isPro = True
-        #else:
+        #else: #Update for automated test
+        if appEnvironment == "ARCMAP":
+            from arcpy import mapping
+            mxd = arcpy.mapping.MapDocument('CURRENT')
+            df = arcpy.mapping.ListDataFrames(mxd)[0]
+
+        # From the template extent, create a polygon that we can project into a localized World Azimuthal Equidistan
+        if DEBUG == True: arcpy.AddMessage("Getting extent info...")
+
+        '''
+        ' If cell units are feet convert to meters
+        '''
+        if (cellUnits == "Feet"):
+            cellWidth = float(cellWidth) / 3.2808
+            cellHeight = float(cellHeight) / 3.2808
+
+        '''
+        ' create a minimum bounding rectangle around the AOI
+        ' The use of the MBG_FIELDS option in MinimumBoundingGeometry_management 
+        ' tool also creates a field that has the shape orientation
+        '''
+        arcpy.AddMessage("Getting Minimum Bounding Geometry that fits the Area of Interest")
+        minBound = os.path.join("in_memory","minBound")
+        arcpy.MinimumBoundingGeometry_management(fc, minBound, 'RECTANGLE_BY_WIDTH','#','#','MBG_FIELDS')
+
+        '''
+        ' Extract the minimum bounding rectangle orienatation angle to a variable
+        '''
+        for row in arcpy.da.SearchCursor(minBound,["MBG_Orientation","MBG_LENGTH","MBG_WIDTH"]):
+            orientation = row[0]
+            arcpy.AddMessage("Orientation Angle: {0}".format(str(orientation)))
+            if(orientation >= 45 and orientation <= 135):
+                horizontalCells = math.ceil(row[1]/float(cellWidth))
+                verticalCells = math.ceil(row[2]/float(cellHeight))
+            else:
+                verticalCells = math.ceil(row[1]/float(cellWidth))
+                horizontalCells = math.ceil(row[2]/float(cellHeight))
+            arcpy.AddMessage('Creating Grid {0} x {1}'.format(horizontalCells,verticalCells))
+
+        arcpy.AddMessage(labelStartPos)
+        '''
+        ' Set up labeling depending on start position
+        '''
+        labelNumber = 0
+        letterIndex = 0
+        secondLetterIndex = 0
+
+        if labelStartPos == "Upper-Left":
+            letterIndex = verticalCells - 1
+            secondLetterIndex = -1
+            if labelStyle != 'Numeric':
+                labelNumber = 0
+            else:
+                labelNumber = (verticalCells - 1) * horizontalCells
+        elif labelStartPos == "Upper-Right":
+            letterIndex = verticalCells - 1
+            secondLetterIndex = horizontalCells
+            if labelStyle != 'Numeric':
+                labelNumber = horizontalCells + 1
+            else:
+                labelNumber = (verticalCells * horizontalCells) + 1
+        elif labelStartPos == "Lower-Right":
+            letterIndex = 0
+            secondLetterIndex = horizontalCells
+            labelNumber = horizontalCells + 1
+        elif labelStartPos == "Lower-Left":
+            letterIndex = 0
+            secondLetterIndex = -1
+            labelNumber = 0
+
+        '''
+        ' Explode the minimum bounding rectangle to points
+        '''
+        with arcpy.da.SearchCursor(minBound, 'SHAPE@XY', explode_to_points=True) as cursor:
+            pts = [r[0] for r in cursor][0:4]
+
+        '''
+        ' Because the fishnet tool always creates a non rotated fishnet before it applies
+        ' its rotation we need to determine what the opposite point location would be if the
+        ' minimum polygon was not rotated
+        '''
+        if orientation < 45:
+            angle = math.radians(orientation)
+            x = float(pts[2][0]) - float(pts[0][0])
+            y = float(pts[2][1]) - float(pts[0][1])
+            xr = (x * math.cos(angle)) - (y * math.sin(angle)) + float(pts[0][0])
+            yr = (x * math.sin(angle)) + (y * math.cos(angle)) + float(pts[0][1])
+            origin = str(pts[0][0]) + ' ' + str(pts[0][1])
+            yaxis =  str(pts[1][0]) + ' ' + str(pts[1][1])
+        elif orientation >= 45 and orientation <= 135:
+            angle = math.radians((90 - orientation) * -1)
+            x = float(pts[1][0]) - float(pts[3][0])
+            y = float(pts[1][1]) - float(pts[3][1])
+            xr = (x * math.cos(angle)) - (y * math.sin(angle)) + float(pts[3][0])
+            yr = (x * math.sin(angle)) + (y * math.cos(angle)) + float(pts[3][1])
+            origin = str(pts[3][0]) + ' ' + str(pts[3][1])
+            yaxis =  str(pts[0][0]) + ' ' + str(pts[0][1])
+        else:
+            angle = math.radians((180 - orientation) * -1)
+            x = float(pts[0][0]) - float(pts[2][0])
+            y = float(pts[0][1]) - float(pts[2][1])
+            xr = (x * math.cos(angle)) - (y * math.sin(angle)) + float(pts[2][0])
+            yr = (x * math.sin(angle)) + (y * math.cos(angle)) + float(pts[2][1])
+            origin = str(pts[2][0]) + ' ' + str(pts[2][1])
+            yaxis =  str(pts[3][0]) + ' ' + str(pts[3][1])
+
+        oppositeCorner = str(xr) + " " + str(yr)
+
+        '''
+        ' Now use the CreateFishnet_management tool to create the desired grid
+        '''
+        arcpy.AddMessage("Creating Fishnet Grid...")
+        arcpy.CreateFishnet_management(fishnet, origin, yaxis, str(cellWidth), str(cellHeight), 0, 0, oppositeCorner, "NO_LABELS", fc, "POLYGON")
+
+        '''
+        ' Add a field which will be used to add the grid labels
+        '''
+        arcpy.AddMessage("Adding field for labeling the grid")
+        gridField = "Grid"
+        arcpy.AddField_management(fishnet, gridField, "TEXT")
+
+        '''
+        ' Loop through features and label
+        '''
+
+        with arcpy.da.UpdateCursor(fishnet, ['OID','Grid']) as cursor:
+            verticalCount = 0
+            horizontalCount = 0
+            for row in cursor:
+                if labelStartPos == "Lower-Left" or labelStartPos == 'Upper-Left':
+                    labelNumber = labelNumber + 1
+                    secondLetterIndex = secondLetterIndex + 1
+                else:
+                    labelNumber = labelNumber - 1
+                    secondLetterIndex = secondLetterIndex - 1
+
+                letter = ColIdxToXlName_CanvasAreaGRG(int(letterIndex))
+                secondLetter = ColIdxToXlName_CanvasAreaGRG(int(secondLetterIndex))
+
+                if (labelStyle == "Alpha-Numeric"):
+                    row[1] = letter + str(int(labelNumber))
+                elif (labelStyle == "Alpha-Alpha"):
+                    row[1] = letter + secondLetter
+                elif (labelStyle == "Numeric"):
+                    row[1] = labelNumber
+
+                cursor.updateRow(row)
+
+                horizontalCount = horizontalCount + 1
+
+                if horizontalCount >= horizontalCells:
+                    horizontalCount = 0
+                    verticalCount = verticalCount + 1
+                    if labelStartPos == "Upper-Left":
+                        letterIndex = letterIndex - 1
+                        secondLetterIndex = -1
+                        if labelStyle != 'Numeric':
+                            labelNumber = 0
+                        else:
+                            labelNumber = (verticalCells - (verticalCount + 1)) * horizontalCells
+                    elif labelStartPos == "Upper-Right":
+                        letterIndex = letterIndex - 1
+                        secondLetterIndex = horizontalCells
+                        if labelStyle != 'Numeric':
+                            labelNumber = horizontalCells + 1
+                    elif labelStartPos == "Lower-Right":
+                        letterIndex = letterIndex + 1
+                        secondLetterIndex = horizontalCells
+                        if labelStyle != 'Numeric':
+                            labelNumber = horizontalCells + 1
+                        else:
+                            labelNumber = ((verticalCount + 1) * horizontalCells) + 1
+                    elif labelStartPos == "Lower-Left":
+                        letterIndex = letterIndex + 1
+                        secondLetterIndex = -1
+                        if labelStyle != 'Numeric':
+                            labelNumber = 0
+                            
+        arcpy.CopyFeatures_management(fishnet, outputFeatureClass)
+        arcpy.Delete_management(fishnet)
+
+        # Get and label the output feature
+        #TODO: Update once applying symbology in Pro is fixed.
+        targetLayerName = os.path.basename(outputFeatureClass.value)
+
+        if appEnvironment == "ARCGIS_PRO":
+            arcpy.AddMessage("Do not apply symbology it will be done in the next task step")
+
+        elif appEnvironment == "ARCMAP":
+            arcpy.AddMessage("Non-map environment, skipping labeling based on best practices")
+        else:
+            arcpy.AddMessage("Non-map environment, skipping labeling...")
+
+        # Set tool output
+        arcpy.SetParameter(6, outputFeatureClass)
+
+    except arcpy.ExecuteError: 
+        # Get the tool error messages
+        msgs = arcpy.GetMessages()
+        arcpy.AddError(msgs)
+        print(msgs)
+
+    except:
+        # Get the traceback object
+        tb = sys.exc_info()[2]
+        tbinfo = traceback.format_tb(tb)[0]
+
+        # Concatenate information together concerning the error into a message string
+        pymsg = "PYTHON ERRORS:\nTraceback info:\n" + tbinfo + "\nError Info:\n" + str(sys.exc_info()[1])
+        msgs = "ArcPy ERRORS:\n" + arcpy.GetMessages() + "\n"
+
+        # Return python error messages for use in script tool or Python Window
+        arcpy.AddError(pymsg)
+        arcpy.AddError(msgs)
+
+        # Print Python error messages for use in Python / Python Window
+        print(pymsg + "\n")
+        print(msgs)
+
+    return outputFeatureClass
+
+
+def GRGFromPoint(starting_point,
+                 horizontal_cells,
+                 vertical_cells,
+                 cell_width,
+                 cell_height,
+                 cell_units,
+                 grid_size_feature_set,
+                 label_start_position,
+                 label_style,
+                 output_feature_class):
+    ''' Create Gridded Reference Graphic (GRG) from point input.'''
+
+    targetPointOrigin = starting_point #arcpy.GetParameterAsText(0)
+    numberCellsHo = horizontal_cells #arcpy.GetParameterAsText(1)
+    numberCellsVert = vertical_cells #arcpy.GetParameterAsText(2)
+    cellWidth = cell_width #arcpy.GetParameterAsText(3)
+    cellHeight = cell_height #arcpy.GetParameterAsText(4)
+    cellUnits = cell_units #arcpy.GetParameterAsText(5)
+    gridSize = grid_size_feature_set #arcpy.GetParameterAsText(6)
+    labelStartPos = label_start_position #arcpy.GetParameterAsText(7)
+    labelStyle = label_style #arcpy.GetParameterAsText(8)
+    outputFeatureClass = output_feature_class #arcpy.GetParameterAsText(9)
+    #g_ESRI_variable_1 = 'lyrFC'
+    #g_ESRI_variable_2 = 'lyrTmp'
+    #g_ESRI_variable_3 = 'ID'
+    #g_ESRI_variable_4 = 'lyrOut'
+    #g_ESRI_variable_5 = ';'
+    tempOutput = os.path.join("in_memory", "tempFishnetGrid")
+    DEBUG = True
+    mxd = None
+    df, aprx = None, None
+
+
+    try:
+        #UPDATE
+        appEnvironment = Utilities.GetApplication()
+        if DEBUG == True: arcpy.AddMessage("App environment: " + appEnvironment)
+
+        if appEnvironment == "ARCGIS_PRO":
+            from arcpy import mp
+            aprx = arcpy.mp.ArcGISProject("CURRENT")
+            mapList = aprx.listMaps()[0]
         elif appEnvironment == "ARCMAP":
             from arcpy import mapping
             mxd = arcpy.mapping.MapDocument('CURRENT')
             df = arcpy.mapping.ListDataFrames(mxd)[0]
-            isPro = False
         else:
             if DEBUG == True: arcpy.AddMessage("Non-map application...")
 
@@ -364,8 +618,6 @@ def main():
         angleDrawn = 0
         workspace = arcpy.env.workspace
         topLeftDrawn = 0
-        global cellWidth
-        global cellHeight
         if float(cellWidth) == 0 and float(cellHeight) == 0:
             inputExtentDrawnFromMap = True
             tempGridFC = os.path.join(arcpy.env.scratchWorkspace, "GridSize")
@@ -414,9 +666,8 @@ def main():
             extent = shape.extent
         pointExtents = str.split(str(extent))
 
-
         ''' This seemed to be shifting the grid when it was not required so commented out
- 
+
         # Shift the grid center point if the rows and/or columns are even.
         if (float(numberCellsHo)%2 == 0.0):
             hoShiftAmt = float(cellHeight) / 2.0
@@ -451,7 +702,7 @@ def main():
         yAxisCoordinate = str(leftCorner) + " " + str(bottomCorner + 10)
         oppCornerCoordinate = str(rightCorner) + " " + str(topCorner)
         fullExtent = str(leftCorner) + " " + str(bottomCorner) + " " + str(rightCorner) + " " + str(topCorner)
-               
+
         # If grid size is drawn on the map, then calculate the rotation of the grid
         if inputExtentDrawnFromMap:
             # Find the highest two points in the inputExtentDrawnFromMap shape
@@ -509,7 +760,7 @@ def main():
             yPoint = row.getValue("SHAPE").firstPoint.Y
             if (lastY != yPoint) and (lastY != -9999):
                 letterIndex += 1
-                letter = ColIdxToXlName(letterIndex)
+                letter = ColIdxToXlName_PointTargetGRG(letterIndex)
                 if (labelStyle != "Numeric"):
                     number = 1
                 secondLetter = 'A'
@@ -526,7 +777,7 @@ def main():
             cursor.updateRow(row)
             number += 1
             secondLetterIndex += 1
-            secondLetter = ColIdxToXlName(secondLetterIndex)
+            secondLetter = ColIdxToXlName_PointTargetGRG(secondLetterIndex)
 
         # Rotate the shape, if needed.
         if (inputExtentDrawnFromMap):
@@ -538,54 +789,13 @@ def main():
 
         # Get and label the output feature
         #UPDATE
-        targetLayerName = os.path.basename(outputFeatureClass)
+        targetLayerName = os.path.basename(outputFeatureClass.value)
         if appEnvironment == "ARCGIS_PRO":
-            #params = arcpy.GetParameterInfo()
-            ## get the symbology from the GRG.lyr
-            #scriptPath = sys.path[0]
-            #layerFilePath = os.path.join(scriptPath,r"commondata\userdata\GRG.lyrx")
-            #arcpy.AddMessage("Applying Symbology from {0}".format(layerFilePath))
-            #params[8].symbology = layerFilePath
-            
             arcpy.AddMessage("Do not apply symbology it will be done in the next task step")
-            
         elif appEnvironment == "ARCMAP":
-                           
-            #arcpy.AddMessage("Adding features to map (" + str(targetLayerName) + ")...")
-            
-            #arcpy.MakeFeatureLayer_management(outputFeatureClass, targetLayerName)
-            
-            # create a layer object
-            #layer = arcpy.mapping.Layer(targetLayerName)            
-            
-            # get the symbology from the NumberedStructures.lyr
-            #layerFilePath = os.path.join(os.getcwd(),"data\Layers\GRG.lyr")
-            #layerFilePath = os.path.join(os.path.dirname(os.path.dirname(__file__)),"layers\GRG.lyr")
-            
-            # apply the symbology to the layer
-            #arcpy.ApplySymbologyFromLayer_management(layer, layerFilePath)
-            
-            # add layer to map
-            #arcpy.mapping.AddLayer(df, layer, "AUTO_ARRANGE")
-            
-            # find the target layer in the map
-            #mapLyr = arcpy.mapping.ListLayers(mxd, targetLayerName)[0]  
-
-            #arcpy.AddMessage("Labeling output features (" + str(targetLayerName) + ")...")
-            # Work around needed as ApplySymbologyFromLayer_management does not honour labels
-            #labelLyr = arcpy.mapping.Layer(layerFilePath)
-            # copy the label info from the source to the map layer
-            #mapLyr.labelClasses = labelLyr.labelClasses
-            # turn labels on
-            #mapLyr.showLabels = True
             arcpy.AddMessage("Non-map environment, skipping labeling based on best practices")
         else:
             arcpy.AddMessage("Non-map environment, skipping labeling...")
-
-        # Apply symbology to the GRG layer
-        #UPDATE
-        #symbologyPath = os.path.dirname(workspace) + "\\Layers\GRG.lyr"
-        #arcpy.ApplySymbologyFromLayer_management(layer, symbologyPath)
 
         # Set tool output
         arcpy.SetParameter(8, outputFeatureClass)
@@ -613,8 +823,4 @@ def main():
         print(pymsg + "\n")
         print(msgs)
 
-
-# MAIN =============================================
-if __name__ == "__main__":
-    main()
-
+    return outputFeatureClass

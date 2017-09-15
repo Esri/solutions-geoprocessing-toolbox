@@ -17,8 +17,8 @@ import unittest
 import logging
 import Configuration
 
-from . import ClearingOperationsPointTargetTestCase
-from . import ClearingOperationsCanvasAreaGRGTestCase
+from . import ClearingOperationsCreateGRGFromPointTestCase
+from . import ClearingOperationsCreateGRGFromAreaTestCase
 from . import ClearingOperationsNumberFeaturesTestCase
 
 ''' Test suite for all tools in the Clearing Operationss Tools toolbox '''
@@ -35,9 +35,9 @@ def getTestSuite():
     loader = unittest.TestLoader()
 
 
-    testSuite.addTest(loader.loadTestsFromTestCase(ClearingOperationsCanvasAreaGRGTestCase.ClearingOperationsCanvasAreaGRGTestCase))
+    testSuite.addTest(loader.loadTestsFromTestCase(ClearingOperationsCreateGRGFromAreaTestCase.ClearingOperationsCreateGRGFromAreaTestCase))
     testSuite.addTest(loader.loadTestsFromTestCase(ClearingOperationsNumberFeaturesTestCase.ClearingOperationsNumberFeaturesTestCase))
-    testSuite.addTest(loader.loadTestsFromTestCase(ClearingOperationsPointTargetTestCase.ClearingOperationsPointTargetTestCase))
+    testSuite.addTest(loader.loadTestsFromTestCase(ClearingOperationsCreateGRGFromPointTestCase.ClearingOperationsCreateGRGFromPointTestCase))
 
 
     return testSuite

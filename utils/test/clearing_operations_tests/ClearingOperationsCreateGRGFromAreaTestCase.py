@@ -30,7 +30,7 @@ import Configuration
 import UnitTestUtilities
 import DataDownload
 
-class ClearingOperationsCanvasAreaGRGTestCase(unittest.TestCase):
+class ClearingOperationsCreateGRGFromAreaTestCase(unittest.TestCase):
 
     toolboxUnderTest = None # Set to Pro or ArcMap toolbox at runtime
 
@@ -40,14 +40,13 @@ class ClearingOperationsCanvasAreaGRGTestCase(unittest.TestCase):
 
     scratchGDB = None
     def setUp(self):
-        if Configuration.DEBUG == True: print("         ClearingOperationsCanvasAreaGRGTestCase.setUp")
+        if Configuration.DEBUG == True: print("         ClearingOperationsCreateGRGFromAreaTestCase.setUp")
 
         ''' Initialization needed if running Test Case standalone '''
         Configuration.GetLogger()
         Configuration.GetPlatform()
         ''' End standalone initialization '''
-        self.toolboxUnderTest = Configuration.clearingOperationsToolboxPath + \
-            Configuration.GetToolboxSuffix()
+        self.toolboxUnderTest = Configuration.clearingOperationsToolboxPath
 
         UnitTestUtilities.checkArcPy()
         DataDownload.runDataDownload(Configuration.clearingOperationsPath, \
@@ -69,12 +68,12 @@ class ClearingOperationsCanvasAreaGRGTestCase(unittest.TestCase):
         UnitTestUtilities.deleteScratch(self.scratchGDB)
 
     def testClearingOperationsAreaGRG(self):
-        if Configuration.DEBUG == True:print(".....ClearingOperationsCanvasAreaGRGTestCase.testClearingOperationsAreaGRG")
+        if Configuration.DEBUG == True:print(".....ClearingOperationsCreateGRGFromAreaTestCase.testClearingOperationsAreaGRG")
         print("Importing toolbox...")
         arcpy.ImportToolbox(self.toolboxUnderTest)
         arcpy.env.overwriteOutput = True
 
-		
+
         #inputs
         cellWidth = 100
         cellHeight = 100
@@ -89,9 +88,9 @@ class ClearingOperationsCanvasAreaGRGTestCase(unittest.TestCase):
         Configuration.Logger.info(runToolMsg)
 
         try:
-			# Calling the CanvasAreaGRG_ClearingOperations Script Tool
-            arcpy.CanvasAreaGRG_ClearingOperations(self.inputArea, cellWidth, cellHeight, cellunits, labelStart, labelStyle, output)
-			
+        # Calling the Create GRG From Area script tool
+            arcpy.CreateGRGFromArea_clrops(self.inputArea, cellWidth, cellHeight, cellunits, labelStart, labelStyle, output)
+
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()
         except:
