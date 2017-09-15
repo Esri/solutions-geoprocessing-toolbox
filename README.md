@@ -59,6 +59,10 @@ Specialized geoprocessing models and tools for general defense and intelligence 
 * The [**military_aspects_of_weather**](./military_aspects_of_weather) folder contains:
 	* Military Aspects of Weather Tools_arcmap
 	* [Military Aspects of Weather Solutions Page](http://solutions.arcgis.com/defense/help/maow/)
+    
+* The [**military_features**](./military_features) folder contains:
+	* Military Features Tools_arcmap
+	* [Military Features Solutions Page](http://solutions.arcgis.com/defense/help/military-features/)
 
 * The [**sun_position_analysis**](./sun_position_analysis) folder contains:
 	* Sun Position Analysis Tools_pro
@@ -83,6 +87,7 @@ NOTE: Check [Releases](https://github.com/Esri/solutions-geoprocessing-toolbox/r
     * ArcGIS Desktop Advanced
 	    * Clearing Operations_arcmap
 	    * Clearing Operations_pro
+	    * Military Features Tools_arcmap
     * ArcGIS Spatial Analyst Extension
 	    * Military Aspects of Terrain_pro
 	    * Military Aspects of Terrain_arcmap
@@ -93,7 +98,7 @@ NOTE: Check [Releases](https://github.com/Esri/solutions-geoprocessing-toolbox/r
 	    * Military Aspects of Terrain_arcmap
     * Access to ArcGIS Organization Account
 	    * Distance To Assets_pro
-      * Distance To Assets_arcmap  
+	    * Distance To Assets_arcmap  
 
 ## A Tale of Two Toolboxes
 
