@@ -75,23 +75,21 @@ class CalculateSidcTestCase(unittest.TestCase, arcpyAssert.FeatureClassAssertMix
         arcpy.ImportToolbox(self.toolboxUnderTest)
 
         outputWorkspace = os.path.join(Configuration.militaryFeaturesGeodatabasesPath, \
-            "test_outputs_temp.gdb")
-
-        # Delete the output temp GDB if already exists (from prior run)
-        if arcpy.Exists(outputWorkspace) :
-            arcpy.Delete_management(outputWorkspace)
-
-        # Copy Blank Workspace to Temp GDB
-        arcpy.Copy_management(Configuration.militaryFeaturesBlankMilFeaturesGDB, \
-            outputWorkspace)
+            "test_outputs.gdb")
 
         inputCalcSidcFC = os.path.join(outputWorkspace, r"FriendlyOperations/FriendlyUnits")    
+
+        # Clear out any previous features
+        arcpy.DeleteFeatures_management(inputCalcSidcFC)
 
         # Copy the features of the input FC into the output GDB
         arcpy.CopyFeatures_management(self.inputPointsFC, inputCalcSidcFC)   
 
         # Check test feature class was created
         self.assertTrue(arcpy.Exists(inputCalcSidcFC))
+
+        recordCount = int(arcpy.GetCount_management(inputCalcSidcFC).getOutput(0))
+        self.assertGreater(recordCount, int(0))
 
         sidcField = "sic"
         standard = "2525"

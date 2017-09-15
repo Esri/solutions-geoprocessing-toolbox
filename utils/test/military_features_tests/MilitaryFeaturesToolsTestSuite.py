@@ -23,6 +23,7 @@ from . import AppendMessageFileTestCase
 from . import CalculateRepRuleTestCase
 from . import CalculateSidcTestCase
 from . import WriteMessageFileTestCase
+from . import WriteMilitaryFeatureFromMessageTestCase
 
 ''' Test suite for all tools in the toolbox '''
     
@@ -46,6 +47,7 @@ def getTestSuite():
     testSuite.addTest(loader.loadTestsFromTestCase(CalculateRepRuleTestCase.CalculateRepRuleTestCase))
     testSuite.addTest(loader.loadTestsFromTestCase(CalculateSidcTestCase.CalculateSidcTestCase))
     testSuite.addTest(loader.loadTestsFromTestCase(WriteMessageFileTestCase.WriteMessageFileTestCase))
+    testSuite.addTest(loader.loadTestsFromTestCase(WriteMilitaryFeatureFromMessageTestCase.WriteMilitaryFeatureFromMessageTestCase))
 
     return testSuite
     
