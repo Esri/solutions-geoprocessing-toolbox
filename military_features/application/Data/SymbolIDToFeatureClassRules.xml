@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<MappingRules>
+  <MappingRule>
+    <Name>Friendly Operations Equipment</Name>
+    <FeatureDataSet>FriendlyOperations</FeatureDataSet>	
+    <FeatureClass>FriendlyEquipment</FeatureClass>	
+    <GeometryType>Point</GeometryType>	
+    <MatchingExpressions> 
+      <Expression><![CDATA[^.[FMAD].{13}$]]></Expression>
+      <Expression><![CDATA[^[S][FMAD][PAGSU][APCDXF](?(?<=..G.)(E)|(.)).{10}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Friendly Operations Installations</Name>
+    <FeatureDataSet>FriendlyOperations</FeatureDataSet>
+    <FeatureClass>FriendlyInstallations</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[S][FMAD].{13}$]]></Expression>
+      <Expression><![CDATA[^[S].[G].[I].{10}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Friendly Operations Area</Name>
+    <FeatureDataSet>FriendlyOperations</FeatureDataSet>
+    <FeatureClass>FriendlyOperationsA</FeatureClass>
+    <GeometryType>Area</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[G][FMAD].{13}$]]></Expression>
+      <Expression><![CDATA[^[G][FMAD].[AP].{11}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Friendly Operations Line</Name>
+    <FeatureDataSet>FriendlyOperations</FeatureDataSet>
+    <FeatureClass>FriendlyOperationsL</FeatureClass>
+    <GeometryType>Line</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[G][FMAD].{13}$]]></Expression>
+      <Expression><![CDATA[^[G][FMAD].[AP].{11}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Friendly Operations Point</Name>
+    <FeatureDataSet>FriendlyOperations</FeatureDataSet>
+    <FeatureClass>FriendlyOperationsP</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[G][FMAD].{13}$]]></Expression>
+      <Expression><![CDATA[^[G][FMAD].[AP].{11}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Friendly Operations SIGINT</Name>
+    <FeatureDataSet>FriendlyOperations</FeatureDataSet>
+    <FeatureClass>FriendlySIGINT</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^.[FMAD].{13}$]]></Expression>
+      <Expression><![CDATA[^[I][FMAD][AFGPSUXZ][APCDXF].{11}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Friendly Operations Unit</Name>
+    <FeatureDataSet>FriendlyOperations</FeatureDataSet>
+    <FeatureClass>FriendlyUnits</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^.[FMAD].{13}$]]></Expression>
+      <Expression><![CDATA[^[S][FMAD][AFGPSUXZ][APCDXF](?(?<=..G.)(U)|(.)).{10}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Hostile Operations Equipment</Name>
+    <FeatureDataSet>HostileOperations</FeatureDataSet>
+    <FeatureClass>HostileEquipment</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^.[HSJK].{13}$]]></Expression>
+      <Expression><![CDATA[^[S][HSJK][PAGSU][APCDXF](?(?<=..G.)(E)|(.)).{10}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Hostile Operations Installations</Name>
+    <FeatureDataSet>HostileOperations</FeatureDataSet>
+    <FeatureClass>HostileInstallations</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[S][HSJK].{13}$]]></Expression>
+      <Expression><![CDATA[^[S].[G].[I].{10}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Hostile Operations Area</Name>
+    <FeatureDataSet>HostileOperations</FeatureDataSet>
+    <FeatureClass>HostileOperationsA</FeatureClass>
+    <GeometryType>Area</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[G][HSJK].{13}$]]></Expression>
+      <Expression><![CDATA[^[G][HSJK].[AP].{11}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Hostile Operations Line</Name>
+    <FeatureDataSet>HostileOperations</FeatureDataSet>
+    <FeatureClass>HostileOperationsL</FeatureClass>
+    <GeometryType>Line</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[G][HSJK].{13}$]]></Expression>
+      <Expression><![CDATA[^[G][HSJK].[AP].{11}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Hostile Operations Point</Name>
+    <FeatureDataSet>HostileOperations</FeatureDataSet>
+    <FeatureClass>HostileOperationsP</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[G][HSJK].{13}$]]></Expression>
+      <Expression><![CDATA[^[G][HSJK].[AP].{11}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Hostile Operations SIGINT</Name>
+    <FeatureDataSet>HostileOperations</FeatureDataSet>
+    <FeatureClass>HostileSIGINT</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^.[HSJK].{13}$]]></Expression>
+      <Expression><![CDATA[^[I][HSJK][AFGPSUXZ][APCDXF].{11}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Hostile Operations Unit</Name>
+    <FeatureDataSet>HostileOperations</FeatureDataSet>
+    <FeatureClass>HostileUnits</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^.[HSJK].{13}$]]></Expression>
+      <Expression><![CDATA[^[S][HSJK][AFGPSUXZ][APCDXF](?(?<=..G.)(U)|(.)).{10}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Neutral Operations Equipment</Name>
+    <FeatureDataSet>NeutralOperations</FeatureDataSet>
+    <FeatureClass>NeutralEquipment</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^.[NL].{13}$]]></Expression>
+      <Expression><![CDATA[^[S][NL][PAGSU][APCDXF](?(?<=..G.)(E)|(.)).{10}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Neutral Operations Installations</Name>
+    <FeatureDataSet>NeutralOperations</FeatureDataSet>
+    <FeatureClass>NeutralInstallations</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[S][NL].{13}$]]></Expression>
+      <Expression><![CDATA[^[S].[G].[I].{10}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Neutral Operations Area</Name>
+    <FeatureDataSet>NeutralOperations</FeatureDataSet>
+    <FeatureClass>NeutralOperationsA</FeatureClass>
+    <GeometryType>Area</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[G][NL].{13}$]]></Expression>
+      <Expression><![CDATA[^[G][NL].[AP].{11}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Neutral Operations Line</Name>
+    <FeatureDataSet>NeutralOperations</FeatureDataSet>
+    <FeatureClass>NeutralOperationsL</FeatureClass>
+    <GeometryType>Line</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[G][NL].{13}$]]></Expression>
+      <Expression><![CDATA[^[G][NL].[AP].{11}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Neutral Operations Point</Name>
+    <FeatureDataSet>NeutralOperations</FeatureDataSet>
+    <FeatureClass>NeutralOperationsP</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[G][NL].{13}$]]></Expression>
+      <Expression><![CDATA[^[G][NL].[AP].{11}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Neutral Operations SIGINT</Name>
+    <FeatureDataSet>NeutralOperations</FeatureDataSet>
+    <FeatureClass>NeutralSIGINT</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^.[NL].{13}$]]></Expression>
+      <Expression><![CDATA[^[I][NL][AFGPSUXZ][APCDXF].{11}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Neutral Operations Unit</Name>
+    <FeatureDataSet>NeutralOperations</FeatureDataSet>
+    <FeatureClass>NeutralUnits</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^.[NL].{13}$]]></Expression>
+      <Expression><![CDATA[^[S][NL][AFGPSUXZ][APCDXF](?(?<=..G.)(U)|(.)).{10}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Unknown Operations Equipment</Name>
+    <FeatureDataSet>UnknownOperations</FeatureDataSet>
+    <FeatureClass>UnknownEquipment</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^.[UPGW].{13}$]]></Expression>
+      <Expression><![CDATA[^[S][UPGW][PAGSU][APCDXF](?(?<=..G.)(E)|(.)).{10}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Unknown Operations Installations</Name>
+    <FeatureDataSet>UnknownOperations</FeatureDataSet>
+    <FeatureClass>UnknownInstallations</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[S][UPGW].{13}$]]></Expression>
+      <Expression><![CDATA[^[S].[G].[I].{10}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Unknown Operations Area</Name>
+    <FeatureDataSet>UnknownOperations</FeatureDataSet>
+    <FeatureClass>UnknownOperationsA</FeatureClass>
+    <GeometryType>Area</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[G][UPGW].{13}$]]></Expression>
+      <Expression><![CDATA[^[G][UPGW].[AP].{11}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Unknown Operations Line</Name>
+    <FeatureDataSet>UnknownOperations</FeatureDataSet>
+    <FeatureClass>UnknownOperationsL</FeatureClass>
+    <GeometryType>Line</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[G][UPGW].{13}$]]></Expression>
+      <Expression><![CDATA[^[G][UPGW].[AP].{11}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Unknown Operations Point</Name>
+    <FeatureDataSet>UnknownOperations</FeatureDataSet>
+    <FeatureClass>UnknownOperationsP</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[G][UPGW].{13}$]]></Expression>
+      <Expression><![CDATA[^[G][UPGW].[AP].{11}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Unknown Operations SIGINT</Name>
+    <FeatureDataSet>UnknownOperations</FeatureDataSet>
+    <FeatureClass>UnknownSIGINT</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^.[UPGW].{13}$]]></Expression>
+      <Expression><![CDATA[^[I][UPGW][AFGPSUXZ][APCDXF].{11}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Unknown Operations Unit</Name>
+    <FeatureDataSet>UnknownOperations</FeatureDataSet>
+    <FeatureClass>UnknownUnits</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^.[UPGW].{13}$]]></Expression>
+      <Expression><![CDATA[^[S][UPGW][AFGPSUXZ][APCDXF](?(?<=..G.)(U)|(.)).{10}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+      <Name>Stability Operations</Name>
+      <FeatureDataSet>StabilityOperations</FeatureDataSet>
+      <FeatureClass>StabilityOperations</FeatureClass>
+      <GeometryType>Point</GeometryType>
+      <MatchingExpressions>
+        <Expression><![CDATA[^[O].[O].{12}$]]></Expression>
+      </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Stability Incidents</Name>
+    <FeatureDataSet>StabilityOperations</FeatureDataSet>
+    <FeatureClass>StabilityIncidents</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[O].[I].{12}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Stability Locations</Name>
+    <FeatureDataSet>StabilityOperations</FeatureDataSet>
+    <FeatureClass>StabilityLocations</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[O].[L].{12}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Stability Organizations</Name>
+    <FeatureDataSet>StabilityOperations</FeatureDataSet>
+    <FeatureClass>StabilityOrganizations</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[O].[VPGR].{12}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>METOC Area</Name>
+    <FeatureDataSet>METOC</FeatureDataSet>
+    <FeatureClass>MetocA</FeatureClass>
+    <GeometryType>Area</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[W].{9}[-][-][A].{2}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>METOC Line</Name>
+    <FeatureDataSet>METOC</FeatureDataSet>
+    <FeatureClass>MetocL</FeatureClass>
+    <GeometryType>Line</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[W].{9}[-][L][-].{2}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>METOC Point</Name>
+    <FeatureDataSet>METOC</FeatureDataSet>
+    <FeatureClass>MetocP</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[W].{9}[P][-][-].{2}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Emergency Management Equipment</Name>
+    <FeatureDataSet>EmergencyManagement</FeatureDataSet>
+    <FeatureClass>EMSEquipment</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[E].[G].{12}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Emergency Management Incidents</Name>
+    <FeatureDataSet>EmergencyManagement</FeatureDataSet>
+    <FeatureClass>EMSIncidents</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[E].[I].{12}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Emergency Management Installations</Name>
+    <FeatureDataSet>EmergencyManagement</FeatureDataSet>
+    <FeatureClass>EMSInstallations</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[E].[F].{12}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Emergency Management Natural Events</Name>
+    <FeatureDataSet>EmergencyManagement</FeatureDataSet>
+    <FeatureClass>EMSNaturalEvents</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[E].[N].{12}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>Emergency Management Units</Name>
+    <FeatureDataSet>EmergencyManagement</FeatureDataSet>
+    <FeatureClass>EMSUnits</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[E].[O].{12}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>APP6 NA5CRO Items</Name>
+    <FeatureDataSet>NA5CRO</FeatureDataSet>
+    <FeatureClass>NA5CROItems</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[G].[O].[I].{10}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>APP6 NA5CRO Locations</Name>
+    <FeatureDataSet>NA5CRO</FeatureDataSet>
+    <FeatureClass>NA5CROLocations</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[G].[O].[L].{10}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>APP6 NA5CRO Operations</Name>
+    <FeatureDataSet>NA5CRO</FeatureDataSet>
+    <FeatureClass>NA5CROOperations</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[G].[O].[P].{10}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+  <MappingRule>
+    <Name>APP6 NA5CRO Violent Activities</Name>
+    <FeatureDataSet>NA5CRO</FeatureDataSet>
+    <FeatureClass>NA5CROViolentActivities</FeatureClass>
+    <GeometryType>Point</GeometryType>
+    <MatchingExpressions>
+      <Expression><![CDATA[^[G].[O].[V].{10}$]]></Expression>
+    </MatchingExpressions>
+  </MappingRule>
+</MappingRules>
+
