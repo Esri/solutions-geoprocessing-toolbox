@@ -66,7 +66,7 @@ try :
     # Get affiliation, needed because SIDC affiliation cannot always be derived from feature attributes
     affiliation = arcpy.GetParameterAsText(4)
     if (not (affiliation == "")) and (not affiliation is None) and (not affiliation in DictionaryConstants.validAffiliations) :
-        if (affiliation <> "NOT_SET") :
+        if (affiliation != "NOT_SET") :
             msg = "ValidAffiliations are " + str(DictionaryConstants.validAffiliations)
             arcpy.AddWarning(msg)
             affiliation = ""

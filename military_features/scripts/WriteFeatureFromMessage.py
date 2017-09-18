@@ -18,13 +18,13 @@
 #              already exist
 #----------------------------------------------------------------------------------
 
+import os.path
+import traceback
 import arcpy
 import MessageIterator
 import MilitaryUtilities
 import GeometryConverter
 import DictionaryConstants
-import os.path
-import traceback
 
 ### Params:
 ### 0 - inputXMLFileName
@@ -53,14 +53,14 @@ def writeFeaturesFromMessageFile() :
     # Get the output feature class
     outputFC = arcpy.GetParameter(1)
     if (outputFC == "") or (outputFC is None):
-        outputFC = os.path.join(MilitaryUtilities.geoDatabasePath, r"/test_outputs.gdb/FriendlyOperations/FriendlyUnits")
+        outputFC = os.path.join(MilitaryUtilities.dataPath, r"/test_outputs.gdb/FriendlyOperations/FriendlyUnits")
         
     desc = arcpy.Describe(outputFC)
-    if desc == None :
+    if desc is None :
         arcpy.AddError("Can't open Output Dataset: " + str(outputFC)) 
         return
 
-    shapeType = desc.shapeType;
+    shapeType = desc.shapeType
 
     # Get standard
     standard = arcpy.GetParameterAsText(2)
@@ -75,7 +75,7 @@ def writeFeaturesFromMessageFile() :
     arcpy.AddMessage("3 - MessageTypeField: " + messageTypeField)
         
     if not ((messageTypeField == "") or (messageTypeField is None)) :
-        if desc.Fields.contains(field) :
+        if desc.Fields.contains(messageTypeField) :
             MilitaryUtilities.MessageTypeField = messageTypeField
         else :
             arcpy.AddWarning("MessageTypeField does not exist in output: " + MessageTypeField + " , using default")
@@ -134,7 +134,7 @@ def writeFeaturesFromMessageFile() :
             while repeatForPairFeatures :
 
                 outputPointList, conversionNotes = MilitaryUtilities.geoConverter.controlPointsToGeometry(sic, controlPoints, attributes)
-                if outputPointList == None :
+                if outputPointList is None :
                     msg = "Failed to Convert Points from Military to MilFeature format for SIDC: " + sic
                     arcpy.AddError(msg)
                     arcpy.AddError("Conversion Notes: " + conversionNotes)

@@ -20,7 +20,9 @@
 #----------------------------------------------------------------------------------
 
 # IMPORTS ==========================================
-import os, sys, traceback
+import os
+import sys
+import traceback
 import subprocess
 import arcpy
 

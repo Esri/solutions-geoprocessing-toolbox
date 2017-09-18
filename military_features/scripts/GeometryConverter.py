@@ -16,11 +16,11 @@
 # Description: Convert Points between formats used by Desktop and Runtime Military Message
 #----------------------------------------------------------------------------------
 
-import SymbolDictionary
-import DictionaryConstants
 import os
 import math
 import arcpy
+import SymbolDictionary
+import DictionaryConstants
 
 def getStringFromXY(x, y) : 
     return str(x) + "," + str(y)
@@ -142,7 +142,7 @@ def getAzimuth(x1, y1, x2, y2) :
     azimuth = getAngleFromY(x1, y1, x2, y2)
     # azimuth = radiansToDegrees(math.atan2(x2 - x1, y2 - y1)) # getAngle(x1, y1, x2, y2)
     if (azimuth < 0.0) : 
-      azimuth += 360.0
+        azimuth += 360.0
 
     return azimuth
 
@@ -212,13 +212,13 @@ class GeometryConverter() :
         return self.symbolDictionary
 
     def expectedGeometryType(self, sic) :
-        if (sic == None) :
+        if (sic is None) :
             return DictionaryConstants.UNKNOWN_GEOMETRY_STRING
         return self.symbolDictionary.symbolIdToGeometryType(sic)
 
     def requiresConversion(self, sic) :
 
-        if (sic == None) :
+        if (sic is None) :
             return False
 
         geoType = self.symbolDictionary.symbolIdToGeometryType(sic)
@@ -237,7 +237,7 @@ class GeometryConverter() :
 
     def geometrytoControlPoints(self, sic, control_points, attributes) : 
 
-        if (sic == None) or (control_points == None) :
+        if (sic is None) or (control_points is None) :
             return None, DictionaryConstants.CONVERSION_ERROR_VALIDATION
 
         inPoints = control_points.split(';')
@@ -1157,7 +1157,7 @@ class GeometryConverter() :
             outPoints.append(getStringFromXY(midPointX, midPointY))
 
         msg = "Geometry Conversion: " + geoConversion
-        if outPoints == None :
+        if outPoints is None :
             msg =  "Geometry Conversion: " + geoConversion + " failed. Returning original points."
             outPoints = inPoints
             arcpy.AddWarning(msg)

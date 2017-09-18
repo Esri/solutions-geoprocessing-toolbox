@@ -67,7 +67,7 @@ class SymbolDictionary(object):
                 ("FIELD ARTILLERY BATTALION",    "SFGPUCF----F---"), \
                 ("STRYKER HEADQUARTERS COMPANY", "SFGPUH-----E---"), \
                 ("BRIGADE SUPPORT BATTALION",    "SFGPU------F---"), \
-                ("INFANTRY PLATOON F", "SFGPUCI----D---")
+                ("INFANTRY PLATOON F", "SFGPUCI----D---") \
                 ])
 
         if (os.path.isfile(self.dictionaryFile)) :
@@ -113,7 +113,7 @@ class SymbolDictionary(object):
     def getAffiliationChar(self, sic) :
         ch = sic.upper()[1]
         if (ch == 'F') or (ch == 'H') or (ch == 'U') or (ch == 'N') :
-            return ch;
+            return ch
         elif (ch == 'M') or (ch == 'A') or (ch == 'D') or (ch == 'J') or (ch == 'K') :
             return 'F'
         elif (ch == 'S') :
@@ -151,12 +151,12 @@ class SymbolDictionary(object):
         sqliteRow = sqliteCursor.fetchone()
 
         # some only have 'F' version
-        if (sqliteRow == None) :
+        if (sqliteRow is None) :
             lookupSic = lookupSic[0] + 'F' + lookupSic[2] + 'P' + lookupSic[4:10]
             sqliteCursor.execute(query, (lookupSic,))
             sqliteRow = sqliteCursor.fetchone()            
 
-        if (sqliteRow == None) :
+        if (sqliteRow is None) :
             print "WARNING: " + symbolId + ":" + attribute + " NOT FOUND"
             val = "None"
         else :
@@ -181,12 +181,12 @@ class SymbolDictionary(object):
         sqliteRow = sqliteCursor.fetchone()
         
         # some only have 'F' version
-        if (sqliteRow == None) :
+        if (sqliteRow is None) :
             lookupSic = lookupSic[0] + 'F' + lookupSic[2] + 'P' + lookupSic[4:10]
             sqliteCursor.execute(query, (lookupSic,))
             sqliteRow = sqliteCursor.fetchone()                   
         
-        if (sqliteRow == None) :
+        if (sqliteRow is None) :
             geoType = "None"
         else :
             geoChar = sqliteRow[0]
@@ -217,7 +217,7 @@ class SymbolDictionary(object):
         sqliteCursor.execute(query, (significant8Chars,))
         sqliteRow = sqliteCursor.fetchone() 
             
-        if (sqliteRow == None) :            
+        if (sqliteRow is None) :            
             geoType = self.symbolIdToGeometryType(symbolId)
             if (geoType == DictionaryConstants.POINT_STRING) : 
                 conversionType = DictionaryConstants.GCT_POINT
@@ -363,7 +363,7 @@ class SymbolDictionary(object):
             sqliteCursor.execute("SELECT SymbolId FROM SymbolInfo WHERE UPPER(Name) = ?", (symbolNameUpper,))
             sqliteRow = sqliteCursor.fetchone()
 
-            if (sqliteRow == None):
+            if (sqliteRow is None):
                 # if it is not found with the supplied name, we need to try a few more cases:
                 # remove 1) affilition 2) "Left" / "Right" 
                 if self.endsInAffilationString(symbolNameUpper) :
@@ -383,7 +383,7 @@ class SymbolDictionary(object):
                     sqliteRow = sqliteCursor.fetchone()
 
                     # Yet another failing case "some have '-' some don't, ex. "Task - Screen" <-> "Task Screen"
-                    if (sqliteRow == None):
+                    if (sqliteRow is None):
                         queryval = '%' + symbolNameUpper + '%'
                         sqliteCursor.execute("SELECT SymbolId FROM SymbolInfo WHERE (UPPER(Name) like ?)", (queryval,))
                         sqliteRow = sqliteCursor.fetchone()
