@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<FieldMapping>
+  <Field>
+    <InputName>Name</InputName>
+    <OutputName>uniquedesignation</OutputName>
+  </Field>
+  <Field>
+    <InputName>Parent</InputName>
+    <OutputName>higherformation</OutputName>
+  </Field>
+  <Field>
+    <InputName>DTG</InputName>
+    <OutputName>datetimevalid</OutputName>
+  </Field>
+  <Field>
+    <InputName>Quantity</InputName>
+    <OutputName>quantity</OutputName>
+  </Field>
+  <Field>
+    <InputName>X</InputName>
+    <OutputName>x</OutputName>
+  </Field>
+  <Field>
+    <InputName>Y</InputName>
+    <OutputName>y</OutputName>
+  </Field>
+  <Field>
+    <InputName>Z</InputName>
+    <OutputName>z</OutputName>
+  </Field>  
+  <Field>
+    <InputName>SComment</InputName>
+    <OutputName>staffcomment</OutputName>
+  </Field>
+  <Field>
+    <InputName>Info</InputName>
+    <OutputName>additionalinformation</OutputName>
+  </Field>  
+  <Field>
+    <InputName>EType</InputName>
+    <OutputName>type</OutputName>
+  </Field>  
+</FieldMapping>

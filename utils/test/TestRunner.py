@@ -152,6 +152,7 @@ def runTestSuite():
     testSuite.addTests(addClearingOperationsSuite())
     testSuite.addTests(addGeoNamesSuite())
     testSuite.addTests(addIncidentAnalysisSuite())
+    testSuite.addTests(addMilitaryFeaturesSuite())
     testSuite.addTests(addSunPositionAnalysisSuite())
     testSuite.addTests(addDistanceToAssetsSuite())
 
@@ -168,7 +169,6 @@ def runTestSuite():
     return result
 
 def addClearingOperationsSuite():
-
     '''Add all Clearing operations Tests'''
     if Configuration.DEBUG == True: print("TestRunner.py - addClearingOperationsSuite")
     from clearing_operations_tests import ClearingOperationsTestSuite
@@ -190,17 +190,24 @@ def addSunPositionAnalysisSuite():
     return suite
 
 def addGeoNamesSuite():
-    ''' Add all SunPositionAnalysis tests '''
+    ''' Add all GeoNames tests '''
     if Configuration.DEBUG == True: print("TestRunner.py - addGeoNamesSuite")
     from geonames_tests import GeoNamesToolsTestSuite
     suite = GeoNamesToolsTestSuite.getTestSuite()
     return suite
 
 def addDistanceToAssetsSuite():
-    ''' Add all SunPositionAnalysis tests '''
+    ''' Add all DistanceToAssets tests '''
     if Configuration.DEBUG == True: print("TestRunner.py - addDistanceToAssetsSuite")
     from distance_to_assets_tests import DistanceToAssetsTestSuite
     suite = DistanceToAssetsTestSuite.getTestSuite()
+    return suite
+    
+def addMilitaryFeaturesSuite():
+    ''' Add all MilitaryFeatures tests '''
+    if Configuration.DEBUG == True: print("TestRunner.py - addMilitaryFeaturesSuite")
+    from military_features_tests import MilitaryFeaturesToolsTestSuite
+    suite = MilitaryFeaturesToolsTestSuite.getTestSuite()
     return suite
 
 # MAIN =============================================
