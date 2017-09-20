@@ -17,14 +17,14 @@
 # Requirements: ArcGIS Desktop Standard
 #----------------------------------------------------------------------------------
 
-import arcpy
-import DictionaryConstants
-import MilitaryUtilities
 import re
 import os
 import tempfile
 import traceback
 import uuid
+import arcpy
+import DictionaryConstants
+import MilitaryUtilities
 
 ### Params:
 ### 0 - inputFC
@@ -58,9 +58,9 @@ def writeMessageFile() :
         # Get input feature class
         inputFC = arcpy.GetParameter(0)
         if (inputFC == "") or (inputFC is None):
-            inputFC = os.path.join(MilitaryUtilities.geoDatabasePath, r"/test_inputs.gdb/FriendlyOperations/FriendlyUnits")
+            inputFC = os.path.join(MilitaryUtilities.dataPath, r"/test_inputs.gdb/FriendlyOperations/FriendlyUnits")
         desc = arcpy.Describe(inputFC)
-        if desc == None :
+        if desc is None :
             arcpy.AddError("Bad Input Feature Class")
             return
 
@@ -174,7 +174,7 @@ def writeMessageFile() :
         arcpy.env.overwriteOutput = True
         
         # Densify if this is a polygon FC
-        if ("Polygon" == shapeType):
+        if (shapeType == "Polygon"):
             try : 
                 densifiedFC = "in_memory/DensifiedFC"
                 arcpy.CopyFeatures_management(inputFC, densifiedFC)
@@ -374,15 +374,15 @@ def writeMessageFile() :
                     
                 if (rowVal is not None) and (rowVal != '') :
                     try:
-						fieldValAsString = str(row.getValue(field))
-						messageFile.write("\t\t<"+field+">" + fieldValAsString + "</" + field + ">\n")
+                        fieldValAsString = str(row.getValue(field))
+                        messageFile.write("\t\t<"+field+">" + fieldValAsString + "</" + field + ">\n")
                     except:
                         #fixed issue #19
-						fieldValAsString = row.getValue(field)
-						decodedstring = fieldValAsString.encode('ascii', 'ignore')
-						arcpy.AddMessage("trying to fix unicode problem, changing " + fieldValAsString + " -> " + decodedstring)
-						messageFile.write("\t\t<"+field+">" + decodedstring + "</" + field + ">\n")
-						
+                        fieldValAsString = row.getValue(field)
+                        decodedstring = fieldValAsString.encode('ascii', 'ignore')
+                        arcpy.AddMessage("trying to fix unicode problem, changing " + fieldValAsString + " -> " + decodedstring)
+                        messageFile.write("\t\t<"+field+">" + decodedstring + "</" + field + ">\n")
+
             ###################Common Fields/Attributes#####################
 
             # Ex: messageFile.write("\t</geomessage>\n")

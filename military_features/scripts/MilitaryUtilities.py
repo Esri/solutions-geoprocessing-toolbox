@@ -19,8 +19,8 @@
 import sqlite3
 import uuid
 import re
-import arcpy
 import os
+import arcpy
 import SymbolDictionary
 import GeometryConverter
 import DictionaryConstants
