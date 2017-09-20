@@ -342,6 +342,99 @@ class CreateGRGFromPoint(object):
                                             parameters[9].value)
         return out_grg
 
+class DefineReferenceGridFromArea(object):
+    '''
+    Build polygon features of MGRS or USNG grids.
+    '''
+    def __init__(self):
+        ''' Define Reference Grid From Area constructor '''
+        self.label = "Define Reference Grid from Area"
+        self.description = "Create an MGRS or USNG grid from an selected location on the map."
+
+    def getParameterInfo(self):
+        '''
+        Define parameter definitions
+        '''
+
+        input_area_features = arcpy.Parameter(name='input_area_features',
+                                              displayName='Input Grid Area',
+                                              direction='Input',
+                                              datatype='GPFeatureRecordSetLayer',
+                                              parameterType='Required',
+                                              enabled=True,
+                                              multiValue=False)
+        input_layer_file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                             "layers",
+                                             "RelativeGRGInputArea.lyr")
+        input_area_features.value = input_layer_file_path
+
+        input_reference_grid = arcpy.Parameter(name='input_reference_grid',
+                                               displayName='Reference Grid',
+                                               direction='Input',
+                                               datatype='GPString',
+                                               parameterType='Required',
+                                               enabled=True,
+                                               multiValue=False)
+        input_reference_grid.filter.type = 'ValueList'
+        input_reference_grid.filter.list=["MGRS",
+                                          "USNG"]
+        input_reference_grid.value = input_reference_grid.filter.list[0]
+
+        grid_square_size = arcpy.Parameter(name='grid_square_size',
+                                           displayName='Grid Square Size',
+                                           direction='Input',
+                                           datatype='GPString',
+                                           parameterType='Required',
+                                           enabled=True,
+                                           multiValue=False)
+        grid_square_size.filter.type = 'ValueList'
+        grid_square_size.filter.list = ['GRID_ZONE_DESIGNATOR',
+                                        '100000M_GRID',
+                                        '10000M_GRID',
+                                        '1000M_GRID',
+                                        '100M_GRID',
+                                        '10M_GRID']
+        grid_square_size.value = grid_square_size.filter.list[0]
+
+        output_features= arcpy.Parameter(name='output_grid_features',
+                                         displayName='Output Grid Features',
+                                         direction='Output',
+                                         datatype='DEFeatureClass',
+                                         parameterType='Required',
+                                         enabled=True,
+                                         multiValue=False)
+        output_features.value = r"%scratchGDB%/output_grid"
+        output_features.symbology = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                                 "layers", "GRG.lyr")
+
+        return [input_area_features,
+                input_reference_grid,
+                grid_square_size,
+                output_features]
+
+    def updateParameters(self, parameters):
+        '''
+        Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed.
+        '''
+        return
+
+    def updateMessages(self, parameters):
+        '''
+        '''
+        return
+
+    def execute(self, parameters, messages):
+        ''' execute for toolbox'''
+
+        arcpy.AddError("Under construction..... please be patient")
+        out_grid = None
+        #out_grid = GRGUtilities.RefGrid()
+
+        return out_grid
+
+
 def _outputGRGSchema():
     ''' '''
     # TODO: implement output schema for all GRG features
@@ -350,5 +443,4 @@ def _outputGRGSchema():
     # * Coodinate system: <Undefined> AAAAAAAAHHHHHHH!!!!!!
     # *
     return None
-
 
