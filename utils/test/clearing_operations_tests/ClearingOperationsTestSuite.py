@@ -20,6 +20,7 @@ import Configuration
 from . import ClearingOperationsCreateGRGFromPointTestCase
 from . import ClearingOperationsCreateGRGFromAreaTestCase
 from . import ClearingOperationsNumberFeaturesTestCase
+from . import DefineReferenceGridFromAreaTestCase
 
 ''' Test suite for all tools in the Clearing Operationss Tools toolbox '''
 
@@ -34,10 +35,12 @@ def getTestSuite():
 
     loader = unittest.TestLoader()
 
-
+    #Clearing Operations
     testSuite.addTest(loader.loadTestsFromTestCase(ClearingOperationsCreateGRGFromAreaTestCase.ClearingOperationsCreateGRGFromAreaTestCase))
     testSuite.addTest(loader.loadTestsFromTestCase(ClearingOperationsNumberFeaturesTestCase.ClearingOperationsNumberFeaturesTestCase))
     testSuite.addTest(loader.loadTestsFromTestCase(ClearingOperationsCreateGRGFromPointTestCase.ClearingOperationsCreateGRGFromPointTestCase))
 
+    #Gridded Reference Graphic
+    testSuite.addTest(loader.loadTestsFromTestCase(DefineReferenceGridFromAreaTestCase.DefineReferenceGridFromAreaTestCase))
 
     return testSuite
