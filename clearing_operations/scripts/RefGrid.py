@@ -483,6 +483,9 @@ def _LLtoUTM (lat, lon, zoneNumber, zoneBand):
   #WGS84
   er = 6378137.0
   e2 = 0.006694379990
+  #NAD 83
+  #   er = 6378137;
+  #   e2 = 0.00669438002290079
   e2ps = e2 / (1 - e2)
   
   lonTemp = (lon + 180) - math.floor((lon + 180) / 360) * 360 - 180;
@@ -526,8 +529,13 @@ def _UTMtoLL(UTMNorthing, UTMEasting, UTMZoneNumber):
   UTMZoneNumber : 6-deg longitudinal zone (numeric), eg. 18
   '''
   k0 = 0.9996
+  # WGS 84
   er = 6378137.0
   e2 = 0.006694379990
+  # NAD 83:
+  #   er = 6378137;
+  #   e2 = 0.00669438002290079
+  
   e2ps = e2 / (1 - e2)
   E1 = (1 - math.sqrt(1 - e2)) / (1 + math.sqrt(1 - e2))
   #remove 500,000 meter offset for longitude

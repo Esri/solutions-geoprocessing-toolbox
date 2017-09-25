@@ -116,21 +116,21 @@ class CreateGRGFromArea(object):
                                             'Lower-Right']
         label_start_position.value = label_start_position.filter.list[0]
 
-        label_style = arcpy.Parameter(name='label_style',
-                                      displayName='Label Style',
+        label_type = arcpy.Parameter(name='label_type',
+                                      displayName='Label Type',
                                       direction='Input',
                                       datatype='GPString',
                                       parameterType='Required',
                                       enabled=True,
                                       multiValue=False)
-        label_style.filter.type = 'ValueList'
-        # label_style.filter.list = ['ALPHA-NUMERIC',
+        label_type.filter.type = 'ValueList'
+        # label_type.filter.list = ['ALPHA-NUMERIC',
         #                            'ALPHA-ALPHA',
         #                            'NUMERIC']
-        label_style.filter.list = ['Alpha-Numeric',
+        label_type.filter.list = ['Alpha-Numeric',
                                    'Alpha-Alpha',
                                    'Numeric']
-        label_style.value = label_style.filter.list[0]
+        label_type.value = label_type.filter.list[0]
 
         # TODO: define output schema as method
         output_features= arcpy.Parameter(name='output_grg_features',
@@ -149,7 +149,7 @@ class CreateGRGFromArea(object):
                 cell_height,
                 cell_units,
                 label_start_position,
-                label_style,
+                label_type,
                 output_features]
 
     def updateParameters(self, parameters):
@@ -283,21 +283,21 @@ class CreateGRGFromPoint(object):
                                             'Lower-Right']
         label_start_position.value = label_start_position.filter.list[0]
 
-        label_style = arcpy.Parameter(name='label_style',
-                                      displayName='Labeling Style',
+        label_type = arcpy.Parameter(name='label_type',
+                                      displayName='Labeling type',
                                       direction='Input',
                                       datatype='GPString',
                                       parameterType='Required',
                                       enabled=True,
                                       multiValue=False)
-        label_style.filter.type = 'ValueList'
+        label_type.filter.type = 'ValueList'
         # label_style.filter.list = ['ALPHA-NUMERIC',
         #                            'ALPHA-ALPHA',
         #                            'NUMERIC']
-        label_style.filter.list = ['Alpha-Numeric',
+        label_type.filter.list = ['Alpha-Numeric',
                                    'Alpha-Alpha',
                                    'Numeric']
-        label_style.value = label_style.filter.list[0]
+        label_type.value = label_type.filter.list[0]
 
         output_features= arcpy.Parameter(name='output_grg_features',
                                          displayName='Output GRG Features',
@@ -318,7 +318,7 @@ class CreateGRGFromPoint(object):
                 cell_units,
                 grid_size_feature_set,
                 label_start_position,
-                label_style,
+                label_type,
                 output_features]
 
     def updateParameters(self, parameters):
