@@ -416,7 +416,7 @@ class DefineReferenceGridFromArea(object):
                                          multiValue=False)
         output_features.value = r"%scratchGDB%/output_grid"
         output_features.symbology = os.path.join(os.path.dirname(os.path.dirname(__file__)),
-                                                 "layers", "GRG.lyr")
+                                                 "layers", "OutputRefGrid.lyr")
 
         large_grid_handling = arcpy.Parameter(name='large_grid_handling',
                                            displayName='Large Grid Handling',

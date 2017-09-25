@@ -110,7 +110,9 @@ class ReferenceGrid(object):
       else:
           arcpy.AddMessage("Creating Grid zones/latitude bands...")
 
-    #sr_nad_83 = None
+    #sr_nad_27 = arcpy.SpatialReference(4267) #GCS_North_American_1927
+    #sr_nad_83 = arcpy.SpatialReference(4269) #GCS_North_American_1983
+    #sr_nad_83_harn = arcpy.SpatialReference(4152) #GCS_North_American_1983_HARN
     sr_wgs_84 = arcpy.SpatialReference(4326)
     
 
