@@ -111,6 +111,8 @@ backwards compatible (see **Compatibility** note below) with other ArcGIS Deskto
 
 Please note that some toolboxes are for ArcGIS Pro only, or ArcGIS Desktop only. These toolboxes will follow the above naming convention, but will not have a duplicate.
 
+Also note that some of our toolboxes are (Python Toolboxes)[http://desktop.arcgis.com/en/arcmap/latest/analyze/creating-tools/a-quick-tour-of-python-toolboxes.htm] (.pyt) and work in both ArcMap and ArcGIS Pro. These do not have the _arcmap_ or _pro_ suffix.
+
 * [Compatibility: ModelBuilder migration in Pro](http://pro.arcgis.com/en/pro-app/help/analysis/geoprocessing/modelbuilder/modelbuilder-changes-in-arcgis-pro.htm)
 * [Product info for ArcGIS Pro](http://www.esri.com/software/arcgis-pro)
 * [Help for ArcGIS Pro](http://pro.arcgis.com/en/pro-app/)
