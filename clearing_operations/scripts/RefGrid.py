@@ -19,7 +19,7 @@ class ReferenceGrid(object):
                           '1000M_GRID':1000,
                           '100M_GRID':100,
                           '10M_GRID':10}
-  DEBUG = True
+  DEBUG = False
 
   def __init__(self, input_area, grid_type, grid_square_size, large_grid_handling='ALLOW_LARGE_GRIDS'):
     '''

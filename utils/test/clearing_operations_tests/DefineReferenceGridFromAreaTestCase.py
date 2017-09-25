@@ -60,6 +60,13 @@ class DefineReferenceGridFromAreaTestCase(unittest.TestCase, arcpyAssert.Feature
         self.inputArea10m = os.path.join(Configuration.grgInputGDB, r"inputAO10m")
         self.ref_grid = "MGRS"
         self.large_grid_handling = "ALLOW_LARGE_GRIDS"
+        self.ignore_options = ["IGNORE_M",
+                               "IGNORE_Z",
+                               "IGNORE_POINTID",
+                               "IGNORE_EXTENSION_PROPERTIES",
+                               "IGNORE_SUBTYPES",
+                               "IGNORE_RELATIONSHIPCLASSES",
+                               "IGNORE_REPRESENTATIONCLASSES"]
         UnitTestUtilities.checkFilePaths([Configuration.grgPath])
         UnitTestUtilities.checkGeoObjects([Configuration.grgInputGDB,
                                            self.toolboxUnderTest,
@@ -70,7 +77,7 @@ class DefineReferenceGridFromAreaTestCase(unittest.TestCase, arcpyAssert.Feature
         if Configuration.DEBUG is True: print("         DefineReferenceGridTestCase.tearDown")
         UnitTestUtilities.deleteScratch(self.scratchGDB)
 
-    # TODO: GZD Test
+    # GZD Test
     def testDefineReferenceGridFromArea_GZD(self):
         '''
         Testing DRGFA with Grid Zone Designator
@@ -92,24 +99,247 @@ class DefineReferenceGridFromAreaTestCase(unittest.TestCase, arcpyAssert.Feature
                                                        "CompareGZD"))
 
         try:
-        # Calling the Create GRG From Area script tool
             arcpy.DefineReferenceGridFromArea_grg(self.inputArea,
                                                   self.ref_grid,
                                                   grid_size,
                                                   output,
                                                   self.large_grid_handling)
+            arcpy.AddSpatialIndex_management(output)
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()
         except:
             UnitTestUtilities.handleGeneralError()
 
-        arcpyAssert.assertFeatureClassEqual(compareDataset,
-                                            output,
-                                            arcpy.Describe(output).oidFieldName)
+        self.assertFeatureClassEqual(compareDataset,
+                                     output,
+                                     arcpy.Describe(output).oidFieldName,
+                                     None,
+                                     "ALL",
+                                     self.ignore_options)
 
-    # TODO: 100KM Test
-    # TODO: 10KM Test
-    # TODO: 1000M Test
-    # TODO: 100M Test
-    
-    # TODO: 10M Test
+    # 100KM Test
+    def testDefineReferenceGridFromArea_100KM(self):
+        '''
+        Testing DRGFA with 100KM grid
+        '''
+        if Configuration.DEBUG is True: print(".....DefineReferenceGridTestCase.testDefineReferenceGridFromArea_100KM")
+        print("Importing toolbox...")
+        arcpy.ImportToolbox(self.toolboxUnderTest)
+        arcpy.env.overwriteOutput = True
+
+        #inputs
+        grid_size = "100000M_GRID"
+        output = os.path.join(self.scratchGDB, "outgrg_100KM")
+
+        #Testing
+        runToolMsg = "Running tool (Define Reference Grid From Area)"
+        arcpy.AddMessage(runToolMsg)
+        Configuration.Logger.info(runToolMsg)
+        compareDataset = os.path.normpath(os.path.join(Configuration.grgInputGDB,
+                                                       "Compare100km"))
+
+        try:
+            arcpy.DefineReferenceGridFromArea_grg(self.inputArea,
+                                                  self.ref_grid,
+                                                  grid_size,
+                                                  output,
+                                                  self.large_grid_handling)
+            arcpy.AddSpatialIndex_management(output)
+        except arcpy.ExecuteError:
+            UnitTestUtilities.handleArcPyError()
+        except:
+            UnitTestUtilities.handleGeneralError()
+
+        self.assertFeatureClassEqual(compareDataset,
+                                     output,
+                                     arcpy.Describe(output).oidFieldName,
+                                     None,
+                                     "ALL",
+                                     self.ignore_options)
+
+    # 10KM Test
+    def testDefineReferenceGridFromArea_10KM(self):
+        '''
+        Testing DRGFA with 10KM grid
+        '''
+        if Configuration.DEBUG is True: print(".....DefineReferenceGridTestCase.testDefineReferenceGridFromArea_10KM")
+        print("Importing toolbox...")
+        arcpy.ImportToolbox(self.toolboxUnderTest)
+        arcpy.env.overwriteOutput = True
+
+        #inputs
+        grid_size = "10000M_GRID"
+        output = os.path.join(self.scratchGDB, "outgrg_10KM")
+
+        #Testing
+        runToolMsg = "Running tool (Define Reference Grid From Area)"
+        arcpy.AddMessage(runToolMsg)
+        Configuration.Logger.info(runToolMsg)
+        compareDataset = os.path.normpath(os.path.join(Configuration.grgInputGDB,
+                                                       "Compare10km"))
+
+        try:
+            arcpy.DefineReferenceGridFromArea_grg(self.inputArea,
+                                                  self.ref_grid,
+                                                  grid_size,
+                                                  output,
+                                                  self.large_grid_handling)
+            arcpy.AddSpatialIndex_management(output)
+        except arcpy.ExecuteError:
+            UnitTestUtilities.handleArcPyError()
+        except:
+            UnitTestUtilities.handleGeneralError()
+
+        self.assertFeatureClassEqual(compareDataset,
+                                     output,
+                                     arcpy.Describe(output).oidFieldName,
+                                     None,
+                                     "ALL",
+                                     self.ignore_options)
+
+    # 1000M Test
+    def testDefineReferenceGridFromArea_1000M(self):
+        '''
+        Testing DRGFA with 1000M grid
+        '''
+        if Configuration.DEBUG is True: print(".....DefineReferenceGridTestCase.testDefineReferenceGridFromArea_1000M")
+        print("Importing toolbox...")
+        arcpy.ImportToolbox(self.toolboxUnderTest)
+        arcpy.env.overwriteOutput = True
+
+        #inputs
+        grid_size = "1000M_GRID"
+        output = os.path.join(self.scratchGDB, "outgrg_1000M")
+
+        #Testing
+        runToolMsg = "Running tool (Define Reference Grid From Area)"
+        arcpy.AddMessage(runToolMsg)
+        Configuration.Logger.info(runToolMsg)
+        compareDataset = os.path.normpath(os.path.join(Configuration.grgInputGDB,
+                                                       "Compare1000m"))
+
+        try:
+            arcpy.DefineReferenceGridFromArea_grg(self.inputArea,
+                                                  self.ref_grid,
+                                                  grid_size,
+                                                  output,
+                                                  self.large_grid_handling)
+            arcpy.AddSpatialIndex_management(output)
+        except arcpy.ExecuteError:
+            UnitTestUtilities.handleArcPyError()
+        except:
+            UnitTestUtilities.handleGeneralError()
+
+        self.assertFeatureClassEqual(compareDataset,
+                                     output,
+                                     arcpy.Describe(output).oidFieldName,
+                                     None,
+                                     "ALL",
+                                     self.ignore_options)
+
+    # 100M Test
+    def testDefineReferenceGridFromArea_100M(self):
+        '''
+        Testing DRGFA with 100M grid
+        '''
+        if Configuration.DEBUG is True: print(".....DefineReferenceGridTestCase.testDefineReferenceGridFromArea_100M")
+        print("Importing toolbox...")
+        arcpy.ImportToolbox(self.toolboxUnderTest)
+        arcpy.env.overwriteOutput = True
+
+        #inputs
+        grid_size = "100M_GRID"
+        output = os.path.join(self.scratchGDB, "outgrg_100M")
+
+        #Testing
+        runToolMsg = "Running tool (Define Reference Grid From Area)"
+        arcpy.AddMessage(runToolMsg)
+        Configuration.Logger.info(runToolMsg)
+        compareDataset = os.path.normpath(os.path.join(Configuration.grgInputGDB,
+                                                       "Compare100m"))
+
+        try:
+            arcpy.DefineReferenceGridFromArea_grg(self.inputArea,
+                                                  self.ref_grid,
+                                                  grid_size,
+                                                  output,
+                                                  self.large_grid_handling)
+            arcpy.AddSpatialIndex_management(output)
+        except arcpy.ExecuteError:
+            UnitTestUtilities.handleArcPyError()
+        except:
+            UnitTestUtilities.handleGeneralError()
+
+        self.assertFeatureClassEqual(compareDataset,
+                                     output,
+                                     arcpy.Describe(output).oidFieldName,
+                                     None,
+                                     "ALL",
+                                     self.ignore_options)
+
+    # 10M Test
+    def testDefineReferenceGridFromArea_10M(self):
+        '''
+        Testing DRGFA with 10M grid
+        '''
+        if Configuration.DEBUG is True: print(".....DefineReferenceGridTestCase.testDefineReferenceGridFromArea_10M")
+        print("Importing toolbox...")
+        arcpy.ImportToolbox(self.toolboxUnderTest)
+        arcpy.env.overwriteOutput = True
+
+        #inputs
+        grid_size = "10M_GRID"
+        output = os.path.join(self.scratchGDB, "outgrg_10M")
+
+        #Testing
+        runToolMsg = "Running tool (Define Reference Grid From Area)"
+        arcpy.AddMessage(runToolMsg)
+        Configuration.Logger.info(runToolMsg)
+        compareDataset = os.path.normpath(os.path.join(Configuration.grgInputGDB,
+                                                       "Compare10m"))
+
+        try:
+            arcpy.DefineReferenceGridFromArea_grg(self.inputArea10m,
+                                                  self.ref_grid,
+                                                  grid_size,
+                                                  output,
+                                                  self.large_grid_handling)
+            arcpy.AddSpatialIndex_management(output)
+        except arcpy.ExecuteError:
+            UnitTestUtilities.handleArcPyError()
+        except:
+            UnitTestUtilities.handleGeneralError()
+
+        self.assertFeatureClassEqual(compareDataset,
+                                     output,
+                                     arcpy.Describe(output).oidFieldName,
+                                     None,
+                                     "ALL",
+                                     self.ignore_options)
+
+    # Check that no large grids created for 10m
+    def testDefineReferenceGridFromArea_10mNoLargeGrids(self):
+        '''
+        Testing DRGFA will raise error with NO_LARGE_GRIDS option.
+        '''
+        if Configuration.DEBUG is True: print(".....DefineReferenceGridTestCase.testDefineReferenceGridFromArea_10mNoLargeGrids")
+        print("Importing toolbox...")
+        arcpy.ImportToolbox(self.toolboxUnderTest)
+        arcpy.env.overwriteOutput = True
+
+        #inputs
+        grid_size = "10M_GRID"
+        output = os.path.join(self.scratchGDB, "outgrg_10M_fail")
+
+        #Testing
+        runToolMsg = "Running tool (Define Reference Grid From Area)"
+        arcpy.AddMessage(runToolMsg)
+        Configuration.Logger.info(runToolMsg)
+
+        with self.assertRaises(arcpy.ExecuteError) as manage_raise:
+            arcpy.DefineReferenceGridFromArea_grg(self.inputArea10m,
+                                                  self.ref_grid,
+                                                  grid_size,
+                                                  output,
+                                                  "NO_LARGE_GRIDS")
+        self.assertTrue('exceeds large grid value for' in str(manage_raise.exception))
