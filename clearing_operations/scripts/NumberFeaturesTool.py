@@ -127,12 +127,23 @@ class NumberFeatures(object):
                        pointFeatures,
                        numberingField,
                        outputFeatureClass):
-        ''' copied and modified from original NumberFeatures.py '''
-        g_ESRI_variable_1 = r'%scratchGDB%\tempSortedPoints'
 
+        descPointFeatures = arcpy.Describe(pointFeatures)
+        arcpy.AddMessage("pointFeatures: {0}".format(descPointFeatures.catalogPath))
+            
+        # If no output FC is specified, then set it a temporary one, as this will be copied to the input and then deleted.
+        overwriteFC = False
+        if not outputFeatureClass:
+            DEFAULT_OUTPUT_LOCATION = r'%scratchGDB%\tempSortedPoints'
+            outputFeatureClass = DEFAULT_OUTPUT_LOCATION
+            overwriteFC = True
+        else:
+            descOutputFeatureClass = arcpy.Describe(outputFeatureClass)
+            arcpy.AddMessage("outputFeatureClass: {0}".format(descOutputFeatureClass.catalogPath))
+      
+        # Sort layer by upper right across and then down spatially               
         arcpy.CopyFeatures_management(areaToNumber, os.path.join("in_memory","areaToNumber"))
         areaToNumber = os.path.join("in_memory","areaToNumber")
-        arcpy.AddMessage("outputFeatureClass: {0}".format(outputFeatureClass))
 
         DEBUG = True
         appEnvironment = None
@@ -183,13 +194,6 @@ class NumberFeatures(object):
                                                                     areaToNumber, "#", "NEW_SELECTION")
             if DEBUG == True:
                 arcpy.AddMessage("Selected " + str(arcpy.GetCount_management(pointFeatureName).getOutput(0)) + " points")
-
-            # If no output FC is specified, then set it a temporary one, as this will be copied to the input and then deleted.
-            # Sort layer by upper right across and then down spatially,
-            overwriteFC = False
-            if not outputFeatureClass:
-                outputFeatureClass = g_ESRI_variable_1
-                overwriteFC = True
 
             arcpy.AddMessage("Sorting the selected points geographically, left to right, top to bottom")
             arcpy.Sort_management(pointFeatureName, outputFeatureClass, [["Shape", "ASCENDING"]])
@@ -255,7 +259,11 @@ class NumberFeatures(object):
             else:
                 targetLayerName = os.path.basename(str(outputFeatureClass))
 
-            #Setting the correct output for the file feature class
+            # Workaround: don't set the outputFeatureClass if none was supplied to the tool
+            if overwriteFC:
+                outputFeatureClass = ''
+
+            #Setting the correct output for the feature class
             arcpy.SetParameter(3, outputFeatureClass)
 
         except arcpy.ExecuteError:
