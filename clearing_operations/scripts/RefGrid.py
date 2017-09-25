@@ -6,7 +6,7 @@ import re
 import os
 import math
 import arcpy
-import Utilities
+from . import Utilities
 
 #self.inputArea = arcpy.GetParameterAsText(0)
 
