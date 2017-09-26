@@ -15,7 +15,7 @@
  ==================================================
  GRGTools.py
  --------------------------------------------------
- requirements: ArcGIS X.X, Python 2.7 or Python 3.x
+ requirements: ArcGIS 10.3.1+, ArcGIS Pro 1.4+, Python 2.7 or Python 3.5+
  author: ArcGIS Solutions
  contact: support@esri.com
  company: Esri
@@ -349,14 +349,14 @@ class CreateGRGFromPoint(object):
                                             parameters[9].value)
         return out_grg
 
-class DefineReferenceGridFromArea(object):
+class CreateReferenceSystemGRGFromArea(object):
     '''
-    Build polygon features of MGRS or USNG grids.
+    Build polygon features of MGRS or USNG gridded reference graphics.
     '''
     def __init__(self):
         ''' Define Reference Grid From Area constructor '''
-        self.label = "Define Reference Grid from Area"
-        self.description = "Create an MGRS or USNG grid from an selected location on the map."
+        self.label = "Create Reference System GRG from Area"
+        self.description = "Create an MGRS or USNG gridded reference graphic from an selected area on the map."
         self.GRID_LIST = ['GRID_ZONE_DESIGNATOR',
                           '100000M_GRID',
                           '10000M_GRID',
@@ -385,16 +385,16 @@ class DefineReferenceGridFromArea(object):
                                              "RelativeGRGInputArea.lyr")
         input_area_features.value = input_layer_file_path
 
-        input_reference_grid = arcpy.Parameter(name='input_reference_grid',
-                                               displayName='Reference Grid',
+        input_grid_reference_system = arcpy.Parameter(name='input_grid_reference_system',
+                                               displayName='Grid Reference System',
                                                direction='Input',
                                                datatype='GPString',
                                                parameterType='Required',
                                                enabled=True,
                                                multiValue=False)
-        input_reference_grid.filter.type = 'ValueList'
-        input_reference_grid.filter.list = self.REF_GRID_TYPE
-        input_reference_grid.value = input_reference_grid.filter.list[0]
+        input_grid_reference_system.filter.type = 'ValueList'
+        input_grid_reference_system.filter.list = self.REF_GRID_TYPE
+        input_grid_reference_system.value = input_grid_reference_system.filter.list[0]
 
         grid_square_size = arcpy.Parameter(name='grid_square_size',
                                            displayName='Grid Square Size',
@@ -407,15 +407,15 @@ class DefineReferenceGridFromArea(object):
         grid_square_size.filter.list = self.GRID_LIST
         grid_square_size.value = grid_square_size.filter.list[0]
 
-        output_features= arcpy.Parameter(name='output_grid_features',
-                                         displayName='Output Grid Features',
+        output_grid_features= arcpy.Parameter(name='output_grid_features',
+                                         displayName='Output GRG Features',
                                          direction='Output',
                                          datatype='DEFeatureClass',
                                          parameterType='Required',
                                          enabled=True,
                                          multiValue=False)
-        output_features.value = r"%scratchGDB%/output_grid"
-        output_features.symbology = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+        output_grid_features.value = r"%scratchGDB%/output_grid"
+        output_grid_features.symbology = os.path.join(os.path.dirname(os.path.dirname(__file__)),
                                                  "layers", "OutputRefGrid.lyr")
 
         large_grid_handling = arcpy.Parameter(name='large_grid_handling',
@@ -429,17 +429,10 @@ class DefineReferenceGridFromArea(object):
         large_grid_handling.filter.list = self.LARGE_GRID_OPTIONS
         large_grid_handling.value = large_grid_handling.filter.list[0]
 
-        # message_window = arcpy.Parameter(name='message_window',
-        #                                  displayName='message_window',
-        #                                  direction='Input',
-        #                                  datatype='GPString',
-        #                                  parameterType='Optional',
-        #                                  enabled='True')
-
         return [input_area_features,
-                input_reference_grid,
+                input_grid_reference_system,
                 grid_square_size,
-                output_features,
+                output_grid_features,
                 large_grid_handling]
 
     def updateParameters(self, parameters):
@@ -448,48 +441,6 @@ class DefineReferenceGridFromArea(object):
         validation is performed.  This method is called whenever a parameter
         has been changed.
         '''
-        # #           get extent area (m**2) of features
-        # #           remove 10m if greater than 200,000.0
-        # #           remove 100m if greater than 20,000,000.0
-        # #           remove 1000m if greater than 2,000,000,000.0
-        # #           remove 10000m if greater than 200,000,000,000.0
-        # if (parameters[0].hasBeenValidated is False) or parameters[0].altered:
-        #     extent_area = arcpy.Describe(parameters[0]).extent.polygon.area
-        #     if   extent_area > 200000.0:
-        #         parameters[2].filter.list = self.GRID_LIST[0:5]
-        #     elif extent_area > 20000000.0:
-        #         parameters[2].filter.list = self.GRID_LIST[0:4]
-        #     elif extent_area > 2000000000.0:
-        #         parameters[2].filter.list = self.GRID_LIST[0:3]
-        #     elif extent_area > 200000000000.0:
-        #         parameters[2].filter.list = self.GRID_LIST[0:2]
-        #     else:
-        #         parameters[2].filter.list = self.GRID_LIST
-
-        # vlist = []
-        # parameters[4].value = ''
-        # if parameters[0].hasBeenValidated is False:
-        #     vlist.append(0)
-        # if parameters[1].hasBeenValidated is False:
-        #     vlist.append(1)
-        # if parameters[2].hasBeenValidated is False:
-        #     vlist.append(2)
-        # if parameters[3].hasBeenValidated is False:
-        #     vlist.append(3)
-        # vmsg = 'validated {}'.format(vlist)
-        #
-        # alist = []
-        # if parameters[0].altered is True:
-        #     alist.append(0)
-        # if parameters[1].altered is True:
-        #     alist.append(1)
-        # if parameters[2].altered is True:
-        #     alist.append(2)
-        # if parameters[3].altered is True:
-        #     alist.append(3)
-        # amsg = 'altered {}'.format(alist)
-        #
-        # parameters[4].value = '{}, {}'.format(vmsg, amsg)
 
         return
 
