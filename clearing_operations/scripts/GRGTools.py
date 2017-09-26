@@ -365,9 +365,9 @@ class CreateReferenceSystemGRGFromArea(object):
                           '10M_GRID']
         self.REF_GRID_TYPE = ["MGRS",
                               "USNG"]
-        self.LARGE_GRID_OPTIONS = ["ALLOW_LARGE_GRIDS",
-                                   "NO_LARGE_GRIDS"]
-
+        self.LARGE_GRID_OPTIONS = ["NO_LARGE_GRIDS",
+                                   "ALLOW_LARGE_GRIDS"]
+        
     def getParameterInfo(self):
         '''
         Define parameter definitions
