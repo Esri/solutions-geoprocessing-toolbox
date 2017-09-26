@@ -32,6 +32,8 @@ HISTORY:
 
 import os
 import sys
+import string
+import random
 import arcpy
 
 app_found = 'NOT_SET'
@@ -61,3 +63,10 @@ def GetApplication():
     except:
         app_found = "OTHER"
         return app_found
+
+def MakeScratchGeodatabase():
+    '''
+    '''
+    name = ''.join([random.choice(string.ascii_uppercase) for _ in range(6)])
+    ws = arcpy.CreateFileGDB_management('%scratchFolder%',name,'CURRENT')[0]
+    return ws

@@ -44,4 +44,5 @@ class Toolbox(object):
                            with tools to create custom Gridded Reference Graphics (GRG).
                            '''
         self.tools = [CreateGRGFromArea,
-                      CreateGRGFromPoint]
+                      CreateGRGFromPoint,
+                      DefineReferenceGridFromArea]
