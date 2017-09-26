@@ -9,7 +9,7 @@ import arcpy
 from . import Utilities
 
 #self.inputArea = arcpy.GetParameterAsText(0)
-
+GRID_FIELD_NAME = "Grid"
 class ReferenceGrid(object):
   '''
   '''
@@ -20,6 +20,7 @@ class ReferenceGrid(object):
                           '100M_GRID':100,
                           '10M_GRID':10}
   DEBUG = False
+  GRID_FIELD_NAME = "Grid"
 
   def __init__(self, input_area, grid_type, grid_square_size, large_grid_handling='ALLOW_LARGE_GRIDS'):
     '''
@@ -62,11 +63,11 @@ class ReferenceGrid(object):
       '''
       '''
       features = _createFC(out_features, "POLYGON", sr_wgs_84)
-      arcpy.AddField_management(features, 'GZD',"text") 
-      with arcpy.da.InsertCursor(features, ['SHAPE@','GZD']) as cursor:
+      arcpy.AddField_management(features, GRID_FIELD_NAME,"text") 
+      with arcpy.da.InsertCursor(features, ['SHAPE@',GRID_FIELD_NAME]) as cursor:
         for i in range(0,len(sq)):
           cursor.insertRow([sq[i]['clippedPolygon'],
-                            sq[i]['GZD']])  
+                            sq[i][GRID_FIELD_NAME]])  
       return features
 
     def _largeGridWarning(area, value):
@@ -120,10 +121,10 @@ class ReferenceGrid(object):
 
     #create an in memory feature class for the grid zones
     gridZones = _createFC(os.path.join(self.scratch_workspace, "GridZones"), "POLYGON", sr_wgs_84)
-    arcpy.AddField_management(gridZones,'GZD',"TEXT")
+    arcpy.AddField_management(gridZones, GRID_FIELD_NAME,"TEXT")
     arcpy.AddField_management(gridZones,'utmZone',"SHORT")
     arcpy.AddField_management(gridZones,'utmBand',"TEXT")
-    with arcpy.da.InsertCursor(gridZones, ['SHAPE@','GZD','utmZone','utmBand']) as cursor:
+    with arcpy.da.InsertCursor(gridZones, ['SHAPE@', GRID_FIELD_NAME,'utmZone','utmBand']) as cursor:
       zonesDictionary = _ZonesDictionary()
       for i in zonesDictionary:
         cursor.insertRow([zonesDictionary[i]['polygon'],
@@ -139,6 +140,7 @@ class ReferenceGrid(object):
     Selection = arcpy.SelectLayerByLocation_management("gridZones_lyr", "INTERSECT", self.inputArea)
     if self.gridSize == 'GRID_ZONE_DESIGNATOR':
       arcpy.CopyFeatures_management(Selection, out_features)
+      arcpy.DeleteField_management(out_features,['utmZone','utmBand'])
       return out_features
     else:
       arcpy.CopyFeatures_management(Selection, os.path.join(self.scratch_workspace,"Selected"))
@@ -152,7 +154,7 @@ class ReferenceGrid(object):
     else:
       sq100k = _buildHundredGrid(os.path.join(self.scratch_workspace, "sq100k"), sq)
 
-    # only if not GZD 100K
+    # only if not 100K
     arcpy.AddMessage("Creating sub 100K grid squares...")
     testValue = self.GRID_SIZE_LOOKUP[self.gridSize]
     currentValue = 10000
@@ -165,8 +167,8 @@ class ReferenceGrid(object):
       currentValue = currentValue / 10
 
     output = _createFC(out_features, "POLYGON", sr_wgs_84)
-    arcpy.AddField_management(output,'GZD',"text") 
-    with arcpy.da.InsertCursor(output, ['SHAPE@','GZD']) as cursor:
+    arcpy.AddField_management(output,GRID_FIELD_NAME,"text") 
+    with arcpy.da.InsertCursor(output, ['SHAPE@',GRID_FIELD_NAME]) as cursor:
       for i in range(0,len(polys)):
         cursor.insertRow([polys[i]['clippedPolygon'],
                           polys[i]['text']])  
@@ -287,7 +289,7 @@ def _processZonePolygons(visibleGridZones, extent):
   Processes an array of visible grid zone and hands them off to the appropriate handler(s)
   '''   
   polys = []
-  fields = ['SHAPE@','GZD','utmZone','utmBand']
+  fields = ['SHAPE@', GRID_FIELD_NAME,'utmZone','utmBand']
   
   with arcpy.da.SearchCursor(visibleGridZones, fields) as cursor:
     for row in cursor:
@@ -405,7 +407,7 @@ def _handle100kGrids(args, AOI):
                           "ymax": (n + 100000),
                           "utmZone": utmZone,
                           "latitudeZone": latitudeZone,
-                          "GZD": text}
+                          GRID_FIELD_NAME: text}
           
         poly100k.append(gridPolygon)
 
@@ -420,7 +422,7 @@ def _handleGridSquares(poly, interval, AOI):
   clippedPoly = poly['clippedPolygon']
   latitudeZone = poly['latitudeZone']
   utmZone = poly['utmZone']
-  GZD = poly['GZD']
+  GZD = poly[GRID_FIELD_NAME]
   minE = poly['xmin']
   maxE = poly['xmax']
   minN = poly['ymin']
@@ -465,7 +467,7 @@ def _handleGridSquares(poly, interval, AOI):
           "y": str(_padZero(((10000000 + n) if minN < 0 else n) % 100000 / interval,5 - math.log10(interval))),
           "utmZone": utmZone,
           "latitudeZone": latitudeZone,
-          "GZD": GZD,
+          GRID_FIELD_NAME: GZD,
           "text": text}
           
         polyOut.append(gridPolygon)

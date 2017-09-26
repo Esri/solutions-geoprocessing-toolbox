@@ -280,7 +280,7 @@ class CreateReferenceSystemGRGFromAreaTestCase(unittest.TestCase, arcpyAssert.Fe
     # 10M Test
     def testCreateReferenceSystemGRGFromArea_10M(self):
         '''
-        Testing DRGFA with 10M grid
+        Testing with 10M grid
         '''
         if Configuration.DEBUG is True: print(".....CreateReferenceSystemGRGFromAreaTestCase.testCreateReferenceSystemGRGFromArea_10M")
         print("Importing toolbox...")
