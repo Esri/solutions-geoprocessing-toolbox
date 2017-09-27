@@ -45,4 +45,4 @@ class Toolbox(object):
                            '''
         self.tools = [CreateGRGFromArea,
                       CreateGRGFromPoint,
-                      DefineReferenceGridFromArea]
+                      CreateReferenceSystemGRGFromArea]
