@@ -342,7 +342,7 @@ def _handle100kGrids(args, AOI):
       # used for labeling and border graphics
 
       # find the label of the 100K grid
-      text = _findGridLetters(utmZone, 10000000 + (n + 50000) if (n + 50000) < 0 else  n + 50000, e + 50000)
+      text = "{0}{1}{2}".format(utmZone,latitudeZone, _findGridLetters(utmZone, 10000000 + (n + 50000) if (n + 50000) < 0 else  n + 50000, e + 50000))
       
       # Build the 100k grid boundary
       ring = []
@@ -395,7 +395,7 @@ def _handle100kGrids(args, AOI):
       # (i.e. they were not within the bounds of the zone)
       # if this is the case, skip the rest and move on to the next increment of n or e
       if not clippedPolygon:
-        break
+        continue
         
       # now check the clipped polygon touches the AOI drawn
       if not AOI.disjoint(polygon):
@@ -427,10 +427,10 @@ def _handleGridSquares(poly, interval, AOI):
   maxE = poly['xmax']
   minN = poly['ymin']
   maxN = poly['ymax']    
-  polyOut = []    
-      
-  for n in range(int(math.floor(minN / interval) * interval), int(maxN), interval):    
-    for e in range(int(math.floor(minE / interval) * interval), int(maxE), interval):  
+  polyOut = []
+  
+  for n in range(int(math.floor(minN / interval) * interval), int(maxN), int(interval)):    
+    for e in range(int(math.floor(minE / interval) * interval), int(maxE), int(interval)):  
       ring = []
       
       ptBL = _UTMtoLL(n, e, utmZone)
@@ -449,11 +449,11 @@ def _handleGridSquares(poly, interval, AOI):
       clippedPolygon = polygon.intersect(clippedPoly,4)      
       
       if not clippedPolygon:
-        break      
+        continue      
             
       if not AOI.disjoint(polygon):
-        text = GZD + str(_padZero(e % 100000 / interval,  5 - 
-          math.log10(interval))) + str(_padZero(((10000000 + n) if minN < 0 else n) % 100000 / interval, 5 - 
+        text = "{0}{1}".format(GZD,_padZero(e % 100000 / interval,  5 - 
+          math.log10(interval)) + _padZero(((10000000 + n) if minN < 0 else n) % 100000 / interval, 5 - 
           math.log10(interval)))        
               
         gridPolygon = {"clippedPolygon": clippedPolygon,
@@ -463,14 +463,15 @@ def _handleGridSquares(poly, interval, AOI):
           "ymin": n,
           "xmax": e + interval,
           "ymax": n + interval,
-          "x": str(_padZero(e % 100000 / interval,  5 - math.log10(interval))),
-          "y": str(_padZero(((10000000 + n) if minN < 0 else n) % 100000 / interval,5 - math.log10(interval))),
+          "x": _padZero(e % 100000 / interval,  5 - math.log10(interval)),
+          "y": _padZero(((10000000 + n) if minN < 0 else n) % 100000 / interval,5 - math.log10(interval)),
           "utmZone": utmZone,
           "latitudeZone": latitudeZone,
           GRID_FIELD_NAME: GZD,
           "text": text}
           
         polyOut.append(gridPolygon)
+
       
   return polyOut
     
@@ -673,9 +674,9 @@ def _findSet(zoneNum):
 
 
 def _padZero(number, width):
-  number = str(number)
+  number = str(int(number))
   while len(number) < width:
-    number = "0" + number      
+    number = "0" + number
   return number
 
 
