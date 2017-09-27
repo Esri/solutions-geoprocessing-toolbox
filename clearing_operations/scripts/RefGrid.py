@@ -425,10 +425,10 @@ def _handleGridSquares(poly, interval, AOI):
   maxE = poly['xmax']
   minN = poly['ymin']
   maxN = poly['ymax']    
-  polyOut = []    
-      
-  for n in range(int(math.floor(minN / interval) * interval), int(maxN), interval):    
-    for e in range(int(math.floor(minE / interval) * interval), int(maxE), interval):  
+  polyOut = []
+  
+  for n in range(int(math.floor(minN / interval) * interval), int(maxN), int(interval)):    
+    for e in range(int(math.floor(minE / interval) * interval), int(maxE), int(interval)):  
       ring = []
       
       ptBL = _UTMtoLL(n, e, utmZone)
@@ -469,6 +469,7 @@ def _handleGridSquares(poly, interval, AOI):
           "text": text}
           
         polyOut.append(gridPolygon)
+
       
   return polyOut
     
