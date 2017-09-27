@@ -340,7 +340,7 @@ def _handle100kGrids(args, AOI):
       # used for labeling and border graphics
 
       # find the label of the 100K grid
-      text = _findGridLetters(utmZone, 10000000 + (n + 50000) if (n + 50000) < 0 else  n + 50000, e + 50000)
+      text = "{0}{1}{2}".format(utmZone,latitudeZone, _findGridLetters(utmZone, 10000000 + (n + 50000) if (n + 50000) < 0 else  n + 50000, e + 50000))
       
       # Build the 100k grid boundary
       ring = []
@@ -450,9 +450,9 @@ def _handleGridSquares(poly, interval, AOI):
         continue      
             
       if not AOI.disjoint(polygon):
-        text = GZD + _padZero(e % 100000 / interval,  5 - 
+        text = "{0}{1}".format(GZD,_padZero(e % 100000 / interval,  5 - 
           math.log10(interval)) + _padZero(((10000000 + n) if minN < 0 else n) % 100000 / interval, 5 - 
-          math.log10(interval))        
+          math.log10(interval)))        
               
         gridPolygon = {"clippedPolygon": clippedPolygon,
           "unclippedPolygon": polygon,
