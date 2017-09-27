@@ -357,7 +357,7 @@ class CreateReferenceSystemGRGFromArea(object):
         ''' Define Reference Grid From Area constructor '''
         self.label = "Create Reference System GRG from Area"
         self.description = "Create an MGRS or USNG gridded reference graphic from an selected area on the map."
-        self.GRID_LIST = ['GRID_ZONE_DESIGNATOR',
+        self.GRID_LIST = ['GRID_ZONE',
                           '100000M_GRID',
                           '10000M_GRID',
                           '1000M_GRID',
@@ -367,7 +367,7 @@ class CreateReferenceSystemGRGFromArea(object):
                               "USNG"]
         self.LARGE_GRID_OPTIONS = ["NO_LARGE_GRIDS",
                                    "ALLOW_LARGE_GRIDS"]
-        
+
     def getParameterInfo(self):
         '''
         Define parameter definitions
@@ -463,6 +463,7 @@ class CreateReferenceSystemGRGFromArea(object):
                                    parameters[2].value,
                                    parameters[4].value)
         out_grid = RG.Build(parameters[3].value)
+        del RG
         return out_grid
 
 

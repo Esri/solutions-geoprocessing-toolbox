@@ -13,7 +13,7 @@ GRID_FIELD_NAME = "Grid"
 class ReferenceGrid(object):
   '''
   '''
-  GRID_SIZE_LOOKUP = {'GRID_ZONE_DESIGNATOR':1000000,
+  GRID_SIZE_LOOKUP = {'GRID_ZONE':1000000,
                           '100000M_GRID':100000,
                           '10000M_GRID':10000,
                           '1000M_GRID':1000,
@@ -22,7 +22,7 @@ class ReferenceGrid(object):
   DEBUG = False
   GRID_FIELD_NAME = "Grid"
 
-  def __init__(self, input_area, grid_type, grid_square_size, large_grid_handling='ALLOW_LARGE_GRIDS'):
+  def __init__(self, input_area, grid_type, grid_square_size, large_grid_handling='NO_LARGE_GRIDS'):
     '''
     Reference Grid Constructor
     '''
@@ -33,14 +33,23 @@ class ReferenceGrid(object):
     if large_grid_handling == 'ALLOW_LARGE_GRIDS':
       self.allowLargeGrids = True
     self.scratch_workspace = Utilities.MakeScratchGeodatabase()
-    
+
     return
-  
+
   def __del__(self):
     '''
     Destructor
     '''
-    arcpy.Delete_management(self.scratch_workspace)
+    arcpy.env.workspace = self.scratch_workspace
+    for d in arcpy.ListDatasets():
+      if arcpy.TestSchemaLock(d):
+        arcpy.Delete_management(d)
+      else:
+        arcpy.AddMessage("Could not delete {}.".format(d))
+    if arcpy.TestSchemaLock(self.scratch_workspace):
+      arcpy.Delete_management(self.scratch_workspace)
+    else:
+      arcpy.AddMessage("Scratch geodatabase {} is locked and cannot be removed.".format(self.scratch_workspace))
     return
 
   def Build(self, out_features):
@@ -56,27 +65,29 @@ class ReferenceGrid(object):
                                                           "" ,
                                                           "" ,
                                                           "" ,
-                                                          spatial_reference)  
+                                                          spatial_reference)
       return feature_class
 
     def _buildHundredGrid(out_features, sq):
       '''
       '''
       features = _createFC(out_features, "POLYGON", sr_wgs_84)
-      arcpy.AddField_management(features, GRID_FIELD_NAME,"text") 
+      arcpy.AddField_management(features, GRID_FIELD_NAME,"text")
       with arcpy.da.InsertCursor(features, ['SHAPE@',GRID_FIELD_NAME]) as cursor:
         for i in range(0,len(sq)):
           cursor.insertRow([sq[i]['clippedPolygon'],
-                            sq[i][GRID_FIELD_NAME]])  
+                            sq[i][GRID_FIELD_NAME]])
       return features
 
     def _largeGridWarning(area, value):
       return "Area ({0}) exceeds large grid value for {1}. Proceeding with grid construction.".format(area, value)
-    
+
     def _largeGridError(area, value):
       return "Area ({0}) exceeds large grid value for {1}. Use a smaller Input Area or choose a larger Grid Size.".format(area, value)
 
-    out_features = out_features.value
+    if not isinstance(out_features, str):
+      out_features = out_features.value
+
     arcpy.env.overwriteOutput = True
     extent_area = arcpy.Describe(self.inputArea).extent.polygon.area
     if self.DEBUG:
@@ -115,7 +126,7 @@ class ReferenceGrid(object):
     #sr_nad_83 = arcpy.SpatialReference(4269) #GCS_North_American_1983
     #sr_nad_83_harn = arcpy.SpatialReference(4152) #GCS_North_American_1983_HARN
     sr_wgs_84 = arcpy.SpatialReference(4326)
-    
+
 
     AOIPoly = arcpy.Describe(self.inputArea).extent.polygon.projectAs(sr_wgs_84)
 
@@ -138,7 +149,7 @@ class ReferenceGrid(object):
     #select the grid zones that intersect with the input extent
     arcpy.MakeFeatureLayer_management(gridZones, "gridZones_lyr")
     Selection = arcpy.SelectLayerByLocation_management("gridZones_lyr", "INTERSECT", self.inputArea)
-    if self.gridSize == 'GRID_ZONE_DESIGNATOR':
+    if self.gridSize == 'GRID_ZONE':
       arcpy.CopyFeatures_management(Selection, out_features)
       arcpy.DeleteField_management(out_features,['utmZone','utmBand'])
       return out_features
@@ -167,34 +178,34 @@ class ReferenceGrid(object):
       currentValue = currentValue / 10
 
     output = _createFC(out_features, "POLYGON", sr_wgs_84)
-    arcpy.AddField_management(output,GRID_FIELD_NAME,"text") 
+    arcpy.AddField_management(output,GRID_FIELD_NAME,"text")
     with arcpy.da.InsertCursor(output, ['SHAPE@',GRID_FIELD_NAME]) as cursor:
       for i in range(0,len(polys)):
         cursor.insertRow([polys[i]['clippedPolygon'],
-                          polys[i]['text']])  
+                          polys[i]['text']])
 
     return output
 
 
 def _NonPolarGridZone(args):
   # parse and set the UTM zone and latitude zone from the id
-  # (i.e. "12S" would parse to ['12', 'S'])  
+  # (i.e. "12S" would parse to ['12', 'S'])
   r = re.compile("([0-9]+)([a-zA-Z]+)")
-  m = r.match(args['id'])  
+  m = r.match(args['id'])
   id = args['id']
   utmZone = m.group(1)
   latitudeZone = m.group(2)
-  
+
   feature_info = [[args['xmin'], args['ymin']],
                   [args['xmin'], args['ymax']],
                   [args['xmax'], args['ymax']],
                   [args['xmax'], args['ymin']],
                   [args['xmin'], args['ymin']]]
-  
+
   polygon = arcpy.Polygon(arcpy.Array([arcpy.Point(*coords) for coords in feature_info]),arcpy.SpatialReference(4326))
-  
+
   npgz = {"id": id,"utmZone": utmZone,"latitudeZone": latitudeZone,"polygon": polygon}
-  
+
   return npgz
 
 
@@ -203,7 +214,7 @@ def _ZonesDictionary():
   The zonesDictionary object has 1197 unique keys (one for eqch MGRS grid zone).
   Rather than load it through a single, large json text file, we build it here programmatically, one time, on the client
   '''
-  
+
   #Per MGRS definition, these are the valid grid zone letters
   # A,B,Y,Z reserved for north and south polar regions as UPS
   zoneLetters = ['C','D','E','F','G','H','J','K','L','M','N','P','Q','R','S','T','U','V','W','X']
@@ -221,7 +232,7 @@ def _ZonesDictionary():
     The index of the MGRS grid zone letter (w.r.t. the zoneLetters object)
     @return {module:mgrs-utils~NonPolarGridZone  The NonPolarGridZone object
     @private
-    '''    
+    '''
     zoneLtr = zoneLetters[zoneLtrIndex]
     zoneId = str(zoneNum) + zoneLtr
 
@@ -267,10 +278,10 @@ def _ZonesDictionary():
         ymax  =  84
 
       nonPolarGridZoneArgs = {"xmin": xmin,"ymin": ymin,"xmax": xmax,"ymax": ymax,"id": zoneId}
-    
+
     #return nonPolarGridZoneArgs
     return _NonPolarGridZone(nonPolarGridZoneArgs)
-  
+
   '''
   Loop through all possible zone number/letter combinations,
   building the NonPolarGridZone object for each
@@ -279,42 +290,42 @@ def _ZonesDictionary():
     for zoneLtr in range(0,len(zoneLetters)):
       nonPolarGridZone = ltrZoneToExtent(zoneNum, zoneLtr)
       if nonPolarGridZone:
-        zonesDictionary[nonPolarGridZone["id"]] = nonPolarGridZone       
-        
+        zonesDictionary[nonPolarGridZone["id"]] = nonPolarGridZone
+
   return zonesDictionary
 
-   
+
 def _processZonePolygons(visibleGridZones, extent):
   '''
   Processes an array of visible grid zone and hands them off to the appropriate handler(s)
-  '''   
+  '''
   polys = []
   fields = ['SHAPE@', GRID_FIELD_NAME,'utmZone','utmBand']
-  
+
   with arcpy.da.SearchCursor(visibleGridZones, fields) as cursor:
     for row in cursor:
-      gridZoneExtent = row[0].extent    
+      gridZoneExtent = row[0].extent
       lowerLeftUtm = _LLtoUTM(gridZoneExtent.YMin, gridZoneExtent.XMin, row[2], row[3])
       lowerRightUtm = _LLtoUTM(gridZoneExtent.YMin, gridZoneExtent.XMax, row[2], row[3])
       upperRightUtm = _LLtoUTM(gridZoneExtent.YMax, gridZoneExtent.XMax, row[2], row[3])
       upperLeftUtm = _LLtoUTM(gridZoneExtent.YMax, gridZoneExtent.XMin, row[2], row[3])
-      
+
       # using the UTM coordinates, find the min/max values
-      # (index 0 of a UTM point is easting, 1 is northing)  
-      
+      # (index 0 of a UTM point is easting, 1 is northing)
+
       minEasting = min(lowerLeftUtm[0],lowerRightUtm[0], upperRightUtm[0], upperLeftUtm[0])
       maxEasting = max(lowerLeftUtm[0],lowerRightUtm[0], upperRightUtm[0], upperLeftUtm[0])
-      minNorthing = min(lowerLeftUtm[1],lowerRightUtm[1], upperRightUtm[1], upperLeftUtm[1]) 
+      minNorthing = min(lowerLeftUtm[1],lowerRightUtm[1], upperRightUtm[1], upperLeftUtm[1])
       maxNorthing = max(lowerLeftUtm[1],lowerRightUtm[1], upperRightUtm[1], upperLeftUtm[1])
-      
+
       handlerArgs = {"minE": minEasting,
                       "maxE": maxEasting,
                       "minN": minNorthing,
                       "maxN": maxNorthing,
                       "utmZone": row[2],
                       "latitudeZone": row[3],
-                      "polygon": row[0]}                     
-      
+                      "polygon": row[0]}
+
       polys = polys + _handle100kGrids(handlerArgs, extent)
   return polys
 
@@ -343,60 +354,59 @@ def _handle100kGrids(args, AOI):
 
       # find the label of the 100K grid
       text = _findGridLetters(utmZone, 10000000 + (n + 50000) if (n + 50000) < 0 else  n + 50000, e + 50000)
-      
+
       # Build the 100k grid boundary
       ring = []
-      
+
       # start at the bottom left corner, and work north to
       # the top left corner (in 25k m increments)
       # this is a faster way of densifying the line, since it
       # will appear to be curved on the map
-      
+
       for i in range(n, n + 100000, 25000):
         pt = _UTMtoLL(i, e, utmZone)
         if i == n:
           BL = arcpy.PointGeometry(arcpy.Point(pt['lon'], pt['lat']),arcpy.SpatialReference(4326))
         ring.append([pt['lon'], pt['lat']])
-      
-      
+
       # continue adding points to the polygon, working from the
-      # top left to top right corner 
-      
+      # top left to top right corner
+
       for i in range(e, e + 100000, 25000):
         pt = _UTMtoLL(n + 100000, i, utmZone)
         ring.append([pt['lon'], pt['lat']])
 
       # continue adding points to the polygon, working from the
       # top right to bottom right corner
-      
+
       for i in range(n + 100000, n , -25000):
         pt = _UTMtoLL(i, e + 100000, utmZone);
         ring.append([pt['lon'], pt['lat']]);
-      
-      BR = arcpy.PointGeometry(arcpy.Point(pt['lon'], pt['lat']),arcpy.SpatialReference(4326))      
+
+      BR = arcpy.PointGeometry(arcpy.Point(pt['lon'], pt['lat']),arcpy.SpatialReference(4326))
       # continue adding points to the polygon, working from
       # the bottom right to the bottom left corner (to close the polygon)
-      
+
       for i in range(e + 100000, e, -25000):
         pt = _UTMtoLL(n, i, utmZone)
         ring.append([pt['lon'], pt['lat']])
 
       # create the polygon, from the ring created above
       polygon = arcpy.Polygon(arcpy.Array([arcpy.Point(*coords) for coords in ring]),arcpy.SpatialReference(4326))
-      
+
       # we need to rotate the drawn extent to match the angle of the grid (so that we can square the grid off)
       angle = BL.angleAndDistanceTo(BR)
-      #arcpy.AddMessage(angle)  
+      #arcpy.AddMessage(angle)
 
       # now that the 100k grid polygon exists, clip it by the grid zone polygon
-      clippedPolygon = polygon.intersect(zonePolygon,4)      
-                
+      clippedPolygon = polygon.intersect(zonePolygon,4)
+
       # after being clipped above, they may no longer exist
       # (i.e. they were not within the bounds of the zone)
       # if this is the case, skip the rest and move on to the next increment of n or e
       if not clippedPolygon:
         break
-        
+
       # now check the clipped polygon touches the AOI drawn
       if not AOI.disjoint(polygon):
         gridPolygon = {"clippedPolygon": clippedPolygon,
@@ -408,7 +418,7 @@ def _handle100kGrids(args, AOI):
                           "utmZone": utmZone,
                           "latitudeZone": latitudeZone,
                           GRID_FIELD_NAME: text}
-          
+
         poly100k.append(gridPolygon)
 
   return poly100k
@@ -426,13 +436,15 @@ def _handleGridSquares(poly, interval, AOI):
   minE = poly['xmin']
   maxE = poly['xmax']
   minN = poly['ymin']
-  maxN = poly['ymax']    
-  polyOut = []    
-      
-  for n in range(int(math.floor(minN / interval) * interval), int(maxN), interval):    
-    for e in range(int(math.floor(minE / interval) * interval), int(maxE), interval):  
+  maxN = poly['ymax']
+  polyOut = []
+
+  for n in range(int(math.floor(minN / interval) * interval),
+                 int(maxN), interval):
+    for e in range(int(math.floor(minE / interval) * interval),
+                   int(maxE), interval):
       ring = []
-      
+
       ptBL = _UTMtoLL(n, e, utmZone)
       ring.append([ptBL['lon'], ptBL['lat']])
       ptTL = _UTMtoLL(n + interval, e, utmZone)
@@ -443,19 +455,19 @@ def _handleGridSquares(poly, interval, AOI):
       ring.append([ptBR['lon'], ptBR['lat']])
       # close off poly
       ring.append([ptBL['lon'], ptBL['lat']])
-            
+
       polygon = arcpy.Polygon(arcpy.Array([arcpy.Point(*coords) for coords in ring]),arcpy.SpatialReference(4326))
-            
-      clippedPolygon = polygon.intersect(clippedPoly,4)      
-      
+
+      clippedPolygon = polygon.intersect(clippedPoly,4)
+
       if not clippedPolygon:
-        break      
-            
+        break
+
       if not AOI.disjoint(polygon):
-        text = GZD + str(_padZero(e % 100000 / interval,  5 - 
-          math.log10(interval))) + str(_padZero(((10000000 + n) if minN < 0 else n) % 100000 / interval, 5 - 
-          math.log10(interval)))        
-              
+        text = GZD + str(_padZero(e % 100000 / interval,  5 -
+          math.log10(interval))) + str(_padZero(((10000000 + n) if minN < 0 else n) % 100000 / interval, 5 -
+          math.log10(interval)))
+
         gridPolygon = {"clippedPolygon": clippedPolygon,
           "unclippedPolygon": polygon,
           "clippedPolygon": clippedPolygon,
@@ -469,12 +481,12 @@ def _handleGridSquares(poly, interval, AOI):
           "latitudeZone": latitudeZone,
           GRID_FIELD_NAME: GZD,
           "text": text}
-          
+
         polyOut.append(gridPolygon)
-      
+
   return polyOut
-    
-  
+
+
 def _LLtoUTM (lat, lon, zoneNumber, zoneBand):
   '''
   Converts lat/lon to UTM coords
@@ -491,14 +503,14 @@ def _LLtoUTM (lat, lon, zoneNumber, zoneBand):
   #   er = 6378137;
   #   e2 = 0.00669438002290079
   e2ps = e2 / (1 - e2)
-  
+
   lonTemp = (lon + 180) - math.floor((lon + 180) / 360) * 360 - 180;
   latRad = lat * math.pi / 180
   lonRad = lonTemp * math.pi / 180
-  
+
   lonOrigin = (zoneNumber - 1) * 6 - 180 + 3 # +3 puts origin in middle of zone
   lonOriginRad = lonOrigin * math.pi / 180
-  
+
   #compute the UTM Zone from the latitude and longitude
   UTMZone = str(zoneNumber) + "" + zoneBand + " "
   N = er / math.sqrt(1 - e2 * math.sin(latRad) * math.sin(latRad))
@@ -519,7 +531,7 @@ def _LLtoUTM (lat, lon, zoneNumber, zoneBand):
     UTMcoordinates = UTMcoordinates + "mE " + str(round(10000000 + UTMNorthing)) + "mN"
   else:
     UTMcoordinates = UTMcoordinates + "mE " + str(round(UTMNorthing)) + "mN"
-  
+
   return [UTMEasting, UTMNorthing, zoneNumber];
 
 
@@ -539,7 +551,7 @@ def _UTMtoLL(UTMNorthing, UTMEasting, UTMZoneNumber):
   # NAD 83:
   #   er = 6378137;
   #   e2 = 0.00669438002290079
-  
+
   e2ps = e2 / (1 - e2)
   E1 = (1 - math.sqrt(1 - e2)) / (1 + math.sqrt(1 - e2))
   #remove 500,000 meter offset for longitude
@@ -577,7 +589,7 @@ def _UTMtoLL(UTMNorthing, UTMEasting, UTMZoneNumber):
   ret['lat'] = lat
   ret['lon'] = lon
   return ret
-     
+
 
 def _findGridLetters (zoneNum, northing, easting):
   '''
@@ -605,7 +617,7 @@ def _findGridLetters (zoneNum, northing, easting):
     col = col + 1
   #cycle repeats (wraps) after 8 columns
   col = col % 8
-  
+
   return _lettersHelper(_findSet(zoneNum), row, col);
 
 
@@ -615,7 +627,7 @@ def _lettersHelper(set, row, col):
   given row, column and set identifier
   '''
   # handle case of last row
-  
+
   if row == 0:
     row = 20 - 1
   else:
@@ -625,7 +637,7 @@ def _lettersHelper(set, row, col):
     col = 8 - 1
   else:
     col = col - 1
-  
+
   if set == 1:
     l1 = "ABCDEFGH" # column ids
     l2 = "ABCDEFGHJKLMNPQRSTUV" # row ids
@@ -644,7 +656,7 @@ def _lettersHelper(set, row, col):
   else:
     l1 = "STUVWXYZ"
     l2 = "FGHJKLMNPQRSTUVABCDE"
-  
+
   return l1[col] + l2[row]
 
 
@@ -675,7 +687,7 @@ def _findSet(zoneNum):
 def _padZero(number, width):
   number = str(number)
   while len(number) < width:
-    number = "0" + number      
+    number = "0" + number
   return number
 
 

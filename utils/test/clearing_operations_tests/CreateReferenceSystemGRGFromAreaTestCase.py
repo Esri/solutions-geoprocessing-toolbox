@@ -80,7 +80,7 @@ class CreateReferenceSystemGRGFromAreaTestCase(unittest.TestCase, arcpyAssert.Fe
     # GZD Test
     def testCreateReferenceSystemGRGFromArea_GZD(self):
         '''
-        Testing with Grid Zone Designator
+        Testing with Grid Zone
         '''
         if Configuration.DEBUG is True: print(".....CreateReferenceSystemGRGFromAreaTestCase.testCreateReferenceSystemGRGFromArea_GZD")
         print("Importing toolbox...")
@@ -88,7 +88,7 @@ class CreateReferenceSystemGRGFromAreaTestCase(unittest.TestCase, arcpyAssert.Fe
         arcpy.env.overwriteOutput = True
 
         #inputs
-        grid_size = "GRID_ZONE_DESIGNATOR"
+        grid_size = "GRID_ZONE"
         output = os.path.join(self.scratchGDB, "outgrg_GZD")
 
         #Testing
