@@ -450,9 +450,9 @@ def _handleGridSquares(poly, interval, AOI):
         break      
             
       if not AOI.disjoint(polygon):
-        text = GZD + str(_padZero(e % 100000 / interval,  5 - 
-          math.log10(interval))) + str(_padZero(((10000000 + n) if minN < 0 else n) % 100000 / interval, 5 - 
-          math.log10(interval)))        
+        text = GZD + _padZero(e % 100000 / interval,  5 - 
+          math.log10(interval)) + _padZero(((10000000 + n) if minN < 0 else n) % 100000 / interval, 5 - 
+          math.log10(interval))        
               
         gridPolygon = {"clippedPolygon": clippedPolygon,
           "unclippedPolygon": polygon,
@@ -461,8 +461,8 @@ def _handleGridSquares(poly, interval, AOI):
           "ymin": n,
           "xmax": e + interval,
           "ymax": n + interval,
-          "x": str(_padZero(e % 100000 / interval,  5 - math.log10(interval))),
-          "y": str(_padZero(((10000000 + n) if minN < 0 else n) % 100000 / interval,5 - math.log10(interval))),
+          "x": _padZero(e % 100000 / interval,  5 - math.log10(interval)),
+          "y": _padZero(((10000000 + n) if minN < 0 else n) % 100000 / interval,5 - math.log10(interval)),
           "utmZone": utmZone,
           "latitudeZone": latitudeZone,
           "GZD": GZD,
@@ -672,9 +672,9 @@ def _findSet(zoneNum):
 
 
 def _padZero(number, width):
-  number = str(number)
+  number = str(int(number))
   while len(number) < width:
-    number = "0" + number      
+    number = "0" + number
   return number
 
 
