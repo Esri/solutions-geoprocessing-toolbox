@@ -393,7 +393,7 @@ def _handle100kGrids(args, AOI):
       # (i.e. they were not within the bounds of the zone)
       # if this is the case, skip the rest and move on to the next increment of n or e
       if not clippedPolygon:
-        break
+        continue
         
       # now check the clipped polygon touches the AOI drawn
       if not AOI.disjoint(polygon):
@@ -447,7 +447,7 @@ def _handleGridSquares(poly, interval, AOI):
       clippedPolygon = polygon.intersect(clippedPoly,4)      
       
       if not clippedPolygon:
-        break      
+        continue      
             
       if not AOI.disjoint(polygon):
         text = GZD + _padZero(e % 100000 / interval,  5 - 
