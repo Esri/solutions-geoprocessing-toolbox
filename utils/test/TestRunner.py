@@ -1,7 +1,7 @@
 # coding: utf-8
 '''
 ------------------------------------------------------------------------------
- Copyright 2015 Esri
+ Copyright 2015 - 2017 Esri
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
@@ -32,19 +32,21 @@
  history:
  10/06/2015 - MF - placeholder
  10/30/2015 - MF - tests running
+ 17/25/2017 - MF - remove deprecated tool tests
 ==================================================
 '''
 
-import os
-import sys
 import datetime
 import logging
+import os
+import sys
 import unittest
+
 import arcpy
+
 import Configuration
 import UnitTestUtilities
 import DataDownload
-
 
 logFileFromBAT = None
 if len(sys.argv) > 1:
@@ -67,54 +69,75 @@ def main():
         Configuration.Logger = UnitTestUtilities.initializeLogger(logName)
     print("Logging results to: " + str(logName))
     UnitTestUtilities.setUpLogFileHeader()
-    
+
     result = runTestSuite()
+
     logTestResults(result)
-    print("END OF TEST =========================================\n")
-    return
+
+    return result.wasSuccessful()
 
 def logTestResults(result):
     ''' Write the log file '''
     resultHead = resultsHeader(result)
     print(resultHead)
     Configuration.Logger.info(resultHead)
-    if len(result.errors) > 0:
-        rError = resultsErrors(result)
-        print(rError)
-        Configuration.Logger.error(rError)
-    if len(result.failures) > 0:
-        rFail = resultsFailures(result)
-        print(rFail)
-        Configuration.Logger.error(rFail)
-    Configuration.Logger.info("END OF TEST =========================================\n")
+
+    errorLogLines = getErrorResultsAsList(result)
+    for errorLogLine in errorLogLines :
+        # strip unicode chars so they don't mess up print/log file
+        line = errorLogLine.encode('ascii','ignore').decode('ascii')
+        print(line)
+        Configuration.Logger.error(line)
+
+    endOfTestMsg = "END OF TEST ========================================="
+    print(endOfTestMsg)
+    Configuration.Logger.info(endOfTestMsg)
 
     return
 
 def resultsHeader(result):
+
+    if result is None:
+        return
+
     ''' Generic header for the results in the log file '''
-    msg = "RESULTS =================================================\n\n"
+    errorCount   = len(result.errors)
+    failureCount = len(result.failures)
+    skippedCount = len(result.skipped)
+    nonPassedCount = errorCount + failureCount + skippedCount
+
+    passedCount  = result.testsRun - nonPassedCount
+    # testsRun should be > 0 , but just in case
+    percentPassed = ((passedCount / result.testsRun) * 100.0) if (result.testsRun > 0) else 0.0
+
+    msg = "\nRESULTS =================================================\n"
     msg += "Number of tests run: " + str(result.testsRun) + "\n"
-    msg += "Number of errors: " + str(len(result.errors)) + "\n"
-    msg += "Number of failures: " + str(len(result.failures)) + "\n"
+    msg += "Number succeeded: " + str(passedCount) + "\n"
+    msg += "Number of errors: " + str(errorCount) + "\n"
+    msg += "Number of failures: " + str(failureCount) + "\n"
+    msg += "Number of tests skipped: " + str(skippedCount) + "\n"
+    msg += "Percent passing: %3.1f" % (percentPassed) + "\n"
+    msg += "=========================================================\n"
     return msg
 
-def resultsErrors(result):
-    ''' Error results formatting '''
-    msg = "ERRORS =================================================\n\n"
-    for i in result.errors:
-        for j in i:
-            msg += str(j)
-        msg += "\n"
-    return msg
+def getErrorResultsAsList(result):
+    results = []
+    if len(result.errors) > 0:
+        results.append("ERRORS ==================================================")
+        for test in result.errors:
+            for error in test:
+                strError = str(error)
+                # For errors containing newlines, break these up so they are more readable
+                results += strError.strip().splitlines()
 
-def resultsFailures(result):
-    ''' Assert failures formatting '''
-    msg = "FAILURES ===============================================\n\n"
-    for i in result.failures:
-        for j in i:
-            msg += str(j)
-        msg += "\n"
-    return msg
+    if len(result.failures) > 0:
+        results.append("FAILURES ================================================")
+        for test in result.failures:
+            for failure in test:
+                strFailure = str(failure)
+                results += strFailure.strip().splitlines()
+
+    return results
 
 def runTestSuite():
     ''' collect all test suites before running them '''
@@ -122,62 +145,77 @@ def runTestSuite():
     testSuite = unittest.TestSuite()
     result = unittest.TestResult()
 
-    #What are we working with?
-    Configuration.Platform = "DESKTOP"
-    if arcpy.GetInstallInfo()['ProductName'] == 'ArcGISPro':
-        Configuration.Platform = "PRO"
+    #What Platform are we running on?
+    Configuration.GetPlatform()
     Configuration.Logger.info(Configuration.Platform + " =======================================")
 
-    testSuite.addTests(addCapabilitySuite())
-    testSuite.addTests(addPatternsSuite())
-    testSuite.addTests(addVisibilitySuite())
-    testSuite.addTests(addSuitabilitySuite())
+    testSuite.addTests(addClearingOperationsSuite())
+    testSuite.addTests(addGeoNamesSuite())
+    testSuite.addTests(addIncidentAnalysisSuite())
+    testSuite.addTests(addMilitaryFeaturesSuite())
+    testSuite.addTests(addSunPositionAnalysisSuite())
+    testSuite.addTests(addDistanceToAssetsSuite())
 
-    #addDataManagementTests(logger, platform)
-    #addOperationalGraphicsTests(logger, platform)
-    #addPatternsTests(logger, platform)
-    #addSuitabilityTests(logger, platform)
-    #testSuite.addTests(addVisibilityTests(logger, platform))
+    #TODO: MAoT Test Suite
+    #TODO: MAoW Test Suite
 
     print("running " + str(testSuite.countTestCases()) + " tests...")
+
+    # Run all of the tests added above
     testSuite.run(result)
+
     print("Test success: {0}".format(str(result.wasSuccessful())))
+
     return result
 
-def addCapabilitySuite():
-    ''' Add all Capability tests in the ./capability_tests folder '''
-    if Configuration.DEBUG == True: print("TestRunner.py - addCapabilitySuite")
-    from capability_tests import AllCapabilityTestSuite
-    testSuite = unittest.TestSuite()
-    testSuite.addTests(AllCapabilityTestSuite.getCapabilityTestSuites())
-    return testSuite
-
-def addPatternsSuite():
-    ''' Add all Patterns tests in the ./patterns_tests folder '''
-    if Configuration.DEBUG == True: print("TestRunner.py - addPatternsSuite")
-    from patterns_tests import AllPatternsTestSuite
-    suite = unittest.TestSuite()
-    suite.addTest(AllPatternsTestSuite.getPatternsTestSuites())
+def addClearingOperationsSuite():
+    '''Add all Clearing operations Tests'''
+    if Configuration.DEBUG == True: print("TestRunner.py - addClearingOperationsSuite")
+    from clearing_operations_tests import ClearingOperationsTestSuite
+    suite = ClearingOperationsTestSuite.getTestSuite()
     return suite
 
-def addVisibilitySuite():
-    ''' Add all Visibility tests in the ./visibility_tests folder '''
-    if Configuration.DEBUG == True: print("TestRunner.py - addVisibilitySuite")
-    from visibility_tests import AllVisibilityTestSuite
-    suite = unittest.TestSuite()
-    suite.addTests(AllVisibilityTestSuite.getVisibilityTestSuites())
+def addIncidentAnalysisSuite():
+    ''' Add all IncidentAnalysis tests  '''
+    if Configuration.DEBUG == True: print("TestRunner.py - addIncidentAnalysisSuite")
+    from incident_analysis_tests import IncidentAnalysisToolsTestSuite
+    suite = IncidentAnalysisToolsTestSuite.getTestSuite()
     return suite
 
-def addSuitabilitySuite():
-    ''' Add all Suitability tests in the ./suitability_tests folder '''
-    if Configuration.DEBUG == True: print("TestRunner.py - addSuitabilitySuite")
-    from suitability_tests import AllSuitabilityTestSuite
-    suite = unittest.TestSuite()
-    suite.addTests(AllSuitabilityTestSuite.getSuitabilityTestSuites())
+def addSunPositionAnalysisSuite():
+    ''' Add all SunPositionAnalysis tests '''
+    if Configuration.DEBUG == True: print("TestRunner.py - addSunPositionAnalysisSuite")
+    from sun_position_analysis_tests import SunPositionAnalysisToolsTestSuite
+    suite = SunPositionAnalysisToolsTestSuite.getTestSuite()
+    return suite
+
+def addGeoNamesSuite():
+    ''' Add all GeoNames tests '''
+    if Configuration.DEBUG == True: print("TestRunner.py - addGeoNamesSuite")
+    from geonames_tests import GeoNamesToolsTestSuite
+    suite = GeoNamesToolsTestSuite.getTestSuite()
+    return suite
+
+def addDistanceToAssetsSuite():
+    ''' Add all DistanceToAssets tests '''
+    if Configuration.DEBUG == True: print("TestRunner.py - addDistanceToAssetsSuite")
+    from distance_to_assets_tests import DistanceToAssetsTestSuite
+    suite = DistanceToAssetsTestSuite.getTestSuite()
+    return suite
+    
+def addMilitaryFeaturesSuite():
+    ''' Add all MilitaryFeatures tests '''
+    if Configuration.DEBUG == True: print("TestRunner.py - addMilitaryFeaturesSuite")
+    from military_features_tests import MilitaryFeaturesToolsTestSuite
+    suite = MilitaryFeaturesToolsTestSuite.getTestSuite()
     return suite
 
 # MAIN =============================================
 if __name__ == "__main__":
     if Configuration.DEBUG == True:
         print("TestRunner.py")
-    main()
+    exitAsCode = main()
+    if exitAsCode:
+        sys.exit(0)
+    else:
+        sys.exit(1)

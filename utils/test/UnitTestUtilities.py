@@ -1,7 +1,7 @@
 # coding: utf-8
 '''
 ------------------------------------------------------------------------------
- Copyright 2015 Esri
+ Copyright 2015 - 2017 Esri
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
@@ -14,7 +14,6 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 ------------------------------------------------------------------------------
-==================================================
 UnitTestUtiliites.py
 --------------------------------------------------
 requirments:
@@ -189,9 +188,16 @@ def handleArcPyError():
     print(msgs)
     Configuration.Logger.error(msgs)
 
-def handleGeneralError():
+    raise Exception('ArcPy Error')
+
+def handleGeneralError(exception = None):
     ''' Basic error handler, errors printed to console and logger '''
     if Configuration.DEBUG == True: print("UnitTestUtilities - handleGeneralError")
+
+    if isinstance(exception, Exception):
+        print(str(exception))
+        Configuration.Logger.error(str(exception))
+
     # Get the traceback object
     tb = sys.exc_info()[2]
     tbinfo = traceback.format_tb(tb)[0]
@@ -205,6 +211,11 @@ def handleGeneralError():
     Configuration.Logger.error(pymsg)
     print(msgs)
     Configuration.Logger.error(msgs)
+
+    if isinstance(exception, Exception):
+        raise exception
+    else:
+        raise Exception('General Error')
     
 def geoObjectsExist(objects):
     ''' Return true if all of the input list of geo-objects exist, false otherwise '''

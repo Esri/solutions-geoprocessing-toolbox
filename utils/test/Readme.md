@@ -24,10 +24,12 @@ The unittests in this section of the repository are designed to test the geoproc
 ## Running the tests
 The goal is to run the test suites for all of the tools against different versions of operating systems and versions of Python/ArcGIS.
 
+**It is important to not add any spaces to folder names. Changing folder names that have spaces will cause errors during execution of the tests.**
+
 1. Check your Python versions. You need to have at least ONE of two required versions listed above.
-2. Modify [**TestKickStart.bat** ](./TestKickStart.bat)to run tests for the versions you have installed. This will mean you must modify the path to the python.exe in *TestKickStart.bat*.
+2. Modify [**TestKickDesktop.bat** ](./TestKickDesktop.bat) or [**TestKickPro.bat**](./TestKickPro.bat) to run tests for the versions you have installed. This will mean you must modify the path to the python.exe in *TestKickStart.bat*.
 3. Open a command prompt in *.\solutions-geoprocessing-toolbox\utils\test*.
-4. Run **TestKickStart.bat**
+4. Run the modified **TestKickDesktop.bat** or **TestKickPro.bat**.
 5. Check the dialog for results and check the log file created by the tests.
 
 ## Log files
