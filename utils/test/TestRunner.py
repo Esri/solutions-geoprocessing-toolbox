@@ -154,7 +154,10 @@ def runTestSuite():
     testSuite.addTests(addIncidentAnalysisSuite())
     testSuite.addTests(addMilitaryFeaturesSuite())
     testSuite.addTests(addSunPositionAnalysisSuite())
-    testSuite.addTests(addDistanceToAssetsSuite())
+
+    # This suite(DistanceToAssets) must be run manually 
+    # - because it requires you to first logon to AGSOnline:
+    # testSuite.addTests(addDistanceToAssetsSuite())
 
     #TODO: MAoT Test Suite
     #TODO: MAoW Test Suite
