@@ -37,13 +37,15 @@ history:
 ==================================================
 '''
 
+import logging
 import os
 import sys
 
 DEBUG = True # this guy is a flag for extra messaging while debugging tests
 
-#NOTE: Logger and Platform are initialized in TestRunner's main()
+#NOTE: Logger and Platform are initialized in TestRunner's main() or Configuration.GetLogger/Platform
 Logger = None
+LoggerFile = None
 
 Platform = None
 
@@ -150,7 +152,7 @@ def checkTokenizeWorkaround() :
     ## END WORKAROUND
     #################################################
 
-def GetLogger() :
+def GetLogger(logLevel = logging.DEBUG) :
 
     global Logger
 
@@ -159,7 +161,7 @@ def GetLogger() :
         import UnitTestUtilities
 
         logName = UnitTestUtilities.getLoggerName()
-        Logger = UnitTestUtilities.initializeLogger(logName)
+        Logger = UnitTestUtilities.initializeLogger(logName, logLevel)
 
     return Logger
 
