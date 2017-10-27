@@ -54,20 +54,22 @@ if len(sys.argv) > 1:
 
 def main():
     ''' main test logic '''
+    print("TestRunner.py - main")
+
     if Configuration.DEBUG == True:
-        print("TestRunner.py - main")
+        print("Debug messaging is ON")
+        logLevel = logging.DEBUG
     else:
         print("Debug messaging is OFF")
+        logLevel = logging.INFO
 
     # setup logger
-    logName = None
     if not logFileFromBAT == None:
-        logName = logFileFromBAT
-        Configuration.Logger = UnitTestUtilities.initializeLogger(logFileFromBAT)
+        Configuration.Logger = UnitTestUtilities.initializeLogger(logFileFromBAT, logLevel)
     else:
-        logName = UnitTestUtilities.getLoggerName()
-        Configuration.Logger = UnitTestUtilities.initializeLogger(logName)
-    print("Logging results to: " + str(logName))
+        Configuration.GetLogger(logLevel)
+
+    print("Logging results to: " + str(Configuration.LoggerFile))
     UnitTestUtilities.setUpLogFileHeader()
 
     result = runTestSuite()
@@ -79,18 +81,15 @@ def main():
 def logTestResults(result):
     ''' Write the log file '''
     resultHead = resultsHeader(result)
-    print(resultHead)
     Configuration.Logger.info(resultHead)
 
     errorLogLines = getErrorResultsAsList(result)
     for errorLogLine in errorLogLines :
         # strip unicode chars so they don't mess up print/log file
         line = errorLogLine.encode('ascii','ignore').decode('ascii')
-        print(line)
         Configuration.Logger.error(line)
 
     endOfTestMsg = "END OF TEST ========================================="
-    print(endOfTestMsg)
     Configuration.Logger.info(endOfTestMsg)
 
     return
@@ -147,7 +146,7 @@ def runTestSuite():
 
     #What Platform are we running on?
     Configuration.GetPlatform()
-    Configuration.Logger.info(Configuration.Platform + " =======================================")
+    Configuration.Logger.info('Running on Platform: ' + Configuration.Platform)
 
     testSuite.addTests(addClearingOperationsSuite())
     testSuite.addTests(addGeoNamesSuite())
@@ -162,53 +161,53 @@ def runTestSuite():
     #TODO: MAoT Test Suite
     #TODO: MAoW Test Suite
 
-    print("running " + str(testSuite.countTestCases()) + " tests...")
+    Configuration.Logger.info("running " + str(testSuite.countTestCases()) + " tests...")
 
     # Run all of the tests added above
     testSuite.run(result)
 
-    print("Test success: {0}".format(str(result.wasSuccessful())))
+    Configuration.Logger.info("Test success: {0}".format(str(result.wasSuccessful())))
 
     return result
 
 def addClearingOperationsSuite():
     '''Add all Clearing operations Tests'''
-    if Configuration.DEBUG == True: print("TestRunner.py - addClearingOperationsSuite")
+    Configuration.Logger.debug("TestRunner.py - addClearingOperationsSuite")
     from clearing_operations_tests import ClearingOperationsTestSuite
     suite = ClearingOperationsTestSuite.getTestSuite()
     return suite
 
 def addIncidentAnalysisSuite():
     ''' Add all IncidentAnalysis tests  '''
-    if Configuration.DEBUG == True: print("TestRunner.py - addIncidentAnalysisSuite")
+    Configuration.Logger.debug("TestRunner.py - addIncidentAnalysisSuite")
     from incident_analysis_tests import IncidentAnalysisToolsTestSuite
     suite = IncidentAnalysisToolsTestSuite.getTestSuite()
     return suite
 
 def addSunPositionAnalysisSuite():
     ''' Add all SunPositionAnalysis tests '''
-    if Configuration.DEBUG == True: print("TestRunner.py - addSunPositionAnalysisSuite")
+    Configuration.Logger.debug("TestRunner.py - addSunPositionAnalysisSuite")
     from sun_position_analysis_tests import SunPositionAnalysisToolsTestSuite
     suite = SunPositionAnalysisToolsTestSuite.getTestSuite()
     return suite
 
 def addGeoNamesSuite():
     ''' Add all GeoNames tests '''
-    if Configuration.DEBUG == True: print("TestRunner.py - addGeoNamesSuite")
+    Configuration.Logger.debug("TestRunner.py - addGeoNamesSuite")
     from geonames_tests import GeoNamesToolsTestSuite
     suite = GeoNamesToolsTestSuite.getTestSuite()
     return suite
 
 def addDistanceToAssetsSuite():
     ''' Add all DistanceToAssets tests '''
-    if Configuration.DEBUG == True: print("TestRunner.py - addDistanceToAssetsSuite")
+    Configuration.Logger.debug("TestRunner.py - addDistanceToAssetsSuite")
     from distance_to_assets_tests import DistanceToAssetsTestSuite
     suite = DistanceToAssetsTestSuite.getTestSuite()
     return suite
     
 def addMilitaryFeaturesSuite():
     ''' Add all MilitaryFeatures tests '''
-    if Configuration.DEBUG == True: print("TestRunner.py - addMilitaryFeaturesSuite")
+    Configuration.Logger.debug("TestRunner.py - addMilitaryFeaturesSuite")
     from military_features_tests import MilitaryFeaturesToolsTestSuite
     suite = MilitaryFeaturesToolsTestSuite.getTestSuite()
     return suite
@@ -216,9 +215,10 @@ def addMilitaryFeaturesSuite():
 # MAIN =============================================
 if __name__ == "__main__":
     if Configuration.DEBUG == True:
-        print("TestRunner.py")
-    exitAsCode = main()
-    if exitAsCode:
-        sys.exit(0)
-    else:
-        sys.exit(1)
+        print("Starting TestRunner.py")
+
+    exitAsBoolean = main()
+
+    exitAsCode = 0 if exitAsBoolean else 1
+
+    sys.exit(exitAsCode)
