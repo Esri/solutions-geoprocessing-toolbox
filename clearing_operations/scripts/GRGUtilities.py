@@ -186,7 +186,7 @@ def RotateFeatureClass(inputFC, outputFC,
         arcpy.ClearEnvironment("outputCoordinateSystem")
 
         # get feature class properties
-        lyrFC = 'lyrFC' #g_ESRI_variable_1
+        lyrFC = 'lyrFC'
         arcpy.MakeFeatureLayer_management(inputFC, lyrFC)
         dFC = arcpy.Describe(lyrFC)
         shpField = dFC.shapeFieldName
@@ -198,13 +198,13 @@ def RotateFeatureClass(inputFC, outputFC,
         arcpy.CreateFeatureclass_management(os.path.dirname(tmpFC),
                                             os.path.basename(tmpFC),
                                             shpType)
-        lyrTmp = 'lyrTmp' #g_ESRI_variable_2
+        lyrTmp = 'lyrTmp'
         arcpy.MakeFeatureLayer_management(tmpFC, lyrTmp)
 
         # set up id field (used to join later)
         TFID = "XXXX_FID"
         arcpy.AddField_management(lyrTmp, TFID, "LONG")
-        arcpy.DeleteField_management(lyrTmp, 'ID') # g_ESRI_variable_3 = 'ID'
+        arcpy.DeleteField_management(lyrTmp, 'ID')
 
         # rotate the feature class coordinates
         # only points, polylines, and polygons are supported
@@ -270,11 +270,11 @@ def RotateFeatureClass(inputFC, outputFC,
         arcpy.AddJoin_management(lyrTmp, TFID, lyrFC, FID)
         env.qualifiedFieldNames = False
         arcpy.Merge_management(lyrTmp, outputFC)
-        lyrOut = 'lyrOut' #g_ESRI_variable_4
+        lyrOut = 'lyrOut'
         arcpy.MakeFeatureLayer_management(outputFC, lyrOut)
         # drop temp fields 2,3 (TFID, FID)
         fnames = [f.name for f in arcpy.ListFields(lyrOut)]
-        dropList = ';'.join(fnames[2:4]) #g_ESRI_variable_5 = ';'
+        dropList = ';'.join(fnames[2:4])
         arcpy.DeleteField_management(lyrOut, dropList)
 
     except MsgError as xmsg:
@@ -586,11 +586,6 @@ def GRGFromPoint(starting_point,
     labelStartPos = label_start_position #arcpy.GetParameterAsText(7)
     labelStyle = label_style #arcpy.GetParameterAsText(8)
     outputFeatureClass = output_feature_class #arcpy.GetParameterAsText(9)
-    #g_ESRI_variable_1 = 'lyrFC'
-    #g_ESRI_variable_2 = 'lyrTmp'
-    #g_ESRI_variable_3 = 'ID'
-    #g_ESRI_variable_4 = 'lyrOut'
-    #g_ESRI_variable_5 = ';'
     tempOutput = os.path.join("in_memory", "tempFishnetGrid")
     DEBUG = True
     mxd = None
