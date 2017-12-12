@@ -186,7 +186,7 @@ def RotateFeatureClass(inputFC, outputFC,
         arcpy.ClearEnvironment("outputCoordinateSystem")
 
         # get feature class properties
-        lyrFC = 'lyrFC' #g_ESRI_variable_1
+        lyrFC = 'lyrFC'
         arcpy.MakeFeatureLayer_management(inputFC, lyrFC)
         dFC = arcpy.Describe(lyrFC)
         shpField = dFC.shapeFieldName
@@ -198,13 +198,13 @@ def RotateFeatureClass(inputFC, outputFC,
         arcpy.CreateFeatureclass_management(os.path.dirname(tmpFC),
                                             os.path.basename(tmpFC),
                                             shpType)
-        lyrTmp = 'lyrTmp' #g_ESRI_variable_2
+        lyrTmp = 'lyrTmp'
         arcpy.MakeFeatureLayer_management(tmpFC, lyrTmp)
 
         # set up id field (used to join later)
         TFID = "XXXX_FID"
         arcpy.AddField_management(lyrTmp, TFID, "LONG")
-        arcpy.DeleteField_management(lyrTmp, 'ID') # g_ESRI_variable_3 = 'ID'
+        arcpy.DeleteField_management(lyrTmp, 'ID')
 
         # rotate the feature class coordinates
         # only points, polylines, and polygons are supported
@@ -270,11 +270,11 @@ def RotateFeatureClass(inputFC, outputFC,
         arcpy.AddJoin_management(lyrTmp, TFID, lyrFC, FID)
         env.qualifiedFieldNames = False
         arcpy.Merge_management(lyrTmp, outputFC)
-        lyrOut = 'lyrOut' #g_ESRI_variable_4
+        lyrOut = 'lyrOut'
         arcpy.MakeFeatureLayer_management(outputFC, lyrOut)
         # drop temp fields 2,3 (TFID, FID)
         fnames = [f.name for f in arcpy.ListFields(lyrOut)]
-        dropList = ';'.join(fnames[2:4]) #g_ESRI_variable_5 = ';'
+        dropList = ';'.join(fnames[2:4])
         arcpy.DeleteField_management(lyrOut, dropList)
 
     except MsgError as xmsg:
@@ -357,6 +357,34 @@ def GRGFromArea(AOI,
         if (cellUnits == "Feet"):
             cellWidth = float(cellWidth) / 3.2808
             cellHeight = float(cellHeight) / 3.2808
+            
+        '''
+        ' If cell units are kilometers convert to meters
+        '''
+        if (cellUnits == "Kilometers"):
+            cellWidth = float(cellWidth) * 1000
+            cellHeight = float(cellHeight) * 1000
+        
+        '''
+        ' If cell units are miles convert to meters
+        '''
+        if (cellUnits == "Miles"):
+            cellWidth = float(cellWidth) * 1609.344
+            cellHeight = float(cellHeight) * 1609.344
+            
+        '''
+        ' If cell units are yards convert to meters
+        '''
+        if (cellUnits == "Yards"):
+            cellWidth = float(cellWidth) * 0.9144
+            cellHeight = float(cellHeight) * 0.9144
+            
+        '''
+        ' If cell units are Nautical Miles convert to meters
+        '''
+        if (cellUnits == "Nautical Miles"):
+            cellWidth = float(cellWidth) * 1852
+            cellHeight = float(cellHeight) * 1852
 
         '''
         ' create a minimum bounding rectangle around the AOI
@@ -586,11 +614,6 @@ def GRGFromPoint(starting_point,
     labelStartPos = label_start_position #arcpy.GetParameterAsText(7)
     labelStyle = label_style #arcpy.GetParameterAsText(8)
     outputFeatureClass = output_feature_class #arcpy.GetParameterAsText(9)
-    #g_ESRI_variable_1 = 'lyrFC'
-    #g_ESRI_variable_2 = 'lyrTmp'
-    #g_ESRI_variable_3 = 'ID'
-    #g_ESRI_variable_4 = 'lyrOut'
-    #g_ESRI_variable_5 = ';'
     tempOutput = os.path.join("in_memory", "tempFishnetGrid")
     DEBUG = True
     mxd = None
@@ -654,9 +677,41 @@ def GRGFromPoint(starting_point,
             if (topRight[1] > topLeft[1]):
                 angleDrawn = 360 - angleDrawn
         else:
+            '''
+            ' If cell units are feet convert to meters
+            '''
             if (cellUnits == "Feet"):
-                cellWidth = float(cellWidth) * 0.3048
-                cellHeight = float(cellHeight) * 0.3048
+                cellWidth = float(cellWidth) / 3.2808
+                cellHeight = float(cellHeight) / 3.2808
+                
+            '''
+            ' If cell units are kilometers convert to meters
+            '''
+            if (cellUnits == "Kilometers"):
+                cellWidth = float(cellWidth) * 1000
+                cellHeight = float(cellHeight) * 1000
+            
+            '''
+            ' If cell units are miles convert to meters
+            '''
+            if (cellUnits == "Miles"):
+                cellWidth = float(cellWidth) * 1609.344
+                cellHeight = float(cellHeight) * 1609.344
+                
+            '''
+            ' If cell units are yards convert to meters
+            '''
+            if (cellUnits == "Yards"):
+                cellWidth = float(cellWidth) * 0.9144
+                cellHeight = float(cellHeight) * 0.9144
+                
+            '''
+            ' If cell units are Nautical Miles convert to meters
+            '''
+            if (cellUnits == "Nautical Miles"):
+                cellWidth = float(cellWidth) * 1852
+                cellHeight = float(cellHeight) * 1852
+            
 
         # Get the coordinates of the point inputExtentDrawnFromMap.
         rows = arcpy.SearchCursor(targetPointOrigin)

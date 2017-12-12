@@ -94,8 +94,7 @@ class CreateGRGFromArea(object):
                                      enabled=True,
                                      multiValue=False)
         cell_units.filter.type = 'ValueList'
-        # cell_units.filter.list = ['METERS', 'FEET']
-        cell_units.filter.list = ['Meters', 'Feet']
+        cell_units.filter.list = ['Meters', 'Feet','Miles','Kilometers','Nautical Miles','Yards']
         cell_units.value = cell_units.filter.list[0]
 
         label_start_position = arcpy.Parameter(name='label_start_position',
@@ -248,8 +247,7 @@ class CreateGRGFromPoint(object):
                                      enabled=True,
                                      multiValue=False)
         cell_units.filter.type = 'ValueList'
-        # cell_units.filter.list = ['METERS', 'FEET']
-        cell_units.filter.list = ['Meters', 'Feet']
+        cell_units.filter.list = ['Meters', 'Feet','Miles','Kilometers','Nautical Miles','Yards']
         cell_units.value = cell_units.filter.list[0]
 
         # TODO: Are we really ever expecting a user to 'draw' a cell size? Doesn't make sense.
