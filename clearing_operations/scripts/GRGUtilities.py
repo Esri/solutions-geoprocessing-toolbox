@@ -319,6 +319,7 @@ def GRGFromArea(AOI,
                 cellUnits,
                 labelStartPos,
                 labelStyle,
+                labelSeperator,
                 outputFeatureClass):
     '''Create Gridded Reference Graphic (GRG) from area input.'''
 
@@ -512,7 +513,7 @@ def GRGFromArea(AOI,
                 if (labelStyle == "Alpha-Numeric"):
                     row[1] = letter + str(int(labelNumber))
                 elif (labelStyle == "Alpha-Alpha"):
-                    row[1] = letter + secondLetter
+                    row[1] = letter + labelSeperator + secondLetter
                 elif (labelStyle == "Numeric"):
                     row[1] = labelNumber
 
@@ -598,22 +599,23 @@ def GRGFromPoint(starting_point,
                  cell_width,
                  cell_height,
                  cell_units,
-                 grid_size_feature_set,
                  label_start_position,
                  label_style,
+                 labelSeperator,
+                 gridAngle,
                  output_feature_class):
     ''' Create Gridded Reference Graphic (GRG) from point input.'''
 
-    targetPointOrigin = starting_point #arcpy.GetParameterAsText(0)
-    numberCellsHo = horizontal_cells #arcpy.GetParameterAsText(1)
-    numberCellsVert = vertical_cells #arcpy.GetParameterAsText(2)
-    cellWidth = cell_width #arcpy.GetParameterAsText(3)
-    cellHeight = cell_height #arcpy.GetParameterAsText(4)
-    cellUnits = cell_units #arcpy.GetParameterAsText(5)
-    gridSize = grid_size_feature_set #arcpy.GetParameterAsText(6)
-    labelStartPos = label_start_position #arcpy.GetParameterAsText(7)
-    labelStyle = label_style #arcpy.GetParameterAsText(8)
-    outputFeatureClass = output_feature_class #arcpy.GetParameterAsText(9)
+    targetPointOrigin = starting_point
+    numberCellsHo = horizontal_cells
+    numberCellsVert = vertical_cells
+    cellWidth = cell_width
+    cellHeight = cell_height
+    cellUnits = cell_units
+    labelStartPos = label_start_position
+    labelStyle = label_style
+    rotation = gridAngle
+    outputFeatureClass = output_feature_class
     tempOutput = os.path.join("in_memory", "tempFishnetGrid")
     DEBUG = True
     mxd = None
@@ -636,81 +638,41 @@ def GRGFromPoint(starting_point,
         else:
             if DEBUG == True: arcpy.AddMessage("Non-map application...")
 
-        # If grid size is drawn on the map, use this instead of cell width and cell height
-        inputExtentDrawnFromMap = False
-        angleDrawn = 0
-        workspace = arcpy.env.workspace
-        topLeftDrawn = 0
-        if float(cellWidth) == 0 and float(cellHeight) == 0:
-            inputExtentDrawnFromMap = True
-            tempGridFC = os.path.join(arcpy.env.scratchWorkspace, "GridSize")
-            arcpy.CopyFeatures_management(gridSize, tempGridFC)
-            pts = None
-            with arcpy.da.SearchCursor(tempGridFC, 'SHAPE@XY', explode_to_points=True) as cursor:
-                pts = [r[0] for r in cursor][0:4]
-            arcpy.Delete_management(tempGridFC)
-
-            # Find the highest points in the drawn rectangle, to calculate the top left and top right coordinates.
-            highestPoint = None
-            nextHighestPoint = None
-            for pt in pts:
-                if highestPoint is None or pt[1] > highestPoint[1]:
-                    nextHighestPoint = highestPoint
-                    highestPoint = pt
-                elif nextHighestPoint is None or pt[1] > nextHighestPoint[1]:
-                    nextHighestPoint = pt
-
-            topLeft = highestPoint if highestPoint[0] < nextHighestPoint[0] else nextHighestPoint
-            topRight = highestPoint if highestPoint[0] > nextHighestPoint[0] else nextHighestPoint
-            topLeftDrawn = topLeft
-
-            # Calculate the cell height and cell width
-            cellWidth= math.sqrt((pts[0][0] - pts[1][0]) ** 2 + (pts[0][1] - pts[1][1]) ** 2)
-            cellHeight = math.sqrt((pts[1][0] - pts[2][0]) ** 2 + (pts[1][1] - pts[2][1]) ** 2)
-
-            # Calculate angle
-            hypotenuse = math.sqrt(math.pow(topLeft[0] - topRight[0], 2) + math.pow(topLeft[1] - topRight[1], 2))
-            adjacent = topRight[0] - topLeft[0]
-            numberToCos = float(adjacent)/float(hypotenuse)
-            angleInRadians = math.acos(numberToCos)
-            angleDrawn = math.degrees(angleInRadians)
-            if (topRight[1] > topLeft[1]):
-                angleDrawn = 360 - angleDrawn
-        else:
-            '''
-            ' If cell units are feet convert to meters
-            '''
-            if (cellUnits == "Feet"):
-                cellWidth = float(cellWidth) / 3.2808
-                cellHeight = float(cellHeight) / 3.2808
-                
-            '''
-            ' If cell units are kilometers convert to meters
-            '''
-            if (cellUnits == "Kilometers"):
-                cellWidth = float(cellWidth) * 1000
-                cellHeight = float(cellHeight) * 1000
+        
+        '''
+        ' If cell units are feet convert to meters
+        '''
+        if (cellUnits == "Feet"):
+            cellWidth = float(cellWidth) / 3.2808
+            cellHeight = float(cellHeight) / 3.2808
             
-            '''
-            ' If cell units are miles convert to meters
-            '''
-            if (cellUnits == "Miles"):
-                cellWidth = float(cellWidth) * 1609.344
-                cellHeight = float(cellHeight) * 1609.344
-                
-            '''
-            ' If cell units are yards convert to meters
-            '''
-            if (cellUnits == "Yards"):
-                cellWidth = float(cellWidth) * 0.9144
-                cellHeight = float(cellHeight) * 0.9144
-                
-            '''
-            ' If cell units are Nautical Miles convert to meters
-            '''
-            if (cellUnits == "Nautical Miles"):
-                cellWidth = float(cellWidth) * 1852
-                cellHeight = float(cellHeight) * 1852
+        '''
+        ' If cell units are kilometers convert to meters
+        '''
+        if (cellUnits == "Kilometers"):
+            cellWidth = float(cellWidth) * 1000
+            cellHeight = float(cellHeight) * 1000
+        
+        '''
+        ' If cell units are miles convert to meters
+        '''
+        if (cellUnits == "Miles"):
+            cellWidth = float(cellWidth) * 1609.344
+            cellHeight = float(cellHeight) * 1609.344
+            
+        '''
+        ' If cell units are yards convert to meters
+        '''
+        if (cellUnits == "Yards"):
+            cellWidth = float(cellWidth) * 0.9144
+            cellHeight = float(cellHeight) * 0.9144
+            
+        '''
+        ' If cell units are Nautical Miles convert to meters
+        '''
+        if (cellUnits == "Nautical Miles"):
+            cellWidth = float(cellWidth) * 1852
+            cellHeight = float(cellHeight) * 1852
             
 
         # Get the coordinates of the point inputExtentDrawnFromMap.
@@ -757,25 +719,6 @@ def GRGFromPoint(starting_point,
         yAxisCoordinate = str(leftCorner) + " " + str(bottomCorner + 10)
         oppCornerCoordinate = str(rightCorner) + " " + str(topCorner)
         fullExtent = str(leftCorner) + " " + str(bottomCorner) + " " + str(rightCorner) + " " + str(topCorner)
-
-        # If grid size is drawn on the map, then calculate the rotation of the grid
-        if inputExtentDrawnFromMap:
-            # Find the highest two points in the inputExtentDrawnFromMap shape
-            highestPoint = None
-            nextHighestPoint = None
-            for pt in pts:
-                if highestPoint is None or pt[1] > highestPoint[1]:
-                    nextHighestPoint = highestPoint
-                    highestPoint = pt
-                elif nextHighestPoint is None or pt[1] > nextHighestPoint[1]:
-                    nextHighestPoint = pt
-            topLeft = highestPoint if highestPoint[0] < nextHighestPoint[0] else nextHighestPoint
-            topRight = highestPoint if highestPoint[0] > nextHighestPoint[0] else nextHighestPoint
-            yDiff = topRight[1] - topLeft[1]
-            xDiff = topRight[0] - topLeft[0]
-
-            # Set the Y-Axis Coordinate so that the grid rotates properly
-            extentHeight = float(topCorner) - float(bottomCorner)
 
         # Set the start position for labeling
         startPos = None
@@ -825,7 +768,7 @@ def GRGFromPoint(starting_point,
             if (labelStyle == "Alpha-Numeric"):
                 row.setValue(gridField, str(letter) + str(number))
             elif (labelStyle == "Alpha-Alpha"):
-                row.setValue(gridField, str(letter) + str(secondLetter))
+                row.setValue(gridField, str(letter) + labelSeperator + str(secondLetter))
             elif (labelStyle == "Numeric"):
                 row.setValue(gridField, str(number))
 
@@ -835,9 +778,9 @@ def GRGFromPoint(starting_point,
             secondLetter = ColIdxToXlName_PointTargetGRG(secondLetterIndex)
 
         # Rotate the shape, if needed.
-        if (inputExtentDrawnFromMap):
+        if (rotation != 0):
             arcpy.AddMessage("Rotating the grid")
-            RotateFeatureClass(tempSort, outputFeatureClass, angleDrawn, pointExtents[0] + " " + pointExtents[1])
+            RotateFeatureClass(tempSort, outputFeatureClass, rotation, pointExtents[0] + " " + pointExtents[1])
         else:
             arcpy.CopyFeatures_management(tempSort, outputFeatureClass)
         arcpy.Delete_management(tempSort)
