@@ -606,6 +606,7 @@ def GRGFromPoint(starting_point,
                  output_feature_class):
     ''' Create Gridded Reference Graphic (GRG) from point input.'''
 
+
     targetPointOrigin = starting_point
     numberCellsHo = horizontal_cells
     numberCellsVert = vertical_cells
@@ -616,6 +617,7 @@ def GRGFromPoint(starting_point,
     labelStyle = label_style
     rotation = gridAngle
     outputFeatureClass = output_feature_class
+
     tempOutput = os.path.join("in_memory", "tempFishnetGrid")
     DEBUG = True
     mxd = None
