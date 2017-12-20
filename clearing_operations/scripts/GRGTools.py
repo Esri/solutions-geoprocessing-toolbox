@@ -94,22 +94,18 @@ class CreateGRGFromArea(object):
                                      enabled=True,
                                      multiValue=False)
         cell_units.filter.type = 'ValueList'
-        # cell_units.filter.list = ['METERS', 'FEET']
-        cell_units.filter.list = ['Meters', 'Feet']
+        cell_units.filter.list = ['Meters', 'Feet','Miles','Kilometers','Nautical Miles','Yards']
         cell_units.value = cell_units.filter.list[0]
 
         label_start_position = arcpy.Parameter(name='label_start_position',
-                                               displayName='Label Start Position',
+                                               displayName='Start Position',
                                                direction='Input',
                                                datatype='GPString',
                                                parameterType='Required',
+                                               category='Label Properties',
                                                enabled=True,
                                                multiValue=False)
         label_start_position.filter.type = 'ValueList'
-        # label_start_position.filter.list = ['UPPER_LEFT',
-        #                                     'LOWER_LEFT',
-        #                                     'UPPER_RIGHT',
-        #                                     'LOWER_RIGHT']
         label_start_position.filter.list = ['Upper-Left',
                                             'Lower-Left',
                                             'Upper-Right',
@@ -117,20 +113,30 @@ class CreateGRGFromArea(object):
         label_start_position.value = label_start_position.filter.list[0]
 
         label_type = arcpy.Parameter(name='label_type',
-                                      displayName='Label Type',
+                                      displayName='Type',
                                       direction='Input',
                                       datatype='GPString',
                                       parameterType='Required',
+                                      category='Label Properties',
                                       enabled=True,
                                       multiValue=False)
         label_type.filter.type = 'ValueList'
-        # label_type.filter.list = ['ALPHA-NUMERIC',
-        #                            'ALPHA-ALPHA',
-        #                            'NUMERIC']
         label_type.filter.list = ['Alpha-Numeric',
                                    'Alpha-Alpha',
                                    'Numeric']
         label_type.value = label_type.filter.list[0]
+        
+        label_seperator = arcpy.Parameter(name='label_seperator',
+                                      displayName='Separator (Only used for Alpha-Alpha labeling)',
+                                      direction='Input',
+                                      datatype='GPString',
+                                      parameterType='Required',
+                                      category='Label Properties',
+                                      enabled=False,
+                                      multiValue=False)
+        label_seperator.filter.type = 'ValueList'
+        label_seperator.filter.list = ['-',',','.','/']
+        label_seperator.value = label_seperator.filter.list[0]
 
         # TODO: define output schema as method
         output_features= arcpy.Parameter(name='output_grg_features',
@@ -150,6 +156,7 @@ class CreateGRGFromArea(object):
                 cell_units,
                 label_start_position,
                 label_type,
+                label_seperator,
                 output_features]
 
     def updateParameters(self, parameters):
@@ -158,6 +165,10 @@ class CreateGRGFromArea(object):
         validation is performed.  This method is called whenever a parameter
         has been changed.
         '''
+        if parameters[5].value == "Alpha-Alpha":
+          parameters[6].enabled = True
+        else:
+          parameters[6].enabled = False
         return
 
     def updateMessages(self, parameters):
@@ -174,7 +185,8 @@ class CreateGRGFromArea(object):
                                            parameters[3].value,
                                            parameters[4].value,
                                            parameters[5].value,
-                                           parameters[6].value)
+                                           parameters[6].value,
+                                           parameters[7].value)
         return out_grg
 
 class CreateGRGFromPoint(object):
@@ -248,35 +260,18 @@ class CreateGRGFromPoint(object):
                                      enabled=True,
                                      multiValue=False)
         cell_units.filter.type = 'ValueList'
-        # cell_units.filter.list = ['METERS', 'FEET']
-        cell_units.filter.list = ['Meters', 'Feet']
+        cell_units.filter.list = ['Meters', 'Feet','Miles','Kilometers','Nautical Miles','Yards']
         cell_units.value = cell_units.filter.list[0]
 
-        # TODO: Are we really ever expecting a user to 'draw' a cell size? Doesn't make sense.
-        grid_size_feature_set = arcpy.Parameter(name='grid_size_feature_set',
-                                                displayName='Grid Size',
-                                                direction='Input',
-                                                datatype='GPFeatureRecordSetLayer',
-                                                parameterType='Optional',
-                                                enabled=True,
-                                                multiValue=False)
-        grid_size_feature_set.value = os.path.join(os.path.dirname(os.path.dirname(__file__)),
-                                                   "layers",
-                                                   "RelativeGRGInputArea.lyr")
-
-
         label_start_position = arcpy.Parameter(name='label_start_position',
-                                               displayName='Labeling Start Position',
+                                               displayName='Start Position',
                                                direction='Input',
                                                datatype='GPString',
                                                parameterType='Required',
+                                               category='Label Properties',
                                                enabled=True,
                                                multiValue=False)
         label_start_position.filter.type = 'ValueList'
-        # label_start_position.filter.list = ['UPPER_LEFT',
-        #                                     'LOWER_LEFT',
-        #                                     'UPPER_RIGHT',
-        #                                     'LOWER_RIGHT']
         label_start_position.filter.list = ['Upper-Left',
                                             'Lower-Left',
                                             'Upper-Right',
@@ -284,20 +279,39 @@ class CreateGRGFromPoint(object):
         label_start_position.value = label_start_position.filter.list[0]
 
         label_type = arcpy.Parameter(name='label_type',
-                                      displayName='Labeling type',
+                                      displayName='Type',
                                       direction='Input',
                                       datatype='GPString',
                                       parameterType='Required',
+                                      category='Label Properties',
                                       enabled=True,
                                       multiValue=False)
         label_type.filter.type = 'ValueList'
-        # label_style.filter.list = ['ALPHA-NUMERIC',
-        #                            'ALPHA-ALPHA',
-        #                            'NUMERIC']
         label_type.filter.list = ['Alpha-Numeric',
                                    'Alpha-Alpha',
                                    'Numeric']
         label_type.value = label_type.filter.list[0]
+        
+        label_seperator = arcpy.Parameter(name='label_seperator',
+                                      displayName='Separator (Only used for Alpha-Alpha labeling)',
+                                      direction='Input',
+                                      datatype='GPString',
+                                      parameterType='Required',
+                                      category='Label Properties',
+                                      enabled=False,
+                                      multiValue=False)
+        label_seperator.filter.type = 'ValueList'
+        label_seperator.filter.list = ['-',',','.','/']
+        label_seperator.value = label_seperator.filter.list[0]
+        
+        grid_angle = arcpy.Parameter(name='grid_angle',
+                                      displayName='Grid Rotation',
+                                      direction='Input',
+                                      datatype='GPLong',
+                                      parameterType='Required',
+                                      enabled=True,
+                                      multiValue=False)
+        grid_angle.value = 0
 
         output_features= arcpy.Parameter(name='output_grg_features',
                                          displayName='Output GRG Features',
@@ -316,9 +330,10 @@ class CreateGRGFromPoint(object):
                 cell_width,
                 cell_height,
                 cell_units,
-                grid_size_feature_set,
                 label_start_position,
                 label_type,
+                label_seperator,
+                grid_angle,
                 output_features]
 
     def updateParameters(self, parameters):
@@ -327,26 +342,35 @@ class CreateGRGFromPoint(object):
         validation is performed.  This method is called whenever a parameter
         has been changed.
         '''
+        if parameters[7].value == "Alpha-Alpha":
+          parameters[8].enabled = True
+        else:
+          parameters[8].enabled = False
+          
+        
         return
 
     def updateMessages(self, parameters):
         '''
         '''
+        if parameters[9].value < -89 or parameters[9].value > 89:
+          parameters[9].setErrorMessage("Grid angle must be between -89 and 89")
         return
 
     def execute(self, parameters, messages):
         ''' execute for toolbox'''
 
-        out_grg = GRGUtilities.GRGFromPoint(parameters[0].value,
-                                            parameters[1].value,
-                                            parameters[2].value,
-                                            parameters[3].value,
-                                            parameters[4].value,
-                                            parameters[5].value,
-                                            parameters[6].value,
-                                            parameters[7].value,
-                                            parameters[8].value,
-                                            parameters[9].value)
+        out_grg = GRGUtilities.GRGFromPoint(parameters[0].value, #Input Location
+                                            parameters[1].value, #Number Horizontal Cells
+                                            parameters[2].value, #Number Vertical Cells
+                                            parameters[3].value, #Cell Width
+                                            parameters[4].value, #Cell Height
+                                            parameters[5].value, #Cell Units
+                                            parameters[6].value, #Labeling Start Postiton
+                                            parameters[7].value, #Labeling Type
+                                            parameters[8].value, #Labeling Seperator
+                                            parameters[9].value, #Grid Angle
+                                            parameters[10].value)  #Output
         return out_grg
 
 class CreateReferenceSystemGRGFromArea(object):
