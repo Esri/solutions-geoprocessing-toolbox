@@ -83,6 +83,9 @@ class ClearingOperationsCreateGRGFromPointTestCase(unittest.TestCase):
         cellUnits = "Meters"
         labelStart = "Lower-Left"
         labelStyle = "Alpha-Numeric"
+        labelSeparator = "-" # Only used for Alpha-Alpha but required parameter?
+        gridRotationAngle = 0
+
         output = os.path.join(self.scratchGDB, "ptTarget")
 
         #Testing
@@ -91,10 +94,13 @@ class ClearingOperationsCreateGRGFromPointTestCase(unittest.TestCase):
         Configuration.Logger.info(runToolMsg)
 
         try:
-        # Calling the PointTargetGRG_ClearingOperations Script Tool
-            arcpy.CreateGRGFromPoint_clrops(self.pointTarget, numCellsH, numCellsV,
-                                            cellWidth, cellHeight, "Meters", None,
-                                            labelStart, labelStyle, output)
+            # Calling the PointTargetGRG_ClearingOperations Script Tool
+            arcpy.CreateGRGFromPoint_clrops(self.pointTarget, \
+                numCellsH, numCellsV, \
+                cellWidth, cellHeight, "Meters", \
+                labelStart, labelStyle, labelSeparator, gridRotationAngle, \
+                output)
+
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()
         except:
