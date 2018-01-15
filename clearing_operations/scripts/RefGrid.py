@@ -6,9 +6,9 @@ import re
 import os
 import math
 import arcpy
-from . import Utilities
 
 #self.inputArea = arcpy.GetParameterAsText(0)
+
 GRID_FIELD_NAME = "Grid"
 class ReferenceGrid(object):
   '''
@@ -32,7 +32,6 @@ class ReferenceGrid(object):
     self.allowLargeGrids = False
     if large_grid_handling == 'ALLOW_LARGE_GRIDS':
       self.allowLargeGrids = True
-    self.scratch_workspace = Utilities.MakeScratchGeodatabase()
     
     return
   
@@ -40,7 +39,6 @@ class ReferenceGrid(object):
     '''
     Destructor
     '''
-    arcpy.Delete_management(self.scratch_workspace)
     return
 
   def Build(self, out_features):
@@ -120,7 +118,7 @@ class ReferenceGrid(object):
     AOIPoly = arcpy.Describe(self.inputArea).extent.polygon.projectAs(sr_wgs_84)
 
     #create an in memory feature class for the grid zones
-    gridZones = _createFC(os.path.join(self.scratch_workspace, "GridZones"), "POLYGON", sr_wgs_84)
+    gridZones = _createFC(r"in_memory\GridZones", "POLYGON", sr_wgs_84)
     arcpy.AddField_management(gridZones, GRID_FIELD_NAME,"TEXT")
     arcpy.AddField_management(gridZones,'utmZone',"SHORT")
     arcpy.AddField_management(gridZones,'utmBand',"TEXT")
@@ -133,7 +131,7 @@ class ReferenceGrid(object):
                           zonesDictionary[i]['latitudeZone']])
 
     #create a utm zone feature class by dissolving the grid zones by there utm zone number
-    utmZones = arcpy.Dissolve_management(gridZones, os.path.join(self.scratch_workspace,"disslove"),["utmZone"])
+    utmZones = arcpy.Dissolve_management(gridZones, r"in_memory\disslove",["utmZone"])
 
     #select the grid zones that intersect with the input extent
     arcpy.MakeFeatureLayer_management(gridZones, "gridZones_lyr")
@@ -142,8 +140,8 @@ class ReferenceGrid(object):
       arcpy.CopyFeatures_management(Selection, out_features)
       arcpy.DeleteField_management(out_features,['utmZone','utmBand'])
       return out_features
-    else:
-      arcpy.CopyFeatures_management(Selection, os.path.join(self.scratch_workspace,"Selected"))
+    #else:
+      #arcpy.CopyFeatures_management(Selection, r"in_memory\Selected")
 
     # create 100k squares for the input self.inputArea
     arcpy.AddMessage('Creating 100k grid squares...')
@@ -152,7 +150,7 @@ class ReferenceGrid(object):
     if self.gridSize == '100000M_GRID':
       return _buildHundredGrid(out_features, sq)
     else:
-      sq100k = _buildHundredGrid(os.path.join(self.scratch_workspace, "sq100k"), sq)
+      sq100k = _buildHundredGrid(r"in_memory\sq100k", sq)
 
     # only if not 100K
     arcpy.AddMessage("Creating sub 100K grid squares...")
@@ -171,8 +169,8 @@ class ReferenceGrid(object):
     with arcpy.da.InsertCursor(output, ['SHAPE@',GRID_FIELD_NAME]) as cursor:
       for i in range(0,len(polys)):
         cursor.insertRow([polys[i]['clippedPolygon'],
-                          polys[i]['text']])  
-
+                          polys[i]['text']])
+                          
     return output
 
 
