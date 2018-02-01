@@ -168,10 +168,7 @@ def RotateFeatureClass(inputFC, outputFC,
         env_file = arcpy.CreateScratchName("xxenv",".xml","file",
                                            os.environ["TEMP"])
         arcpy.SaveSettings(env_file)
-
-        # Disable any GP environment clips or project on the fly
-        arcpy.ClearEnvironment("extent")
-        arcpy.ClearEnvironment("outputCoordinateSystem")
+        
         WKS = env.workspace
         if not WKS:
             if os.path.dirname(outputFC):
@@ -183,7 +180,7 @@ def RotateFeatureClass(inputFC, outputFC,
 
         # Disable GP environment clips or project on the fly
         arcpy.ClearEnvironment("extent")
-        arcpy.ClearEnvironment("outputCoordinateSystem")
+        #arcpy.ClearEnvironment("outputCoordinateSystem")
 
         # get feature class properties
         lyrFC = 'lyrFC'
@@ -394,7 +391,7 @@ def GRGFromArea(AOI,
         '''
         arcpy.AddMessage("Getting Minimum Bounding Geometry that fits the Area of Interest")
         minBound = os.path.join("in_memory","minBound")
-        arcpy.MinimumBoundingGeometry_management(fc, minBound, 'RECTANGLE_BY_WIDTH','#','#','MBG_FIELDS')
+        arcpy.MinimumBoundingGeometry_management(fc, minBound, 'RECTANGLE_BY_AREA','#','#','MBG_FIELDS')
 
         '''
         ' Extract the minimum bounding rectangle orienatation angle to a variable
@@ -639,8 +636,13 @@ def GRGFromPoint(starting_point,
             df = arcpy.mapping.ListDataFrames(mxd)[0]
         else:
             if DEBUG == True: arcpy.AddMessage("Non-map application...")
-
         
+        numberOfFeatures = arcpy.GetCount_management(targetPointOrigin)
+        if(int(numberOfFeatures[0]) == 0):
+          raise Exception("The input start location must contain at least one feature.")
+        
+        if(int(numberOfFeatures[0]) > 1):
+          arcpy.AddMessage("More than one feature detected for the start location, last feature entered will be used.")
         '''
         ' If cell units are feet convert to meters
         '''
@@ -732,8 +734,10 @@ def GRGFromPoint(starting_point,
             startPos = "LL"
         elif (labelStartPos == "Lower-Right"):
             startPos = "LR"
-
-        arcpy.AddMessage("Creating Fishnet Grid")        
+            
+        arcpy.AddMessage("Creating Fishnet Grid") 
+        env.outputCoordinateSystem = arcpy.Describe(targetPointOrigin).spatialReference
+        
         arcpy.CreateFishnet_management(tempOutput, originCoordinate, yAxisCoordinate, 0, 0, str(numberCellsHo), str(numberCellsVert), oppCornerCoordinate, "NO_LABELS", fullExtent, "POLYGON")
 
         # Sort the grid upper left to lower right, and delete the in memory one
@@ -805,6 +809,9 @@ def GRGFromPoint(starting_point,
         msgs = arcpy.GetMessages()
         arcpy.AddError(msgs)
         print(msgs)
+    
+    except Exception as xmsg:
+        arcpy.AddError(str(xmsg))
 
     except:
         # Get the traceback object
