@@ -394,7 +394,7 @@ def GRGFromArea(AOI,
         '''
         arcpy.AddMessage("Getting Minimum Bounding Geometry that fits the Area of Interest")
         minBound = os.path.join("in_memory","minBound")
-        arcpy.MinimumBoundingGeometry_management(fc, minBound, 'RECTANGLE_BY_WIDTH','#','#','MBG_FIELDS')
+        arcpy.MinimumBoundingGeometry_management(fc, minBound, 'RECTANGLE_BY_AREA','#','#','MBG_FIELDS')
 
         '''
         ' Extract the minimum bounding rectangle orienatation angle to a variable
