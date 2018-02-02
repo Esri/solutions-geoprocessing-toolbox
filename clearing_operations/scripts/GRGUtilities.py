@@ -387,7 +387,7 @@ def GRGFromArea(AOI,
         '''
         ' Extract the minimum bounding rectangle orienatation angle to a variable
         '''
-        for row in arcpy.da.SearchCursor(minBound,["MBG_Orientation","MBG_LENGTH","MBG_WIDTH"]):
+        for row in arcpy.da.SearchCursor(minBound,["MBG_Orientation","MBG_LENGTH","MBG_WIDTH","SHAPE@"]):
             orientation = row[0]
             arcpy.AddMessage("Orientation Angle: {0}".format(str(orientation)))
             if(orientation >= 45 and orientation <= 135):
