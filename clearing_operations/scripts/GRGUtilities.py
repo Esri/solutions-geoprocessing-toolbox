@@ -127,7 +127,6 @@ def RotateFeatureClass(inputFC, outputFC,
 
     def RotateXY(x, y, xc=0, yc=0, angle=0, units="DEGREES"):
         """Rotate an xy cooordinate about a specified origin
-
         x,y      xy coordinates
         xc,yc   center of rotation
         angle   angle
@@ -142,7 +141,6 @@ def RotateFeatureClass(inputFC, outputFC,
         xr = (x * math.cos(angle)) - (y * math.sin(angle)) + xc
         yr = (x * math.sin(angle)) + (y * math.cos(angle)) + yc
         return xr, yr
-
 
     # temp names for cleanup
     env_file = None
@@ -178,9 +176,8 @@ def RotateFeatureClass(inputFC, outputFC,
                     arcpy.Describe(inputFC).catalogPath)
         env.workspace = env.scratchWorkspace = WKS
 
-        # Disable GP environment clips or project on the fly
+        # Disable any GP environment clips
         arcpy.ClearEnvironment("extent")
-        #arcpy.ClearEnvironment("outputCoordinateSystem")
 
         # get feature class properties
         lyrFC = 'lyrFC'
@@ -188,7 +185,6 @@ def RotateFeatureClass(inputFC, outputFC,
         dFC = arcpy.Describe(lyrFC)
         shpField = dFC.shapeFieldName
         shpType = dFC.shapeType
-        FID = dFC.OIDFieldName
 
         # create temp feature class
         tmpFC = arcpy.CreateScratchName("xxfc", "", "featureclass")
@@ -198,81 +194,63 @@ def RotateFeatureClass(inputFC, outputFC,
         lyrTmp = 'lyrTmp'
         arcpy.MakeFeatureLayer_management(tmpFC, lyrTmp)
 
-        # set up id field (used to join later)
-        TFID = "XXXX_FID"
-        arcpy.AddField_management(lyrTmp, TFID, "LONG")
+        # set up grid field
+        gridField = "Grid"
+        arcpy.AddField_management(lyrTmp, gridField, "TEXT")
         arcpy.DeleteField_management(lyrTmp, 'ID')
 
         # rotate the feature class coordinates
-        # only points, polylines, and polygons are supported
 
         # open read and write cursors
         Rows = arcpy.SearchCursor(lyrFC, "", "",
-                                  "%s;%s" % (shpField,FID))
+                                  "%s;%s;" % (shpField,'Grid'))
         oRows = arcpy.InsertCursor(lyrTmp)
         arcpy.AddMessage("Opened search cursor")
-        if shpType  == "Point":
-            for Row in Rows:
-                shp = Row.getValue(shpField)
-                pnt = shp.getPart()
-                pnt.X, pnt.Y = RotateXY(pnt.X, pnt.Y, xcen, ycen, angle)
-                oRow = oRows.newRow()
-                oRow.setValue(shpField, pnt)
-                oRow.setValue(TFID, Row. getValue(FID))
-                oRows.insertRow(oRow)
-        elif shpType in ["Polyline", "Polygon"]:
-            parts = arcpy.Array()
-            rings = arcpy.Array()
-            ring = arcpy.Array()
-            for Row in Rows:
-                shp = Row.getValue(shpField)
-                p = 0
-                for part in shp:
-                    for pnt in part:
-                        if pnt:
-                            x, y = RotateXY(pnt.X, pnt.Y, xcen, ycen, angle)
-                            ring.add(arcpy.Point(x, y, pnt.ID))
-                        else:
-                            # if we have a ring, save it
-                            if len(ring) > 0:
-                                rings.add(ring)
-                                ring.removeAll()
-                    # we have our last ring, add it
-                    rings.add(ring)
-                    ring.removeAll()
-                    # if only one, remove nesting
-                    if len(rings) == 1: rings = rings.getObject(0)
-                    parts.add(rings)
-                    rings.removeAll()
-                    p += 1
-
+        
+        parts = arcpy.Array()
+        rings = arcpy.Array()
+        ring = arcpy.Array()
+        for Row in Rows:
+            shp = Row.getValue(shpField)
+            p = 0
+            for part in shp:
+                for pnt in part:
+                    if pnt:
+                        x, y = RotateXY(pnt.X, pnt.Y, xcen, ycen, angle)
+                        ring.add(arcpy.Point(x, y, pnt.ID))
+                    else:
+                        # if we have a ring, save it
+                        if len(ring) > 0:
+                            rings.add(ring)
+                            ring.removeAll()
+                # we have our last ring, add it
+                rings.add(ring)
+                ring.removeAll()
                 # if only one, remove nesting
-                if len(parts) == 1: parts = parts.getObject(0)
-                if dFC.shapeType == "Polyline":
-                    shp = arcpy.Polyline(parts)
-                else:
-                    shp = arcpy.Polygon(parts)
-                parts.removeAll()
-                oRow = oRows.newRow()
-                oRow.setValue(shpField, shp)
-                oRow.setValue(TFID,Row.getValue(FID))
-                oRows.insertRow(oRow)
-        else:
-            raise Exception("Shape type {0} is not supported".format(shpType))
+                if len(rings) == 1: rings = rings.getObject(0)
+                parts.add(rings)
+                rings.removeAll()
+                p += 1
+
+            # if only one, remove nesting
+            if len(parts) == 1: parts = parts.getObject(0)
+            if dFC.shapeType == "Polyline":
+                shp = arcpy.Polyline(parts)
+            else:
+                shp = arcpy.Polygon(parts)
+            parts.removeAll()
+            oRow = oRows.newRow()
+            oRow.setValue(shpField, shp)
+            oRow.setValue('Grid', Row.getValue('Grid'))                
+            oRows.insertRow(oRow)              
 
         del oRow, oRows # close write cursor (ensure buffer written)
         oRow, oRows = None, None # restore variables for cleanup
-
-        # join attributes, and copy to output
-        arcpy.AddJoin_management(lyrTmp, TFID, lyrFC, FID)
+        
         env.qualifiedFieldNames = False
         arcpy.Merge_management(lyrTmp, outputFC)
         lyrOut = 'lyrOut'
-        arcpy.MakeFeatureLayer_management(outputFC, lyrOut)
-        # drop temp fields 2,3 (TFID, FID)
-        fnames = [f.name for f in arcpy.ListFields(lyrOut)]
-        dropList = ';'.join(fnames[2:4])
-        arcpy.DeleteField_management(lyrOut, dropList)
+        arcpy.MakeFeatureLayer_management(outputFC, lyrOut)        
 
     except MsgError as xmsg:
         arcpy.AddError(str(xmsg))
