@@ -83,7 +83,19 @@ def findLayerByName(layerName):
                 arcpy.AddMessage("Incorrect layer: [" + layer.name + "]")
     else:
         arcpy.AddWarning("Non-map environment")
-
+        
+def checkPolarRegion(inputFeature):
+    ''' checks if the input feature class overlaps with the ploar regions'''
+    sr = arcpy.SpatialReference(4326)
+    
+    # A list of features and coordinate pairs
+    polarNorth = [[-180,84],[-180,90],[180,90],[180,84],[-180,84]]
+    #[[-180,-90],[-180,-80],[180,-80],[180,-90],[-180,-90]]]
+    
+    # A list that will hold each of the Polygon objects
+    northPoly = arcpy.Polygon(arcpy.Array([arcpy.Point(*coords) for coords in polarNorth]),sr)
+              
+    arcpy.AddMessage("Outside Polar Region: " + str(northPoly.disjoint(inputFeature.projectAs(sr)))) 
 
 def ColIdxToXlName_CanvasAreaGRG(index):
     ''' Converts an index into a letter, labeled like excel columns, A to Z, AA to ZZ, etc.'''
@@ -370,7 +382,8 @@ def GRGFromArea(AOI,
         arcpy.AddMessage("Getting Minimum Bounding Geometry that fits the Area of Interest")
         minBound = os.path.join("in_memory","minBound")
         arcpy.MinimumBoundingGeometry_management(fc, minBound, 'RECTANGLE_BY_AREA','#','#','MBG_FIELDS')
-
+        
+        
         '''
         ' Extract the minimum bounding rectangle orienatation angle to a variable
         '''
@@ -384,6 +397,11 @@ def GRGFromArea(AOI,
                 verticalCells = math.ceil(row[1]/float(cellWidth))
                 horizontalCells = math.ceil(row[2]/float(cellHeight))
             arcpy.AddMessage('Creating Grid {0} x {1}'.format(horizontalCells,verticalCells))
+            '''
+            ' Check if the minimum boundary overlaps the polar regions
+            ' If true add warning to console
+            '''
+            checkPolarRegion(row[3])
 
         arcpy.AddMessage(labelStartPos)
         '''
@@ -458,7 +476,7 @@ def GRGFromArea(AOI,
         ' Now use the CreateFishnet_management tool to create the desired grid
         '''
         arcpy.AddMessage("Creating Fishnet Grid...")
-        arcpy.CreateFishnet_management(fishnet, origin, yaxis, str(cellWidth), str(cellHeight), 0, 0, oppositeCorner, "NO_LABELS", fc, "POLYGON")
+        arcpy.CreateFishnet_management(fishnet, origin, yaxis, str(cellWidth), str(cellHeight), verticalCells, horizontalCells, oppositeCorner, "NO_LABELS", fc, "POLYGON")
 
         '''
         ' Add a field which will be used to add the grid labels
