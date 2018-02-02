@@ -73,6 +73,24 @@ class ReferenceGrid(object):
     
     def _largeGridError(area, value):
       return "Area ({0}) exceeds large grid value for {1}. Use a smaller Input Area or choose a larger Grid Size.".format(area, value)
+      
+    def checkPolarRegion(inputFeature):
+      ''' checks if the input feature class overlaps with the polar regions'''
+      sr = arcpy.SpatialReference(4326)
+      
+      # A list of features and coordinate pairs
+      polarNorth = [[-180,84],[-180,90],[180,90],[180,84],[-180,84]]
+      polarSouth = [[-180,-90],[-180,-80],[180,-80],[180,-90],[-180,-90]]
+      
+      northPoly = arcpy.Polygon(arcpy.Array([arcpy.Point(*coords) for coords in polarNorth]),sr)
+      southPoly = arcpy.Polygon(arcpy.Array([arcpy.Point(*coords) for coords in polarSouth]),sr)
+      
+      outsideNorthPolar = northPoly.disjoint(inputFeature.projectAs(sr))
+      outsideSouthPolar = southPoly.disjoint(inputFeature.projectAs(sr))
+      
+      if(not outsideNorthPolar or not outsideSouthPolar):
+        arcpy.AddMessage("The GRG extent is within a polar region." + 
+          " Cells that fall within the polar region will not be created.")
 
     out_features = out_features.value
     arcpy.env.overwriteOutput = True
@@ -116,6 +134,8 @@ class ReferenceGrid(object):
     
 
     AOIPoly = arcpy.Describe(self.inputArea).extent.polygon.projectAs(sr_wgs_84)
+    
+    checkPolarRegion(AOIPoly)
 
     #create an in memory feature class for the grid zones
     gridZones = _createFC(r"in_memory\GridZones", "POLYGON", sr_wgs_84)
