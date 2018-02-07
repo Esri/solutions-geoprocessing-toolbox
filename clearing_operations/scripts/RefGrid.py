@@ -89,7 +89,7 @@ class ReferenceGrid(object):
       outsideSouthPolar = southPoly.disjoint(inputFeature.projectAs(sr))
       
       if(not outsideNorthPolar or not outsideSouthPolar):
-        arcpy.AddMessage("The GRG extent is within a polar region." + 
+        arcpy.AddWarning("The GRG extent is within a polar region." + 
           " Cells that fall within the polar region will not be created.")
 
     out_features = out_features.value
