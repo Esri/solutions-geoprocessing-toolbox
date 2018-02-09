@@ -85,8 +85,8 @@ NOTE: Check [Releases](https://github.com/Esri/solutions-geoprocessing-toolbox/r
 
 * Some tools require additional licenses (these tools will be disabled if license is unavailable): 
     * ArcGIS Desktop Advanced
-	    * Clearing Operations_arcmap
-	    * Clearing Operations_pro
+	    * ClearingOperationsTools.pyt
+	    * GriddedReferenceGraphicTools.pyt
 	    * Military Features Tools_arcmap
     * ArcGIS Spatial Analyst Extension
 	    * Military Aspects of Terrain_pro
