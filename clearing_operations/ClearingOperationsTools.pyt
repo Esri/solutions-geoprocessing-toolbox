@@ -47,4 +47,5 @@ class Toolbox(object):
                            '''
         self.tools = [CreateGRGFromArea,
                       CreateGRGFromPoint,
+					  CreateReferenceSystemGRGFromArea,
                       NumberFeatures]
