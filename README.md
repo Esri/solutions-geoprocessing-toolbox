@@ -42,8 +42,8 @@ Specialized geoprocessing models and tools for general defense and intelligence 
 	* [Geonames Locator Solutions Page](http://solutions.arcgis.com/defense/help/geonames-locator/)
 
 * The [**clearing_operations**](./clearing_operations) folder contains:
-	* Clearing Operations Tools_pro
-	* Clearing Operations Tools_arcmap
+	* ClearingOperationsTools.pyt (Single python toolbox for both ArcMap and Pro)
+	* GriddedReferenceGraphicTools.pyt (Single python toolbox for both ArcMap and Pro)
 	* [Clearing Operations Solutions Page](http://solutions.arcgis.com/defense/help/clearing-operations/)
 
 * The [**distance_to_assets**](./distance_to_assets) folder contains:
@@ -85,8 +85,8 @@ NOTE: Check [Releases](https://github.com/Esri/solutions-geoprocessing-toolbox/r
 
 * Some tools require additional licenses (these tools will be disabled if license is unavailable): 
     * ArcGIS Desktop Advanced
-	    * Clearing Operations_arcmap
-	    * Clearing Operations_pro
+	    * ClearingOperationsTools.pyt
+	    * GriddedReferenceGraphicTools.pyt
 	    * Military Features Tools_arcmap
     * ArcGIS Spatial Analyst Extension
 	    * Military Aspects of Terrain_pro

@@ -80,6 +80,7 @@ class ClearingOperationsCreateGRGFromAreaTestCase(unittest.TestCase):
         cellunits = "Meters"
         labelStart = "Lower-Left"
         labelStyle = "Alpha-Numeric"
+        labelSeparator = "-" # Only used for Alpha-Alpha but required parameter?
         output = os.path.join(self.scratchGDB, "grg")
 
         #Testing
@@ -89,7 +90,9 @@ class ClearingOperationsCreateGRGFromAreaTestCase(unittest.TestCase):
 
         try:
         # Calling the Create GRG From Area script tool
-            arcpy.CreateGRGFromArea_clrops(self.inputArea, cellWidth, cellHeight, cellunits, labelStart, labelStyle, output)
+            arcpy.CreateGRGFromArea_clrops(self.inputArea, \
+                cellWidth, cellHeight, cellunits, \
+                labelStart, labelStyle, labelSeparator, output)
 
         except arcpy.ExecuteError:
             UnitTestUtilities.handleArcPyError()

@@ -343,3 +343,6 @@ class CreateReferenceSystemGRGFromAreaTestCase(unittest.TestCase, arcpyAssert.Fe
                                                        output,
                                                        "NO_LARGE_GRIDS")
         self.assertTrue('exceeds large grid value for' in str(manage_raise.exception))
+
+if __name__ == "__main__":
+    unittest.main()   

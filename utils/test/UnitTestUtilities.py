@@ -87,7 +87,7 @@ def makeFolderFromPath(folderPath):
             print("Can't make the folder for some reason.")
     return folderPath
 
-def initializeLogger(name):
+def initializeLogger(name, logLevel = logging.DEBUG):
     ''' get and return named logger '''
     if Configuration.DEBUG == True:
         print("UnitTestUtilities - initializeLogger")
@@ -101,25 +101,37 @@ def initializeLogger(name):
         name = getLoggerName()
 
     logFile = os.path.join(Configuration.logPath, name)
+    Configuration.LoggerFile = logFile
 
     # if the log file does NOT exist, create it
     if not os.path.exists(logFile):
         logFile = makeFileFromPath(logFile)
 
-    logging.basicConfig(format='%(levelname)s: %(asctime)s %(message)s', filename=logFile, level=logging.DEBUG)
     logger = logging.getLogger(name)
+    logger.setLevel(logLevel)
+
+    logFormatter = logging.Formatter('%(levelname)s: %(asctime)s %(message)s')
+    
+    fileHandler = logging.FileHandler(logFile)
+    fileHandler.setFormatter(logFormatter)
+    logger.addHandler(fileHandler)
+
+    consoleHandler = logging.StreamHandler(sys.stdout)
+    consoleHandler.setFormatter(logFormatter)
+    logger.addHandler(consoleHandler)
+    
     return logger
 
 def setUpLogFileHeader():
-    ''' Add a header to log file when initalized '''
-    if Configuration.DEBUG == True:
-        print("UnitTestUtilities - setUpLogFileHeader")
-    Configuration.Logger.info("------------ Begin Test ------------------")
+    ''' Add a header to log file when initialized '''
+    Configuration.Logger.debug("UnitTestUtilities - setUpLogFileHeader")
+    Configuration.Logger.info("------------ Begin Tests ------------------")
     Configuration.Logger.info("Platform: {0}".format(platform.platform()))
     Configuration.Logger.info("Python Version {0}".format(sys.version))
-    d = arcpy.GetInstallInfo()
-    Configuration.Logger.info("{0} Version {1}, installed on {2}.".format(d['ProductName'], d['Version'], d['InstallDate']))
-    Configuration.Logger.info("----------------------------------------")
+    agsInstallInfo = arcpy.GetInstallInfo()
+    Configuration.Logger.info("Product: {0}, Version: {1}, Installed on: {2}, Build: {3}.".format(agsInstallInfo['ProductName'], \
+       agsInstallInfo['Version'], agsInstallInfo['InstallDate'], agsInstallInfo['BuildNumber']))
+    Configuration.Logger.info("-------------------------------------------")
 
 def checkArcPy():
     ''' sanity check that ArcPy is working '''
@@ -127,7 +139,7 @@ def checkArcPy():
     arcpy.AddMessage("ArcPy works")
 
 def checkExists(p):
-    ''' Python check for existance '''
+    ''' Python check for existence '''
     if Configuration.DEBUG == True: print("UnitTestUtilities - checkExists")
     return os.path.exists(p)
 

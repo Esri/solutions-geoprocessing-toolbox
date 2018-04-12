@@ -127,7 +127,6 @@ def RotateFeatureClass(inputFC, outputFC,
 
     def RotateXY(x, y, xc=0, yc=0, angle=0, units="DEGREES"):
         """Rotate an xy cooordinate about a specified origin
-
         x,y      xy coordinates
         xc,yc   center of rotation
         angle   angle
@@ -142,7 +141,6 @@ def RotateFeatureClass(inputFC, outputFC,
         xr = (x * math.cos(angle)) - (y * math.sin(angle)) + xc
         yr = (x * math.sin(angle)) + (y * math.cos(angle)) + yc
         return xr, yr
-
 
     # temp names for cleanup
     env_file = None
@@ -168,10 +166,7 @@ def RotateFeatureClass(inputFC, outputFC,
         env_file = arcpy.CreateScratchName("xxenv",".xml","file",
                                            os.environ["TEMP"])
         arcpy.SaveSettings(env_file)
-
-        # Disable any GP environment clips or project on the fly
-        arcpy.ClearEnvironment("extent")
-        arcpy.ClearEnvironment("outputCoordinateSystem")
+        
         WKS = env.workspace
         if not WKS:
             if os.path.dirname(outputFC):
@@ -181,101 +176,81 @@ def RotateFeatureClass(inputFC, outputFC,
                     arcpy.Describe(inputFC).catalogPath)
         env.workspace = env.scratchWorkspace = WKS
 
-        # Disable GP environment clips or project on the fly
+        # Disable any GP environment clips
         arcpy.ClearEnvironment("extent")
-        arcpy.ClearEnvironment("outputCoordinateSystem")
 
         # get feature class properties
-        lyrFC = 'lyrFC' #g_ESRI_variable_1
+        lyrFC = 'lyrFC'
         arcpy.MakeFeatureLayer_management(inputFC, lyrFC)
         dFC = arcpy.Describe(lyrFC)
         shpField = dFC.shapeFieldName
         shpType = dFC.shapeType
-        FID = dFC.OIDFieldName
 
         # create temp feature class
         tmpFC = arcpy.CreateScratchName("xxfc", "", "featureclass")
         arcpy.CreateFeatureclass_management(os.path.dirname(tmpFC),
                                             os.path.basename(tmpFC),
                                             shpType)
-        lyrTmp = 'lyrTmp' #g_ESRI_variable_2
+        lyrTmp = 'lyrTmp'
         arcpy.MakeFeatureLayer_management(tmpFC, lyrTmp)
 
-        # set up id field (used to join later)
-        TFID = "XXXX_FID"
-        arcpy.AddField_management(lyrTmp, TFID, "LONG")
-        arcpy.DeleteField_management(lyrTmp, 'ID') # g_ESRI_variable_3 = 'ID'
+        # set up grid field
+        gridField = "Grid"
+        arcpy.AddField_management(lyrTmp, gridField, "TEXT")
+        arcpy.DeleteField_management(lyrTmp, 'ID')
 
         # rotate the feature class coordinates
-        # only points, polylines, and polygons are supported
 
         # open read and write cursors
         Rows = arcpy.SearchCursor(lyrFC, "", "",
-                                  "%s;%s" % (shpField,FID))
+                                  "%s;%s;" % (shpField,'Grid'))
         oRows = arcpy.InsertCursor(lyrTmp)
         arcpy.AddMessage("Opened search cursor")
-        if shpType  == "Point":
-            for Row in Rows:
-                shp = Row.getValue(shpField)
-                pnt = shp.getPart()
-                pnt.X, pnt.Y = RotateXY(pnt.X, pnt.Y, xcen, ycen, angle)
-                oRow = oRows.newRow()
-                oRow.setValue(shpField, pnt)
-                oRow.setValue(TFID, Row. getValue(FID))
-                oRows.insertRow(oRow)
-        elif shpType in ["Polyline", "Polygon"]:
-            parts = arcpy.Array()
-            rings = arcpy.Array()
-            ring = arcpy.Array()
-            for Row in Rows:
-                shp = Row.getValue(shpField)
-                p = 0
-                for part in shp:
-                    for pnt in part:
-                        if pnt:
-                            x, y = RotateXY(pnt.X, pnt.Y, xcen, ycen, angle)
-                            ring.add(arcpy.Point(x, y, pnt.ID))
-                        else:
-                            # if we have a ring, save it
-                            if len(ring) > 0:
-                                rings.add(ring)
-                                ring.removeAll()
-                    # we have our last ring, add it
-                    rings.add(ring)
-                    ring.removeAll()
-                    # if only one, remove nesting
-                    if len(rings) == 1: rings = rings.getObject(0)
-                    parts.add(rings)
-                    rings.removeAll()
-                    p += 1
-
+        
+        parts = arcpy.Array()
+        rings = arcpy.Array()
+        ring = arcpy.Array()
+        for Row in Rows:
+            shp = Row.getValue(shpField)
+            p = 0
+            for part in shp:
+                for pnt in part:
+                    if pnt:
+                        x, y = RotateXY(pnt.X, pnt.Y, xcen, ycen, angle)
+                        ring.add(arcpy.Point(x, y, pnt.ID))
+                    else:
+                        # if we have a ring, save it
+                        if len(ring) > 0:
+                            rings.add(ring)
+                            ring.removeAll()
+                # we have our last ring, add it
+                rings.add(ring)
+                ring.removeAll()
                 # if only one, remove nesting
-                if len(parts) == 1: parts = parts.getObject(0)
-                if dFC.shapeType == "Polyline":
-                    shp = arcpy.Polyline(parts)
-                else:
-                    shp = arcpy.Polygon(parts)
-                parts.removeAll()
-                oRow = oRows.newRow()
-                oRow.setValue(shpField, shp)
-                oRow.setValue(TFID,Row.getValue(FID))
-                oRows.insertRow(oRow)
-        else:
-            raise Exception("Shape type {0} is not supported".format(shpType))
+                if len(rings) == 1: rings = rings.getObject(0)
+                parts.add(rings)
+                rings.removeAll()
+                p += 1
+
+            # if only one, remove nesting
+            if len(parts) == 1: parts = parts.getObject(0)
+            if dFC.shapeType == "Polyline":
+                shp = arcpy.Polyline(parts)
+            else:
+                shp = arcpy.Polygon(parts)
+            parts.removeAll()
+            oRow = oRows.newRow()
+            oRow.setValue(shpField, shp)
+            oRow.setValue('Grid', Row.getValue('Grid'))                
+            oRows.insertRow(oRow)              
 
         del oRow, oRows # close write cursor (ensure buffer written)
         oRow, oRows = None, None # restore variables for cleanup
-
-        # join attributes, and copy to output
-        arcpy.AddJoin_management(lyrTmp, TFID, lyrFC, FID)
+        
         env.qualifiedFieldNames = False
         arcpy.Merge_management(lyrTmp, outputFC)
-        lyrOut = 'lyrOut' #g_ESRI_variable_4
-        arcpy.MakeFeatureLayer_management(outputFC, lyrOut)
-        # drop temp fields 2,3 (TFID, FID)
-        fnames = [f.name for f in arcpy.ListFields(lyrOut)]
-        dropList = ';'.join(fnames[2:4]) #g_ESRI_variable_5 = ';'
-        arcpy.DeleteField_management(lyrOut, dropList)
+        lyrOut = 'lyrOut'
+        arcpy.MakeFeatureLayer_management(outputFC, lyrOut)        
 
     except MsgError as xmsg:
         arcpy.AddError(str(xmsg))
@@ -319,6 +294,7 @@ def GRGFromArea(AOI,
                 cellUnits,
                 labelStartPos,
                 labelStyle,
+                labelSeperator,
                 outputFeatureClass):
     '''Create Gridded Reference Graphic (GRG) from area input.'''
 
@@ -357,6 +333,34 @@ def GRGFromArea(AOI,
         if (cellUnits == "Feet"):
             cellWidth = float(cellWidth) / 3.2808
             cellHeight = float(cellHeight) / 3.2808
+            
+        '''
+        ' If cell units are kilometers convert to meters
+        '''
+        if (cellUnits == "Kilometers"):
+            cellWidth = float(cellWidth) * 1000
+            cellHeight = float(cellHeight) * 1000
+        
+        '''
+        ' If cell units are miles convert to meters
+        '''
+        if (cellUnits == "Miles"):
+            cellWidth = float(cellWidth) * 1609.344
+            cellHeight = float(cellHeight) * 1609.344
+            
+        '''
+        ' If cell units are yards convert to meters
+        '''
+        if (cellUnits == "Yards"):
+            cellWidth = float(cellWidth) * 0.9144
+            cellHeight = float(cellHeight) * 0.9144
+            
+        '''
+        ' If cell units are Nautical Miles convert to meters
+        '''
+        if (cellUnits == "Nautical Miles"):
+            cellWidth = float(cellWidth) * 1852
+            cellHeight = float(cellHeight) * 1852
 
         '''
         ' create a minimum bounding rectangle around the AOI
@@ -365,7 +369,7 @@ def GRGFromArea(AOI,
         '''
         arcpy.AddMessage("Getting Minimum Bounding Geometry that fits the Area of Interest")
         minBound = os.path.join("in_memory","minBound")
-        arcpy.MinimumBoundingGeometry_management(fc, minBound, 'RECTANGLE_BY_WIDTH','#','#','MBG_FIELDS')
+        arcpy.MinimumBoundingGeometry_management(fc, minBound, 'RECTANGLE_BY_AREA','#','#','MBG_FIELDS')
 
         '''
         ' Extract the minimum bounding rectangle orienatation angle to a variable
@@ -454,7 +458,7 @@ def GRGFromArea(AOI,
         ' Now use the CreateFishnet_management tool to create the desired grid
         '''
         arcpy.AddMessage("Creating Fishnet Grid...")
-        arcpy.CreateFishnet_management(fishnet, origin, yaxis, str(cellWidth), str(cellHeight), 0, 0, oppositeCorner, "NO_LABELS", fc, "POLYGON")
+        arcpy.CreateFishnet_management(fishnet, origin, yaxis, str(cellWidth), str(cellHeight), verticalCells, horizontalCells, oppositeCorner, "NO_LABELS", fc, "POLYGON")
 
         '''
         ' Add a field which will be used to add the grid labels
@@ -484,7 +488,7 @@ def GRGFromArea(AOI,
                 if (labelStyle == "Alpha-Numeric"):
                     row[1] = letter + str(int(labelNumber))
                 elif (labelStyle == "Alpha-Alpha"):
-                    row[1] = letter + secondLetter
+                    row[1] = letter + labelSeperator + secondLetter
                 elif (labelStyle == "Numeric"):
                     row[1] = labelNumber
 
@@ -570,27 +574,25 @@ def GRGFromPoint(starting_point,
                  cell_width,
                  cell_height,
                  cell_units,
-                 grid_size_feature_set,
                  label_start_position,
                  label_style,
+                 labelSeperator,
+                 gridAngle,
                  output_feature_class):
     ''' Create Gridded Reference Graphic (GRG) from point input.'''
 
-    targetPointOrigin = starting_point #arcpy.GetParameterAsText(0)
-    numberCellsHo = horizontal_cells #arcpy.GetParameterAsText(1)
-    numberCellsVert = vertical_cells #arcpy.GetParameterAsText(2)
-    cellWidth = cell_width #arcpy.GetParameterAsText(3)
-    cellHeight = cell_height #arcpy.GetParameterAsText(4)
-    cellUnits = cell_units #arcpy.GetParameterAsText(5)
-    gridSize = grid_size_feature_set #arcpy.GetParameterAsText(6)
-    labelStartPos = label_start_position #arcpy.GetParameterAsText(7)
-    labelStyle = label_style #arcpy.GetParameterAsText(8)
-    outputFeatureClass = output_feature_class #arcpy.GetParameterAsText(9)
-    #g_ESRI_variable_1 = 'lyrFC'
-    #g_ESRI_variable_2 = 'lyrTmp'
-    #g_ESRI_variable_3 = 'ID'
-    #g_ESRI_variable_4 = 'lyrOut'
-    #g_ESRI_variable_5 = ';'
+
+    targetPointOrigin = starting_point
+    numberCellsHo = horizontal_cells
+    numberCellsVert = vertical_cells
+    cellWidth = cell_width
+    cellHeight = cell_height
+    cellUnits = cell_units
+    labelStartPos = label_start_position
+    labelStyle = label_style
+    rotation = gridAngle
+    outputFeatureClass = output_feature_class
+
     tempOutput = os.path.join("in_memory", "tempFishnetGrid")
     DEBUG = True
     mxd = None
@@ -612,51 +614,48 @@ def GRGFromPoint(starting_point,
             df = arcpy.mapping.ListDataFrames(mxd)[0]
         else:
             if DEBUG == True: arcpy.AddMessage("Non-map application...")
-
-        # If grid size is drawn on the map, use this instead of cell width and cell height
-        inputExtentDrawnFromMap = False
-        angleDrawn = 0
-        workspace = arcpy.env.workspace
-        topLeftDrawn = 0
-        if float(cellWidth) == 0 and float(cellHeight) == 0:
-            inputExtentDrawnFromMap = True
-            tempGridFC = os.path.join(arcpy.env.scratchWorkspace, "GridSize")
-            arcpy.CopyFeatures_management(gridSize, tempGridFC)
-            pts = None
-            with arcpy.da.SearchCursor(tempGridFC, 'SHAPE@XY', explode_to_points=True) as cursor:
-                pts = [r[0] for r in cursor][0:4]
-            arcpy.Delete_management(tempGridFC)
-
-            # Find the highest points in the drawn rectangle, to calculate the top left and top right coordinates.
-            highestPoint = None
-            nextHighestPoint = None
-            for pt in pts:
-                if highestPoint is None or pt[1] > highestPoint[1]:
-                    nextHighestPoint = highestPoint
-                    highestPoint = pt
-                elif nextHighestPoint is None or pt[1] > nextHighestPoint[1]:
-                    nextHighestPoint = pt
-
-            topLeft = highestPoint if highestPoint[0] < nextHighestPoint[0] else nextHighestPoint
-            topRight = highestPoint if highestPoint[0] > nextHighestPoint[0] else nextHighestPoint
-            topLeftDrawn = topLeft
-
-            # Calculate the cell height and cell width
-            cellWidth= math.sqrt((pts[0][0] - pts[1][0]) ** 2 + (pts[0][1] - pts[1][1]) ** 2)
-            cellHeight = math.sqrt((pts[1][0] - pts[2][0]) ** 2 + (pts[1][1] - pts[2][1]) ** 2)
-
-            # Calculate angle
-            hypotenuse = math.sqrt(math.pow(topLeft[0] - topRight[0], 2) + math.pow(topLeft[1] - topRight[1], 2))
-            adjacent = topRight[0] - topLeft[0]
-            numberToCos = float(adjacent)/float(hypotenuse)
-            angleInRadians = math.acos(numberToCos)
-            angleDrawn = math.degrees(angleInRadians)
-            if (topRight[1] > topLeft[1]):
-                angleDrawn = 360 - angleDrawn
-        else:
-            if (cellUnits == "Feet"):
-                cellWidth = float(cellWidth) * 0.3048
-                cellHeight = float(cellHeight) * 0.3048
+        
+        numberOfFeatures = arcpy.GetCount_management(targetPointOrigin)
+        if(int(numberOfFeatures[0]) == 0):
+          raise Exception("The input start location must contain at least one feature.")
+        
+        if(int(numberOfFeatures[0]) > 1):
+          arcpy.AddMessage("More than one feature detected for the start location, last feature entered will be used.")
+        '''
+        ' If cell units are feet convert to meters
+        '''
+        if (cellUnits == "Feet"):
+            cellWidth = float(cellWidth) / 3.2808
+            cellHeight = float(cellHeight) / 3.2808
+            
+        '''
+        ' If cell units are kilometers convert to meters
+        '''
+        if (cellUnits == "Kilometers"):
+            cellWidth = float(cellWidth) * 1000
+            cellHeight = float(cellHeight) * 1000
+        
+        '''
+        ' If cell units are miles convert to meters
+        '''
+        if (cellUnits == "Miles"):
+            cellWidth = float(cellWidth) * 1609.344
+            cellHeight = float(cellHeight) * 1609.344
+            
+        '''
+        ' If cell units are yards convert to meters
+        '''
+        if (cellUnits == "Yards"):
+            cellWidth = float(cellWidth) * 0.9144
+            cellHeight = float(cellHeight) * 0.9144
+            
+        '''
+        ' If cell units are Nautical Miles convert to meters
+        '''
+        if (cellUnits == "Nautical Miles"):
+            cellWidth = float(cellWidth) * 1852
+            cellHeight = float(cellHeight) * 1852
+            
 
         # Get the coordinates of the point inputExtentDrawnFromMap.
         rows = arcpy.SearchCursor(targetPointOrigin)
@@ -703,25 +702,6 @@ def GRGFromPoint(starting_point,
         oppCornerCoordinate = str(rightCorner) + " " + str(topCorner)
         fullExtent = str(leftCorner) + " " + str(bottomCorner) + " " + str(rightCorner) + " " + str(topCorner)
 
-        # If grid size is drawn on the map, then calculate the rotation of the grid
-        if inputExtentDrawnFromMap:
-            # Find the highest two points in the inputExtentDrawnFromMap shape
-            highestPoint = None
-            nextHighestPoint = None
-            for pt in pts:
-                if highestPoint is None or pt[1] > highestPoint[1]:
-                    nextHighestPoint = highestPoint
-                    highestPoint = pt
-                elif nextHighestPoint is None or pt[1] > nextHighestPoint[1]:
-                    nextHighestPoint = pt
-            topLeft = highestPoint if highestPoint[0] < nextHighestPoint[0] else nextHighestPoint
-            topRight = highestPoint if highestPoint[0] > nextHighestPoint[0] else nextHighestPoint
-            yDiff = topRight[1] - topLeft[1]
-            xDiff = topRight[0] - topLeft[0]
-
-            # Set the Y-Axis Coordinate so that the grid rotates properly
-            extentHeight = float(topCorner) - float(bottomCorner)
-
         # Set the start position for labeling
         startPos = None
         if (labelStartPos == "Upper-Right"):
@@ -732,8 +712,10 @@ def GRGFromPoint(starting_point,
             startPos = "LL"
         elif (labelStartPos == "Lower-Right"):
             startPos = "LR"
-
-        arcpy.AddMessage("Creating Fishnet Grid")        
+            
+        arcpy.AddMessage("Creating Fishnet Grid") 
+        env.outputCoordinateSystem = arcpy.Describe(targetPointOrigin).spatialReference
+        
         arcpy.CreateFishnet_management(tempOutput, originCoordinate, yAxisCoordinate, 0, 0, str(numberCellsHo), str(numberCellsVert), oppCornerCoordinate, "NO_LABELS", fullExtent, "POLYGON")
 
         # Sort the grid upper left to lower right, and delete the in memory one
@@ -770,7 +752,7 @@ def GRGFromPoint(starting_point,
             if (labelStyle == "Alpha-Numeric"):
                 row.setValue(gridField, str(letter) + str(number))
             elif (labelStyle == "Alpha-Alpha"):
-                row.setValue(gridField, str(letter) + str(secondLetter))
+                row.setValue(gridField, str(letter) + labelSeperator + str(secondLetter))
             elif (labelStyle == "Numeric"):
                 row.setValue(gridField, str(number))
 
@@ -780,9 +762,9 @@ def GRGFromPoint(starting_point,
             secondLetter = ColIdxToXlName_PointTargetGRG(secondLetterIndex)
 
         # Rotate the shape, if needed.
-        if (inputExtentDrawnFromMap):
+        if (rotation != 0):
             arcpy.AddMessage("Rotating the grid")
-            RotateFeatureClass(tempSort, outputFeatureClass, angleDrawn, pointExtents[0] + " " + pointExtents[1])
+            RotateFeatureClass(tempSort, outputFeatureClass, rotation, pointExtents[0] + " " + pointExtents[1])
         else:
             arcpy.CopyFeatures_management(tempSort, outputFeatureClass)
         arcpy.Delete_management(tempSort)
@@ -805,6 +787,9 @@ def GRGFromPoint(starting_point,
         msgs = arcpy.GetMessages()
         arcpy.AddError(msgs)
         print(msgs)
+    
+    except Exception as xmsg:
+        arcpy.AddError(str(xmsg))
 
     except:
         # Get the traceback object
@@ -824,3 +809,4 @@ def GRGFromPoint(starting_point,
         print(msgs)
 
     return outputFeatureClass
+
