@@ -4,18 +4,6 @@
 The ArcGIS Solutions Geoprocessing Toolbox is a collection of models, scripts, and tools for use in [ArcGIS for Desktop](http://www.esri.com/software/arcgis/arcgis-for-desktop) and [ArcGIS Pro](http://www.esri.com/en/software/arcgis-pro). These tools provide specialized processing, workflows, and analysis for defense, intelligence, emergency management, and law enforcement. They are included in Esri's [Solutions Templates](http://solutions.arcgis.com/).
 
 
-### Repository Owner: [Matt](https://github.com/mfunk)
-
-* Merge Pull Requests
-* Creates Releases and Tags
-* Manages Milestones
-* Manages and Assigns Issues
-
-### Secondary: [Chris](https://github.com/csmoore)
-
-* Backup when the Owner is away
-
-Additional information is available in the repository's [Wiki](https://github.com/Esri/solutions-geoprocessing-toolbox/wiki).
 
 ## Sections
 
@@ -36,11 +24,6 @@ Additional information is available in the repository's [Wiki](https://github.co
 
 Specialized geoprocessing models and tools for general defense and intelligence analysis tasks including:
 
-* The [**geonames**](./geonames) folder contains:
-	* Geonames Tools_pro
-	* Geonames Tools_arcmap
-	* [Geonames Locator Solutions Page](http://solutions.arcgis.com/defense/help/geonames-locator/)
-
 * The [**clearing_operations**](./clearing_operations) folder contains:
 	* ClearingOperationsTools.pyt (Single python toolbox for both ArcMap and Pro)
 	* GriddedReferenceGraphicTools.pyt (Single python toolbox for both ArcMap and Pro)
@@ -50,15 +33,18 @@ Specialized geoprocessing models and tools for general defense and intelligence 
 	* Distance To Assets_pro
 	* Distance To Assets_arcmap
 	* [Distance to Assets Solutions Page](http://solutions.arcgis.com/defense/help/distance-to-assets/)
-  
-* The [**military_aspects_of_terrain**](./military_aspects_of_terrain) folder contains:
-	* Military Aspects of Terrain Tools_pro
-	* Military Aspects of Terrain Tools_arcmap
-	* [Military Aspects of Terrain Solutions Page](http://solutions.arcgis.com/defense/help/maot/)
-
-* The [**military_aspects_of_weather**](./military_aspects_of_weather) folder contains:
-	* Military Aspects of Weather Tools_arcmap
-	* [Military Aspects of Weather Solutions Page](http://solutions.arcgis.com/defense/help/maow/)
+	
+* The [**geonames**](./geonames) folder contains:
+	* Geonames Tools_pro
+	* Geonames Tools_arcmap
+	* [Geonames Locator Solutions Page](http://solutions.arcgis.com/defense/help/geonames-locator/)
+	
+* The [**incident_analysis**](./incident_analysis) folder contains:
+	* Incident Analysis Tools_pro
+	* Adjust Sample Data Dates Tools_pro
+	* Incident Analysis Tools_arcmap
+	* Adjust Sample Data Dates Tools_arcmap
+	* [Incident Analysis Solutions Page](http://solutions.arcgis.com/defense/help/incident-analysis/)
     
 * The [**military_features**](./military_features) folder contains:
 	* Military Features Tools_arcmap
@@ -69,12 +55,6 @@ Specialized geoprocessing models and tools for general defense and intelligence 
 	* Sun Position Analysis Tools_arcmap
 	* [Sun Position Analysis Solutions Page](http://solutions.arcgis.com/defense/help/sun-position-analysis/)
 
-* The [**incident_analysis**](./incident_analysis) folder contains:
-	* Incident Analysis Tools_pro
-	* Adjust Sample Data Dates Tools_pro
-	* Incident Analysis Tools_arcmap
-	* Adjust Sample Data Dates Tools_arcmap
-	* [Incident Analysis Solutions Page](http://solutions.arcgis.com/defense/help/incident-analysis/)
 
 ## Requirements
 
@@ -144,9 +124,7 @@ For information Esri support levels visit the [Esri Product Life Cycle](http://s
 ## Resources
 * [GitHub Help](https://help.github.com/)
 * Learn more about [ArcGIS Solutions](http://solutions.arcgis.com/).
-* Learn more about [ArcGIS for the Military](http://solutions.arcgis.com/military/).
-* Learn more about [ArcGIS for Intelligence](http://solutions.arcgis.com/intelligence/).
-* Learn more about [ArcGIS for Emergency Management](http://solutions.arcgis.com/emergency-management/).
+* Learn more about [ArcGIS for Defense](http://solutions.arcgis.com/defense/).
 * Learn more about [ArcGIS Pro](http://pro.arcgis.com/en/pro-app/).
 
 ## Issues
@@ -174,7 +152,7 @@ Tips:
 
 ## Contributing
 
-When you contribute to this repository we ask that you follow the guidelines in the [repository-specific guidelines for contributing](./CONTRIBUTING.md). If you have questions, or you get stuck, please ask the [Repository Owner](#repository-owner). We are here to help! Thanks.
+When you contribute to this repository we ask that you follow the guidelines in the [repository-specific guidelines for contributing](./CONTRIBUTING.md).
 
 Esri welcomes contributions from anyone and everyone through GitHub. Please see Esri's general [guidelines for contributing](https://github.com/esri/contributing).
 
