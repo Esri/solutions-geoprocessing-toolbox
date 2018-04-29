@@ -569,8 +569,8 @@ def GRGFromArea(AOI,
 
 
 def GRGFromPoint(starting_point,
+				 vertical_cells,
                  horizontal_cells,
-                 vertical_cells,
                  cell_width,
                  cell_height,
                  cell_units,
