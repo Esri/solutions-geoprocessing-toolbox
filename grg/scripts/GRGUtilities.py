@@ -20,7 +20,7 @@
  contact: support@esri.com
  company: Esri
  ==================================================
- description: 
+ description:
  GRG objects module.
  ==================================================
  history:
@@ -110,6 +110,10 @@ def ColIdxToXlName_PointTargetGRG(index):
             return chr(index + ord('A') - 1) + result
 
 
+'''
+Sample adapted/taken from: https://github.com/usgs/arcgis-sample/blob/master/scripts/RotateFeatureClass.py
+License: Public Domain: https://github.com/usgs/arcgis-sample/blob/master/LICENSE.txt
+'''
 def RotateFeatureClass(inputFC, outputFC,
                        angle=0, pivot_point=None):
     """Rotate Feature Class
@@ -144,9 +148,8 @@ def RotateFeatureClass(inputFC, outputFC,
 
     # temp names for cleanup
     env_file = None
-    lyrFC, lyrTmp, lyrOut   = [None] * 3  # layers
+    lyrFC, lyrTmp = [None] * 2  # layers
     tmpFC  = None # temp dataset
-    Row, Rows, oRow, oRows = [None] * 4 # cursors
 
     try:
         # process parameters
@@ -165,8 +168,8 @@ def RotateFeatureClass(inputFC, outputFC,
         # set up environment
         env_file = arcpy.CreateScratchName("xxenv",".xml","file",
                                            os.environ["TEMP"])
-        arcpy.SaveSettings(env_file)
-        
+        arcpy.gp.SaveSettings(env_file)
+
         WKS = env.workspace
         if not WKS:
             if os.path.dirname(outputFC):
@@ -188,69 +191,69 @@ def RotateFeatureClass(inputFC, outputFC,
 
         # create temp feature class
         tmpFC = arcpy.CreateScratchName("xxfc", "", "featureclass")
+
+        # Create Feature Class using inputFC as template (so will have "Grid" field)
         arcpy.CreateFeatureclass_management(os.path.dirname(tmpFC),
                                             os.path.basename(tmpFC),
-                                            shpType)
+                                            shpType,
+                                            inputFC)
         lyrTmp = 'lyrTmp'
         arcpy.MakeFeatureLayer_management(tmpFC, lyrTmp)
 
-        # set up grid field
-        gridField = "Grid"
-        arcpy.AddField_management(lyrTmp, gridField, "TEXT")
-        arcpy.DeleteField_management(lyrTmp, 'ID')
+        ## WORKAROUND: removed below because it was creating a schema lock until Pro/arcpy exited
+        ## set up grid field
+        #gridField = "Grid"
+        #arcpy.AddField_management(lyrTmp, gridField, "TEXT")
+        #arcpy.DeleteField_management(lyrTmp, 'ID')
 
-        # rotate the feature class coordinates
+        # rotate the feature class coordinates for each feature, and each feature part
 
         # open read and write cursors
-        Rows = arcpy.SearchCursor(lyrFC, "", "",
-                                  "%s;%s;" % (shpField,'Grid'))
-        oRows = arcpy.InsertCursor(lyrTmp)
-        arcpy.AddMessage("Opened search cursor")
-        
+        updateFields = ['SHAPE@','Grid']
+        arcpy.AddMessage('Rotating temporary dataset')
+
         parts = arcpy.Array()
         rings = arcpy.Array()
         ring = arcpy.Array()
-        for Row in Rows:
-            shp = Row.getValue(shpField)
-            p = 0
-            for part in shp:
-                for pnt in part:
-                    if pnt:
-                        x, y = RotateXY(pnt.X, pnt.Y, xcen, ycen, angle)
-                        ring.add(arcpy.Point(x, y, pnt.ID))
-                    else:
-                        # if we have a ring, save it
-                        if len(ring) > 0:
-                            rings.add(ring)
-                            ring.removeAll()
-                # we have our last ring, add it
-                rings.add(ring)
-                ring.removeAll()
+
+        with arcpy.da.SearchCursor(lyrFC, updateFields) as inRows,\
+          arcpy.da.InsertCursor(lyrTmp, updateFields) as outRows:
+            for inRow in inRows:
+                shp = inRow[0] # SHAPE
+                p = 0
+                for part in shp:
+                    for pnt in part:
+                        if pnt:
+                            x, y = RotateXY(pnt.X, pnt.Y, xcen, ycen, angle)
+                            ring.add(arcpy.Point(x, y, pnt.ID))
+                        else:
+                            # if we have a ring, save it
+                            if len(ring) > 0:
+                                rings.add(ring)
+                                ring.removeAll()
+                    # we have our last ring, add it
+                    rings.add(ring)
+                    ring.removeAll()
+                    # if only one, remove nesting
+                    if len(rings) == 1: rings = rings.getObject(0)
+                    parts.add(rings)
+                    rings.removeAll()
+                    p += 1
+
                 # if only one, remove nesting
-                if len(rings) == 1: rings = rings.getObject(0)
-                parts.add(rings)
-                rings.removeAll()
-                p += 1
+                if len(parts) == 1: parts = parts.getObject(0)
+                if dFC.shapeType == "Polyline":
+                    shp = arcpy.Polyline(parts)
+                else:
+                    shp = arcpy.Polygon(parts)
+                parts.removeAll()
 
-            # if only one, remove nesting
-            if len(parts) == 1: parts = parts.getObject(0)
-            if dFC.shapeType == "Polyline":
-                shp = arcpy.Polyline(parts)
-            else:
-                shp = arcpy.Polygon(parts)
-            parts.removeAll()
-            oRow = oRows.newRow()
-            oRow.setValue(shpField, shp)
-            oRow.setValue('Grid', Row.getValue('Grid'))                
-            oRows.insertRow(oRow)              
+                gridValue = inRow[1] # GRID string
+                outRows.insertRow([shp, gridValue])  # write row to output
 
-        del oRow, oRows # close write cursor (ensure buffer written)
-        oRow, oRows = None, None # restore variables for cleanup
-        
+        arcpy.AddMessage('Merging temporary, rotated dataset with output')
         env.qualifiedFieldNames = False
         arcpy.Merge_management(lyrTmp, outputFC)
-        lyrOut = 'lyrOut'
-        arcpy.MakeFeatureLayer_management(outputFC, lyrOut)        
 
     except MsgError as xmsg:
         arcpy.AddError(str(xmsg))
@@ -266,18 +269,14 @@ def RotateFeatureClass(inputFC, outputFC,
         arcpy.AddError(tbinfo + str(xmsg))
     finally:
         # reset environment
-        if env_file: arcpy.LoadSettings(env_file)
+        if env_file: arcpy.gp.LoadSettings(env_file)
         # Clean up temp files
-        for f in [lyrFC, lyrTmp, lyrOut, tmpFC, env_file]:
+        for f in [lyrFC, lyrTmp, tmpFC, env_file]:
             try:
-                if f: arcpy.Delete_management(f)
+                if f and arcpy.Exists(f) :
+                    arcpy.Delete_management(f)
             except:
                 pass
-        # delete cursors
-        try:
-            for c in [Row, Rows, oRow, oRows]: del c
-        except:
-            pass
 
         # return pivot point
         try:
@@ -287,6 +286,7 @@ def RotateFeatureClass(inputFC, outputFC,
 
         return pivot_point
 
+    # END RotateFeatureClass
 
 def GRGFromArea(AOI,
                 cellWidth,
@@ -305,6 +305,8 @@ def GRGFromArea(AOI,
     df = None
     aprx = None
     mapList = None
+    scratch = None
+    fc_WM = None
 
     try:
         #UPDATE
@@ -324,6 +326,19 @@ def GRGFromArea(AOI,
             mxd = arcpy.mapping.MapDocument('CURRENT')
             df = arcpy.mapping.ListDataFrames(mxd)[0]
 
+        arcpy.env.overwriteOutput = True
+        if arcpy.env.scratchWorkspace:
+            scratch = arcpy.env.scratchWorkspace
+        else:
+            scratch = r"%scratchGDB%"
+
+        #If AOI is not in WebMercator, re-project to it
+        if arcpy.Describe(AOI).spatialReference.name != "WGS_1984_Web_Mercator_Auxiliary_Sphere":
+            fc_WM = os.path.join(scratch, "AOI_WM")
+            outCS = arcpy.SpatialReference(3857) #the code for WGS84 Web Mercator
+            arcpy.Project_management(fc, fc_WM, outCS)
+            fc = fc_WM
+
         # From the template extent, create a polygon that we can project into a localized World Azimuthal Equidistan
         if DEBUG == True: arcpy.AddMessage("Getting extent info...")
 
@@ -333,28 +348,28 @@ def GRGFromArea(AOI,
         if (cellUnits == "Feet"):
             cellWidth = float(cellWidth) / 3.2808
             cellHeight = float(cellHeight) / 3.2808
-            
+
         '''
         ' If cell units are kilometers convert to meters
         '''
         if (cellUnits == "Kilometers"):
             cellWidth = float(cellWidth) * 1000
             cellHeight = float(cellHeight) * 1000
-        
+
         '''
         ' If cell units are miles convert to meters
         '''
         if (cellUnits == "Miles"):
             cellWidth = float(cellWidth) * 1609.344
             cellHeight = float(cellHeight) * 1609.344
-            
+
         '''
         ' If cell units are yards convert to meters
         '''
         if (cellUnits == "Yards"):
             cellWidth = float(cellWidth) * 0.9144
             cellHeight = float(cellHeight) * 0.9144
-            
+
         '''
         ' If cell units are Nautical Miles convert to meters
         '''
@@ -364,7 +379,7 @@ def GRGFromArea(AOI,
 
         '''
         ' create a minimum bounding rectangle around the AOI
-        ' The use of the MBG_FIELDS option in MinimumBoundingGeometry_management 
+        ' The use of the MBG_FIELDS option in MinimumBoundingGeometry_management
         ' tool also creates a field that has the shape orientation
         '''
         arcpy.AddMessage("Getting Minimum Bounding Geometry that fits the Area of Interest")
@@ -458,7 +473,7 @@ def GRGFromArea(AOI,
         ' Now use the CreateFishnet_management tool to create the desired grid
         '''
         arcpy.AddMessage("Creating Fishnet Grid...")
-        arcpy.CreateFishnet_management(fishnet, origin, yaxis, str(cellWidth), str(cellHeight), verticalCells, horizontalCells, oppositeCorner, "NO_LABELS", fc, "POLYGON")
+        arcpy.CreateFishnet_management(fishnet, origin, yaxis, str(cellWidth), str(cellHeight), 0, 0, oppositeCorner, "NO_LABELS", fc, "POLYGON")
 
         '''
         ' Add a field which will be used to add the grid labels
@@ -523,7 +538,7 @@ def GRGFromArea(AOI,
                         secondLetterIndex = -1
                         if labelStyle != 'Numeric':
                             labelNumber = 0
-                            
+
         arcpy.CopyFeatures_management(fishnet, outputFeatureClass)
         arcpy.Delete_management(fishnet)
 
@@ -539,10 +554,9 @@ def GRGFromArea(AOI,
         else:
             arcpy.AddMessage("Non-map environment, skipping labeling...")
 
-        # Set tool output
-        arcpy.SetParameter(6, outputFeatureClass)
+        return outputFeatureClass
 
-    except arcpy.ExecuteError: 
+    except arcpy.ExecuteError:
         # Get the tool error messages
         msgs = arcpy.GetMessages()
         arcpy.AddError(msgs)
@@ -565,8 +579,12 @@ def GRGFromArea(AOI,
         print(pymsg + "\n")
         print(msgs)
 
-    return outputFeatureClass
-
+    finally:
+        try:
+            if arcpy.Exists(os.path.join(scratch, "AOI_WM")):
+                arcpy.Delete_management(fc_WM)
+        except:
+            pass
 
 def GRGFromPoint(starting_point,
                  horizontal_cells,
@@ -597,7 +615,8 @@ def GRGFromPoint(starting_point,
     DEBUG = True
     mxd = None
     df, aprx = None, None
-
+    point_WM = None
+    scratch = None
 
     try:
         #UPDATE
@@ -614,48 +633,63 @@ def GRGFromPoint(starting_point,
             df = arcpy.mapping.ListDataFrames(mxd)[0]
         else:
             if DEBUG == True: arcpy.AddMessage("Non-map application...")
-        
+
         numberOfFeatures = arcpy.GetCount_management(targetPointOrigin)
         if(int(numberOfFeatures[0]) == 0):
-          raise Exception("The input start location must contain at least one feature.")
-        
+            raise Exception("The input start location must contain at least one feature.")
+
         if(int(numberOfFeatures[0]) > 1):
-          arcpy.AddMessage("More than one feature detected for the start location, last feature entered will be used.")
+            arcpy.AddMessage("More than one feature detected for the start location, last feature entered will be used.")
+
+        arcpy.env.overwriteOutput = True
+        if arcpy.env.scratchWorkspace:
+            scratch = arcpy.env.scratchWorkspace
+        else:
+            scratch = r"%scratchGDB%"
+
+        #If starting point is not in WebMercator, re-project to it
+        if arcpy.Describe(targetPointOrigin).spatialReference.name != "WGS_1984_Web_Mercator_Auxiliary_Sphere":
+            point_WM = os.path.join(scratch, "GRG_POINT_WM")
+            outCS = arcpy.SpatialReference(3857) #the code for WGS84 Web Mercator
+            arcpy.Project_management(targetPointOrigin, point_WM, outCS)
+            targetPointOrigin = point_WM
+            arcpy.AddMessage("Projected starting point to Web Mercator.")
+
         '''
         ' If cell units are feet convert to meters
         '''
         if (cellUnits == "Feet"):
             cellWidth = float(cellWidth) / 3.2808
             cellHeight = float(cellHeight) / 3.2808
-            
+
         '''
         ' If cell units are kilometers convert to meters
         '''
         if (cellUnits == "Kilometers"):
             cellWidth = float(cellWidth) * 1000
             cellHeight = float(cellHeight) * 1000
-        
+
         '''
         ' If cell units are miles convert to meters
         '''
         if (cellUnits == "Miles"):
             cellWidth = float(cellWidth) * 1609.344
             cellHeight = float(cellHeight) * 1609.344
-            
+
         '''
         ' If cell units are yards convert to meters
         '''
         if (cellUnits == "Yards"):
             cellWidth = float(cellWidth) * 0.9144
             cellHeight = float(cellHeight) * 0.9144
-            
+
         '''
         ' If cell units are Nautical Miles convert to meters
         '''
         if (cellUnits == "Nautical Miles"):
             cellWidth = float(cellWidth) * 1852
             cellHeight = float(cellHeight) * 1852
-            
+
 
         # Get the coordinates of the point inputExtentDrawnFromMap.
         rows = arcpy.SearchCursor(targetPointOrigin)
@@ -712,10 +746,10 @@ def GRGFromPoint(starting_point,
             startPos = "LL"
         elif (labelStartPos == "Lower-Right"):
             startPos = "LR"
-            
-        arcpy.AddMessage("Creating Fishnet Grid") 
+
+        arcpy.AddMessage("Creating Fishnet Grid")
         env.outputCoordinateSystem = arcpy.Describe(targetPointOrigin).spatialReference
-        
+
         arcpy.CreateFishnet_management(tempOutput, originCoordinate, yAxisCoordinate, 0, 0, str(numberCellsHo), str(numberCellsVert), oppCornerCoordinate, "NO_LABELS", fullExtent, "POLYGON")
 
         # Sort the grid upper left to lower right, and delete the in memory one
@@ -771,7 +805,7 @@ def GRGFromPoint(starting_point,
 
         # Get and label the output feature
         #UPDATE
-        targetLayerName = os.path.basename(outputFeatureClass.value)
+        targetLayerName = os.path.basename(outputFeatureClass)
         if appEnvironment == "ARCGIS_PRO":
             arcpy.AddMessage("Do not apply symbology it will be done in the next task step")
         elif appEnvironment == "ARCMAP":
@@ -779,15 +813,14 @@ def GRGFromPoint(starting_point,
         else:
             arcpy.AddMessage("Non-map environment, skipping labeling...")
 
-        # Set tool output
-        arcpy.SetParameter(8, outputFeatureClass)
+        return outputFeatureClass
 
     except arcpy.ExecuteError:
         # Get the tool error messages
         msgs = arcpy.GetMessages()
         arcpy.AddError(msgs)
         print(msgs)
-    
+
     except Exception as xmsg:
         arcpy.AddError(str(xmsg))
 
@@ -808,5 +841,175 @@ def GRGFromPoint(starting_point,
         print(pymsg + "\n")
         print(msgs)
 
-    return outputFeatureClass
+    finally:
+        try:
+            if arcpy.Exists(os.path.join(scratch, "GRG_POINT_WM")):
+                arcpy.Delete_management(point_WM)
+        except:
+            pass
 
+def NumberFeatures(areaToNumber,
+                    pointFeatures,
+                    numberingField,
+                    outputFeatureClass):
+
+        descPointFeatures = arcpy.Describe(pointFeatures)
+        arcpy.AddMessage("pointFeatures: {0}".format(descPointFeatures.catalogPath))
+
+        # If no output FC is specified, then set it a temporary one, as this will be copied to the input and then deleted.
+        overwriteFC = False
+        if not outputFeatureClass:
+            DEFAULT_OUTPUT_LOCATION = r'%scratchGDB%\tempSortedPoints'
+            outputFeatureClass = DEFAULT_OUTPUT_LOCATION
+            overwriteFC = True
+        else:
+            descOutputFeatureClass = arcpy.Describe(outputFeatureClass)
+            arcpy.AddMessage("outputFeatureClass: {0}".format(descOutputFeatureClass.catalogPath))
+
+        # Sort layer by upper right across and then down spatially
+        areaToNumberInMemory = os.path.join("in_memory","areaToNumber")
+        arcpy.CopyFeatures_management(areaToNumber, areaToNumberInMemory)
+        areaToNumber = areaToNumberInMemory
+
+        DEBUG = True
+        appEnvironment = None
+        mxd, df, aprx, mp, mapList = None, None, None, None, None
+        pointFeatureName = os.path.basename(str(pointFeatures))
+        layerExists = False
+        try:
+            # Check that area to number is a polygon
+            descArea = arcpy.Describe(areaToNumber)
+            areaGeom = descArea.shapeType
+            arcpy.AddMessage("Shape type: " + str(areaGeom))
+            if (descArea.shapeType != "Polygon"):
+                raise Exception("ERROR: The area to number must be a polygon.")
+
+            #Checking the version of the Desktop Application
+            appEnvironment = Utilities.GetApplication()
+            if DEBUG == True: arcpy.AddMessage("App environment: " + appEnvironment)
+
+            #Getting the layer name from the Table of Contents
+            if appEnvironment == Utilities.PLATFORM_PRO:
+                from arcpy import mp
+                aprx = arcpy.mp.ArcGISProject("CURRENT")
+                mapList = aprx.listMaps()[0]
+                for lyr in mapList.listLayers():
+                    if lyr.name == pointFeatureName:
+                        layerExists = True
+            #else:
+            if appEnvironment == Utilities.PLATFORM_DESKTOP:
+                from arcpy import mapping
+                mxd = arcpy.mapping.MapDocument('CURRENT')
+                df = arcpy.mapping.ListDataFrames(mxd)[0]
+                for lyr in arcpy.mapping.ListLayers(mxd):
+                    if lyr.name == pointFeatureName:
+                        layerExists = True
+
+            if layerExists == False:
+                arcpy.MakeFeatureLayer_management(pointFeatures, pointFeatureName)
+            else:
+                pointFeatureName = pointFeatures
+
+            # Select all the points that are inside of area
+            if areaToNumber:
+                arcpy.AddMessage("Selecting points from {0} inside of the area {1}".format(pointFeatureName, areaToNumber))
+            else:
+                arcpy.AddMessage("Selecting points from {0} inside of the area {1}".format(pointFeatureName, areaToNumber.name))
+
+            selectionLayer = arcpy.SelectLayerByLocation_management(pointFeatureName, "INTERSECT",
+                                                                    areaToNumber, "#", "NEW_SELECTION")
+            if DEBUG == True:
+                arcpy.AddMessage("Selected " + str(arcpy.GetCount_management(pointFeatureName).getOutput(0)) + " points")
+
+            arcpy.AddMessage("Sorting the selected points geographically, left to right, top to bottom")
+            arcpy.Sort_management(pointFeatureName, outputFeatureClass, [["Shape", "ASCENDING"]])
+
+            #global numberingField
+            if numberingField is None or numberingField == "":
+                fnames = [field.name for field in arcpy.ListFields(outputFeatureClass)]
+                addfield = "Number"
+                if addfield in fnames:
+                    arcpy.AddMessage("Number field is already used")
+                    numberingField = "Number"
+                else:
+                    arcpy.AddMessage("Add One")
+                    arcpy.AddMessage("Adding Number field because no input field was given")
+                    arcpy.AddField_management(outputFeatureClass,"Number","SHORT")
+                    numberingField = "Number"
+            else:
+                pass
+
+            # Number the fields
+            arcpy.AddMessage("Numbering the fields")
+            i = 1
+            cursor = arcpy.UpdateCursor(outputFeatureClass) # Object: Error in parsing arguments for UpdateCursor
+            for row in cursor:
+                row.setValue(numberingField, i)
+                cursor.updateRow(row)
+                i += 1
+            # Clear the selection
+            arcpy.AddMessage("Clearing the selection")
+            arcpy.SelectLayerByAttribute_management(pointFeatureName, "CLEAR_SELECTION")
+
+            # Overwrite the Input Point Features, and then delete the temporary output feature class
+            targetLayerName = ""
+            if (overwriteFC):
+                arcpy.AddMessage("Copying the features to the input, and then deleting the temporary feature class")
+                desc = arcpy.Describe(pointFeatures)
+                if hasattr(desc, "layer"):
+                    overwriteFC = desc.layer.catalogPath
+                else:
+                    overwriteFC = desc.catalogPath
+
+                arcpy.AddMessage("what is the numberingField: " + str(numberingField))
+                addfield = "Number"
+                fnames1 = [field.name for field in arcpy.ListFields(overwriteFC)]
+                if addfield in fnames1:
+                    arcpy.AddMessage("Number field is already used")
+                else:
+                    arcpy.AddMessage("Adding Number field to overwriteFC due to no input field")
+                    arcpy.AddField_management(overwriteFC,"Number")
+                    arcpy.AddMessage("Added Number field to overwriteFC")
+
+                fields = (str(numberingField), "SHAPE@")
+
+                overwriteCursor = arcpy.da.UpdateCursor(overwriteFC, fields)
+                for overwriteRow in overwriteCursor:
+                    sortedPointsCursor = arcpy.da.SearchCursor(outputFeatureClass, fields)
+                    for sortedRow in sortedPointsCursor:
+                        if sortedRow[1].equals(overwriteRow[1]):
+                            overwriteRow[0] = sortedRow[0]
+                    overwriteCursor.updateRow(overwriteRow)
+                arcpy.Delete_management(outputFeatureClass)
+                targetLayerName = pointFeatureName
+            else:
+                targetLayerName = os.path.basename(str(outputFeatureClass))
+
+            # Workaround: don't set the outputFeatureClass if none was supplied to the tool
+            if overwriteFC:
+                outputFeatureClass = ''
+
+        except arcpy.ExecuteError:
+            # Get the tool error messages
+            msgs = arcpy.GetMessages()
+            arcpy.AddError(msgs)
+            print(msgs)
+
+        except:
+            # Get the traceback object
+            tb = sys.exc_info()[2]
+            tbinfo = traceback.format_tb(tb)[0]
+
+            # Concatenate information together concerning the error into a message string
+            pymsg = "PYTHON ERRORS:\nTraceback info:\n" + tbinfo + "\nError Info:\n" + str(sys.exc_info()[1])
+            msgs = "ArcPy ERRORS:\n" + arcpy.GetMessages() + "\n"
+
+            # Return python error messages for use in script tool or Python Window
+            arcpy.AddError(pymsg)
+            arcpy.AddError(msgs)
+
+            # Print Python error messages for use in Python / Python Window
+            print(pymsg + "\n")
+            print(msgs)
+
+        return outputFeatureClass
