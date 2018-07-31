@@ -1,0 +1,504 @@
+{
+  "type" : "CIMLayerDocument",
+  "version" : "1.2.0",
+  "build" : 5023,
+  "layers" : [
+    "CIMPATH=map/lowest_point.xml"
+  ],
+  "layerDefinitions" : [
+    {
+      "type" : "CIMFeatureLayer",
+      "name" : "Lowest Points",
+      "uRI" : "CIMPATH=map/lowest_point.xml",
+      "sourceModifiedTime" : {
+        "type" : "TimeInstant",
+        "start" : 978307200000
+      },
+      "metadataURI" : "CIMPATH=Metadata/3fe2fd24ab9f13868eb856075769922c.xml",
+      "description" : "Finds the lowest point on a surface within a user specified area. ",
+      "expanded" : true,
+      "layerType" : "Operational",
+      "showLegends" : true,
+      "visibility" : true,
+      "displayCacheType" : "Permanent",
+      "maxDisplayCacheAge" : 5,
+      "showPopups" : true,
+      "serviceLayerID" : -1,
+      "featureTable" : {
+        "type" : "CIMFeatureTable",
+        "displayField" : "Elevation",
+        "editable" : true,
+        "fieldDescriptions" : [
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "OBJECTID",
+            "fieldName" : "OBJECTID",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 0
+            },
+            "readOnly" : true,
+            "visible" : true
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Shape",
+            "fieldName" : "Shape",
+            "visible" : true
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Elevation",
+            "fieldName" : "Elevation",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "visible" : true
+          }
+        ],
+        "timeFields" : {
+          "type" : "CIMTimeTableDefinition"
+        },
+        "timeDefinition" : {
+          "type" : "CIMTimeDataDefinition"
+        },
+        "timeDisplayDefinition" : {
+          "type" : "CIMTimeDisplayDefinition",
+          "timeInterval" : 0,
+          "timeIntervalUnits" : "esriTimeUnitsHours",
+          "timeOffsetUnits" : "esriTimeUnitsYears"
+        },
+        "dataConnection" : {
+          "type" : "CIMStandardDataConnection",
+          "workspaceConnectionString" : "DATABASE=..\\..\\testdata\\Results.gdb",
+          "workspaceFactory" : "FileGDB",
+          "dataset" : "ExpectedOutputLowestPt",
+          "datasetType" : "esriDTFeatureClass"
+        },
+        "studyAreaSpatialRel" : "esriSpatialRelUndefined",
+        "searchOrder" : "esriSearchOrderSpatial"
+      },
+      "featureTemplates" : [
+        {
+          "type" : "CIMFeatureTemplate",
+          "name" : "Lowest_Point",
+          "tags" : "Point",
+          "toolProgID" : "{2A8B3331-5238-4025-972E-452A69535B06}",
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+            ]
+          }
+        }
+      ],
+      "htmlPopupEnabled" : true,
+      "htmlPopupFormat" : {
+        "type" : "CIMHtmlPopupFormat",
+        "htmlXSLStyleSheet" : "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:fo=\"http://www.w3.org/1999/XSL/Format\" xmlns:msxsl=\"urn:schemas-microsoft-com:xslt\">\n    <xsl:output method=\"html\" version=\"1.0\" encoding=\"UTF-8\" indent=\"yes\" />\n    <xsl:variable name=\"ignoreFieldNames\" select=\"'|OBJECTID|Shape|Shape_Length|Shape_Area|ATTACHMENTID|REL_OBJECTID|CONTENT_TYPE|ATT_NAME|DATA_SIZE|DATA|'\" />\n    <xsl:variable name=\"headerRowColor\" select=\"'#EAEFEB'\" />\n    <xsl:variable name=\"alternateRowColor\" select=\"'#EEEEEE'\" />\n    <xsl:variable name=\"AlertRowColor\" select=\"'#FFFF66'\" />\n    <xsl:template match=\"/\">\n        <html>\n            <body style=\"margin:0px 0px 0px 0px;overflow:auto;background:#CCCCCC;\">\n                <table style=\"font-family:Arial,Verdana,Times;font-size:10px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px\">\n                    <!--<tr style=\"text-align:center;font-weight:bold;background:{$headerRowColor}\">-->\n                    <!--    <td>-->\n                    <!--        <xsl:value-of select=\"FieldsDoc/Title\" />-->\n                    <!--    </td>-->\n                    <!--</tr>-->\n                    <xsl:apply-templates select=\"FieldsDoc/Attachments\" />\n                    <tr>\n                        <td>\n                            <table style=\"font-family:Arial,Verdana,Times;font-size:10px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px\">\n                                <xsl:apply-templates select=\"FieldsDoc/Fields/Field[not(contains($ignoreFieldNames, concat(concat('|', FieldName), '|'))) and not(FieldValue = '&lt;Null&gt;')]\" />\n                            </table>\n                        </td>\n                    </tr>\n                </table>\n            </body>\n        </html>\n    </xsl:template>\n    <xsl:template match=\"Attachments\">\n        <xsl:variable name=\"imageCount\" select=\"count(Attachment/ContentType[contains(., 'image')])\" />\n        <xsl:variable name=\"attachmentCount\" select=\"count(Attachment)\" />\n        <tr bgcolor=\"{$headerRowColor}\">\n            <td>\n                <table style=\"font-family:Arial,Verdana,Times;font-size:10px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px\">\n                    <xsl:variable name=\"imageSrc\" select=\"Attachment/ContentType[contains(., 'image')]/../FilePath\" />\n                    <xsl:if test=\"$imageSrc\">\n                        <tr align=\"center\">\n                            <td>\n                                <a target=\"_blank\" href=\"{$imageSrc}\">\n                                    <img src=\"{$imageSrc}\" width=\"275px\" border=\"0\" />\n                                </a>\n                            </td>\n                        </tr>\n                        <tr align=\"center\">\n                            <td>\n                                <xsl:value-of select=\"Attachment/ContentType[contains(., 'image')]/../Name\" />\n                            </td>\n                        </tr>\n                   </xsl:if>\n                    <xsl:if test=\"($attachmentCount &gt; $imageCount) or not($imageCount = 1)\">\n                        <tr align=\"center\">\n                            <td>\n                                <table style=\"font-family:Arial,Verdana,Times;font-size:10px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px\">\n                                    <xsl:for-each select=\"Attachment[position() mod 2 = 1]\">\n                                        <tr align=\"left\" bgcolor=\"white\">\n                                            <xsl:if test=\"(position() +1) mod 2\">\n                                                <xsl:attribute name=\"bgcolor\">\n                                                    <xsl:value-of select=\"$alternateRowColor\" />\n                                                </xsl:attribute>\n                                            </xsl:if>\n                                            <td>\n                                                <a target=\"_blank\">\n                                                    <xsl:attribute name=\"href\">\n                                                        <xsl:value-of select=\"FilePath\" />\n                                                    </xsl:attribute>\n                                                    <xsl:value-of select=\"Name\" />\n                                                </a>\n                                            </td>\n                                            <td>\n                                                <a target=\"_blank\">\n                                                    <xsl:attribute name=\"href\">\n                                                        <xsl:value-of select=\"following-sibling::Attachment/FilePath\" />\n                                                    </xsl:attribute>\n                                                    <xsl:value-of select=\"following-sibling::Attachment/Name\" />\n                                                </a>\n                                            </td>\n                                        </tr>\n                                    </xsl:for-each>\n                                </table>\n                            </td>\n                        </tr>\n                    </xsl:if>\n                </table>\n            </td>\n        </tr>\n    </xsl:template>\n    <xsl:template match=\"Field\">\n        <tr>\n            <xsl:if test=\"(position() +1) mod 2\">\n                <xsl:attribute name=\"bgcolor\">\n                    <xsl:value-of select=\"$alternateRowColor\" />\n                </xsl:attribute>\n            </xsl:if>\n            <xsl:if test=\"FieldValue[contains(.,'Immediate') or contains(.,'gasoline')]\">\n                <xsl:attribute name=\"bgcolor\">\n                    <xsl:value-of select=\"$AlertRowColor\" />\n                </xsl:attribute>\n            </xsl:if>\n            <td>\n                <xsl:value-of select=\"FieldName\" />\n            </td>\n            <td>\n                <xsl:choose>\n                    <xsl:when test=\"FieldValue[starts-with(., 'www.')]\">\n                        <a target=\"_blank\">\n                            <xsl:attribute name=\"href\">http://\n                            <xsl:value-of select=\"FieldValue\" /></xsl:attribute>\n                            <xsl:value-of select=\"FieldValue\" />\n                        </a>\n                    </xsl:when>\n                    <xsl:when test=\"FieldValue[starts-with(., 'http:')]\">\n                        <a target=\"_blank\">\n                            <xsl:attribute name=\"href\">\n                                <xsl:value-of select=\"FieldValue\" />\n                            </xsl:attribute>\n                            <xsl:value-of select=\"FieldValue\" />\n                        </a>\n                    </xsl:when>\n                    <xsl:when test=\"FieldValue[starts-with(., 'https:')]\">\n                        <a target=\"_blank\">\n                            <xsl:attribute name=\"href\">\n                                <xsl:value-of select=\"FieldValue\" />\n                            </xsl:attribute>\n                            <xsl:value-of select=\"FieldValue\" />\n                        </a>\n                    </xsl:when>\n                    <xsl:when test=\"FieldValue[starts-with(., '\\\\')]\">\n                        <a target=\"_blank\">\n                            <xsl:attribute name=\"href\">\n                                <xsl:value-of select=\"FieldValue\" />\n                            </xsl:attribute>\n                            <xsl:value-of select=\"FieldValue\" />\n                        </a>\n                    </xsl:when>\n                    <xsl:when test=\"FieldValue[starts-with(., '&lt;img ')]\">\n                        <xsl:value-of select=\"FieldValue\" disable-output-escaping=\"yes\" />\n                    </xsl:when>\n                    <xsl:otherwise>\n                        <xsl:value-of select=\"FieldValue\" />\n                    </xsl:otherwise>\n                </xsl:choose>\n            </td>\n        </tr>\n    </xsl:template>\n</xsl:stylesheet>\n",
+        "htmlUseCodedDomainValues" : true,
+        "htmlPresentationStyle" : "XSLStyleSheet"
+      },
+      "isFlattened" : true,
+      "selectable" : true,
+      "selectionSymbol" : {
+        "type" : "CIMSymbolReference",
+        "symbol" : {
+          "type" : "CIMPointSymbol",
+          "symbolLayers" : [
+            {
+              "type" : "CIMVectorMarker",
+              "enable" : true,
+              "anchorPointUnits" : "Relative",
+              "dominantSizeAxis3D" : "Z",
+              "size" : 8,
+              "billboardMode3D" : "FaceNearPlane",
+              "frame" : {
+                "xmin" : -2,
+                "ymin" : -2,
+                "xmax" : 2,
+                "ymax" : 2
+              },
+              "markerGraphics" : [
+                {
+                  "type" : "CIMMarkerGraphic",
+                  "geometry" : {
+                    "curveRings" : [
+                      [
+                        [
+                          1.2246467991473532e-016,
+                          2
+                        ],
+                        {
+                          "a" : [
+                            [
+                              1.2246467991473532e-016,
+                              2
+                            ],
+                            [
+                              0,
+                              0
+                            ],
+                            0,
+                            1
+                          ]
+                        }
+                      ]
+                    ]
+                  },
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            0,
+                            255,
+                            255,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "respectFrame" : true
+            }
+          ],
+          "haloSize" : 1,
+          "scaleX" : 1,
+          "angleAlignment" : "Map"
+        },
+        "symbolName" : "Symbol_3"
+      },
+      "labelClasses" : [
+        {
+          "type" : "CIMLabelClass",
+          "expression" : "[Elevation] & \" Meters\"",
+          "expressionEngine" : "VBScript",
+          "featuresToLabel" : "AllVisibleFeatures",
+          "maplexLabelPlacementProperties" : {
+            "type" : "CIMMaplexLabelPlacementProperties",
+            "featureType" : "Point",
+            "avoidPolygonHoles" : true,
+            "canOverrunFeature" : true,
+            "canPlaceLabelOutsidePolygon" : true,
+            "canRemoveOverlappingLabel" : true,
+            "canStackLabel" : true,
+            "connectionType" : "Unambiguous",
+            "constrainOffset" : "NoConstraint",
+            "contourAlignmentType" : "Page",
+            "contourLadderType" : "Straight",
+            "contourMaximumAngle" : 90,
+            "enableConnection" : true,
+            "enablePointPlacementPriorities" : true,
+            "featureWeight" : 0,
+            "fontHeightReductionLimit" : 4,
+            "fontHeightReductionStep" : 0.5,
+            "fontWidthReductionLimit" : 90,
+            "fontWidthReductionStep" : 5,
+            "graticuleAlignmentType" : "Straight",
+            "keyNumberGroupName" : "Default",
+            "labelBuffer" : 15,
+            "labelLargestPolygon" : true,
+            "labelPriority" : -1,
+            "labelStackingProperties" : {
+              "type" : "CIMMaplexLabelStackingProperties",
+              "stackAlignment" : "ChooseBest",
+              "maximumNumberOfLines" : 3,
+              "minimumNumberOfCharsPerLine" : 3,
+              "maximumNumberOfCharsPerLine" : 24,
+              "separators" : [
+                {
+                  "type" : "CIMMaplexStackingSeparator",
+                  "separator" : " ",
+                  "splitAfter" : true
+                },
+                {
+                  "type" : "CIMMaplexStackingSeparator",
+                  "separator" : ",",
+                  "visible" : true,
+                  "splitAfter" : true
+                }
+              ]
+            },
+            "lineFeatureType" : "General",
+            "linePlacementMethod" : "OffsetCurvedFromLine",
+            "maximumLabelOverrun" : 36,
+            "maximumLabelOverrunUnit" : "Point",
+            "minimumFeatureSizeUnit" : "Map",
+            "multiPartOption" : "OneLabelPerPart",
+            "offsetAlongLineProperties" : {
+              "type" : "CIMMaplexOffsetAlongLineProperties",
+              "placementMethod" : "BestPositionAlongLine",
+              "labelAnchorPoint" : "CenterOfLabel",
+              "distanceUnit" : "Percentage",
+              "useLineDirection" : true
+            },
+            "pointExternalZonePriorities" : {
+              "type" : "CIMMaplexExternalZonePriorities",
+              "aboveLeft" : 4,
+              "aboveCenter" : 2,
+              "aboveRight" : 1,
+              "centerRight" : 3,
+              "belowRight" : 5,
+              "belowCenter" : 7,
+              "belowLeft" : 8,
+              "centerLeft" : 6
+            },
+            "pointPlacementMethod" : "AroundPoint",
+            "polygonAnchorPointType" : "GeometricCenter",
+            "polygonBoundaryWeight" : 0,
+            "polygonExternalZones" : {
+              "type" : "CIMMaplexExternalZonePriorities",
+              "aboveLeft" : 4,
+              "aboveCenter" : 2,
+              "aboveRight" : 1,
+              "centerRight" : 3,
+              "belowRight" : 5,
+              "belowCenter" : 7,
+              "belowLeft" : 8,
+              "centerLeft" : 6
+            },
+            "polygonFeatureType" : "General",
+            "polygonInternalZones" : {
+              "type" : "CIMMaplexInternalZonePriorities",
+              "center" : 1
+            },
+            "polygonPlacementMethod" : "CurvedInPolygon",
+            "primaryOffset" : 1,
+            "primaryOffsetUnit" : "Point",
+            "removeExtraWhiteSpace" : true,
+            "repetitionIntervalUnit" : "Map",
+            "rotationProperties" : {
+              "type" : "CIMMaplexRotationProperties",
+              "rotationType" : "Arithmetic",
+              "alignmentType" : "Straight"
+            },
+            "secondaryOffset" : 100,
+            "strategyPriorities" : {
+              "type" : "CIMMaplexStrategyPriorities",
+              "stacking" : 1,
+              "overrun" : 2,
+              "fontCompression" : 3,
+              "fontReduction" : 4,
+              "abbreviation" : 5
+            },
+            "thinningDistanceUnit" : "Map",
+            "truncationMarkerCharacter" : ".",
+            "truncationMinimumLength" : 1,
+            "truncationPreferredCharacters" : "aeiou"
+          },
+          "name" : "Default",
+          "priority" : 4,
+          "standardLabelPlacementProperties" : {
+            "type" : "CIMStandardLabelPlacementProperties",
+            "featureType" : "Line",
+            "featureWeight" : "Low",
+            "labelWeight" : "High",
+            "numLabelsOption" : "OneLabelPerName",
+            "lineLabelPosition" : {
+              "type" : "CIMStandardLineLabelPosition",
+              "above" : true,
+              "inLine" : true,
+              "parallel" : true
+            },
+            "lineLabelPriorities" : {
+              "type" : "CIMStandardLineLabelPriorities",
+              "aboveStart" : 3,
+              "aboveAlong" : 3,
+              "aboveEnd" : 3,
+              "centerStart" : 3,
+              "centerAlong" : 3,
+              "centerEnd" : 3,
+              "belowStart" : 3,
+              "belowAlong" : 3,
+              "belowEnd" : 3
+            },
+            "pointPlacementMethod" : "AroundPoint",
+            "pointPlacementPriorities" : {
+              "type" : "CIMStandardPointPlacementPriorities",
+              "aboveLeft" : 2,
+              "aboveCenter" : 2,
+              "aboveRight" : 1,
+              "centerLeft" : 3,
+              "centerRight" : 2,
+              "belowLeft" : 3,
+              "belowCenter" : 3,
+              "belowRight" : 2
+            },
+            "rotationType" : "Arithmetic",
+            "polygonPlacementMethod" : "AlwaysHorizontal"
+          },
+          "textSymbol" : {
+            "type" : "CIMSymbolReference",
+            "symbol" : {
+              "type" : "CIMTextSymbol",
+              "blockProgression" : "TTB",
+              "compatibilityMode" : true,
+              "depth3D" : 1,
+              "drawSoftHyphen" : true,
+              "extrapolateBaselines" : true,
+              "flipAngle" : 90,
+              "fontEffects" : "Normal",
+              "fontEncoding" : "Unicode",
+              "fontFamilyName" : "Georgia",
+              "fontStyleName" : "Regular",
+              "fontType" : "Unspecified",
+              "haloSize" : 1,
+              "height" : 10,
+              "hinting" : "Default",
+              "horizontalAlignment" : "Left",
+              "kerning" : true,
+              "letterWidth" : 100,
+              "ligatures" : false,
+              "lineGapType" : "ExtraLeading",
+              "shadowColor" : {
+                "type" : "CIMRGBColor",
+                "values" : [
+                  204,
+                  204,
+                  204,
+                  100
+                ]
+              },
+              "shadowOffsetX" : 0.75,
+              "shadowOffsetY" : 0.75,
+              "symbol" : {
+                "type" : "CIMPolygonSymbol",
+                "symbolLayers" : [
+                  {
+                    "type" : "CIMSolidFill",
+                    "enable" : true,
+                    "color" : {
+                      "type" : "CIMRGBColor",
+                      "values" : [
+                        0,
+                        0,
+                        0,
+                        100
+                      ]
+                    }
+                  }
+                ]
+              },
+              "textCase" : "Normal",
+              "textDirection" : "LTR",
+              "verticalAlignment" : "Baseline",
+              "verticalGlyphOrientation" : "Right",
+              "wordSpacing" : 100,
+              "billboardMode3D" : "FaceNearPlane"
+            },
+            "symbolName" : "Symbol_2"
+          },
+          "useCodedValue" : true,
+          "visibility" : true,
+          "iD" : -1
+        }
+      ],
+      "labelVisibility" : true,
+      "renderer" : {
+        "type" : "CIMSimpleRenderer",
+        "patch" : "Default",
+        "symbol" : {
+          "type" : "CIMSymbolReference",
+          "symbol" : {
+            "type" : "CIMPointSymbol",
+            "symbolLayers" : [
+              {
+                "type" : "CIMCharacterMarker",
+                "enable" : true,
+                "anchorPointUnits" : "Relative",
+                "dominantSizeAxis3D" : "Y",
+                "size" : 12,
+                "billboardMode3D" : "FaceNearPlane",
+                "characterIndex" : 33,
+                "fontFamilyName" : "ESRI Default Marker",
+                "fontStyleName" : "Regular",
+                "fontType" : "Unspecified",
+                "scaleX" : 1,
+                "symbol" : {
+                  "type" : "CIMPolygonSymbol",
+                  "symbolLayers" : [
+                    {
+                      "type" : "CIMSolidFill",
+                      "enable" : true,
+                      "color" : {
+                        "type" : "CIMRGBColor",
+                        "values" : [
+                          0,
+                          168,
+                          132,
+                          100
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "scaleSymbolsProportionally" : true,
+                "respectFrame" : true
+              },
+              {
+                "type" : "CIMCharacterMarker",
+                "enable" : true,
+                "colorLocked" : true,
+                "anchorPointUnits" : "Relative",
+                "dominantSizeAxis3D" : "Y",
+                "size" : 14,
+                "billboardMode3D" : "FaceNearPlane",
+                "characterIndex" : 33,
+                "fontFamilyName" : "ESRI Default Marker",
+                "fontStyleName" : "Regular",
+                "fontType" : "Unspecified",
+                "scaleX" : 1,
+                "symbol" : {
+                  "type" : "CIMPolygonSymbol",
+                  "symbolLayers" : [
+                    {
+                      "type" : "CIMSolidFill",
+                      "enable" : true,
+                      "color" : {
+                        "type" : "CIMRGBColor",
+                        "values" : [
+                          78,
+                          78,
+                          78,
+                          100
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "scaleSymbolsProportionally" : true,
+                "respectFrame" : true
+              }
+            ],
+            "haloSize" : 1,
+            "scaleX" : 1,
+            "angleAlignment" : "Map"
+          },
+          "symbolName" : "Symbol_1"
+        }
+      },
+      "scaleSymbols" : true,
+      "snappable" : true
+    }
+  ],
+  "binaryReferences" : [
+    {
+      "type" : "CIMBinaryReference",
+      "uRI" : "CIMPATH=Metadata/3fe2fd24ab9f13868eb856075769922c.xml",
+      "data" : "<?xml version=\"1.0\"?>\r\n<metadata xml:lang=\"en\"><Esri><CreaDate>20161209</CreaDate><CreaTime>14215700</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce></Esri><dataIdInfo><idCitation><resTitle>Lowest Point Output</resTitle></idCitation><idAbs></idAbs><idPurp></idPurp><idCredit></idCredit><resConst><Consts><useLimit></useLimit></Consts></resConst></dataIdInfo></metadata>\r\n"
+    }
+  ]
+}
