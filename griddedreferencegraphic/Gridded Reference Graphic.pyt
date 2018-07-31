@@ -13,7 +13,7 @@
  limitations under the License.
 ------------------------------------------------------------------------------
  ==================================================
- Gridded Referance Graphic.pyt
+ Gridded Reference Graphic.pyt
  --------------------------------------------------
  requirements: ArcGIS 10.3.1+, ArcGIS Pro 2.1+
  author: ArcGIS Solutions
@@ -21,7 +21,7 @@
  company: Esri
  ==================================================
  description: 
- Python toolbox container for Gridded Referance Graphic.
+ Python toolbox container for Gridded Reference Graphic.
  ==================================================
 '''
 
@@ -31,12 +31,12 @@ from scripts.GRGTools import *
 
 class Toolbox(object):
     '''
-    Gridded Referance Graphic Toolbox class container.
+    Gridded Reference Graphic Toolbox class container.
     '''
 
     def __init__(self):
         ''' constructor '''
-        self.label = u'Gridded Referance Graphic'
+        self.label = u'Gridded Reference Graphic'
         self.alias = "grg"
 		# NOTE: this description doesn't do anything, description shown in ArcGIS 
 		# comes from the pyt.xml file
