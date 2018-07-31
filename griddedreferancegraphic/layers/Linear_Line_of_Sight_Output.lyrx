@@ -1,0 +1,339 @@
+{
+  "type" : "CIMLayerDocument",
+  "version" : "1.2.0",
+  "build" : 5023,
+  "layers" : [
+    "CIMPATH=output_linear_line_of_sight2.xml"
+  ],
+  "layerDefinitions" : [
+    {
+      "type" : "CIMFeatureLayer",
+      "name" : "Output Linear Line Of Sight",
+      "uRI" : "CIMPATH=output_linear_line_of_sight2.xml",
+      "description" : "Shows visible terrain along the line of sight. Green is visible, red is not visible.",
+      "layerType" : "Operational",
+      "showLegends" : true,
+      "visibility" : true,
+      "displayCacheType" : "Permanent",
+      "maxDisplayCacheAge" : 5,
+      "showPopups" : true,
+      "serviceLayerID" : -1,
+      "autoGenerateFeatureTemplates" : true,
+      "featureTable" : {
+        "type" : "CIMFeatureTable",
+        "displayField" : "SourceOID",
+        "editable" : true,
+        "timeFields" : {
+          "type" : "CIMTimeTableDefinition"
+        },
+        "timeDefinition" : {
+          "type" : "CIMTimeDataDefinition"
+        },
+        "timeDisplayDefinition" : {
+          "type" : "CIMTimeDisplayDefinition",
+          "timeInterval" : 0,
+          "timeIntervalUnits" : "esriTimeUnitsHours",
+          "timeOffsetUnits" : "esriTimeUnitsYears"
+        },
+        "dataConnection" : {
+          "type" : "CIMStandardDataConnection",
+          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\ArcGIS Defense Templates\\Visibility and Range 1.1\\Visibility and Range Template\\Maps\\default.gdb",
+          "workspaceFactory" : "FileGDB",
+          "dataset" : "LineOfSight",
+          "datasetType" : "esriDTFeatureClass"
+        },
+        "studyAreaSpatialRel" : "esriSpatialRelUndefined",
+        "searchOrder" : "esriSearchOrderSpatial"
+      },
+      "htmlPopupEnabled" : true,
+      "htmlPopupFormat" : {
+        "type" : "CIMHtmlPopupFormat",
+        "htmlXSLStyleSheet" : "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:fo=\"http://www.w3.org/1999/XSL/Format\" xmlns:msxsl=\"urn:schemas-microsoft-com:xslt\">\r\n    <xsl:output method=\"html\" version=\"1.0\" encoding=\"UTF-8\" indent=\"yes\" />\r\n    <xsl:variable name=\"ignoreFieldNames\" select=\"'|OBJECTID|Shape|Shape_Length|Shape_Area|ATTACHMENTID|REL_OBJECTID|CONTENT_TYPE|ATT_NAME|DATA_SIZE|DATA|'\" />\r\n    <xsl:variable name=\"headerRowColor\" select=\"'#E4ECE9'\" />\r\n    <xsl:variable name=\"alternateRowColor\" select=\"'#E4ECE9'\" />\r\n    <xsl:variable name=\"MaskedRowColor\" select=\"'#FF0000'\" />\r\n    <xsl:variable name=\"VisibleRowColor\" select=\"'#00CC00'\" />\r\n    \r\n    <xsl:template match=\"/\">\r\n        <html>\r\n            <body style=\"margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;\">\r\n                <table style=\"font-family:Arial,Verdana,Times;font-size:10px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px\">\r\n                    <!--<tr style=\"text-align:center;font-weight:bold;background:{$headerRowColor}\">-->\r\n                    <!--    <td>-->\r\n                    <!--        <xsl:value-of select=\"FieldsDoc/Title\" />-->\r\n                    <!--    </td>-->\r\n                    <!--</tr>-->\r\n                    <tr>\r\n                        <td>\r\n                            <table style=\"font-family:Arial,Verdana,Times;font-size:14px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px\">\r\n                                <xsl:apply-templates select=\"FieldsDoc/Fields/Field[not(contains($ignoreFieldNames, concat(concat('|', FieldName), '|'))) and not(FieldValue = '&lt;Null&gt;')]\" />\r\n                            </table>\r\n                        </td>\r\n                    </tr>\r\n                </table>\r\n            </body>\r\n        </html>\r\n    </xsl:template>\r\n\r\n    <xsl:template match=\"Field\">\r\n        <tr>\r\n            <xsl:if test=\"(position() +1) mod 2\">\r\n                <xsl:attribute name=\"bgcolor\">\r\n                    <xsl:value-of select=\"$alternateRowColor\" />\r\n                </xsl:attribute>\r\n            </xsl:if>\r\n            <!-- Color row by visible value either Red for invisible or green for visible   -->\r\n            <xsl:choose>\r\n                <xsl:when test=\"FieldValue[contains(.,'2')]\">\r\n                    <xsl:attribute name=\"bgcolor\">\r\n                        <xsl:value-of select=\"$MaskedRowColor\" />\r\n                    </xsl:attribute>\r\n                </xsl:when>\r\n                <xsl:when test=\"FieldValue[contains(.,'1')]\">\r\n                    <xsl:attribute name=\"bgcolor\">\r\n                        <xsl:value-of select=\"$VisibleRowColor\" />\r\n                    </xsl:attribute>\r\n                </xsl:when>\r\n                <xsl:otherwise>\r\n                    <xsl:attribute name=\"bgcolor\">\r\n                        <xsl:value-of select=\"$VisibleRowColor\" />\r\n                    </xsl:attribute>\r\n                </xsl:otherwise>\r\n            </xsl:choose>\r\n            <!-- Don't show the field name, don't need to see it -->\r\n            <!--<td>-->\r\n            <!--    <xsl:value-of select=\"FieldName\" />-->\r\n            <!--</td>-->\r\n            <td>\r\n                <!-- CHANGE THE FIELD VALUES HERE!! -->\r\n                <xsl:choose>\r\n                    \r\n                    <xsl:when test=\"FieldValue[contains(.,'2')]\">\r\n                        <a>NOT VISIBLE</a>\r\n                    </xsl:when>\r\n                    \r\n                    <xsl:when test=\"FieldValue[contains(.,'1')]\">\r\n                        <a>VISIBLE</a>\r\n                    </xsl:when>\r\n                    \r\n                </xsl:choose>\r\n            </td>\r\n        </tr>\r\n    </xsl:template>\r\n</xsl:stylesheet>",
+        "htmlPresentationStyle" : "XSLStyleSheet"
+      },
+      "isFlattened" : true,
+      "selectable" : false,
+      "labelClasses" : [
+        {
+          "type" : "CIMLabelClass",
+          "expression" : "[VisCode]",
+          "expressionEngine" : "VBScript",
+          "featuresToLabel" : "AllVisibleFeatures",
+          "maplexLabelPlacementProperties" : {
+            "type" : "CIMMaplexLabelPlacementProperties",
+            "featureType" : "Line",
+            "avoidPolygonHoles" : true,
+            "canOverrunFeature" : true,
+            "canPlaceLabelOutsidePolygon" : true,
+            "canRemoveOverlappingLabel" : true,
+            "canStackLabel" : true,
+            "connectionType" : "Unambiguous",
+            "constrainOffset" : "AboveLine",
+            "contourAlignmentType" : "Page",
+            "contourLadderType" : "Straight",
+            "contourMaximumAngle" : 90,
+            "enableConnection" : true,
+            "featureWeight" : 0,
+            "fontHeightReductionLimit" : 4,
+            "fontHeightReductionStep" : 0.5,
+            "fontWidthReductionLimit" : 90,
+            "fontWidthReductionStep" : 5,
+            "graticuleAlignmentType" : "Straight",
+            "keyNumberGroupName" : "Default",
+            "labelBuffer" : 15,
+            "labelLargestPolygon" : true,
+            "labelPriority" : -1,
+            "labelStackingProperties" : {
+              "type" : "CIMMaplexLabelStackingProperties",
+              "stackAlignment" : "ChooseBest",
+              "maximumNumberOfLines" : 3,
+              "minimumNumberOfCharsPerLine" : 3,
+              "maximumNumberOfCharsPerLine" : 24,
+              "separators" : [
+                {
+                  "type" : "CIMMaplexStackingSeparator",
+                  "separator" : " ",
+                  "splitAfter" : true
+                },
+                {
+                  "type" : "CIMMaplexStackingSeparator",
+                  "separator" : ",",
+                  "visible" : true,
+                  "splitAfter" : true
+                }
+              ]
+            },
+            "lineFeatureType" : "General",
+            "linePlacementMethod" : "OffsetStraightFromLine",
+            "maximumLabelOverrun" : 16,
+            "maximumLabelOverrunUnit" : "Point",
+            "minimumFeatureSizeUnit" : "Map",
+            "multiPartOption" : "OneLabelPerPart",
+            "offsetAlongLineProperties" : {
+              "type" : "CIMMaplexOffsetAlongLineProperties",
+              "placementMethod" : "BestPositionAlongLine",
+              "labelAnchorPoint" : "CenterOfLabel",
+              "distanceUnit" : "Map",
+              "useLineDirection" : false
+            },
+            "pointExternalZonePriorities" : {
+              "type" : "CIMMaplexExternalZonePriorities",
+              "aboveLeft" : 4,
+              "aboveCenter" : 2,
+              "aboveRight" : 1,
+              "centerRight" : 3,
+              "belowRight" : 5,
+              "belowCenter" : 7,
+              "belowLeft" : 8,
+              "centerLeft" : 6
+            },
+            "pointPlacementMethod" : "AroundPoint",
+            "polygonAnchorPointType" : "GeometricCenter",
+            "polygonBoundaryWeight" : 0,
+            "polygonExternalZones" : {
+              "type" : "CIMMaplexExternalZonePriorities",
+              "aboveLeft" : 4,
+              "aboveCenter" : 2,
+              "aboveRight" : 1,
+              "centerRight" : 3,
+              "belowRight" : 5,
+              "belowCenter" : 7,
+              "belowLeft" : 8,
+              "centerLeft" : 6
+            },
+            "polygonFeatureType" : "General",
+            "polygonInternalZones" : {
+              "type" : "CIMMaplexInternalZonePriorities",
+              "center" : 1
+            },
+            "polygonPlacementMethod" : "CurvedInPolygon",
+            "primaryOffset" : 1,
+            "primaryOffsetUnit" : "Point",
+            "removeExtraWhiteSpace" : true,
+            "repetitionIntervalUnit" : "Map",
+            "rotationProperties" : {
+              "type" : "CIMMaplexRotationProperties",
+              "rotationType" : "Arithmetic",
+              "alignmentType" : "Straight"
+            },
+            "secondaryOffset" : 100,
+            "strategyPriorities" : {
+              "type" : "CIMMaplexStrategyPriorities",
+              "stacking" : 1,
+              "overrun" : 2,
+              "fontCompression" : 3,
+              "fontReduction" : 4,
+              "abbreviation" : 5
+            },
+            "thinningDistanceUnit" : "Map",
+            "truncationMarkerCharacter" : ".",
+            "truncationMinimumLength" : 1,
+            "truncationPreferredCharacters" : "aeiou"
+          },
+          "name" : "Default",
+          "priority" : 4,
+          "textSymbol" : {
+            "type" : "CIMSymbolReference",
+            "symbol" : {
+              "type" : "CIMTextSymbol",
+              "blockProgression" : "TTB",
+              "compatibilityMode" : true,
+              "depth3D" : 1,
+              "drawSoftHyphen" : true,
+              "extrapolateBaselines" : true,
+              "flipAngle" : 90,
+              "fontEffects" : "Normal",
+              "fontEncoding" : "Unicode",
+              "fontFamilyName" : "Arial",
+              "fontStyleName" : "Regular",
+              "fontType" : "Unspecified",
+              "haloSize" : 1,
+              "height" : 8,
+              "hinting" : "Default",
+              "horizontalAlignment" : "Center",
+              "kerning" : true,
+              "letterWidth" : 100,
+              "ligatures" : false,
+              "lineGapType" : "ExtraLeading",
+              "shadowColor" : {
+                "type" : "CIMRGBColor",
+                "values" : [
+                  0,
+                  0,
+                  0,
+                  100
+                ]
+              },
+              "symbol" : {
+                "type" : "CIMPolygonSymbol",
+                "symbolLayers" : [
+                  {
+                    "type" : "CIMSolidFill",
+                    "enable" : true,
+                    "color" : {
+                      "type" : "CIMRGBColor",
+                      "values" : [
+                        0,
+                        0,
+                        0,
+                        100
+                      ]
+                    }
+                  }
+                ]
+              },
+              "textCase" : "Normal",
+              "textDirection" : "LTR",
+              "verticalAlignment" : "Bottom",
+              "verticalGlyphOrientation" : "Right",
+              "wordSpacing" : 100,
+              "billboardMode3D" : "FaceNearPlane"
+            },
+            "symbolName" : "Symbol_18"
+          },
+          "useCodedValue" : true,
+          "visibility" : true,
+          "iD" : -1
+        }
+      ],
+      "renderer" : {
+        "type" : "CIMUniqueValueRenderer",
+        "defaultLabel" : "<all other values>",
+        "fields" : [
+          "VisCode"
+        ],
+        "groups" : [
+          {
+            "type" : "CIMUniqueValueGroup",
+            "classes" : [
+              {
+                "type" : "CIMUniqueValueClass",
+                "label" : "Visible",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMLineSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidStroke",
+                        "enable" : true,
+                        "capStyle" : "Round",
+                        "joinStyle" : "Round",
+                        "lineStyle3D" : "Strip",
+                        "miterLimit" : 10,
+                        "width" : 1,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            0,
+                            255,
+                            0,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "symbolName" : "Symbol_16"
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "1"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "label" : "Not visible",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMLineSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidStroke",
+                        "enable" : true,
+                        "capStyle" : "Round",
+                        "joinStyle" : "Round",
+                        "lineStyle3D" : "Strip",
+                        "miterLimit" : 10,
+                        "width" : 1,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            255,
+                            0,
+                            0,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "symbolName" : "Symbol_17"
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "2"
+                    ]
+                  }
+                ],
+                "visible" : true
+              }
+            ]
+          }
+        ]
+      },
+      "scaleSymbols" : true,
+      "snappable" : true
+    }
+  ]
+}
