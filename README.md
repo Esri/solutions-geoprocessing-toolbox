@@ -24,9 +24,7 @@ The ArcGIS Solutions Geoprocessing Toolbox is a collection of models, scripts, a
 
 Specialized geoprocessing models and tools for general defense and intelligence analysis tasks including:
 
-* The [**clearing_operations**](./clearing_operations) folder contains:
-	* ClearingOperationsTools.pyt (Single python toolbox for both ArcMap and Pro)
-	* [Clearing Operations Solutions Page](http://solutions.arcgis.com/defense/help/clearing-operations/)
+
 
 * The [**distance_to_assets**](./distance_to_assets) folder contains:
 	* Distance To Assets_pro
