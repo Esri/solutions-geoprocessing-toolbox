@@ -26,7 +26,6 @@ Specialized geoprocessing models and tools for general defense and intelligence 
 
 * The [**clearing_operations**](./clearing_operations) folder contains:
 	* ClearingOperationsTools.pyt (Single python toolbox for both ArcMap and Pro)
-	* GriddedReferenceGraphicTools.pyt (Single python toolbox for both ArcMap and Pro)
 	* [Clearing Operations Solutions Page](http://solutions.arcgis.com/defense/help/clearing-operations/)
 
 * The [**distance_to_assets**](./distance_to_assets) folder contains:
@@ -38,7 +37,9 @@ Specialized geoprocessing models and tools for general defense and intelligence 
 	* Geonames Tools_pro
 	* Geonames Tools_arcmap
 	* [Geonames Locator Solutions Page](http://solutions.arcgis.com/defense/help/geonames-locator/)
-	
+* The [**griddedreferencegraphic**](./griddedreferencegraphic) folder contains
+	* GriddedReferenceGraphicTools.pyt (Single python toolbox for both ArcMap and Pro)
+	* [Gridded Reference Graphic Solutions Page](http://solutions.arcgis.com/defense/help/gridded-reference-graphic/)
 * The [**incident_analysis**](./incident_analysis) folder contains:
 	* Incident Analysis Tools_pro
 	* Adjust Sample Data Dates Tools_pro
