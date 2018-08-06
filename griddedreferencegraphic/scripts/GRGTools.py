@@ -552,11 +552,11 @@ class NumberFeatures(object):
                                          enabled=True,
                                          multiValue=False)
 
-        layerFile = "NumberedStructures.lyrx"
+        layerFile = "NumberedFeatures.lyrx"
 		app = Utilities.GetPlatform()
         if (app == 'ARCMAP'):
 			# Layerfile for ArcMap
-            layerFile = "NumberedStructures.lyr" 
+            layerFile = "NumberedFeatures.lyr" 
 
         output_features.symbology = os.path.join(os.path.dirname(os.path.dirname(__file__)),
                                                  "layers", layerFile)
